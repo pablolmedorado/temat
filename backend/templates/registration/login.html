@@ -1,0 +1,108 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="{% static 'lib/roboto-fontface/css/roboto/roboto-fontface.css' %}" rel="stylesheet" />
+  <link href="{% static 'lib/@mdi/font/css/materialdesignicons.min.css' %}" rel="stylesheet" />
+  <link href="{% static 'lib/vuetify/dist/vuetify.min.css' %}" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" href="{% static 'img/icons/favicon.ico' %}">
+  <title>TeMaT | Login</title>
+</head>
+<body>
+  <div id="app">
+    <v-app>
+      <v-main class="grey lighten-4">
+        <v-container fluid class="fill-height">
+          <v-row align="center" justify="center">
+            <v-col cols="12" sm="8" md="6" lg="4">
+              <form method="post" action="{% url 'login' %}">
+                <v-card class="elevation-12">
+                  <v-toolbar
+                    color="primary"
+                    dark
+                    flat
+                  >
+                    <v-toolbar-title class="text-h6">TeMaT</v-toolbar-title>
+                  </v-toolbar>
+                  <v-card-text>
+                    {% if form.errors %}
+                      <v-alert type="error" text outlined border="left" class="mb-4">
+                        No existe ninguna cuenta con la combinación de usuario y contraseña proporcionada. Por favor, inténtelo de nuevo.
+                      </v-alert>
+                    {% endif %}
+
+                    {% if next %}
+                        {% if user.is_authenticated %}
+                          <v-alert type="error" text outlined border="left" class="mb-4">
+                            No tienes permisos para acceder a esta página. Para acceder, inicia sesión con una cuenta que tenga permisos.
+                          </v-alert>
+                        {% else %}
+                          <v-alert type="warning" text outlined border="left" class="mb-4">
+                            Es obligatorio iniciar sesión para ver esta página.
+                          </v-alert>
+                        {% endif %}
+                    {% endif %}
+
+                    <v-text-field
+                      id="{{ form.username.id_for_label }}"
+                      label="{{ form.username.label }}"
+                      name="{{ form.username.html_name }}"
+                      prepend-icon="mdi-account"
+                      type="text"
+                    ></v-text-field>
+
+                    <v-text-field
+                      id="{{ form.password.id_for_label }}"
+                      label="{{ form.password.label }}"
+                      name="{{ form.password.html_name }}"
+                      prepend-icon="mdi-lock-question"
+                      type="password"
+                    ></v-text-field>
+                    <input type="hidden" name="next" value="{{ next|default:"/" }}" />
+                    {% csrf_token %}
+                  </v-card-text>
+                  <v-divider></v-divider>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" type="submit" value="login">
+                      <v-icon>mdi-login</v-icon>&nbsp;
+                      Iniciar sesión
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </form>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-main>
+    </v-app>
+  </div>
+
+  <script src="{% static 'lib/vue/dist/vue.min.js' %}"></script>
+  <script src="{% static 'lib/vuetify/dist/vuetify.min.js' %}"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      vuetify: new Vuetify({
+        theme: {
+          themes: {
+            light: {
+              primary: "#00205b",
+              secondary: "#0085ad",
+              accent: "#6399ae",
+              error: "#e4002b",
+              info: "#00aec7",
+              success: "#84bd00",
+              warning: "#fe5000"
+            }
+          }
+        }
+      })
+    })
+  </script>
+</body>
+</html>

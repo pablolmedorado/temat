@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    environment:
+      - TEMAT_ENV=development
+      - TEMAT_SECRET_KEY=1NS3CUR3_D3V3L0PM3NT_K3Y
+      - TEMAT_DATABASE_URL=psql://temat:T3M4T_DB@db:5432/temat
+    volumes:
+      - ..:/usr/src/app:cached
+      - node_modules:/usr/src/app/node_modules:delegated
+      - virtual_envs:/usr/src/.venvs:delegated
+      - frontend_node_modules:/usr/src/app/frontend/node_modules:delegated
+    ports:
+      - 8000:8000
+      - 8080:8080
+    command: sleep infinity
+    links:
+      - db
+
+  db:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_DB=temat
+      - POSTGRES_USER=temat
+      - POSTGRES_PASSWORD=T3M4T_DB
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer
+    ports:
+      - 5050:8080
+    depends_on:
+      - db
+
+volumes:
+  node_modules:
+  virtual_envs:
+  frontend_node_modules:
+  db_data:

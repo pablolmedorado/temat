@@ -1,0 +1,261 @@
+<template>
+  <div>
+    <v-menu
+      v-model="showNotificationSummary"
+      content-class="v-dialog--scrollable"
+      :min-width="400"
+      :max-width="400"
+      :close-on-content-click="false"
+      :nudge-width="200"
+      bottom
+      left
+      offset-y
+    >
+      <template v-slot:activator="{ on: menu }">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on: tooltip }">
+            <v-btn icon v-on="{ ...tooltip, ...menu }">
+              <v-badge :color="unreadCountBadgeColour" :content="unreadCount | text" bordered overlap>
+                <v-icon>{{ browserNotificationsEnabled ? "mdi-bell-ring" : "mdi-bell" }}</v-icon>
+              </v-badge>
+            </v-btn>
+          </template>
+          <span>
+            Notificaciones
+          </span>
+        </v-tooltip>
+      </template>
+
+      <v-card :loading="loadingNotificationSummary">
+        <v-toolbar flat dense>
+          <v-toolbar-title>
+            Notificaciones{{ unreadCount > notifications.length ? ` (${notifications.length}/${unreadCount})` : "" }}
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                icon
+                :disabled="!Boolean(notificationPartition[0].length)"
+                v-bind="attrs"
+                @click="markAllNotificationsAsRead"
+                v-on="on"
+              >
+                <v-icon>mdi-notification-clear-all</v-icon>
+              </v-btn>
+            </template>
+            <span>
+              Marcar todas como leídas
+            </span>
+          </v-tooltip>
+          <v-btn icon @click="getUnreadSummary">
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-text class="pa-0">
+          <template v-if="!loadingNotificationSummary">
+            <template v-if="notifications.length">
+              <v-list v-for="(partition, index) in notificationPartition" :key="index" two-line class="pa-0">
+                <template v-if="partition.length">
+                  <v-subheader>{{ index === 0 ? "NUEVAS" : "Leídas" }}</v-subheader>
+                  <v-list-item v-for="notification in partition" :key="notification.id">
+                    <v-list-item-avatar :color="notification.level">
+                      <v-icon dark>{{ getNotificationIcon(notification) }}</v-icon>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-list-item-title :class="{ 'font-weight-medium': index === 0 }">
+                        {{ notification.actor.first_name }} {{ notification.actor.last_name }} {{ notification.verb }}
+                        {{ notification.target ? notification.target.representation : "" }}
+                      </v-list-item-title>
+                      <v-list-item-subtitle>Hace {{ notification.timesince }}</v-list-item-subtitle>
+                    </v-list-item-content>
+                    <v-list-item-action>
+                      <v-btn
+                        v-if="notification.target"
+                        icon
+                        :to="{
+                          ...notificationTargetMap[notification.target_content_type].route,
+                          params: { id: notification.target.id }
+                        }"
+                        @click="onNotificationActionClick(notification)"
+                      >
+                        <v-icon>mdi-open-in-app</v-icon>
+                      </v-btn>
+                      <v-btn
+                        v-else
+                        icon
+                        :disabled="!notification.unread"
+                        @click="onNotificationActionClick(notification)"
+                      >
+                        <v-icon>mdi-read</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
+                  </v-list-item>
+                </template>
+              </v-list>
+            </template>
+            <template v-else>
+              <v-alert class="mx-3 my-2" type="info" border="left" text outlined>
+                No tienes notificaciones nuevas
+              </v-alert>
+            </template>
+          </template>
+          <template v-else>
+            <v-skeleton-loader v-for="n in 3" :key="n" type="list-item-avatar-three-line" />
+          </template>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="showNotificationSummary = false">Salir</v-btn>
+          <v-btn color="primary" text :to="{ name: 'notifications' }" @click="showNotificationSummary = false">
+            Ver todas
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-menu>
+  </div>
+</template>
+
+<script>
+import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
+import { isNil, partition } from "lodash";
+
+import NotificationService from "@/services/notifications/notification-service";
+
+import NotificationImg from "@/assets/notification.png";
+
+export default {
+  name: "NotificationManager",
+  filters: {
+    text: function(value) {
+      return isNil(value) ? "" : value.toString();
+    }
+  },
+  data() {
+    return {
+      updateInterval: null,
+      browserNotificationsEnabled: false,
+      showNotificationSummary: false,
+      loadingNotificationSummary: false,
+      notifications: []
+    };
+  },
+  computed: {
+    ...mapState("notifications", ["unreadCount"]),
+    ...mapGetters("notifications", ["notificationTargetMap", "unreadCountBadgeColour"]),
+    notificationPartition() {
+      return partition(this.notifications, { unread: true });
+    }
+  },
+  watch: {
+    unreadCount(newValue, oldValue) {
+      if (this.browserNotificationsEnabled && newValue > oldValue) {
+        new Notification("TeMaT", {
+          body: `Tienes ${newValue} notificación/es sin leer`,
+          icon: NotificationImg
+        });
+      }
+    },
+    showNotificationSummary(newValue) {
+      if (newValue) {
+        this.getUnreadSummary();
+      } else {
+        this.notifications = [];
+      }
+    }
+  },
+  created() {
+    this.checkNotificationSupport();
+    this.getUnreadCount();
+    this.setUpdateInterval();
+  },
+  beforeDestroy() {
+    clearInterval(this.updateInterval);
+  },
+  methods: {
+    ...mapMutations("notifications", ["setUnreadCount"]),
+    ...mapActions("notifications", ["getUnreadCount"]),
+    checkNotificationPromise() {
+      try {
+        Notification.requestPermission().then();
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    handleNotificationPermission(permission) {
+      if (!("permission" in Notification)) {
+        Notification.permission = permission;
+      }
+      this.browserNotificationsEnabled = Notification.permission === "granted";
+    },
+    checkNotificationSupport() {
+      if (!("Notification" in window)) {
+        // eslint-disable-next-line no-console
+        console.warn("This browser does not support notifications.");
+      } else {
+        if (this.checkNotificationPromise()) {
+          Notification.requestPermission().then(permission => {
+            this.handleNotificationPermission(permission);
+          });
+        } else {
+          Notification.requestPermission(function(permission) {
+            this.handleNotificationPermission(permission);
+          });
+        }
+      }
+    },
+    setUpdateInterval() {
+      clearInterval(this.updateInterval);
+      this.updateInterval = setInterval(() => {
+        this.getUnreadCount();
+      }, 300000); // 5 minutes
+    },
+    async getUnreadSummary() {
+      this.loadingNotificationSummary = true;
+      try {
+        const response = await NotificationService.unreadSummary();
+        this.notifications = response.data.results;
+        this.setUnreadCount(response.data.count);
+      } finally {
+        this.loadingNotificationSummary = false;
+      }
+    },
+    async markNotificationAsRead(id) {
+      const response = await NotificationService.markAsRead(id);
+      const notification = response.data;
+      const notificationIndex = this.notifications.findIndex(item => item.id === notification.id);
+      this.notifications.splice(notificationIndex, 1, notification);
+      this.getUnreadCount();
+    },
+    async markAllNotificationsAsRead() {
+      if (this.notificationPartition[0].length) {
+        const notificationIds = this.notificationPartition[0].map(notification => notification.id);
+        await NotificationService.markSummaryAsRead({ id__in: notificationIds.join(",") });
+        this.getUnreadSummary();
+      }
+    },
+    getNotificationIcon(notification) {
+      return notification.target ? this.notificationTargetMap[notification.target_content_type].icon : "mdi-bell-alert";
+    },
+    onNotificationActionClick(notification) {
+      if (notification.unread) {
+        this.markNotificationAsRead(notification.id);
+      }
+      if (notification.target) {
+        this.showNotificationSummary = false;
+      }
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.v-dialog--scrollable {
+  max-height: 80%;
+}
+.v-list-item__title {
+  white-space: unset;
+}
+</style>

@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "python",
+      "request": "launch",
+      "name": "Python: Django",
+      "program": "${workspaceFolder}/backend/manage.py",
+      "console": "integratedTerminal",
+      "args": [
+        "runserver",
+        "0.0.0.0:8000",
+        "--noreload"
+      ],
+      "django": true
+    },
+    {
+      "type": "firefox",
+      "request": "launch",
+      "reAttach": true,
+      "name": "Javascript: Firefox Debugger",
+      "url": "http://localhost:8000/",
+      "pathMappings": [
+        {
+          "url": "webpack:///src",
+          "path": "${workspaceFolder}/frontend/src"
+        }
+      ]
+    }
+  ]
+}

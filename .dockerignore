@@ -1,0 +1,15 @@
+# General
+.git
+node_modules
+
+# Backend
+**/mypy_cache
+**/__pycache__
+**/*.sqlite3
+backend/temat/.env
+backend/static
+
+# Frontend
+frontend/config/webpack-stats-*.json
+frontend/dist
+frontend/node_modules

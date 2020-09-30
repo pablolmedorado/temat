@@ -1,0 +1,63 @@
+{
+  /* Tree view */
+  "files.exclude": {
+    "**/*.pyc": true,
+    "**/.scannerwork": true,
+    "**/.sonarlint": true,
+    "**/__pycache__": true,
+    "**/.mypy_cache": true
+  },
+  /* Linting & formatting */
+  "editor.formatOnSave": false,
+  "vetur.validation.template": false,
+  // ESLint
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.alwaysShowStatus": true,
+  "eslint.options": {
+    "extensions": [ ".html", ".js", ".vue" ]
+  },
+  "eslint.validate": ["html", "vue", "javascript"],
+  "eslint.workingDirectories": [
+    "./frontend"
+  ],
+  // Python
+  "[python]": {
+    "editor.formatOnSave": true,
+  },
+  "python.formatting.blackArgs": [
+    "--line-length",
+    "120"
+  ],
+  "python.formatting.provider": "black",
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Args": [
+    "--max-line-length=120",
+    "--exclude=.tox,.git,*/static/CACHE/*,docs,node_modules"
+  ],
+  "python.linting.pylintEnabled": false,
+  "python.linting.mypyEnabled": true,
+  // Javascript
+  "javascript.format.enable": false,
+  "prettier.disableLanguages": [],
+  "prettier.printWidth": 120,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  /* Django */
+  "files.associations": {
+    "**/templates/*.html": "django-html",
+    "**/templates/*": "django-txt",
+    "**/requirements{/**,*}.{txt,in}": "pip-requirements"
+  },
+  "emmet.includeLanguages": {
+    "django-html": "html"
+  },
+}
