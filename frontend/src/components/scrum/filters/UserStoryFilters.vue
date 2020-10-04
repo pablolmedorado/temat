@@ -25,7 +25,7 @@
           clearable
           @input="updateFilters({ status__in: $event.join(',') })"
         >
-          <template v-slot:selection="{ item, index }">
+          <template #selection="{ item, index }">
             <v-chip v-if="index === 0" small>
               <span>{{ item.label }}</span>
             </v-chip>

@@ -11,7 +11,7 @@
         <slot name="toolbar" v-bind="{ selectedItems, filters }"></slot>
         <template v-if="advancedFilters">
           <v-tooltip bottom>
-            <template v-slot:activator="{ attrs, on }">
+            <template #activator="{ attrs, on }">
               <v-btn icon v-bind="attrs" v-on="on" @click="resetFilters">
                 <v-icon>mdi-filter-remove-outline</v-icon>
               </v-btn>
@@ -19,7 +19,7 @@
             <span>Limpiar filtros</span>
           </v-tooltip>
           <v-tooltip bottom>
-            <template v-slot:activator="{ attrs, on }">
+            <template #activator="{ attrs, on }">
               <v-btn icon v-bind="attrs" v-on="on" @click.stop="openFiltersDialog">
                 <v-badge :value="dialogFilterCount" color="primary" :content="dialogFilterCount" overlap>
                   <v-icon>mdi-filter</v-icon>
@@ -30,7 +30,7 @@
           </v-tooltip>
         </template>
         <v-tooltip bottom>
-          <template v-slot:activator="{ attrs, on }">
+          <template #activator="{ attrs, on }">
             <v-btn
               v-if="customHeaders"
               icon
@@ -45,7 +45,7 @@
           <span>Columnas visibles</span>
         </v-tooltip>
         <v-tooltip bottom>
-          <template v-slot:activator="{ attrs, on }">
+          <template #activator="{ attrs, on }">
             <v-btn icon :disabled="loading" v-bind="attrs" v-on="on" @click="fetchTableItems">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
@@ -78,22 +78,22 @@
         :elevation="0"
         v-on="$listeners"
       >
-        <template v-slot:top>
+        <template #top>
           <slot name="top"></slot>
         </template>
 
-        <template v-for="header in tableAvailableHeaders" v-slot:[`item.${header.value}`]="slotProps">
+        <template v-for="header in tableAvailableHeaders" #[`item.${header.value}`]="slotProps">
           <slot :name="`item.${header.value}`" v-bind="slotProps">
             {{ slotProps.value }}
           </slot>
         </template>
 
-        <template v-slot:item.table_actions="slotProps">
+        <template #item.table_actions="slotProps">
           <span class="d-inline-flex">
             <slot name="item.table_actions" v-bind="slotProps"></slot>
             <template v-if="!readOnly">
               <v-tooltip v-if="canEdit(slotProps.item, loggedUser)" bottom>
-                <template v-slot:activator="{ on, attrs }">
+                <template #activator="{ on, attrs }">
                   <v-btn icon v-bind="attrs" :disabled="loading" @click.stop="openFormDialog(slotProps.item)" v-on="on">
                     <v-icon>mdi-pencil</v-icon>
                   </v-btn>
@@ -103,7 +103,7 @@
                 </span>
               </v-tooltip>
               <v-tooltip v-if="canDelete(slotProps.item, loggedUser)" bottom>
-                <template v-slot:activator="{ on, attrs }">
+                <template #activator="{ on, attrs }">
                   <v-btn
                     icon
                     v-bind="attrs"

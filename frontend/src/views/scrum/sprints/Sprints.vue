@@ -17,32 +17,32 @@
           advanced-filters
           delete-child-items-warning
         >
-          <template v-slot:item.name="{ value }">
+          <template #item.name="{ value }">
             <TruncatedText :value="value" :text-length="100" />
           </template>
-          <template v-slot:item.start_date="{ value }">
+          <template #item.start_date="{ value }">
             <DateRouterLink :date="value"></DateRouterLink>
           </template>
-          <template v-slot:item.end_date="{ value }">
+          <template #item.end_date="{ value }">
             <DateRouterLink :date="value"></DateRouterLink>
           </template>
-          <template v-slot:item.ongoing="{ item }">
+          <template #item.ongoing="{ item }">
             <v-simple-checkbox v-model="item.ongoing" disabled></v-simple-checkbox>
           </template>
-          <template v-slot:item.accountable_user="{ value }">
+          <template #item.accountable_user="{ value }">
             <UserPill :user="value"></UserPill>
           </template>
-          <template v-slot:item.current_progress="{ value }">
+          <template #item.current_progress="{ value }">
             <v-progress-circular :rotate="-90" :size="32" :value="value" :width="3" color="primary">
               {{ value }}
             </v-progress-circular>
           </template>
-          <template v-slot:item.tags="{ value }">
+          <template #item.tags="{ value }">
             <TagLabels v-if="value" :tags="value" @click:tag="setTagFilter" />
           </template>
-          <template v-slot:item.table_actions="{ item }">
+          <template #item.table_actions="{ item }">
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn
                   icon
                   :to="{ name: 'sprint-user-stories', params: { sprintId: item.id } }"
@@ -57,7 +57,7 @@
               </span>
             </v-tooltip>
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn icon :to="{ name: 'sprint-kanban', params: { sprintId: item.id } }" v-bind="attrs" v-on="on">
                   <v-icon>mdi-teach</v-icon>
                 </v-btn>
@@ -67,7 +67,7 @@
               </span>
             </v-tooltip>
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn icon :to="{ name: 'sprint-chart', params: { sprintId: item.id } }" v-bind="attrs" v-on="on">
                   <v-icon>mdi-fire</v-icon>
                 </v-btn>

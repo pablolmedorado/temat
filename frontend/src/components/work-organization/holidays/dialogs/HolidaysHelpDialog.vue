@@ -4,7 +4,7 @@
       <v-card-title class="text-h6">Código de colores</v-card-title>
       <v-card-text class="pa-0">
         <v-simple-table>
-          <template v-slot:default>
+          <template #default>
             <thead>
               <tr>
                 <th scope="col" class="text-left">Color</th>

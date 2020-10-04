@@ -27,7 +27,7 @@
     // Workspace & Editor
     "terminal.integrated.shell.linux": "/bin/bash",
     // Python
-    "python.pythonPath": "/usr/src/.venvs/backend-EONSJISo/bin/python",
+    "python.pythonPath": "/usr/src/app/backend/.venv/bin/python",
     "python.terminal.activateEnvironment": true,
     "python.languageSever": "Pylance",
     "python.analysis.typeCheckingMode": "off",

@@ -20,7 +20,7 @@
               :color="$vuetify.theme.dark ? 'white' : 'black'"
               no-action
             >
-              <template v-slot:activator>
+              <template #activator>
                 <v-list-item-content>
                   <v-list-item-title>{{ item.text }}</v-list-item-title>
                 </v-list-item-content>
@@ -56,7 +56,7 @@
       <v-progress-circular v-show="loading" class="mr-5" :size="36" color="white" indeterminate></v-progress-circular>
       <NotificationManager class="mr-5" />
       <v-menu bottom left offset-y>
-        <template v-slot:activator="{ on, attrs }">
+        <template #activator="{ on, attrs }">
           <span id="user-menu" v-bind="attrs" v-on="on">
             <span class="mr-3">{{ loggedUser.first_name }}</span>
             <UserAvatar size="36" :font-size="14" :user="loggedUser" />
@@ -85,7 +85,7 @@
 
     <v-snackbar v-bind="snackbar" bottom app @input="onSnackbarInput">
       {{ snackbar.message }}
-      <template v-slot:action="{ attrs }">
+      <template #action="{ attrs }">
         <v-btn icon v-bind="attrs" @click="clearSnackbar">
           <v-icon>mdi-close</v-icon>
         </v-btn>

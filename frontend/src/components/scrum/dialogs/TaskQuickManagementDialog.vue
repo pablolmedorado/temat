@@ -23,7 +23,7 @@
           :elevation="0"
           no-data-text="No hay tareas"
         >
-          <template v-slot:item.done="{ item }">
+          <template #item.done="{ item }">
             <v-btn
               icon
               :disabled="loading || (!loggedUser.is_staff && loggedUser.id !== item.user_story.development_user)"

@@ -14,11 +14,11 @@
     :class="[`elevation-${elevation}`]"
     v-on="$listeners"
   >
-    <template v-slot:top="props">
+    <template #top="props">
       <slot name="top" v-bind="props"></slot>
     </template>
 
-    <template v-for="header in headers" v-slot:[`item.${header.value}`]="item">
+    <template v-for="header in headers" #[`item.${header.value}`]="item">
       <slot :name="`item.${header.value}`" v-bind="item">
         {{ item.value }}
       </slot>

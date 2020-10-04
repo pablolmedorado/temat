@@ -16,13 +16,13 @@
           custom-headers
           delete-child-items-warning
         >
-          <template v-slot:item.name="{ value }">
+          <template #item.name="{ value }">
             <TruncatedText :value="value" :text-length="100" />
           </template>
-          <template v-slot:item.description="{ value }">
+          <template #item.description="{ value }">
             <TruncatedText :value="value" :text-length="100" />
           </template>
-          <template v-slot:item.external_reference="{ value }">
+          <template #item.external_reference="{ value }">
             <a v-if="isWebUri(value)" :href="value" target="_blank">
               <v-icon>mdi-open-in-new</v-icon>
             </a>
@@ -30,17 +30,17 @@
               <TruncatedText :value="value" :text-length="100" />
             </template>
           </template>
-          <template v-slot:item.current_progress="{ value }">
+          <template #item.current_progress="{ value }">
             <v-progress-circular :rotate="-90" :size="32" :value="value" :width="3" color="primary">
               {{ value }}
             </v-progress-circular>
           </template>
-          <template v-slot:item.tags="{ value }">
+          <template #item.tags="{ value }">
             <TagLabels v-if="value" :tags="value" @click:tag="setTagFilter" />
           </template>
-          <template v-slot:item.table_actions="{ item }">
+          <template #item.table_actions="{ item }">
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn icon :to="{ name: 'epic-user-stories', params: { epicId: item.id } }" v-bind="attrs" v-on="on">
                   <v-icon>mdi-book-account</v-icon>
                 </v-btn>

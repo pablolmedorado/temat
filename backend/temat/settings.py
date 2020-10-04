@@ -1,5 +1,6 @@
 import os
 import environ
+import warnings
 
 from django.urls import reverse_lazy
 
@@ -18,6 +19,8 @@ env = environ.Env(
     ),
 )
 environ.Env.read_env()
+if not os.environ.get("TEMAT_DATABASE_URL"):
+    warnings.warn("TEMAT_DATABASE_URL has not been set. Running using SQLite local database")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")

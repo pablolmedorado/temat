@@ -16,13 +16,13 @@
           custom-headers
           reactive-filters
         >
-          <template v-slot:title="{ verboseNamePlural, filters }">
+          <template #title="{ verboseNamePlural, filters }">
             <span>{{ verboseNamePlural }}&nbsp;({{ filters.date__year }})</span>
           </template>
 
-          <template v-slot:toolbar>
+          <template #toolbar>
             <v-menu bottom left offset-y>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn icon :disabled="loading" v-bind="attrs" v-on="on">
                   <v-icon>mdi-calendar-range</v-icon>
                 </v-btn>
@@ -35,18 +35,18 @@
             </v-menu>
           </template>
 
-          <template v-slot:item.date="{ value }">
+          <template #item.date="{ value }">
             <DateRouterLink :date="value" />
           </template>
-          <template v-slot:item.main_user="{ value }">
+          <template #item.main_user="{ value }">
             <UserPill v-if="value" :user="value" />
           </template>
-          <template v-slot:item.support_user="{ value }">
+          <template #item.support_user="{ value }">
             <UserPill v-if="value" :user="value" />
           </template>
-          <template v-slot:item.table_actions="{ item }">
+          <template #item.table_actions="{ item }">
             <v-badge bottom left overlap>
-              <template v-slot:badge>{{ item.volunteers.length }}</template>
+              <template #badge>{{ item.volunteers.length }}</template>
               <v-btn icon @click.stop="$refs.volunteersDialog.open(item)">
                 <v-icon>mdi-account-multiple</v-icon>
               </v-btn>
@@ -58,7 +58,7 @@
             </v-btn>
           </template>
 
-          <template v-slot:fab="{ canCreate }">
+          <template #fab="{ canCreate }">
             <v-btn
               v-if="canCreate(loggedUser)"
               fab
@@ -84,7 +84,7 @@
       :form-component="bulkFormComponent"
       @submit="fetchTableItems"
     >
-      <template v-slot:header>Crear jornadas especiales</template>
+      <template #header>Crear jornadas especiales</template>
     </StepperBulkFormDialog>
   </v-container>
 </template>

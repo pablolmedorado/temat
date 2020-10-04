@@ -53,7 +53,7 @@
             offset-y
             width="290px"
           >
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-text-field
                 v-model="startTime"
                 label="Hora de inicio"
@@ -88,7 +88,7 @@
             offset-y
             width="290px"
           >
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-text-field
                 v-model="endTime"
                 label="Hora de fin"

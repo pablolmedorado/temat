@@ -137,7 +137,7 @@
                   offset-y
                   min-width="290px"
                 >
-                  <template v-slot:activator="{ on, attrs }">
+                  <template #activator="{ on, attrs }">
                     <v-text-field
                       :value="item.start_date | date"
                       label="Fecha de inicio planificada"
@@ -176,7 +176,7 @@
                   offset-y
                   min-width="290px"
                 >
-                  <template v-slot:activator="{ on, attrs }">
+                  <template #activator="{ on, attrs }">
                     <v-text-field
                       :value="item.end_date | date"
                       label="Fecha límite"

@@ -6,7 +6,7 @@
         <v-toolbar-title class="text-h6">Kanban</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn icon :to="{ name: 'sprint-chart', params: { sprintId } }" v-bind="attrs" v-on="on">
               <v-icon>mdi-fire</v-icon>
             </v-btn>
@@ -17,7 +17,7 @@
         </v-tooltip>
         <v-divider vertical inset></v-divider>
         <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn v-if="!hideEmptyColumns" icon v-bind="attrs" @click="hideEmptyColumns = true" v-on="on">
               <v-icon>mdi-eye-off</v-icon>
             </v-btn>
@@ -28,7 +28,7 @@
           <span>{{ hideEmptyColumns ? "Mostrar" : "Ocultar" }} columnas vacías</span>
         </v-tooltip>
         <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn v-if="!fullscreenEnabled" icon v-bind="attrs" @click="activateFullscreen" v-on="on">
               <v-icon>mdi-fullscreen</v-icon>
             </v-btn>

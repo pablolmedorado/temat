@@ -17,7 +17,7 @@
           offset-y
           min-width="290px"
         >
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-toolbar-title class="capitalize" v-bind="attrs" v-on="on">
               {{ calendarIntervalRepresentation }}
             </v-toolbar-title>
@@ -43,7 +43,7 @@
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
         <v-menu bottom right offset-y>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn class="mr-2" outlined :disabled="loading" v-bind="attrs" v-on="on">
               <v-icon left>{{ excludeSystemEvents ? "mdi-eye-off" : "mdi-eye" }}</v-icon>
               <span>E. Sistema</span>
@@ -62,7 +62,7 @@
           </v-list>
         </v-menu>
         <v-menu bottom right offset-y>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn outlined :disabled="loading" v-bind="attrs" v-on="on">
               <span>{{ typeToLabel[calendarType] }}</span>
               <v-icon right>mdi-menu-down</v-icon>

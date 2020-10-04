@@ -7,7 +7,7 @@
     offset-y
     min-width="290px"
   >
-    <template v-slot:activator="{ on, attrs }">
+    <template #activator="{ on, attrs }">
       <v-text-field
         :value="value | date"
         :label="label"

@@ -3,7 +3,7 @@
     <v-subheader class="pl-0">
       Progreso
       <v-tooltip right>
-        <template v-slot:activator="{ on, attrs }">
+        <template #activator="{ on, attrs }">
           <v-icon class="ml-2" small v-bind="attrs" v-on="on">mdi-information</v-icon>
         </template>
         <span>

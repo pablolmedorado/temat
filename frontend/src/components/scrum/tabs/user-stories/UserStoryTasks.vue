@@ -18,16 +18,16 @@
         @submit:form="onFormSubmit"
         @delete:item="onDeleteItem"
       >
-        <template v-slot:top>
+        <template #top>
           <UserStoryProgressBar class="px-4 pb-4" :user-story="userStory" />
         </template>
 
-        <template v-slot:item.done="{ item }">
+        <template #item.done="{ item }">
           <v-btn icon :disabled="readOnly || loading" @click="toggleItem(item)">
             <v-icon>{{ item.done ? "mdi-checkbox-marked" : "mdi-checkbox-blank-outline" }}</v-icon>
           </v-btn>
         </template>
-        <template v-slot:item.table_actions="{ item }">
+        <template #item.table_actions="{ item }">
           <v-btn icon :disabled="loading" @click="moveItem(item, 'top')">
             <v-icon>mdi-arrow-collapse-up</v-icon>
           </v-btn>

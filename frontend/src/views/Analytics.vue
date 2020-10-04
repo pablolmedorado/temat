@@ -7,7 +7,7 @@
             <v-toolbar-title class="text-h6">Análisis ({{ year }})</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-menu bottom right offset-y>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn icon :disabled="loading" v-bind="attrs" v-on="on">
                   <v-icon>mdi-calendar-range</v-icon>
                 </v-btn>
