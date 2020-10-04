@@ -4,6 +4,8 @@
 ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/pablolmedorado/temat)
 ![GitHub](https://img.shields.io/github/license/pablolmedorado/temat)
 
+![Docker version](https://img.shields.io/badge/Docker-19-2496ed)
+![PostgreSQL version](https://img.shields.io/badge/PostgreSQL-13-336791)
 ![Python version](https://img.shields.io/badge/Python-3.7-ffd343)
 ![Django version](https://img.shields.io/badge/Django-3.1-0c4b33)
 ![Django Rest Framework version](https://img.shields.io/badge/DRF-3.12-a30000)
@@ -11,7 +13,7 @@
 ![Vue.js version](https://img.shields.io/badge/Vue.js-2.6-4fc08d)
 ![Vuetify version](https://img.shields.io/badge/Vuetify-2.3-1867c0)
 
-## Overview
+## 👀 Overview
 
 In order to embrace a **paperless** team management, I decided to develop a simple but useful SPA that allowed our team to get rid of those **annoying excel files**.
 
@@ -31,149 +33,182 @@ One extra module was added due to popular acclaim: **Breakfasts management**.
 Table of Contents:
 
 - [TeMaT - TEam MAnagement Tool](#temat---team-management-tool)
-  - [Overview](#overview)
-  - [Used frameworks & libraries](#used-frameworks--libraries)
-    - [Backend](#backend)
-    - [Frontend](#frontend)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-    - [Development](#development)
-    - [Production](#production)
-  - [Quickstart](#quickstart)
-    - [First run](#first-run)
-      - [1. Configuring the app](#1-configuring-the-app)
-      - [2. Running migrations](#2-running-migrations)
-      - [3. Creating an admin user](#3-creating-an-admin-user)
-      - [4. Populating the db](#4-populating-the-db)
-    - [Serving the app](#serving-the-app)
-      - [Development mode](#development-mode)
-        - [Shell 1](#shell-1)
-        - [Shell 2](#shell-2)
-      - [Production mode](#production-mode)
-        - [Build & serve](#build--serve)
-        - [Serve only (if you have built the project before)](#serve-only-if-you-have-built-the-project-before)
-  - [Disclaimer](#disclaimer)
-  - [Changelog](#changelog)
-  - [License](#license)
+  - [👀 Overview](#-overview)
+  - [🧱 Tech stack](#-tech-stack)
+    - [🐳 Container](#-container)
+    - [🐘 Database](#-database)
+    - [🐍 Backend](#-backend)
+    - [👁️ Frontend](#️-frontend)
+  - [⚙️ Configuring the app](#️-configuring-the-app)
+    - [✔️ Configuration parameters](#️-configuration-parameters)
+  - [🏃‍♀️ Running the app](#️-running-the-app)
+    - [🏠 Locally](#-locally)
+    - [🐳 Docker](#-docker)
+    - [📦 VS Code Dev Container](#-vs-code-dev-container)
+  - [💻 Accessing the app](#-accessing-the-app)
+  - [📚 Populating the db](#-populating-the-db)
+  - [📝 Disclaimer](#-disclaimer)
+  - [📜 Changelog](#-changelog)
+  - [🧾 License](#-license)
 
-## Used frameworks & libraries
+## 🧱 Tech stack
 
-### Backend
+### 🐳 Container
+
+- [Docker](https://www.docker.com/)
+
+### 🐘 Database
+
+- [PostgreSQL 13](https://www.postgresql.org/)
+
+### 🐍 Backend
 
 - [Django](https://www.djangoproject.com/)
 - [Django Rest Framework](https://www.django-rest-framework.org/)
 
-### Frontend
+### 👁️ Frontend
 
 - [Vue.js](https://vuejs.org/)
 - [Vuetify](https://vuetifyjs.com/en/)
-- [Highcharts](https://www.highcharts.com/)
 
-## Prerequisites
+## ⚙️ Configuring the app
 
-- [Python 3.7](https://www.python.org/downloads/)
-  - [Pipenv](https://pipenv.readthedocs.io/en/latest/)
-- (Optional) [Node.js](https://nodejs.org/en/download/)
+The app needs to be configured before running it and it can be done in 2 ways:
 
-## Installation
+1. Placing a ```.env``` file in ```backend/temat```. Example: [.env.example](backend/temat/.env.example)
+2. Declaring environment variables (prefixed with ```TEMAT_```).
 
-### Development
+### ✔️ Configuration parameters
 
-```bash
-cd frontend
-npm ci
-cd ../backend
-pipenv sync --dev
-```
+| Prefix (for env vars) | Param | Description | Default value |
+|-|-|-|-|
+| TEMAT\_ | **ENV** | Execution environment. Can be: ```development``` or ```production``` | ```production``` |
+| TEMAT\_ | **DEBUG** | Django debug. Can be: ```on``` or ```off``` | ```off``` |
+| TEMAT\_ | **SECRET\_KEY** | Django secret key. **MANDATORY**. [Need a new one?](https://djecrety.ir/) |  |
+| TEMAT\_ | **DATABASE\_URL** | Database connection url. [Django environ](https://django-environ.readthedocs.io/en/latest/) format | ```sqlite:///[PROJECT_DIR]/db.sqlite3``` |
 
-### Production
+## 🏃‍♀️ Running the app
 
-```bash
-cd backend
-pipenv sync
-```
+### 🏠 Locally
 
-## Quickstart
+1. Prerequisites
 
-### First run
+   - [PostgreSQL 13 (Optional)](https://www.postgresql.org/download/)
+   - [Python 3.7](https://www.python.org/downloads/)
+     - [Pipenv](https://pipenv.readthedocs.io/en/latest/)
+   - [Node.js](https://nodejs.org/en/download/)
 
-#### 1. Configuring the app
+2. Installing dependencies
 
-The app needs a ```.env``` file placed in ```backend/temat``` to run. You can see the example file: [.env.example](backend/temat/.env.example)
+    ```bash
+    cd frontend
+    npm ci
+    cd ../backend
+    pipenv sync --dev
+    ```
 
-If you omit the ```DATABASE_URL``` parameter, a **SQLite** database will be created in ```backend``` folder.
+3. Running migrations
 
-#### 2. Running migrations
+    ```bash
+    cd backend
+    pipenv run python manage.py migrate
+    ```
 
-```bash
-cd backend
-pipenv run python manage.py migrate
-```
+4. Creating an admin user
 
-#### 3. Creating an admin user
+    ```bash
+    cd backend
+    pipenv run python manage.py createsuperuser
+    ```
 
-```bash
-cd backend
-pipenv run python manage.py createsuperuser
-```
+5. Serving the app
 
-#### 4. Populating the db
+    - Development mode
 
-It's mandatory to populate some database tables before using the app the first time. It can be done by using the ```django admin```, available at [http://localhost:8000/admin](http://localhost:8000/admin) (after serving the app).
+      - Python shell
 
-You'll probably want to add event and user story types, as they're required fields. I decided not to create default records so everyone could customize them.
+          ```bash
+          cd backend
+          pipenv run runserver
+          ```
 
-### Serving the app
+      - Node shell
 
-#### Development mode
+          ```bash
+          cd frontend
+          npm run serve
+          ```
 
-##### Shell 1
+    - Production mode
 
-```bash
-cd backend
-pipenv run runserver
-```
+      1. Build
 
-##### Shell 2
+          ```bash
+          cd frontend
+          npm run build-modern
+          ```
 
-```bash
-cd frontend
-npm run serve
-```
+      2. Serve
 
-#### Production mode
+          ```bash
+          cd backend
+          pipenv run python manage.py collectstatic --no-input
+          pipenv run serve
+          ```
 
-##### Build & serve
+### 🐳 Docker
 
-```bash
-cd frontend
-npm run build
-cd ../backend
-pipenv run python manage.py collectstatic --no-input
-pipenv run serve
-```
+1. Pulling and running the image
 
-##### Serve only (if you have built the project before)
+    ```bash
+    docker run -d --name temat --env-file [PATH_TO_ENV_FILE] -p 8000:8000 pablolmedorado/temat:[VERSION]
+    ```
 
-```bash
-cd backend
-pipenv run python manage.py collectstatic --no-input
-pipenv run serve
-```
+2. Running migrations
 
-In both cases, the app will be available at [http://localhost:8000/](http://localhost:8000/)
+    ```bash
+    docker exec temat pipenv run python manage.py migrate
+    ```
 
-## Disclaimer
+3. Creating an admin user
+
+    ```bash
+    docker exec -ti temat pipenv run python manage.py createsuperuser
+    ```
+
+### 📦 VS Code Dev Container
+
+The app has been developed using [VS Code Dev Containers](https://code.visualstudio.com/docs/remote/containers). You can use them to run the app just opening the project folder in VS Code and clicking in "Open in remote container" option.
+
+Doing this you'll create 3 containers:
+
+- **PosgreSQL** database
+- **Adminer** (database manager)
+- **VS Code dev container** with all the dependencies and extensions installed
+
+Once the dev container is ready, you'll only need to run migrations, create an admin user and serve the app.
+
+## 💻 Accessing the app
+
+Once the app has been served, it is available at [http://localhost:8000/](http://localhost:8000/)
+
+## 📚 Populating the db
+
+**It's mandatory to populate some database tables before using the app the first time**. It can be done by using the ```django admin```, available at [http://localhost:8000/admin](http://localhost:8000/admin).
+
+You'll probably want to add **event types** and **user story types**, as they're required fields. I decided not to create default records so everyone could customize them.
+
+## 📝 Disclaimer
 
 - This application has been developed **with barely Vue.js knowledge**. Learning Vue.js was, in fact, the motivation to start developing it. I tried to do my best, but I'm sure there is a bunch of things to improve. I'd like to update the repo with the new good practices I learn. If you want to collaborate, **feel free to send a pull request**.
-- The scope of the application was defined according to **my own team's needs**. Again, **feel free to fork the project and change it if it don't fit your team's needs**.
+- The scope of the application was defined according to **my own team's needs**. Again, **feel free to fork the project and change it if it doesn't fit your team's needs**.
 - The application doesn't scale well (as it loads the entire user list in the vuex store) neither allow you to manage more than one team. In case you were planning to use it with a big team (>50 people?), I'd change the behaviour of the users dropdown.
 - Although the source code is written in english, the app texts are in spanish. I had no time for translate the entire app.
 
-## Changelog
+## 📜 Changelog
 
 See [Changelog](CHANGELOG.md).
 
-## License
+## 🧾 License
 
 See [License](LICENSE).
