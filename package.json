@@ -4,6 +4,14 @@
   "scripts": {
     "release": "standard-version"
   },
+  "standard-version": {
+    "skip": {
+      "bump": false,
+      "changelog": false,
+      "commit": false,
+      "tag": false
+    }
+  },
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
