@@ -9,7 +9,7 @@
       <template v-if="items.length">
         <v-col cols="12" lg="4">
           <v-simple-table class="elevation-1">
-            <template v-slot:default>
+            <template #default>
               <thead>
                 <tr>
                   <th scope="col" class="text-left">Fecha</th>

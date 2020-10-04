@@ -1,6 +1,6 @@
 <template>
   <v-autocomplete v-bind="{ ...$props, ...$attrs }" :items="tagOptions" :loading="!tagOptions.length" v-on="$listeners">
-    <template v-if="truncateResults" v-slot:selection="{ item, index }">
+    <template v-if="truncateResults" #selection="{ item, index }">
       <v-chip v-if="index === 0" small>
         <span>{{ item }}</span>
       </v-chip>

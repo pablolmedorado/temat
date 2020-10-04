@@ -14,11 +14,11 @@
     :class="[`elevation-${elevation}`]"
     v-on="$listeners"
   >
-    <template v-slot:top="props">
+    <template #top="props">
       <slot name="top" v-bind="props"></slot>
     </template>
 
-    <template v-for="header in headers" v-slot:[`item.${header.value}`]="item">
+    <template v-for="header in headers" #[`item.${header.value}`]="item">
       <slot :name="`item.${header.value}`" v-bind="item">
         {{ item.value }}
       </slot>
@@ -167,19 +167,19 @@ export default {
       };
     },
     async fetchItems(resetPagination = false) {
-      this.tableLoading = true;
-      try {
-        this.$emit("input", []);
+        this.tableLoading = true;
+        try {
+          this.$emit("input", []);
         if (resetPagination) {
           this.options.page = 1;
         }
-        const response = await this.service.list(this.buildFetchRequestParams());
-        this.items = this.options.itemsPerPage <= 0 ? response.data : response.data.results;
-        this.itemCount = this.options.itemsPerPage <= 0 ? response.data.length : response.data.count;
-      } finally {
-        this.tableLoading = false;
+          const response = await this.service.list(this.buildFetchRequestParams());
+          this.items = this.options.itemsPerPage <= 0 ? response.data : response.data.results;
+          this.itemCount = this.options.itemsPerPage <= 0 ? response.data.length : response.data.count;
+        } finally {
+          this.tableLoading = false;
+        }
       }
     }
-  }
 };
 </script>

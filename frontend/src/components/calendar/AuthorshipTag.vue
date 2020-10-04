@@ -1,6 +1,6 @@
 <template>
   <v-tooltip v-if="Object.keys(usersMap).length" bottom>
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-chip class="elevation-1" v-bind="$attrs" v-on="on">
         <v-icon left>mdi-account-edit</v-icon>
         {{ lastModificationUser.acronym }}

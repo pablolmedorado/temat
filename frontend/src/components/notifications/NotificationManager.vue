@@ -11,9 +11,9 @@
       left
       offset-y
     >
-      <template v-slot:activator="{ on: menu }">
+      <template #activator="{ on: menu }">
         <v-tooltip bottom>
-          <template v-slot:activator="{ on: tooltip }">
+          <template #activator="{ on: tooltip }">
             <v-btn icon v-on="{ ...tooltip, ...menu }">
               <v-badge :color="unreadCountBadgeColour" :content="unreadCount | text" bordered overlap>
                 <v-icon>{{ browserNotificationsEnabled ? "mdi-bell-ring" : "mdi-bell" }}</v-icon>
@@ -33,7 +33,7 @@
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-btn
                 icon
                 :disabled="!Boolean(notificationPartition[0].length)"

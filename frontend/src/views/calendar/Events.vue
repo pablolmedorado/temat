@@ -17,9 +17,9 @@
           advanced-filters
           read-only
         >
-          <template v-slot:item.type="{ value }">
+          <template #item.type="{ value }">
             <v-tooltip v-if="value" bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-icon v-bind="attrs" v-on="on">{{ eventTypesMap[value].icon }}</v-icon>
               </template>
               <span>
@@ -27,7 +27,7 @@
               </span>
             </v-tooltip>
           </template>
-          <template v-slot:item.start_datetime="{ item }">
+          <template #item.start_datetime="{ item }">
             <template v-if="item.all_day">
               {{ item.start_datetime | date }}
             </template>
@@ -35,14 +35,14 @@
               {{ item.start_datetime | datetime(datetimeFormat) }}
             </template>
           </template>
-          <template v-slot:item.duration="{ item }">
+          <template #item.duration="{ item }">
             <template v-if="!item.all_day">
               {{ calculateDuration(item) }}
             </template>
           </template>
-          <template v-slot:item.visibility="{ value }">
+          <template #item.visibility="{ value }">
             <v-tooltip v-if="value && Object.keys(eventVisibilityTypesMap).length" bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-icon v-bind="attrs" v-on="on">{{ eventVisibilityTypesMap[value].icon }}</v-icon>
               </template>
               <span>
@@ -50,12 +50,12 @@
               </span>
             </v-tooltip>
           </template>
-          <template v-slot:item.tags="{ value }">
+          <template #item.tags="{ value }">
             <TagLabels v-if="value" :tags="value" @click:tag="setTagFilter" />
           </template>
-          <template v-slot:item.table_actions="{ item }">
+          <template #item.table_actions="{ item }">
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn icon :to="{ name: 'event', params: { id: item.id } }" v-bind="attrs" v-on="on">
                   <v-icon>mdi-open-in-app</v-icon>
                 </v-btn>
@@ -65,7 +65,7 @@
               </span>
             </v-tooltip>
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn
                   icon
                   :to="{ name: 'calendar', params: { initialDate: extractIsoDate(item.start_datetime) } }"

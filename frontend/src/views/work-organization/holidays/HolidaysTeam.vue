@@ -25,18 +25,18 @@
             no-data-text="No hay días de vacaciones coincidentes con los filtros aplicados"
             reactive-filters
           >
-            <template v-slot:item.planned_date="{ value }">
+            <template #item.planned_date="{ value }">
               <DateRouterLink :date="value" />
             </template>
-            <template v-slot:item.user="{ value }">
+            <template #item.user="{ value }">
               <UserPill :user="value" />
             </template>
-            <template v-slot:item.approved="{ value }">
+            <template #item.approved="{ value }">
               <v-chip :color="getHolidayStatusRepresentation(value).colour" dark>
                 <v-icon small>{{ getHolidayStatusRepresentation(value).icon }}</v-icon>
               </v-chip>
             </template>
-            <template v-slot:item.table_actions="{ item }">
+            <template #item.table_actions="{ item }">
               <span class="d-inline-flex">
                 <v-btn
                   v-show="[null, false].includes(item.approved)"

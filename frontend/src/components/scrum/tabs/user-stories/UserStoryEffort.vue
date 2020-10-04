@@ -21,7 +21,7 @@
         @submit:form="onFormSubmit"
         @delete:item="onDeleteItem"
       >
-        <template v-slot:top>
+        <template #top>
           <div class="px-4 pb-4 text-center">
             <span><strong>Esfuerzo planificado:</strong>&nbsp;{{ userStory.planned_effort }} UT</span> /
             <span>
@@ -33,22 +33,22 @@
           </div>
         </template>
 
-        <template v-slot:item.date="{ value }">
+        <template #item.date="{ value }">
           <DateRouterLink :date="value" />
         </template>
-        <template v-slot:item.user="{ value }">
+        <template #item.user="{ value }">
           <UserPill :user="value" />
         </template>
-        <template v-slot:item.role="{ value }"> {{ effortRolesMap[value].label }}</template>
-        <template v-slot:item.effort="{ value }">
+        <template #item.role="{ value }"> {{ effortRolesMap[value].label }}</template>
+        <template #item.effort="{ value }">
           <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <span v-bind="attrs" v-on="on">{{ value }}&nbsp;UT</span>
             </template>
             <span>{{ value * 0.5 }}&nbsp;h</span>
           </v-tooltip>
         </template>
-        <template v-slot:item.comments="{ value }">
+        <template #item.comments="{ value }">
           <TruncatedText :value="value" :text-length="70" />
         </template>
       </ItemIndex>

@@ -7,7 +7,7 @@
     max-width="400px"
     offset-x
   >
-    <template v-slot:activator="{ on, attrs }">
+    <template #activator="{ on, attrs }">
       <span v-bind="attrs" v-on="on">{{ value | truncate(textLength) }}</span>
     </template>
     <v-card>

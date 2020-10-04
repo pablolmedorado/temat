@@ -13,7 +13,7 @@
                   :disabled="header.fixed"
                   :value="header.value"
                 >
-                  <template v-slot:default="{ active }">
+                  <template #default="{ active }">
                     <v-list-item-content>
                       <v-list-item-title v-text="header.text"></v-list-item-title>
                     </v-list-item-content>

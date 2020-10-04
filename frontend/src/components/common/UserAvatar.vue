@@ -2,7 +2,7 @@
   <span>
     <template v-if="localUser">
       <v-tooltip :disabled="!tooltip" bottom>
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
           <v-avatar v-bind="$attrs" :color="color" v-on="on">
             <img v-if="konamiCodeActive" src="@/assets/donmanue.jpg" alt="Don Manuel Ruiz de Lopera" />
             <span v-else class="white--text" :style="{ fontSize: fontSize + 'px' }">{{ localUser.acronym }}</span>

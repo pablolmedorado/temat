@@ -18,28 +18,28 @@
           advanced-filters
           delete-child-items-warning
         >
-          <template v-slot:item.name="{ value }">
+          <template #item.name="{ value }">
             <TruncatedText :value="value" :text-length="100" />
           </template>
-          <template v-slot:item.planned_effort="{ value }">{{ value }} UT</template>
-          <template v-slot:item.start_date="{ value }">
+          <template #item.planned_effort="{ value }">{{ value }} UT</template>
+          <template #item.start_date="{ value }">
             <DateRouterLink v-if="value" :date="value" />
           </template>
-          <template v-slot:item.end_date="{ value }">
+          <template #item.end_date="{ value }">
             <DateRouterLink v-if="value" :date="value" />
           </template>
-          <template v-slot:item.status="{ item }">
+          <template #item.status="{ item }">
             <UserStoryIndexStatus :user-story="item" />
           </template>
-          <template v-slot:item.people="{ item }">
+          <template #item.people="{ item }">
             <UserStoryActors :user-story="item" :avatar-size="32" />
           </template>
-          <template v-slot:item.tags="{ value }">
+          <template #item.tags="{ value }">
             <TagLabels v-if="value" :tags="value" @click:tag="setTagFilter" />
           </template>
-          <template v-slot:item.table_actions="{ item }">
+          <template #item.table_actions="{ item }">
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn icon :to="buildDetailLink(item.id)" v-bind="attrs" v-on="on">
                   <v-icon>mdi-open-in-app</v-icon>
                 </v-btn>
@@ -49,7 +49,7 @@
               </span>
             </v-tooltip>
             <v-tooltip v-if="item.status < 3 && canDevelop(item, loggedUser)" bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn icon v-bind="attrs" @click.stop="$refs.taskDialog.open(item)" v-on="on">
                   <v-icon>mdi-format-list-checks</v-icon>
                 </v-btn>
@@ -59,7 +59,7 @@
               </span>
             </v-tooltip>
             <v-tooltip v-if="item.status < 4" bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn icon v-bind="attrs" @click.stop="openNewEffortDialog(item)" v-on="on">
                   <v-icon>mdi-dumbbell</v-icon>
                 </v-btn>
@@ -69,7 +69,7 @@
               </span>
             </v-tooltip>
             <v-tooltip v-if="item.status === 3 && canValidate(item, loggedUser)" bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn icon v-bind="attrs" @click="validateItem(item)" v-on="on">
                   <v-icon>mdi-check-bold</v-icon>
                 </v-btn>
@@ -80,7 +80,7 @@
             </v-tooltip>
           </template>
 
-          <template v-slot:fab="{ canCreate }">
+          <template #fab="{ canCreate }">
             <v-btn v-if="canCreate(loggedUser)" fab fixed bottom right color="secondary" :to="newUserStoryRouteConfig">
               <v-icon>mdi-plus</v-icon>
             </v-btn>

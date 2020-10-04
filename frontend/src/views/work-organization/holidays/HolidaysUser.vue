@@ -98,18 +98,18 @@
             hide-default-footer
             must-sort
           >
-            <template v-slot:item.planned_date="{ value }">
+            <template #item.planned_date="{ value }">
               <DateRouterLink :date="value"></DateRouterLink>
             </template>
-            <template v-slot:item.user="{ value }">
+            <template #item.user="{ value }">
               <UserPill :user="value"></UserPill>
             </template>
-            <template v-slot:item.approved="{ value }">
+            <template #item.approved="{ value }">
               <v-chip :color="getHolidayStatusRepresentation(value).colour" dark>
                 <v-icon small>{{ getHolidayStatusRepresentation(value).icon }}</v-icon>
               </v-chip>
             </template>
-            <template v-slot:item.table_actions="{ item }">
+            <template #item.table_actions="{ item }">
               <template v-if="!item.approved">
                 <v-btn :disabled="loading" icon @click="cancelHoliday(item)">
                   <v-icon>mdi-delete</v-icon>

@@ -79,6 +79,49 @@ export default {
     UserStoryEffort
   },
   mixins: [BreadcrumbsContextMixin],
+  async beforeRouteEnter(to, from, next) {
+    try {
+      let item;
+      if (to.params.id) {
+        const response = await UserStoryService.retrieve(to.params.id, { expand: "sprint" });
+        item = response.data;
+      } else {
+        item = {
+          ...defaultItem,
+          epic: defaultTo(to.query.epic, null),
+          sprint: defaultTo(to.query.sprint, null)
+        };
+      }
+      next(vm => {
+        vm.item = item;
+        vm.tab = "data";
+      });
+    } catch (error) {
+      handleError(error);
+      if (from.name === null) {
+        next({ name: "user-stories" });
+      }
+    }
+  },
+  async beforeRouteUpdate(to, from, next) {
+    this.item = null;
+    try {
+      if (to.params.id) {
+        await this.fetchItem(to.params.id);
+      } else {
+        this.item = {
+          ...defaultItem,
+          epic: defaultTo(to.query.epic, null),
+          sprint: defaultTo(to.query.sprint, null)
+        };
+      }
+      this.tab = "data";
+      next();
+    } catch (error) {
+      handleError(error);
+      next({ name: "user-stories" });
+    }
+  },
   props: {
     id: {
       type: String,
@@ -143,49 +186,6 @@ export default {
           currentItemBreadcrumb
         ];
       }
-    }
-  },
-  async beforeRouteEnter(to, from, next) {
-    try {
-      let item;
-      if (to.params.id) {
-        const response = await UserStoryService.retrieve(to.params.id, { expand: "sprint" });
-        item = response.data;
-      } else {
-        item = {
-          ...defaultItem,
-          epic: defaultTo(to.query.epic, null),
-          sprint: defaultTo(to.query.sprint, null)
-        };
-      }
-      next(vm => {
-        vm.item = item;
-        vm.tab = "data";
-      });
-    } catch (error) {
-      handleError(error);
-      if (from.name === null) {
-        next({ name: "user-stories" });
-      }
-    }
-  },
-  async beforeRouteUpdate(to, from, next) {
-    this.item = null;
-    try {
-      if (to.params.id) {
-        await this.fetchItem(to.params.id);
-      } else {
-        this.item = {
-          ...defaultItem,
-          epic: defaultTo(to.query.epic, null),
-          sprint: defaultTo(to.query.sprint, null)
-        };
-      }
-      this.tab = "data";
-      next();
-    } catch (error) {
-      handleError(error);
-      next({ name: "user-stories" });
     }
   },
   methods: {

@@ -7,7 +7,7 @@
         </v-alert>
         <v-timeline v-else-if="Object.keys(eventTypesMap).length" align-top :dense="$vuetify.breakpoint.smAndDown">
           <v-timeline-item fill-dot class="mb-5" color="secondary" large>
-            <template v-slot:icon>
+            <template #icon>
               <v-icon dark>mdi-calendar-today</v-icon>
             </template>
             <span class="font-weight-thin">
@@ -54,7 +54,7 @@
             </template>
           </template>
           <v-timeline-item fill-dot class="mb-5" color="secondary" large>
-            <template v-slot:icon>
+            <template #icon>
               <v-icon dark>mdi-dots-horizontal-circle-outline</v-icon>
             </template>
           </v-timeline-item>

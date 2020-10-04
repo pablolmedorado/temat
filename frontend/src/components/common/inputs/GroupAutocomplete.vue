@@ -7,13 +7,13 @@
     :loading="!groupOptions.length"
     v-on="$listeners"
   >
-    <template v-if="multiple && truncateResults" v-slot:selection="{ item, index }">
+    <template v-if="multiple && truncateResults" #selection="{ item, index }">
       <v-chip v-if="index === 0" small>
         <span>{{ item.name }}</span>
       </v-chip>
       <span v-if="index === 1" class="grey--text text-caption">(+{{ value.length - 1 }} más)</span>
     </template>
-    <template v-slot:item="{ item }">
+    <template #item="{ item }">
       <v-list-item-avatar color="teal">
         <v-icon color="white">mdi-account-group</v-icon>
       </v-list-item-avatar>

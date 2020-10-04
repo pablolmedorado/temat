@@ -3,7 +3,7 @@
     {{ date | date }}
     <router-link class="ml-1" :to="{ name: 'calendar', params: { initialDate: date } }">
       <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
+        <template #activator="{ on, attrs }">
           <v-icon small v-bind="attrs" v-on="on">mdi-calendar-search</v-icon>
         </template>
         <span>

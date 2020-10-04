@@ -9,7 +9,7 @@
           <v-icon>mdi-calendar-search</v-icon>
         </v-btn>
         <v-menu bottom offset-y>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn icon v-bind="attrs" v-on="on"><v-icon>mdi-export</v-icon></v-btn>
           </template>
           <v-list>
@@ -45,7 +45,7 @@
       :open-on-hover="true"
       transition="slide-y-reverse-transition"
     >
-      <template v-slot:activator>
+      <template #activator>
         <v-btn fab dark color="secondary" @click="onEdit(item)">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
@@ -80,28 +80,6 @@ import { truncate } from "@/filters";
 export default {
   name: "EventDetail",
   mixins: [EventEditionMixin],
-  props: {
-    id: {
-      type: String,
-      required: true
-    }
-  },
-  data() {
-    return {
-      item: null,
-      showSpeedDial: false
-    };
-  },
-  computed: {
-    breadcrumbs() {
-      const text = get(this.item, "name", "Evento");
-      return [
-        { text: "Calendario", to: { name: "calendar" }, exact: true },
-        { text: "Eventos", to: { name: "events" }, exact: true },
-        { text: truncate(text, 50), disabled: true }
-      ];
-    }
-  },
   async beforeRouteEnter(to, from, next) {
     try {
       const response = await EventService.retrieve(to.params.id);
@@ -123,6 +101,28 @@ export default {
     } catch (error) {
       handleError(error);
       next({ name: "events" });
+    }
+  },
+  props: {
+    id: {
+      type: String,
+      required: true
+    }
+  },
+  data() {
+    return {
+      item: null,
+      showSpeedDial: false
+    };
+  },
+  computed: {
+    breadcrumbs() {
+      const text = get(this.item, "name", "Evento");
+      return [
+        { text: "Calendario", to: { name: "calendar" }, exact: true },
+        { text: "Eventos", to: { name: "events" }, exact: true },
+        { text: truncate(text, 50), disabled: true }
+      ];
     }
   },
   methods: {

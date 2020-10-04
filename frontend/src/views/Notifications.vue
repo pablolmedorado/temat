@@ -15,9 +15,9 @@
           read-only
           selectable-rows
         >
-          <template v-slot:toolbar="{ selectedItems }">
+          <template #toolbar="{ selectedItems }">
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn
                   icon
                   :disabled="loading || !Boolean(selectedItems.length)"
@@ -33,7 +33,7 @@
               </span>
             </v-tooltip>
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn
                   icon
                   :disabled="loading || !Boolean(selectedItems.length)"
@@ -54,12 +54,12 @@
             <v-divider vertical inset />
           </template>
 
-          <template v-slot:item.timestamp="{ value }">
+          <template #item.timestamp="{ value }">
             {{ value | datetime }}
           </template>
-          <template v-slot:item.target_content_type="{ value }">
+          <template #item.target_content_type="{ value }">
             <v-tooltip v-if="value" bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-icon v-bind="attrs" v-on="on">{{ notificationTargetMap[value].icon }}</v-icon>
               </template>
               <span>
@@ -67,9 +67,9 @@
               </span>
             </v-tooltip>
           </template>
-          <template v-slot:item.level="{ value }">
+          <template #item.level="{ value }">
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-icon :color="value" v-bind="attrs" v-on="on">{{ levelIcons[value] }}</v-icon>
               </template>
               <span>
@@ -77,16 +77,16 @@
               </span>
             </v-tooltip>
           </template>
-          <template v-slot:item.actor="{ value }">
+          <template #item.actor="{ value }">
             <UserPill :user="value"></UserPill>
           </template>
-          <template v-slot:item.target="{ value }">
+          <template #item.target="{ value }">
             {{ value ? value.representation : "" }}
           </template>
-          <template v-slot:item.unread="{ value }">
+          <template #item.unread="{ value }">
             <v-simple-checkbox :value="!value" disabled></v-simple-checkbox>
           </template>
-          <template v-slot:item.table_actions="{ item }">
+          <template #item.table_actions="{ item }">
             <v-btn
               v-if="item.target"
               icon

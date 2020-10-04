@@ -19,7 +19,7 @@
           clearable
           @input="updateFilters({ target_content_type__model: $event })"
         >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-avatar>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-avatar>

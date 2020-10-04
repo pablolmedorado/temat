@@ -9,15 +9,15 @@
     :loading="!userOptions.length"
     v-on="$listeners"
   >
-    <template v-if="multiple && truncateResults" v-slot:selection="{ item, index }">
+    <template v-if="multiple && truncateResults" #selection="{ item, index }">
       <v-chip v-if="index === 0" small>
         <span>{{ item.first_name }} {{ item.last_name }}</span>
       </v-chip>
       <span v-if="index === 1" class="grey--text text-caption">(+{{ value.length - 1 }} más)</span>
     </template>
-    <template v-if="showRandomBtn" v-slot:append-outer>
+    <template v-if="showRandomBtn" #append-outer>
       <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
+        <template #activator="{ on, attrs }">
           <v-icon :disabled="disabled || readonly" v-bind="attrs" @click="getRandomUser" v-on="on">
             mdi-dice-multiple
           </v-icon>
@@ -27,7 +27,7 @@
         </span>
       </v-tooltip>
     </template>
-    <template v-slot:item="{ item }">
+    <template #item="{ item }">
       <v-list-item-avatar>
         <UserAvatar size="40" :font-size="14" :user="item" />
       </v-list-item-avatar>

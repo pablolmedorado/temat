@@ -4,7 +4,7 @@
       <v-row>
         <v-col class="d-inline-flex">
           <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-progress-circular
                 class="mr-2"
                 :rotate="-90"
@@ -23,7 +23,7 @@
             <span> Última actualización: {{ userStory.current_progress_changed | datetime }} </span>
           </v-tooltip>
           <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-icon
                 v-if="userStory.validated === false"
                 class="mr-2"
@@ -61,7 +61,7 @@
       <v-row>
         <v-col>
           <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-chip :color="effortPillColour" :text-color="effortPillColour" outlined v-bind="attrs" v-on="on">
                 <v-avatar left :class="[effortPillColour, 'darken-4', 'white--text']">
                   {{ userStory.planned_effort }}

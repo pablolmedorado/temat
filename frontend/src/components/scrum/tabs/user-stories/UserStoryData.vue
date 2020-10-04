@@ -7,7 +7,7 @@
             Estado
             <v-spacer></v-spacer>
             <v-tooltip left>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-icon v-if="item.validated === false" class="mr-2" color="error" v-bind="attrs" v-on="on">
                   mdi-alert-circle-check-outline
                 </v-icon>
@@ -15,7 +15,7 @@
               <span> Fecha de rechazo: {{ item.validated_changed | datetime }} </span>
             </v-tooltip>
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-icon :color="riskLevelsMap[item.risk_level].colour" v-bind="attrs" v-on="on">
                   {{ riskLevelsMap[item.risk_level].icon }}
                 </v-icon>
@@ -43,7 +43,7 @@
       :open-on-hover="true"
       transition="slide-y-reverse-transition"
     >
-      <template v-slot:activator>
+      <template #activator>
         <v-btn fab dark color="secondary" @click="saveUserStory">
           <v-icon>mdi-content-save</v-icon>
         </v-btn>

@@ -18,7 +18,7 @@
           custom-headers
           selectable-rows
         >
-          <template v-slot:toolbar="{ selectedItems }">
+          <template #toolbar="{ selectedItems }">
             <v-btn icon :disabled="loading" :loading="loadingUserBreakfast" @click.stop="openFormDialog">
               <v-icon>mdi-account</v-icon>
             </v-btn>
@@ -31,7 +31,7 @@
             </v-btn>
           </template>
 
-          <template v-slot:item.user="{ value }">
+          <template #item.user="{ value }">
             <UserPill :user="value" />
           </template>
         </ItemIndex>

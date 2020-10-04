@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-breadcrumbs v-if="items.length" :items="items">
-      <template v-slot:item="{ item }">
+      <template #item="{ item }">
         <v-breadcrumbs-item v-bind="item">
           {{ item.text | truncate(50) }}
         </v-breadcrumbs-item>

@@ -17,7 +17,7 @@
       {{ userStoryStatusMap[userStory.status].label }}
     </span>
     <v-tooltip v-if="userStory.validated === false" bottom>
-      <template v-slot:activator="{ on, attrs }">
+      <template #activator="{ on, attrs }">
         <v-icon class="ml-1" color="error" v-bind="attrs" v-on="on">mdi-alert-circle-check-outline</v-icon>
       </template>
       <span>

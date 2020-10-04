@@ -15,14 +15,14 @@
           :service="service"
           :form-component="formComponent"
         >
-          <template v-slot:item.date="{ value }">
+          <template #item.date="{ value }">
             <DateRouterLink :date="value" />
           </template>
-          <template v-slot:item.user="{ value }">
+          <template #item.user="{ value }">
             <UserPill :user="value" />
           </template>
 
-          <template v-slot:fab="{ canCreate }">
+          <template #fab="{ canCreate }">
             <v-btn
               v-if="canCreate(loggedUser)"
               fab
@@ -45,7 +45,7 @@
       :form-component="bulkFormComponent"
       @submit="fetchTableItems"
     >
-      <template v-slot:header>Crear jornadas de soporte</template>
+      <template #header>Crear jornadas de soporte</template>
     </StepperBulkFormDialog>
   </v-container>
 </template>
