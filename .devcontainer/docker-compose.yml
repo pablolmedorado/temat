@@ -11,8 +11,8 @@ services:
       - TEMAT_DATABASE_URL=psql://temat:T3M4T_DB@db:5432/temat
     volumes:
       - ..:/usr/src/app:cached
-      - node_modules:/usr/src/app/node_modules:delegated
-      - virtual_envs:/usr/src/.venvs:delegated
+      - project_node_modules:/usr/src/app/node_modules:delegated
+      - backend_virtual_env:/usr/src/app/backend/.venv:delegated
       - frontend_node_modules:/usr/src/app/frontend/node_modules:delegated
     ports:
       - 8000:8000
@@ -40,7 +40,7 @@ services:
       - db
 
 volumes:
-  node_modules:
-  virtual_envs:
+  project_node_modules:
+  backend_virtual_env:
   frontend_node_modules:
   db_data:

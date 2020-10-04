@@ -14,15 +14,11 @@ RUN groupadd --gid $USER_GID $USERNAME \
 # Environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-ENV WORKON_HOME /usr/src/.venvs
+ENV PIPENV_VENV_IN_PROJECT 1
 ENV CHOKIDAR_USEPOLLING true
 
 # Install packages
 RUN apt-get install -y nano htop && npm install -g @vue/cli
-
-# Create project folder structure
-WORKDIR /usr/src/
-RUN mkdir app && mkdir .venvs
 
 WORKDIR /usr/src/app/
 
