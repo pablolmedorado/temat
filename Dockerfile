@@ -19,6 +19,8 @@ RUN pipenv sync
 COPY ./backend ./
 COPY --from=build /usr/src/app/frontend/dist /usr/src/app/frontend/dist
 COPY --from=build /usr/src/app/frontend/config/* /usr/src/app/frontend/config/
+RUN echo "SECRET_KEY=D2F4ULT_B41LD_K3Y_D0_N0T_US3_IN_PR0D" > ./temat/.env
 RUN pipenv run python manage.py collectstatic --no-input --link
+RUN rm ./temat/.env
 EXPOSE 8000
 CMD [ "pipenv", "run", "serve" ]
