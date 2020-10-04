@@ -94,7 +94,7 @@ export default {
       ],
       tableOptions: {
         sortBy: ["name"],
-        sortDesc: [true],
+        sortDesc: [false],
         mustSort: true
       },
       service: EpicService,
