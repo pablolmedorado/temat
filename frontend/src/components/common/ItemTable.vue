@@ -167,17 +167,18 @@ export default {
       };
     },
     async fetchItems(resetPagination = false) {
-      this.tableLoading = true;
-      try {
-        this.$emit("input", []);
-        if (resetPagination) {
-          this.options.page = 1;
+      if (resetPagination && this.options.page !== 1) {
+        this.$emit("update:options", { ...this.options, page: 1 });
+      } else {
+        this.tableLoading = true;
+        try {
+          this.$emit("input", []);
+          const response = await this.service.list(this.buildFetchRequestParams());
+          this.items = this.options.itemsPerPage <= 0 ? response.data : response.data.results;
+          this.itemCount = this.options.itemsPerPage <= 0 ? response.data.length : response.data.count;
+        } finally {
+          this.tableLoading = false;
         }
-        const response = await this.service.list(this.buildFetchRequestParams());
-        this.items = this.options.itemsPerPage <= 0 ? response.data : response.data.results;
-        this.itemCount = this.options.itemsPerPage <= 0 ? response.data.length : response.data.count;
-      } finally {
-        this.tableLoading = false;
       }
     }
   }
