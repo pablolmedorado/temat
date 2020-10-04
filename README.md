@@ -176,4 +176,4 @@ See [Changelog](CHANGELOG.md).
 
 ## License
 
-See [License](LICENSE.md).
+See [License](LICENSE).
