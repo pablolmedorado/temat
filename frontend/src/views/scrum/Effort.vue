@@ -41,7 +41,7 @@
           </template>
           <template #item.user_story="{ item }">
             <TruncatedText :value="item.user_story.name" :text-length="70" />
-            <router-link class="ml-1" :to="{ name: 'user-story', params: { id: item.user_story.id } }">
+            <router-link class="ml-1 user-story-link" :to="{ name: 'user-story', params: { id: item.user_story.id } }">
               <v-tooltip bottom>
                 <template #activator="{ on, attrs }">
                   <v-icon small v-bind="attrs" v-on="on">mdi-open-in-app</v-icon>
@@ -169,3 +169,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.user-story-link {
+  text-decoration: none;
+}
+</style>
