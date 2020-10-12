@@ -120,6 +120,7 @@
                   search-field="name"
                   search-lookup="icontains"
                   :readonly="!loggedUser.is_staff"
+                  :clearable="loggedUser.is_staff"
                   :hint="item.sprint ? `Del ${item.sprint.start_date} al ${item.sprint.end_date}` : ''"
                   :persistent-hint="Boolean(item.sprint)"
                   label="Sprint"
@@ -142,20 +143,24 @@
                       :value="item.start_date | date"
                       label="Fecha de inicio planificada"
                       prepend-icon="mdi-calendar-arrow-right"
-                      append-icon="mdi-run-fast"
                       readonly
                       :clearable="loggedUser.is_staff"
                       :error-messages="buildValidationErrorMessages($v.item.start_date)"
                       v-bind="attrs"
-                      @click:append="setStartDateFromSprint"
                       @click:clear="item.start_date = null"
                       @blur="$v.item.start_date.$touch()"
                       v-on="on"
-                    ></v-text-field>
+                    >
+                      <template #append>
+                        <v-icon :disabled="!loggedUser.is_staff" @click="setStartDateFromSprint">
+                          mdi-run-fast
+                        </v-icon>
+                      </template>
+                    </v-text-field>
                   </template>
                   <v-date-picker
                     v-model="item.start_date"
-                    :readonly="!loggedUser.is_staff"
+                    :disabled="!loggedUser.is_staff"
                     :locale="locale"
                     :locale-first-day-of-year="4"
                     first-day-of-week="1"
@@ -181,20 +186,24 @@
                       :value="item.end_date | date"
                       label="Fecha límite"
                       prepend-icon="mdi-calendar-arrow-left"
-                      append-icon="mdi-run-fast"
                       readonly
                       :clearable="loggedUser.is_staff"
                       :error-messages="buildValidationErrorMessages($v.item.end_date)"
                       v-bind="attrs"
-                      @click:append="setEndDateFromSprint"
                       @click:clear="item.end_date = null"
                       @blur="$v.item.end_date.$touch()"
                       v-on="on"
-                    ></v-text-field>
+                    >
+                      <template #append>
+                        <v-icon :disabled="!loggedUser.is_staff" @click="setEndDateFromSprint">
+                          mdi-run-fast
+                        </v-icon>
+                      </template>
+                    </v-text-field>
                   </template>
                   <v-date-picker
                     v-model="item.end_date"
-                    :readonly="!loggedUser.is_staff"
+                    :disabled="!loggedUser.is_staff"
                     :locale="locale"
                     :locale-first-day-of-year="4"
                     first-day-of-week="1"
