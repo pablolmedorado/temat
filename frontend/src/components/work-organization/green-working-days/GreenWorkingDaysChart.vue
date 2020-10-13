@@ -1,21 +1,19 @@
-<template>
-  <highcharts :key="theme" :options="chartOptions" />
-</template>
-
 <script>
 import Highcharts from "highcharts";
+import { get } from "lodash";
 import colors from "vuetify/lib/util/colors";
-
-import ChartMixin from "@/mixins/chart-mixin";
 
 import GreenService from "@/services/work-organization/green-service";
 
+import BaseChart from "@/components/common/BaseChart";
+
 export default {
   name: "GreenWorkingDaysChart",
-  mixins: [ChartMixin({ service: GreenService, fetchFunctionName: "userChartData" })],
+  extends: BaseChart,
   data() {
     return {
-      chartData: {}
+      service: GreenService,
+      fetchFunctionName: "userChartData"
     };
   },
   computed: {
@@ -25,7 +23,7 @@ export default {
           { name: "", color: colors.green.base, data: [] },
           { name: "", color: colors.lime.base, data: [] }
         ],
-        this.chartData.series || []
+        get(this.chartData, "series", [])
       );
       return {
         chart: {
@@ -35,7 +33,7 @@ export default {
           text: "Jornadas especiales por usuario"
         },
         xAxis: {
-          categories: this.chartData.categories || []
+          categories: get(this.chartData, "categories", [])
         },
         yAxis: {
           allowDecimals: false,

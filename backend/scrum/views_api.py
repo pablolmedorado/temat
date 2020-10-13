@@ -35,6 +35,7 @@ from .utils import (
     burn_chart_data,
     effort_role_timeline_chart_data,
     effort_user_timeline_chart_data,
+    gantt_chart_data,
     user_story_user_chart_data,
 )
 from common.mixins import AuthorshipMixin, OrderedMixin
@@ -67,6 +68,12 @@ class SprintApi(AuthorshipMixin, FlexFieldsModelViewSet):
     def burn_chart(self, request, *args, **kwargs):
         instance = self.get_object()
         chart_data = burn_chart_data(instance)
+        return Response(chart_data)
+
+    @action(detail=True, methods=["GET"])
+    def gantt_chart(self, request, *args, **kwargs):
+        instance = self.get_object()
+        chart_data = gantt_chart_data(instance)
         return Response(chart_data)
 
 

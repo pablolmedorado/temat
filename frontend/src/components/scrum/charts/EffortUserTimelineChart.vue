@@ -1,20 +1,18 @@
-<template>
-  <highcharts :key="theme" :constructor-type="'stockChart'" :update-args="[true, true, true]" :options="chartOptions" />
-</template>
-
 <script>
 import { mapGetters } from "vuex";
-
-import ChartMixin from "@/mixins/chart-mixin";
+import { has } from "lodash";
 
 import EffortService from "@/services/scrum/effort-service";
 
+import BaseChart from "@/components/common/BaseChart";
+
 export default {
   name: "EffortUserTimelineChart",
-  mixins: [ChartMixin({ service: EffortService, fetchFunctionName: "userTimelineChartData" })],
+  extends: BaseChart,
   data() {
     return {
-      chartData: {}
+      service: EffortService,
+      fetchFunctionName: "userTimelineChartData"
     };
   },
   computed: {
@@ -23,7 +21,6 @@ export default {
       return {
         chart: {
           type: "column",
-          height: 500,
           zoomType: "xy"
         },
         title: {
@@ -89,7 +86,7 @@ export default {
         series: this.usersWithCompany.map(user => {
           return {
             name: user.acronym,
-            data: this.chartData[user.acronym]
+            data: has(this.chartData, user.acronym)
               ? this.chartData[user.acronym].map(item => [new Date(item.date).getTime(), item.total_effort])
               : []
           };

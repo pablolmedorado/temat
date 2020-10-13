@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/pablolmedorado/temat/compare/v1.0.1...v1.1.0) (2020-10-13)
+
+
+### Features
+
+* **sprints:** add gantt chart ([53ebd21](https://github.com/pablolmedorado/temat/commit/53ebd21d9d2821155aa4daa26dfeb09a6bf14dd8))
+
+
+### Bug Fixes
+
+* **effort:** remove text-decoration from user story links ([1aa8eb6](https://github.com/pablolmedorado/temat/commit/1aa8eb6482f51536e2f4ba0344b8fba034081560))
+* **user-stories:** prevent sprint and date fields from being modified by non staff users ([ac954fb](https://github.com/pablolmedorado/temat/commit/ac954fbfc8ae1b2c948d262b8c7896d3d8ccca7c))
+
 ### [1.0.1](https://github.com/pablolmedorado/temat/compare/v1.0.0...v1.0.1) (2020-10-04)
 
 

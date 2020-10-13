@@ -1,18 +1,15 @@
-<template>
-  <highcharts :key="theme" :constructor-type="'stockChart'" :update-args="[true, true, true]" :options="chartOptions" />
-</template>
-
 <script>
 import { mapGetters } from "vuex";
+import { has, get } from "lodash";
 import colors from "vuetify/lib/util/colors";
-
-import ChartMixin from "@/mixins/chart-mixin";
 
 import SprintService from "@/services/scrum/sprint-service";
 
+import BaseChart from "@/components/common/BaseChart";
+
 export default {
   name: "SprintBurnChart",
-  mixins: [ChartMixin({ service: SprintService, fetchFunctionName: "burnChartData" })],
+  extends: BaseChart,
   props: {
     sprintId: {
       type: String,
@@ -25,19 +22,21 @@ export default {
   },
   data() {
     return {
-      chartData: {}
+      constructorType: "stockChart",
+      service: SprintService,
+      fetchFunctionName: "burnChartData"
     };
   },
   computed: {
     ...mapGetters("users", ["usersWithCompany"]),
     totalEffort() {
-      return this.chartData.total_effort || 0;
+      return get(this.chartData, "total_effort", 0);
     },
     dailyProgress() {
-      return this.chartData.data ? this.totalEffort / this.chartData.data.length : 0;
+      return has(this.chartData, "data") ? this.totalEffort / this.chartData.data.length : 0;
     },
     actualData() {
-      if (this.chartData.data) {
+      if (has(this.chartData, "data")) {
         return this.chartData.data.map(item => {
           const timestamp = new Date(item.date).getTime();
           let value = null;
@@ -54,7 +53,7 @@ export default {
       return [];
     },
     idealData() {
-      if (this.chartData.data) {
+      if (has(this.chartData, "data")) {
         return this.chartData.data.map((item, index) => {
           const timestamp = new Date(item.date).getTime();
           let value;
@@ -69,7 +68,7 @@ export default {
       return [];
     },
     effortData() {
-      if (this.chartData.data) {
+      if (has(this.chartData, "data")) {
         return this.chartData.data.map(item => [new Date(item.date).getTime(), item.actual_effort]);
       }
       return [];
@@ -77,7 +76,6 @@ export default {
     localChartOptions() {
       return {
         chart: {
-          height: 500,
           zoomType: "xy"
         },
         title: { text: null },

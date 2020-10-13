@@ -8,4 +8,9 @@ export default class SprintService extends BaseService {
     const url = Urls[`${this.baseUrlName}-burn-chart`]({ pk });
     return Api.get(url);
   }
+
+  static ganttChartData(pk) {
+    const url = Urls[`${this.baseUrlName}-gantt-chart`]({ pk });
+    return Api.get(url);
+  }
 }
