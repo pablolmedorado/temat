@@ -39,14 +39,26 @@
         <v-row v-if="loggedUser.is_staff">
           <v-col>
             <v-card outlined>
-              <EffortUserTimelineChart v-if="filters" ref="userChart" :filter="filters" :reactive-filters="false" />
+              <EffortUserTimelineChart
+                v-if="filters"
+                ref="userChart"
+                :filter="filters"
+                :reactive-filters="false"
+                :height="500"
+              />
             </v-card>
           </v-col>
         </v-row>
         <v-row>
           <v-col>
             <v-card outlined>
-              <EffortRoleTimelineChart v-if="filters" ref="roleChart" :filter="filters" :reactive-filters="false" />
+              <EffortRoleTimelineChart
+                v-if="filters"
+                ref="roleChart"
+                :filter="filters"
+                :reactive-filters="false"
+                :height="500"
+              />
             </v-card>
           </v-col>
         </v-row>

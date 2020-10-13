@@ -9,6 +9,7 @@ import EventDetail from "@/views/calendar/EventDetail";
 import Sprints from "@/views/scrum/sprints/Sprints";
 import SprintKanban from "@/views/scrum/sprints/SprintKanban";
 import SprintChart from "@/views/scrum/sprints/SprintChart";
+import SprintGantt from "@/views/scrum/sprints/SprintGantt";
 import UserStories from "@/views/scrum/user-stories/UserStories";
 import UserStoryDetail from "@/views/scrum/user-stories/UserStoryDetail";
 import Epics from "@/views/scrum/Epics";
@@ -103,6 +104,16 @@ const router = new Router({
       component: SprintChart,
       meta: {
         title: "Sprint - Gráfica",
+        keepAlive: true
+      },
+      props: true
+    },
+    {
+      path: "/scrum/sprints/:sprintId/gantt",
+      name: "sprint-gantt",
+      component: SprintGantt,
+      meta: {
+        title: "Sprint - Gantt",
         keepAlive: true
       },
       props: true

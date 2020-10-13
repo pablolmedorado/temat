@@ -1,15 +1,17 @@
-<template>
-  <highcharts :key="theme" :options="chartOptions" />
-</template>
-
 <script>
-import ChartMixin from "@/mixins/chart-mixin";
-
 import EventService from "@/services/calendar/event-service";
+
+import BaseChart from "@/components/common/BaseChart";
 
 export default {
   name: "EventTypeChart",
-  mixins: [ChartMixin({ service: EventService, fetchFunctionName: "typeChartData" })],
+  extends: BaseChart,
+  data() {
+    return {
+      service: EventService,
+      fetchFunctionName: "typeChartData"
+    };
+  },
   computed: {
     localChartOptions() {
       return {
@@ -37,7 +39,7 @@ export default {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false,
-            data: this.chartData
+            data: this.chartData || []
           }
         ]
       };

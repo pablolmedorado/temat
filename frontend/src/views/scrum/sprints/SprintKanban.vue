@@ -15,6 +15,16 @@
             Diagrama de quemado (Burn-down/up)
           </span>
         </v-tooltip>
+        <v-tooltip bottom>
+          <template #activator="{ on, attrs }">
+            <v-btn icon :to="{ name: 'sprint-gantt', params: { sprintId } }" v-bind="attrs" v-on="on">
+              <v-icon>mdi-chart-timeline</v-icon>
+            </v-btn>
+          </template>
+          <span>
+            Diagrama de Gantt
+          </span>
+        </v-tooltip>
         <v-divider vertical inset></v-divider>
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">

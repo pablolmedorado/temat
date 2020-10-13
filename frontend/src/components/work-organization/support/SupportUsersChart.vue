@@ -1,21 +1,18 @@
-<template>
-  <highcharts :key="theme" :options="chartOptions" />
-</template>
-
 <script>
-import { mean } from "lodash";
+import { get, mean } from "lodash";
 import colors from "vuetify/lib/util/colors";
-
-import ChartMixin from "@/mixins/chart-mixin";
 
 import SupportService from "@/services/work-organization/support-service";
 
+import BaseChart from "@/components/common/BaseChart";
+
 export default {
   name: "SupportUsersChart",
-  mixins: [ChartMixin({ service: SupportService, fetchFunctionName: "userChartData" })],
+  extends: BaseChart,
   data() {
     return {
-      chartData: {}
+      service: SupportService,
+      fetchFunctionName: "userChartData"
     };
   },
   computed: {
@@ -28,7 +25,7 @@ export default {
           text: "Jornadas de soporte por usuario"
         },
         xAxis: {
-          categories: this.chartData.categories || []
+          categories: get(this.chartData, "categories", [])
         },
         yAxis: {
           allowDecimals: false,
@@ -37,7 +34,7 @@ export default {
           },
           plotLines: [
             {
-              value: this.chartData.data ? mean(this.chartData.data) : null,
+              value: get(this.chartData, "data") ? mean(this.chartData.data) : null,
               color: colors.grey.base,
               dashStyle: "longdash",
               width: 2,
@@ -60,7 +57,7 @@ export default {
           {
             name: "Número de jornadas de soporte",
             color: colors.blue.base,
-            data: this.chartData.data || []
+            data: get(this.chartData, "data", [])
           }
         ]
       };

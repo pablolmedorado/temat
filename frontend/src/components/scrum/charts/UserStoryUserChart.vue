@@ -1,21 +1,19 @@
-<template>
-  <highcharts :key="theme" :options="chartOptions" />
-</template>
-
 <script>
 import { mapState } from "vuex";
 import Highcharts from "highcharts";
-
-import ChartMixin from "@/mixins/chart-mixin";
+import { get } from "lodash";
 
 import UserStoryService from "@/services/scrum/user-story-service";
 
+import BaseChart from "@/components/common/BaseChart";
+
 export default {
   name: "UserStoryUserChart",
-  mixins: [ChartMixin({ service: UserStoryService, fetchFunctionName: "userChartData" })],
+  extends: BaseChart,
   data() {
     return {
-      chartData: {}
+      service: UserStoryService,
+      fetchFunctionName: "userChartData"
     };
   },
   computed: {
@@ -27,7 +25,7 @@ export default {
           color: role.colour,
           data: []
         })),
-        this.chartData.series || []
+        get(this.chartData, "series", [])
       );
       return {
         chart: {
@@ -37,7 +35,7 @@ export default {
           text: "Historias de usuario por usuario/rol"
         },
         xAxis: {
-          categories: this.chartData.categories || []
+          categories: get(this.chartData, "categories", [])
         },
         yAxis: {
           allowDecimals: false,
