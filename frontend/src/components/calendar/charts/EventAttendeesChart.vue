@@ -1,21 +1,19 @@
-<template>
-  <highcharts :key="theme" :options="chartOptions" />
-</template>
-
 <script>
 import Highcharts from "highcharts";
+import { get } from "lodash";
 import colors from "vuetify/lib/util/colors";
-
-import ChartMixin from "@/mixins/chart-mixin";
 
 import EventService from "@/services/calendar/event-service";
 
+import BaseChart from "@/components/common/BaseChart";
+
 export default {
   name: "EventAttendeesChart",
-  mixins: [ChartMixin({ service: EventService, fetchFunctionName: "attendeesChartData" })],
+  extends: BaseChart,
   data() {
     return {
-      chartData: {}
+      service: EventService,
+      fetchFunctionName: "attendeesChartData"
     };
   },
   computed: {
@@ -33,7 +31,7 @@ export default {
             data: []
           }
         ],
-        this.chartData.series || []
+        get(this.chartData, "series", [])
       );
       return {
         chart: {

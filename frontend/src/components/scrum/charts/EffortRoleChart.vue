@@ -1,17 +1,19 @@
-<template>
-  <highcharts :key="theme" :options="chartOptions" />
-</template>
-
 <script>
 import { mapGetters } from "vuex";
 
-import ChartMixin from "@/mixins/chart-mixin";
-
 import UserStoryService from "@/services/scrum/user-story-service";
+
+import BaseChart from "@/components/common/BaseChart";
 
 export default {
   name: "EffortRoleChart",
-  mixins: [ChartMixin({ service: UserStoryService, fetchFunctionName: "effortRoleChartData" })],
+  extends: BaseChart,
+  data() {
+    return {
+      service: UserStoryService,
+      fetchFunctionName: "effortRoleChartData"
+    };
+  },
   computed: {
     ...mapGetters("scrum", ["effortRolesMap"]),
     localChartOptions() {

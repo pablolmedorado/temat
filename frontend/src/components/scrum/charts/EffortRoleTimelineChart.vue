@@ -1,20 +1,19 @@
-<template>
-  <highcharts :key="theme" :constructor-type="'stockChart'" :update-args="[true, true, true]" :options="chartOptions" />
-</template>
-
 <script>
 import { mapState } from "vuex";
-
-import ChartMixin from "@/mixins/chart-mixin";
+import { has } from "lodash";
 
 import EffortService from "@/services/scrum/effort-service";
 
+import BaseChart from "@/components/common/BaseChart";
+
 export default {
   name: "EffortRoleTimelineChart",
-  mixins: [ChartMixin({ service: EffortService, fetchFunctionName: "roleTimelineChartData" })],
+  extends: BaseChart,
   data() {
     return {
-      chartData: {}
+      constructorType: "stockChart",
+      service: EffortService,
+      fetchFunctionName: "roleTimelineChartData"
     };
   },
   computed: {
@@ -23,7 +22,6 @@ export default {
       return {
         chart: {
           type: "column",
-          height: 500,
           zoomType: "xy"
         },
         title: {
@@ -90,7 +88,7 @@ export default {
           return {
             name: role.label,
             color: role.colour,
-            data: this.chartData[role.value]
+            data: has(this.chartData, role.value)
               ? this.chartData[role.value].map(item => [new Date(item.date).getTime(), item.total_effort])
               : []
           };

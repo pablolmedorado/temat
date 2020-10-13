@@ -33,21 +33,21 @@
                   <v-col cols="12" lg="6">
                     <v-card outlined>
                       <v-card-text>
-                        <EventMonthlyChart :filter="{ start_datetime__year: year }"></EventMonthlyChart>
+                        <EventMonthlyChart :filter="{ start_datetime__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
                   <v-col cols="12" md="6" lg="3">
                     <v-card outlined>
                       <v-card-text>
-                        <EventTypeChart :filter="{ start_datetime__year: year }"></EventTypeChart>
+                        <EventTypeChart :filter="{ start_datetime__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
                   <v-col cols="12" md="6" lg="3">
                     <v-card outlined>
                       <v-card-text>
-                        <EventAttendeesChart :filter="{ start_datetime__year: year }"></EventAttendeesChart>
+                        <EventAttendeesChart :filter="{ start_datetime__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
@@ -58,28 +58,28 @@
                   <v-col cols="12" md="6" lg="3">
                     <v-card outlined>
                       <v-card-text>
-                        <UserStoryTypeChart :filter="{ sprint__end_date__year: year }"></UserStoryTypeChart>
+                        <UserStoryTypeChart :filter="{ sprint__end_date__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
                   <v-col cols="12" md="6" lg="3">
                     <v-card outlined>
                       <v-card-text>
-                        <EffortRoleChart :filter="{ sprint__end_date__year: year }"></EffortRoleChart>
+                        <EffortRoleChart :filter="{ sprint__end_date__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
                   <v-col cols="12" md="6" lg="3">
                     <v-card outlined>
                       <v-card-text>
-                        <UserStoryDelayedChart :filter="{ sprint__end_date__year: year }"></UserStoryDelayedChart>
+                        <UserStoryDelayedChart :filter="{ sprint__end_date__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
                   <v-col cols="12" md="6" lg="3">
                     <v-card outlined>
                       <v-card-text>
-                        <UserStoryOverworkedChart :filter="{ sprint__end_date__year: year }"></UserStoryOverworkedChart>
+                        <UserStoryOverworkedChart :filter="{ sprint__end_date__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
@@ -88,7 +88,7 @@
                   <v-col>
                     <v-card outlined>
                       <v-card-text>
-                        <UserStoryUserChart :filter="{ sprint__end_date__year: year }"></UserStoryUserChart>
+                        <UserStoryUserChart :filter="{ sprint__end_date__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
@@ -99,7 +99,7 @@
                   <v-col>
                     <v-card outlined>
                       <v-card-text>
-                        <SupportUsersChart :filter="{ date__year: year }"></SupportUsersChart>
+                        <SupportUsersChart :filter="{ date__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
@@ -110,7 +110,7 @@
                   <v-col>
                     <v-card outlined>
                       <v-card-text>
-                        <GreenWorkingDaysChart :filter="{ date__year: year }"></GreenWorkingDaysChart>
+                        <GreenWorkingDaysChart :filter="{ date__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
@@ -121,7 +121,7 @@
                   <v-col>
                     <v-card outlined>
                       <v-card-text>
-                        <HolidaysChart :filter="{ allowance_date__year: year }"></HolidaysChart>
+                        <HolidaysChart :filter="{ allowance_date__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
@@ -130,7 +130,7 @@
                   <v-col>
                     <v-card outlined>
                       <v-card-text>
-                        <HolidaysDistributionChart :filter="{ allowance_date__year: year }"></HolidaysDistributionChart>
+                        <HolidaysDistributionChart :filter="{ allowance_date__year: year }" :height="500" />
                       </v-card-text>
                     </v-card>
                   </v-col>

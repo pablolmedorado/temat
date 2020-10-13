@@ -1,23 +1,21 @@
-<template>
-  <highcharts :key="theme" :options="chartOptions" />
-</template>
-
 <script>
 import Highcharts from "highcharts";
+import { get } from "lodash";
 import colors from "vuetify/lib/util/colors";
 
-import ChartMixin from "@/mixins/chart-mixin";
-
 import HolidayService from "@/services/work-organization/holiday-service";
+
+import BaseChart from "@/components/common/BaseChart";
 
 import { hex2rgba } from "@/utils/colours";
 
 export default {
   name: "HolidaysChart",
-  mixins: [ChartMixin({ service: HolidayService, fetchFunctionName: "userAvailabilityChartData" })],
+  extends: BaseChart,
   data() {
     return {
-      chartData: {}
+      service: HolidayService,
+      fetchFunctionName: "userAvailabilityChartData"
     };
   },
   computed: {
@@ -37,7 +35,7 @@ export default {
             pointPadding: 0.4
           }
         ],
-        this.chartData.series || []
+        get(this.chartData, "series", [])
       );
       return {
         chart: {
@@ -47,7 +45,7 @@ export default {
           text: "Vacaciones por usuario"
         },
         xAxis: {
-          categories: this.chartData.categories || []
+          categories: get(this.chartData, "categories", [])
         },
         yAxis: [
           {

@@ -1,20 +1,18 @@
-<template>
-  <highcharts :key="theme" :options="chartOptions" />
-</template>
-
 <script>
+import { get } from "lodash";
 import colors from "vuetify/lib/util/colors";
-
-import ChartMixin from "@/mixins/chart-mixin";
 
 import EventService from "@/services/calendar/event-service";
 
+import BaseChart from "@/components/common/BaseChart";
+
 export default {
   name: "EventMonthlyChart",
-  mixins: [ChartMixin({ service: EventService, fetchFunctionName: "monthlyChartData" })],
+  extends: BaseChart,
   data() {
     return {
-      chartData: {}
+      service: EventService,
+      fetchFunctionName: "monthlyChartData"
     };
   },
   computed: {
@@ -27,7 +25,7 @@ export default {
           text: "Eventos por mes"
         },
         xAxis: {
-          categories: this.chartData.categories || []
+          categories: get(this.chartData, "categories", [])
         },
         yAxis: {
           allowDecimals: false,
@@ -43,7 +41,7 @@ export default {
           },
           plotLines: [
             {
-              value: this.chartData.average || null,
+              value: get(this.chartData, "average", null),
               color: colors.grey.base,
               dashStyle: "longdash",
               width: 2,
@@ -75,7 +73,7 @@ export default {
             borderColor: this.$vuetify.theme.isDark ? "#ffffff" : "rgba(0, 0, 0, 0.54)"
           }
         },
-        series: this.chartData.series || []
+        series: get(this.chartData, "series", [])
       };
     }
   }

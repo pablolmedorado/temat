@@ -1,22 +1,25 @@
-<template>
-  <highcharts :key="theme" :constructor-type="'stockChart'" :update-args="[true, true, true]" :options="chartOptions" />
-</template>
-
 <script>
 import colors from "vuetify/lib/util/colors";
 
-import ChartMixin from "@/mixins/chart-mixin";
-
 import HolidayService from "@/services/work-organization/holiday-service";
+
+import BaseChart from "@/components/common/BaseChart";
 
 export default {
   name: "HolidaysDistributionChart",
-  mixins: [ChartMixin({ service: HolidayService, fetchFunctionName: "summary" })],
+  extends: BaseChart,
+  data() {
+    return {
+      constructorType: "stockChart",
+      service: HolidayService,
+      fetchFunctionName: "summary"
+    };
+  },
   computed: {
     localChartOptions() {
+      const data = this.chartData || [];
       return {
         chart: {
-          height: 500,
           zoomType: "xy"
         },
         title: {
@@ -61,7 +64,7 @@ export default {
             name: "Solicitudes de vacaciones",
             type: "column",
             color: colors.orange.base,
-            data: this.chartData.map(item => [new Date(item.date).getTime(), item.users])
+            data: data.map(item => [new Date(item.date).getTime(), item.users])
           }
         ]
       };
