@@ -7,7 +7,7 @@
       :update-args="[true, true, true]"
       :options="chartOptions"
     />
-    <v-card v-else :height="height" flat>
+    <v-card v-else :height="height || 400" flat>
       <v-overlay absolute>
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>

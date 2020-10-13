@@ -7,10 +7,10 @@ from django.contrib.auth import get_user_model
 from django.db.models import Count, F, Q, QuerySet, Sum
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Effort, Progress, UserStory
+from .models import Effort, Progress, Sprint, UserStory
 
 
-def burn_chart_data(instance: UserStory) -> Dict:
+def burn_chart_data(instance: Sprint) -> Dict:
     sprint_dates = [
         instance.start_date + timedelta(days=num_of_days)
         for num_of_days in range((instance.end_date - instance.start_date).days + 1)
@@ -79,6 +79,17 @@ def burn_chart_data(instance: UserStory) -> Dict:
             item["actual_effort"] = effort_record["effort__sum"] if effort_record else 0
             chart_data.append(item)
         return {"total_effort": total_effort, "data": chart_data}
+
+
+def gantt_chart_data(instance: Sprint) -> Dict:
+    return {
+        "name": instance.name,
+        "start_date": instance.start_date,
+        "end_date": instance.end_date,
+        "user_stories": instance.user_stories.values(
+            "name", "start_date", "end_date", "current_progress", "validated", "risk_level"
+        ).order_by("start_date"),
+    }
 
 
 def user_story_user_chart_data(queryset: QuerySet) -> Dict:
