@@ -18,21 +18,42 @@
           custom-headers
           selectable-rows
         >
-          <template #toolbar="{ selectedItems }">
-            <v-btn icon :disabled="loading" :loading="loadingUserBreakfast" @click.stop="openFormDialog">
-              <v-icon>mdi-account</v-icon>
-            </v-btn>
-            <v-btn
-              icon
-              :disabled="!selectedItems.length"
-              @click.stop="$refs.breakfastsSummaryDialog.open(selectedItems)"
-            >
-              <v-icon>mdi-clipboard-list</v-icon>
-            </v-btn>
+          <template #toolbar>
+            <v-tooltip bottom>
+              <template #activator="{ attrs, on }">
+                <v-btn
+                  icon
+                  v-bind="attrs"
+                  :disabled="loading"
+                  :loading="loadingUserBreakfast"
+                  v-on="on"
+                  @click.stop="openFormDialog"
+                >
+                  <v-icon>mdi-account</v-icon>
+                </v-btn>
+              </template>
+              <span>Mi desayuno</span>
+            </v-tooltip>
           </template>
 
           <template #item.user="{ value }">
             <UserPill :user="value" />
+          </template>
+
+          <template #fab="{ selectedItems }">
+            <v-fab-transition>
+              <v-btn
+                v-show="selectedItems.length"
+                fab
+                fixed
+                bottom
+                right
+                color="secondary"
+                @click.stop="$refs.breakfastsSummaryDialog.open(selectedItems)"
+              >
+                <v-icon>mdi-clipboard-list</v-icon>
+              </v-btn>
+            </v-fab-transition>
           </template>
         </ItemIndex>
       </v-col>
