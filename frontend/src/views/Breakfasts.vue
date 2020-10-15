@@ -11,10 +11,7 @@
           :table-initial-options="tableOptions"
           :table-footer-props="tableFooterProps"
           :service="service"
-          :form-component="formComponent"
-          :default-item="defaultItem"
-          :clear-form-item-on-finish="false"
-          :can-create="() => false"
+          read-only
           custom-headers
           selectable-rows
         >
@@ -58,6 +55,8 @@
         </ItemIndex>
       </v-col>
     </v-row>
+
+    <FormDialog ref="formDialog" verbose-name="Desayuno" :form-component="formComponent" @submit="onFormSubmit" />
 
     <BreakfastsSummaryDialog ref="breakfastsSummaryDialog" />
   </v-container>
@@ -143,14 +142,17 @@ export default {
           page_size: 1,
           page: 1
         });
-        return response.data.results.length ? response.data.results[0] : null;
+        return response.data.results.length ? response.data.results[0] : this.defaultItem;
       } finally {
         this.loadingUserBreakfast = false;
       }
     },
     async openFormDialog() {
       const userBreakfast = await this.getUserBreakfast();
-      this.$refs.itemIndex.openFormDialog(userBreakfast);
+      this.$refs.formDialog.open(userBreakfast);
+    },
+    onFormSubmit() {
+      this.$refs.itemIndex.fetchTableItems();
     }
   }
 };
