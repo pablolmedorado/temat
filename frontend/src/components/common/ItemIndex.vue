@@ -131,13 +131,21 @@
       :headers.sync="tableHeaders"
     />
 
-    <template v-if="!readOnly">
-      <slot name="fab" v-bind="{ canCreate, canEdit, canDelete }">
-        <v-btn v-if="canCreate(loggedUser)" fab fixed bottom right color="secondary" @click.stop="openFormDialog(null)">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </slot>
+    <slot name="fab" v-bind="{ canCreate, canEdit, canDelete, selectedItems }">
+      <v-btn
+        v-if="!readOnly && canCreate(loggedUser)"
+        fab
+        fixed
+        bottom
+        right
+        color="secondary"
+        @click.stop="openFormDialog(null)"
+      >
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+    </slot>
 
+    <template v-if="!readOnly">
       <FormDialog
         v-if="formComponent"
         ref="formDialog"
