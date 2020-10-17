@@ -145,8 +145,8 @@ export default {
   props: {
     item: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     ...mapState(["locale"]),
@@ -166,7 +166,7 @@ export default {
     },
     readableDuration() {
       return getReadableDuration(this.item.luxonEnd.diff(this.item.luxonStart).toObject());
-    }
+    },
   },
   created() {
     if (!Object.keys(this.eventTypesMap).length) {
@@ -178,8 +178,8 @@ export default {
     applyDarkVariant,
     dateLocaleString(dateTime) {
       return dateTime.setLocale(this.locale).toLocaleString(DateTime.DATE_HUGE);
-    }
-  }
+    },
+  },
 };
 </script>
 

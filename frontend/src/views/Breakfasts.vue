@@ -82,7 +82,7 @@ export default {
           sortable: true,
           value: "user",
           sortingField: "user__acronym",
-          fixed: true
+          fixed: true,
         },
         { text: "Pan", align: "start", sortable: true, value: "bread.name", sortingField: "bread__name", fixed: true },
         { text: "Base", align: "start", sortable: true, value: "base.name", sortingField: "base__name", fixed: true },
@@ -92,7 +92,7 @@ export default {
           sortable: true,
           value: "ingredient1.name",
           sortingField: "ingredient1__name",
-          fixed: true
+          fixed: true,
         },
         {
           text: "Segundo ingrediente",
@@ -100,22 +100,22 @@ export default {
           sortable: true,
           value: "ingredient2.name",
           sortingField: "ingredient2__name",
-          fixed: true
+          fixed: true,
         },
-        { text: "Bebida", align: "start", sortable: true, value: "drink.name", sortingField: "drink__name" }
+        { text: "Bebida", align: "start", sortable: true, value: "drink.name", sortingField: "drink__name" },
       ],
       tableOptions: {
         itemsPerPage: -1,
         sortBy: ["user"],
         sortDesc: [false],
-        multiSort: true
+        multiSort: true,
       },
       tableFooterProps: {
-        itemsPerPageOptions: [10, 25, 50, -1]
+        itemsPerPageOptions: [10, 25, 50, -1],
       },
       service: BreakfastService,
       formComponent: BreakfastForm,
-      loadingUserBreakfast: false
+      loadingUserBreakfast: false,
     };
   },
   computed: {
@@ -129,9 +129,9 @@ export default {
         base: null,
         ingredient1: null,
         ingredient2: null,
-        drink: null
+        drink: null,
       };
-    }
+    },
   },
   methods: {
     async getUserBreakfast() {
@@ -140,7 +140,7 @@ export default {
         const response = await this.service.list({
           user_id: this.loggedUser.id,
           page_size: 1,
-          page: 1
+          page: 1,
         });
         return response.data.results.length ? response.data.results[0] : this.defaultItem;
       } finally {
@@ -153,7 +153,7 @@ export default {
     },
     onFormSubmit() {
       this.$refs.itemIndex.fetchTableItems();
-    }
-  }
+    },
+  },
 };
 </script>

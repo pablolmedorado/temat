@@ -31,14 +31,14 @@ export default {
   mixins: [FormMixin({ service: SupportService })],
   validations: {
     item: {
-      user: { required }
-    }
+      user: { required },
+    },
   },
   data() {
     return {
       saveFunctionName: "update",
-      successMessage: "Día de soporte guardado correctamente"
+      successMessage: "Día de soporte guardado correctamente",
     };
-  }
+  },
 };
 </script>

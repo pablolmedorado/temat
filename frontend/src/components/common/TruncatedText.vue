@@ -25,12 +25,12 @@ export default {
   props: {
     value: {
       type: String,
-      default: ""
+      default: "",
     },
     textLength: {
       type: Number,
-      default: 30
-    }
-  }
+      default: 30,
+    },
+  },
 };
 </script>

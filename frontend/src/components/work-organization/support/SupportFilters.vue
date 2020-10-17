@@ -43,6 +43,6 @@ import FilterMixin from "@/mixins/filter-mixin";
 
 export default {
   name: "SupportFilters",
-  mixins: [FilterMixin]
+  mixins: [FilterMixin],
 };
 </script>

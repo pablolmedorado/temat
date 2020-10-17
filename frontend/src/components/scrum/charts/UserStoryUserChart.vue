@@ -13,42 +13,42 @@ export default {
   data() {
     return {
       service: UserStoryService,
-      fetchFunctionName: "userChartData"
+      fetchFunctionName: "userChartData",
     };
   },
   computed: {
     ...mapState("scrum", ["effortRoles"]),
     localChartOptions() {
       const series = Highcharts.merge(
-        this.effortRoles.map(role => ({
+        this.effortRoles.map((role) => ({
           name: "",
           color: role.colour,
-          data: []
+          data: [],
         })),
         get(this.chartData, "series", [])
       );
       return {
         chart: {
-          type: "column"
+          type: "column",
         },
         title: {
-          text: "Historias de usuario por usuario/rol"
+          text: "Historias de usuario por usuario/rol",
         },
         xAxis: {
-          categories: get(this.chartData, "categories", [])
+          categories: get(this.chartData, "categories", []),
         },
         yAxis: {
           allowDecimals: false,
           title: {
-            text: "Historias de usuario"
+            text: "Historias de usuario",
           },
           stackLabels: {
             enabled: true,
             style: {
               fontWeight: "bold",
-              color: "gray"
-            }
-          }
+              color: "gray",
+            },
+          },
         },
         tooltip: {
           headerFormat: '<span style="font-size:10px">{point.x}</span><table>',
@@ -57,19 +57,19 @@ export default {
             '<td style="padding:0"><strong>{point.y}</strong></td></tr>' +
             '<tr><td style="padding:0">Total: </td>' +
             '<td style="padding:0"><strong>{point.stackTotal}</strong></td></tr>',
-          shared: false
+          shared: false,
         },
         plotOptions: {
           column: {
             stacking: "normal",
             dataLabels: {
-              enabled: true
-            }
-          }
+              enabled: true,
+            },
+          },
         },
-        series
+        series,
       };
-    }
-  }
+    },
+  },
 };
 </script>

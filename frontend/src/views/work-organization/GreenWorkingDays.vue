@@ -114,7 +114,7 @@ export default {
           sortable: true,
           value: "main_user",
           sortingField: "main_user__acronym",
-          fixed: true
+          fixed: true,
         },
         {
           text: "Usuario de apoyo",
@@ -122,7 +122,7 @@ export default {
           sortable: true,
           value: "support_user",
           sortingField: "support_user__acronym",
-          default: true
+          default: true,
         },
         {
           text: "Acciones",
@@ -130,25 +130,25 @@ export default {
           sortable: false,
           value: "table_actions",
           fields: ["volunteers"],
-          fixed: true
-        }
+          fixed: true,
+        },
       ],
       tableOptions: {
         sortBy: ["date"],
         sortDesc: [false],
-        mustSort: true
+        mustSort: true,
       },
       service: GreenService,
       defaultFilters: {
-        date__year: DateTime.local().year
+        date__year: DateTime.local().year,
       },
       formComponent: GreenWorkingDayForm,
-      bulkFormComponent: GreenWorkingDayBulkForm
+      bulkFormComponent: GreenWorkingDayBulkForm,
     };
   },
   computed: {
     ...mapState(["loggedUser"]),
-    ...mapGetters(["loading", "yearOptions"])
+    ...mapGetters(["loading", "yearOptions"]),
   },
   methods: {
     ...mapActions(["showSnackbar"]),
@@ -160,7 +160,7 @@ export default {
       this.fetchTableItems();
       this.showSnackbar({
         color: "success",
-        message: "Estado de voluntario actualizado correctamente"
+        message: "Estado de voluntario actualizado correctamente",
       });
     },
     setYearFilter(year) {
@@ -168,7 +168,7 @@ export default {
       this.$nextTick(() => {
         this.$refs.itemIndex.fetchTableItems();
       });
-    }
-  }
+    },
+  },
 };
 </script>

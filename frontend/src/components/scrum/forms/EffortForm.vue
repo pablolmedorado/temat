@@ -80,38 +80,38 @@ export default {
     item: {
       date: {
         required,
-        noFutureAllocations: value => {
+        noFutureAllocations: (value) => {
           return DateTime.fromISO(value) < DateTime.local();
-        }
+        },
       },
       role: { required },
       effort: { required, numeric, minValue: minValue(1) },
-      comments: { maxLength: maxLength(2000) }
-    }
+      comments: { maxLength: maxLength(2000) },
+    },
   },
   data() {
     return {
       today: DateTime.local().toISODate(),
       successMessage: "Esfuerzo guardado correctamente",
       validationErrorMessages: {
-        noFutureAllocations: "No es posible imputar a futuro"
-      }
+        noFutureAllocations: "No es posible imputar a futuro",
+      },
     };
   },
   computed: {
     ...mapState("scrum", {
-      effortRoleOptions: "effortRoles"
-    })
+      effortRoleOptions: "effortRoles",
+    }),
   },
   methods: {
     buildSaveFunctionArgs() {
       return [
         this.replaceUndefined({
           ...this.item,
-          user_story: isObject(this.item.user_story) ? this.item.user_story.id : this.item.user_story
-        })
+          user_story: isObject(this.item.user_story) ? this.item.user_story.id : this.item.user_story,
+        }),
       ];
-    }
-  }
+    },
+  },
 };
 </script>

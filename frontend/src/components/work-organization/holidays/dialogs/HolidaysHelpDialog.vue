@@ -53,6 +53,6 @@ import DialogMixin from "@/mixins/dialog-mixin";
 
 export default {
   name: "HolidaysHelpDialog",
-  mixins: [DialogMixin]
+  mixins: [DialogMixin],
 };
 </script>

@@ -67,7 +67,7 @@ const defaultItem = {
   cvs_reference: "",
   risk_level: 0,
   risk_comments: "",
-  tags: []
+  tags: [],
 };
 
 export default {
@@ -76,7 +76,7 @@ export default {
     UserStoryData,
     UserStoryTasks,
     UserStoryProgress,
-    UserStoryEffort
+    UserStoryEffort,
   },
   mixins: [BreadcrumbsContextMixin],
   async beforeRouteEnter(to, from, next) {
@@ -89,10 +89,10 @@ export default {
         item = {
           ...defaultItem,
           epic: defaultTo(to.query.epic, null),
-          sprint: defaultTo(to.query.sprint, null)
+          sprint: defaultTo(to.query.sprint, null),
         };
       }
-      next(vm => {
+      next((vm) => {
         vm.item = item;
         vm.tab = "data";
       });
@@ -112,7 +112,7 @@ export default {
         this.item = {
           ...defaultItem,
           epic: defaultTo(to.query.epic, null),
-          sprint: defaultTo(to.query.sprint, null)
+          sprint: defaultTo(to.query.sprint, null),
         };
       }
       this.tab = "data";
@@ -125,20 +125,20 @@ export default {
   props: {
     id: {
       type: String,
-      default: undefined
-    }
+      default: undefined,
+    },
   },
   data() {
     return {
       item: null,
-      tab: "data"
+      tab: "data",
     };
   },
   computed: {
     breadcrumbs() {
       const currentItemBreadcrumb = {
         text: (this.item && this.item.name) || "Nueva historia de usuario",
-        disabled: true
+        disabled: true,
       };
       if (this.contextItem) {
         let result = [];
@@ -148,15 +148,15 @@ export default {
             {
               text: "Sprints",
               to: { name: "sprints" },
-              exact: true
+              exact: true,
             },
             contextItemBreadcrumb,
             {
               text: "Historias de usuario",
               to: { name: "sprint-user-stories", params: { sprintId: this.sprintId } },
-              exact: true
+              exact: true,
             },
-            currentItemBreadcrumb
+            currentItemBreadcrumb,
           ];
         }
         if (this.epicId) {
@@ -164,15 +164,15 @@ export default {
             {
               text: "Épicas",
               to: { name: "epics" },
-              exact: true
+              exact: true,
             },
             contextItemBreadcrumb,
             {
               text: "Historias de usuario",
               to: { name: "epic-user-stories", params: { epicId: this.epicId } },
-              exact: true
+              exact: true,
             },
-            currentItemBreadcrumb
+            currentItemBreadcrumb,
           ];
         }
         return result;
@@ -181,12 +181,12 @@ export default {
           {
             text: "Historias de usuario",
             to: { name: "user-stories" },
-            exact: true
+            exact: true,
           },
-          currentItemBreadcrumb
+          currentItemBreadcrumb,
         ];
       }
-    }
+    },
   },
   methods: {
     async fetchItem(id) {
@@ -201,8 +201,8 @@ export default {
     },
     onEffortUpdated() {
       this.fetchItem(this.id);
-    }
-  }
+    },
+  },
 };
 </script>
 

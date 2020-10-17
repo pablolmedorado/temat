@@ -9,16 +9,16 @@ export default {
   data() {
     return {
       filters: {
-        allowance_date__year: currentDate.year
-      }
+        allowance_date__year: currentDate.year,
+      },
     };
   },
   computed: {
     ...mapState(["locale", "loggedUser"]),
     ...mapState("users", {
-      userOptions: "users"
+      userOptions: "users",
     }),
-    ...mapGetters(["loading", "yearOptions"])
+    ...mapGetters(["loading", "yearOptions"]),
   },
   methods: {
     ...mapActions(["showSnackbar"]),
@@ -40,9 +40,9 @@ export default {
         this.getSummary();
         this.showSnackbar({
           color: "success",
-          message: "Día de vacaciones cancelado correctamente"
+          message: "Día de vacaciones cancelado correctamente",
         });
       }
-    }
-  }
+    },
+  },
 };

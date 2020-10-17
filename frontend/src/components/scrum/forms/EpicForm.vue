@@ -64,13 +64,13 @@ export default {
     item: {
       name: { required, maxLength: maxLength(200) },
       description: { maxLength: maxLength(2000) },
-      external_reference: { maxLength: maxLength(2000) }
-    }
+      external_reference: { maxLength: maxLength(2000) },
+    },
   },
   data() {
     return {
-      successMessage: "Épica guardada correctamente"
+      successMessage: "Épica guardada correctamente",
     };
-  }
+  },
 };
 </script>

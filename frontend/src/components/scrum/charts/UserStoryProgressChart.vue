@@ -12,21 +12,21 @@ import darkUnica from "@/utils/highcharts/themes/dark-unica-custom";
 export default {
   name: "UserStoryProgressChart",
   components: {
-    highcharts: Chart
+    highcharts: Chart,
   },
   props: {
     chartData: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     from: {
       type: String,
-      default: undefined
+      default: undefined,
     },
     to: {
       type: String,
-      default: undefined
-    }
+      default: undefined,
+    },
   },
   computed: {
     plotLines() {
@@ -39,8 +39,8 @@ export default {
           width: 2,
           label: {
             text: "Fecha de inicio plan.",
-            style: { color: this.$vuetify.theme.isDark ? "#ffffff" : "#000000" }
-          }
+            style: { color: this.$vuetify.theme.isDark ? "#ffffff" : "#000000" },
+          },
         });
       }
       if (this.to) {
@@ -51,8 +51,8 @@ export default {
           width: 2,
           label: {
             text: "Fecha límite",
-            style: { color: this.$vuetify.theme.isDark ? "#ffffff" : "#000000" }
-          }
+            style: { color: this.$vuetify.theme.isDark ? "#ffffff" : "#000000" },
+          },
         });
       }
       return result;
@@ -62,8 +62,8 @@ export default {
         chart: {
           zoomType: "xy",
           style: {
-            fontFamily: "Roboto"
-          }
+            fontFamily: "Roboto",
+          },
         },
         title: { text: "Historial de avance" },
         rangeSelector: {
@@ -71,31 +71,31 @@ export default {
             {
               type: "week",
               count: 1,
-              text: "1w"
+              text: "1w",
             },
             {
               type: "month",
               count: 1,
-              text: "1m"
+              text: "1m",
             },
             {
               type: "all",
               count: 1,
-              text: "All"
-            }
-          ]
+              text: "All",
+            },
+          ],
         },
         xAxis: {
           plotLines: this.plotLines,
-          ordinal: false
+          ordinal: false,
         },
         yAxis: {
           allowDecimals: false,
           min: 0,
           max: 100,
           title: {
-            text: "% de avance"
-          }
+            text: "% de avance",
+          },
         },
         series: [
           {
@@ -104,13 +104,13 @@ export default {
             color: colors.blue.base,
             marker: {
               enabled: true,
-              radius: 3
+              radius: 3,
             },
-            data: this.chartData.map(item => [new Date(item.date).getTime(), item.progress])
-          }
+            data: this.chartData.map((item) => [new Date(item.date).getTime(), item.progress]),
+          },
         ],
         navigator: {
-          enabled: false
+          enabled: false,
         },
         credits: { enabled: false },
         exporting: { enabled: true },
@@ -122,8 +122,8 @@ export default {
             '<td style="padding:0"><strong>{point.y}%</strong></td></tr>',
           footerFormat: "</table>",
           shared: true,
-          useHTML: true
-        }
+          useHTML: true,
+        },
       };
     },
     theme() {
@@ -132,7 +132,7 @@ export default {
     chartOptions() {
       const defaultTheme = this.$vuetify.theme.isDark ? darkUnica : Highcharts.getOptions();
       return Highcharts.merge(defaultTheme, this.localChartOptions);
-    }
-  }
+    },
+  },
 };
 </script>

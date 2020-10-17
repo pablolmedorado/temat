@@ -79,7 +79,7 @@ export default {
           sortable: true,
           sortingField: "user_stories__count",
           value: "num_of_user_stories",
-          default: true
+          default: true,
         },
         {
           text: "Progreso",
@@ -87,15 +87,15 @@ export default {
           sortable: true,
           sortingField: "annotated_current_progress",
           value: "current_progress",
-          default: true
+          default: true,
         },
         { text: "Tags", align: "start", sortable: false, value: "tags" },
-        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true }
+        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
       ],
       tableOptions: {
         sortBy: ["name"],
         sortDesc: [false],
-        mustSort: true
+        mustSort: true,
       },
       service: EpicService,
       filterComponent: EpicFilters,
@@ -105,12 +105,12 @@ export default {
         name: "",
         description: "",
         external_reference: "",
-        tags: []
-      }
+        tags: [],
+      },
     };
   },
   computed: {
-    ...mapState(["loggedUser"])
+    ...mapState(["loggedUser"]),
   },
   methods: {
     isWebUri,
@@ -119,8 +119,8 @@ export default {
       this.$nextTick(() => {
         this.$refs.itemIndex.fetchTableItems();
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

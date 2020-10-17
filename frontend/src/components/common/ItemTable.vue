@@ -37,63 +37,63 @@ export default {
   props: {
     value: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     service: {
       type: Function,
-      required: true
+      required: true,
     },
     headers: {
       type: Array,
-      required: true
+      required: true,
     },
     options: {
       type: Object,
-      default: () => defaultTableOptions
+      default: () => defaultTableOptions,
     },
     footerProps: {
       type: Object,
       default: () => ({
-        itemsPerPageOptions: [10, 25, 50]
-      })
+        itemsPerPageOptions: [10, 25, 50],
+      }),
     },
     filters: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     systemFilters: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     reactiveFilters: {
       type: Boolean,
-      default: false
+      default: false,
     },
     itemKey: {
       type: String,
-      default: "id"
+      default: "id",
     },
     noDataText: {
       type: String,
-      default: "No hay elementos coincidentes con los filtros aplicados"
+      default: "No hay elementos coincidentes con los filtros aplicados",
     },
     elevation: {
       type: Number,
-      default: 2
-    }
+      default: 2,
+    },
   },
   data() {
     return {
       tableLoading: true,
       items: [],
       itemCount: 0,
-      resetPagination: false
+      resetPagination: false,
     };
   },
   computed: {
     fields() {
       let fields = [this.itemKey];
-      this.headers.forEach(header => {
+      this.headers.forEach((header) => {
         if (header.fields) {
           fields = [...fields, ...header.fields];
         } else if (header.value !== "table_actions") {
@@ -104,7 +104,7 @@ export default {
     },
     expand() {
       const expand = [];
-      this.fields.forEach(field => {
+      this.fields.forEach((field) => {
         const splittedField = field.split(".");
         if (splittedField.length > 1) {
           expand.push(splittedField.slice(0, splittedField.length - 1).join("."));
@@ -115,13 +115,13 @@ export default {
     ordering() {
       const ordering = [];
       this.options.sortBy.forEach((field, index) => {
-        const header = this.headers.find(header => header.value === field);
+        const header = this.headers.find((header) => header.value === field);
         if (header) {
           ordering.push(`${this.options.sortDesc[index] ? "-" : ""}${defaultTo(header.sortingField, field)}`);
         }
       });
       return ordering;
-    }
+    },
   },
   watch: {
     filters: {
@@ -130,7 +130,7 @@ export default {
           this.fetchItems(true);
         }
       },
-      deep: true
+      deep: true,
     },
     options: {
       handler(newValue, oldValue) {
@@ -138,7 +138,7 @@ export default {
           this.fetchItems();
         }
       },
-      deep: true
+      deep: true,
     },
     headers: {
       handler(newValue, oldValue) {
@@ -146,8 +146,8 @@ export default {
           this.fetchItems();
         }
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   activated() {
     if (this.headers.length) {
@@ -163,7 +163,7 @@ export default {
         expand: this.expand.join(","),
         ordering: this.ordering.join(","),
         page: this.options.page,
-        page_size: this.options.itemsPerPage
+        page_size: this.options.itemsPerPage,
       };
     },
     async fetchItems(resetPagination = false) {
@@ -180,7 +180,7 @@ export default {
           this.tableLoading = false;
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>

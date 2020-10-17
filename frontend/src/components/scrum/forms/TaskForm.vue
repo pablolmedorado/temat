@@ -49,13 +49,13 @@ export default {
   validations: {
     item: {
       name: { required, maxLength: maxLength(2000) },
-      weight: { required, numeric, minValue: minValue(1) }
-    }
+      weight: { required, numeric, minValue: minValue(1) },
+    },
   },
   data() {
     return {
-      successMessage: "Tarea guardada correctamente"
+      successMessage: "Tarea guardada correctamente",
     };
-  }
+  },
 };
 </script>

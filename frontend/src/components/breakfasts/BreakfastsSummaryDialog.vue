@@ -48,27 +48,27 @@ export default {
           text: "Primer ingrediente",
           align: "start",
           sortable: true,
-          value: "ingredient1"
+          value: "ingredient1",
         },
         {
           text: "Segundo ingrediente",
           align: "start",
           sortable: true,
-          value: "ingredient2"
+          value: "ingredient2",
         },
-        { text: "Total", align: "start", sortable: true, value: "count" }
+        { text: "Total", align: "start", sortable: true, value: "count" },
       ],
       options: {
         sortBy: ["bread", "base", "ingredient1", "ingredient2"],
-        sortDesc: [false, false, false, false]
+        sortDesc: [false, false, false, false],
       },
-      items: []
+      items: [],
     };
   },
   computed: {
     itemSummary() {
       return chain(this.items)
-        .map(item =>
+        .map((item) =>
           chain(item)
             .pick(["bread", "base", "ingredient1", "ingredient2"])
             .map(property("name"))
@@ -83,11 +83,11 @@ export default {
             base: elements[1] || "",
             ingredient1: elements[2] || "",
             ingredient2: elements[3] || "",
-            count
+            count,
           };
         })
         .value();
-    }
+    },
   },
   methods: {
     open(items) {
@@ -97,7 +97,7 @@ export default {
     close() {
       this.items = [];
       this.showDialog = false;
-    }
-  }
+    },
+  },
 };
 </script>

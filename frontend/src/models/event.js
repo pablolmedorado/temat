@@ -15,7 +15,7 @@ export default class CalendarEvent {
       visibility: "PU",
       attendees: [],
       groups: [],
-      tags: []
+      tags: [],
     };
   }
 

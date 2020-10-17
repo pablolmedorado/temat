@@ -35,11 +35,11 @@ export default {
   props: {
     userStory: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
-    ...mapGetters("scrum", ["userStoryStatusMap", "riskLevelsMap"])
-  }
+    ...mapGetters("scrum", ["userStoryStatusMap", "riskLevelsMap"]),
+  },
 };
 </script>

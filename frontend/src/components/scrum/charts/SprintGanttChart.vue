@@ -15,18 +15,18 @@ export default {
   props: {
     sprintId: {
       type: String,
-      required: true
+      required: true,
     },
     height: {
       type: Number,
-      default: null
-    }
+      default: null,
+    },
   },
   data() {
     return {
       constructorType: "ganttChart",
       service: SprintService,
-      fetchFunctionName: "ganttChartData"
+      fetchFunctionName: "ganttChartData",
     };
   },
   computed: {
@@ -35,30 +35,30 @@ export default {
       const userStories = get(this.chartData, "user_stories", []);
       return {
         title: {
-          text: this.chartData.name
+          text: this.chartData.name,
         },
         legend: { enabled: false },
         tooltip: {
-          shared: false
+          shared: false,
         },
         xAxis: {
           min: new Date(this.chartData.start_date).getTime(),
-          max: new Date(this.chartData.end_date).getTime()
+          max: new Date(this.chartData.end_date).getTime(),
         },
         series: [
           {
             name: this.chartData.name,
-            data: userStories.map(userStory => ({
+            data: userStories.map((userStory) => ({
               name: truncate(userStory.name),
               start: new Date(userStory.start_date).getTime(),
               end: new Date(userStory.end_date).getTime(),
               completed: userStory.current_progress / 100,
-              color: this.getUserStoryColour(userStory)
-            }))
-          }
-        ]
+              color: this.getUserStoryColour(userStory),
+            })),
+          },
+        ],
       };
-    }
+    },
   },
   methods: {
     buildFetchFunctionArgs() {
@@ -75,7 +75,7 @@ export default {
         return colors.grey.base;
       }
       return colors.blue.base;
-    }
-  }
+    },
+  },
 };
 </script>

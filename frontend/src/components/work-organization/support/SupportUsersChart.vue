@@ -12,25 +12,25 @@ export default {
   data() {
     return {
       service: SupportService,
-      fetchFunctionName: "userChartData"
+      fetchFunctionName: "userChartData",
     };
   },
   computed: {
     localChartOptions() {
       return {
         chart: {
-          type: "column"
+          type: "column",
         },
         title: {
-          text: "Jornadas de soporte por usuario"
+          text: "Jornadas de soporte por usuario",
         },
         xAxis: {
-          categories: get(this.chartData, "categories", [])
+          categories: get(this.chartData, "categories", []),
         },
         yAxis: {
           allowDecimals: false,
           title: {
-            text: "Jornadas"
+            text: "Jornadas",
           },
           plotLines: [
             {
@@ -40,28 +40,28 @@ export default {
               width: 2,
               label: {
                 text: "Media",
-                style: { color: this.$vuetify.theme.isDark ? "#ffffff" : "#000000" }
-              }
-            }
-          ]
+                style: { color: this.$vuetify.theme.isDark ? "#ffffff" : "#000000" },
+              },
+            },
+          ],
         },
         plotOptions: {
           column: {
             dataLabels: {
-              enabled: true
-            }
-          }
+              enabled: true,
+            },
+          },
         },
         legend: { enabled: false },
         series: [
           {
             name: "Número de jornadas de soporte",
             color: colors.blue.base,
-            data: get(this.chartData, "data", [])
-          }
-        ]
+            data: get(this.chartData, "data", []),
+          },
+        ],
       };
-    }
-  }
+    },
+  },
 };
 </script>

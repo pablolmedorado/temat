@@ -13,13 +13,13 @@ import { truncate } from "@/filters";
 export default {
   name: "TagLabels",
   filters: {
-    truncate
+    truncate,
   },
   props: {
     tags: {
       type: Array,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 };
 </script>

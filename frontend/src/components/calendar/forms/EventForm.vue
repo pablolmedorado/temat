@@ -117,7 +117,7 @@
         <v-col cols="12" sm="6">
           <v-select
             v-model.number="item.type"
-            :items="eventTypesOptions.filter(ev => !ev.system)"
+            :items="eventTypesOptions.filter((ev) => !ev.system)"
             item-text="name"
             item-value="id"
             label="Tipo de evento*"
@@ -228,22 +228,22 @@ export default {
         const startDateAux = DateTime.fromISO(vm.startDate);
         const endDateAux = DateTime.fromISO(vm.endDate);
         return endDateAux.diff(startDateAux).milliseconds >= 0;
-      }
+      },
     },
     startTime: { required: requiredUnless("item.all_day") },
     endTime: {
       required: requiredUnless("item.all_day"),
       endTimeBeforeStartTime: (value, vm) => {
         return vm.startDate !== vm.endDate || vm.endDateTime.diff(vm.startDateTime).milliseconds >= 0;
-      }
+      },
     },
     item: {
       name: { required, maxLength: maxLength(200) },
       type: { required },
       visibility: { required },
       details: { maxLength: maxLength(2000) },
-      location: { maxLength: maxLength(200) }
-    }
+      location: { maxLength: maxLength(200) },
+    },
   },
   data() {
     return {
@@ -255,27 +255,27 @@ export default {
       showEndTimepicker: false,
       validationErrorMessages: {
         endDateBeforeStartDate: "Fecha de fin anterior a la de inicio",
-        endTimeBeforeStartTime: "Hora de fin anterior a la de inicio"
+        endTimeBeforeStartTime: "Hora de fin anterior a la de inicio",
       },
-      successMessage: "Evento guardado correctamente"
+      successMessage: "Evento guardado correctamente",
     };
   },
   computed: {
     ...mapState(["locale"]),
     ...mapState("users", {
       attendeesOptions: "users",
-      groupsOptions: "groups"
+      groupsOptions: "groups",
     }),
     ...mapState("calendar", {
       eventTypesOptions: "eventTypes",
-      visibilityOptions: "eventVisibilityTypes"
+      visibilityOptions: "eventVisibilityTypes",
     }),
     startDateTime() {
       return DateTime.fromFormat(`${this.startDate} ${defaultTo(this.startTime, "00:00")}`, "yyyy-MM-dd HH:mm");
     },
     endDateTime() {
       return DateTime.fromFormat(`${this.endDate} ${defaultTo(this.endTime, "00:00")}`, "yyyy-MM-dd HH:mm");
-    }
+    },
   },
   watch: {
     startDateTime: {
@@ -284,8 +284,8 @@ export default {
         const newEndDateTime = newDateTime.plus(previousDiff);
         this.endDate = newEndDateTime.toISODate();
         this.endTime = newEndDateTime.toFormat("HH:mm");
-      }
-    }
+      },
+    },
   },
   methods: {
     ...mapActions("calendar", ["saveEvent"]),
@@ -303,10 +303,10 @@ export default {
       const payload = {
         ...this.item,
         start_datetime: this.startDateTime.toISO(),
-        end_datetime: this.endDateTime.toISO()
+        end_datetime: this.endDateTime.toISO(),
       };
       return [this.replaceUndefined(payload)];
-    }
-  }
+    },
+  },
 };
 </script>

@@ -40,29 +40,29 @@ export default {
           text: "Fecha de caducidad",
           align: "start",
           sortable: true,
-          value: "expiration_date"
+          value: "expiration_date",
         },
-        { text: "Total", align: "start", sortable: true, value: "count" }
+        { text: "Total", align: "start", sortable: true, value: "count" },
       ],
       options: {
         sortBy: ["expiration_date", "allowance_date"],
         sortDesc: [false, false],
-        mustSort: true
+        mustSort: true,
       },
       holidays: [],
-      type: null
+      type: null,
     };
   },
   computed: {
     holidaysSummary() {
       return chain(this.holidays)
-        .countBy(item => [item.allowance_date, item.expiration_date])
+        .countBy((item) => [item.allowance_date, item.expiration_date])
         .map((count, item) => {
           const dates = item.split(",");
           return { allowance_date: dates[0], expiration_date: dates[1], count };
         })
         .value();
-    }
+    },
   },
   methods: {
     open({ holidays, type }) {
@@ -74,7 +74,7 @@ export default {
       this.holidays = [];
       this.type = null;
       this.showDialog = false;
-    }
-  }
+    },
+  },
 };
 </script>

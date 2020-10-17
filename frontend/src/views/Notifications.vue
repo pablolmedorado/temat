@@ -92,7 +92,7 @@
               icon
               :to="{
                 ...notificationTargetMap[item.target_content_type].route,
-                params: { id: item.target.id }
+                params: { id: item.target.id },
               }"
             >
               <v-icon>mdi-open-in-app</v-icon>
@@ -118,7 +118,7 @@ import { isoDateTimeToLocaleString } from "@/utils/dates";
 export default {
   name: "Notifications",
   filters: {
-    datetime: isoDateTimeToLocaleString
+    datetime: isoDateTimeToLocaleString,
   },
   data() {
     return {
@@ -130,7 +130,7 @@ export default {
           sortable: true,
           value: "target_content_type",
           sortingField: "target_content_type__model",
-          default: true
+          default: true,
         },
         { text: "Nivel", align: "start", sortable: true, value: "level", default: true },
         { text: "Quién", align: "start", sortable: false, value: "actor", default: true },
@@ -140,15 +140,15 @@ export default {
           align: "start",
           sortable: false,
           value: "target",
-          fixed: true
+          fixed: true,
         },
         { text: "Leída", align: "start", sortable: true, value: "unread", fixed: true },
-        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true }
+        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
       ],
       tableOptions: {
         sortBy: ["unread", "timestamp"],
         sortDesc: [true, true],
-        multiSort: true
+        multiSort: true,
       },
       service: NotificationService,
       filterComponent: NotificationFilters,
@@ -156,18 +156,18 @@ export default {
         success: "mdi-check",
         info: "mdi-information",
         warning: "mdi-exclamation",
-        error: "mdi-alert"
-      }
+        error: "mdi-alert",
+      },
     };
   },
   computed: {
     ...mapGetters(["loading"]),
-    ...mapGetters("notifications", ["notificationTargetMap"])
+    ...mapGetters("notifications", ["notificationTargetMap"]),
   },
   methods: {
     ...mapActions("notifications", ["getUnreadCount"]),
     async performBulkAction(actionFunctionName, selectedItems) {
-      const params = { id__in: selectedItems.map(item => item.id).join(",") };
+      const params = { id__in: selectedItems.map((item) => item.id).join(",") };
       await this.service[actionFunctionName](params);
       this.postBulkAction();
     },
@@ -177,7 +177,7 @@ export default {
     },
     openDeleteDialog(selectedItems) {
       this.$refs.deleteDialog.open(selectedItems);
-    }
-  }
+    },
+  },
 };
 </script>

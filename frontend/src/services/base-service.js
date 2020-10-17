@@ -17,7 +17,7 @@ export default class BaseService {
 
   static retrieve(pk, queryParams) {
     return Api.get(this.detailUrl(pk), {
-      params: defaultTo(queryParams, this.defaultRetrieveParams)
+      params: defaultTo(queryParams, this.defaultRetrieveParams),
     });
   }
 

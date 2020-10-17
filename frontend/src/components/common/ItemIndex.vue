@@ -176,98 +176,98 @@ export default {
   props: {
     localStorageKey: {
       type: String,
-      required: true
+      required: true,
     },
     verboseName: {
       type: String,
-      required: true
+      required: true,
     },
     verboseNamePlural: {
       type: String,
-      required: true
+      required: true,
     },
     itemText: {
       type: [String, Function],
-      default: "name"
+      default: "name",
     },
     service: {
       type: Function,
-      required: true
+      required: true,
     },
     tableAvailableHeaders: {
       type: Array,
-      required: true
+      required: true,
     },
     tableInitialOptions: {
       type: Object,
-      required: true
+      required: true,
     },
     tableFooterProps: {
       type: Object,
       default: () => ({
-        itemsPerPageOptions: [10, 25, 50]
-      })
+        itemsPerPageOptions: [10, 25, 50],
+      }),
     },
     formComponent: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     defaultItem: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     deleteChildItemsWarning: {
       type: Boolean,
-      default: false
+      default: false,
     },
     canCreate: {
       type: Function,
-      default: user => user.is_staff
+      default: (user) => user.is_staff,
     },
     canEdit: {
       type: Function,
-      default: (item, user) => user.is_staff
+      default: (item, user) => user.is_staff,
     },
     canDelete: {
       type: Function,
-      default: (item, user) => user.is_staff
+      default: (item, user) => user.is_staff,
     },
     readOnly: {
       type: Boolean,
-      default: false
+      default: false,
     },
     filterComponent: {
       type: Object,
-      default: undefined
+      default: undefined,
     },
     systemFilters: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     defaultFilters: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     reactiveFilters: {
       type: Boolean,
-      default: false
+      default: false,
     },
     advancedFilters: {
       type: Boolean,
-      default: false
+      default: false,
     },
     customHeaders: {
       type: Boolean,
-      default: false
+      default: false,
     },
     selectableRows: {
       type: Boolean,
-      default: false
+      default: false,
     },
     formDialogMultiAdd: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
@@ -275,17 +275,17 @@ export default {
       tableOptions: null,
       filters: {},
       dialogFilterCount: 0,
-      selectedItems: []
+      selectedItems: [],
     };
   },
   computed: {
     ...mapState(["loggedUser"]),
-    ...mapGetters(["loading"])
+    ...mapGetters(["loading"]),
   },
   watch: {
     tableHeaders: {
       handler(newValue) {
-        const flatHeaders = newValue.map(header => header.value);
+        const flatHeaders = newValue.map((header) => header.value);
         localStorage[`${this.localStorageKey}TableHeaders`] = JSON.stringify(flatHeaders);
 
         const sortingConfig = { sortBy: [], sortDesc: [] };
@@ -297,21 +297,21 @@ export default {
         });
         this.tableOptions = { ...this.tableOptions, ...sortingConfig };
       },
-      deep: true
+      deep: true,
     },
     tableOptions: {
       handler(newValue) {
         localStorage[`${this.localStorageKey}TableOptions`] = JSON.stringify(omit(newValue, ["page"]));
       },
-      deep: true
+      deep: true,
     },
     defaultFilters: {
       handler(newValue) {
         this.filters = newValue;
       },
       deep: true,
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   created() {
     this.loadOptionsFromLocalStorage();
@@ -343,7 +343,7 @@ export default {
       this.$emit("delete:item", item);
       this.showSnackbar({
         color: "success",
-        message: "Elemento eliminado correctamente"
+        message: "Elemento eliminado correctamente",
       });
     },
     openFiltersDialog() {
@@ -363,16 +363,16 @@ export default {
     loadHeadersFromLocalStorage() {
       const lsTableHeaders = localStorage[`${this.localStorageKey}TableHeaders`];
       if (lsTableHeaders) {
-        this.tableHeaders = this.tableAvailableHeaders.filter(header => lsTableHeaders.includes(header.value));
+        this.tableHeaders = this.tableAvailableHeaders.filter((header) => lsTableHeaders.includes(header.value));
       } else {
-        this.tableHeaders = this.tableAvailableHeaders.filter(header => header.default || header.fixed);
+        this.tableHeaders = this.tableAvailableHeaders.filter((header) => header.default || header.fixed);
       }
     },
     loadOptionsFromLocalStorage() {
       const localOptions = { ...defaultTableOptions, ...this.tableInitialOptions };
       const lsTableOptions = localStorage[`${this.localStorageKey}TableOptions`];
       this.tableOptions = lsTableOptions ? { ...localOptions, ...JSON.parse(lsTableOptions) } : localOptions;
-    }
-  }
+    },
+  },
 };
 </script>

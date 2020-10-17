@@ -81,7 +81,7 @@ export default {
   mixins: [DialogMixin],
   data() {
     return {
-      filters: null
+      filters: null,
     };
   },
   computed: {
@@ -94,9 +94,9 @@ export default {
       }
       return this.filters.user_id__in
         .split(",")
-        .map(user => this.usersMap[user].acronym)
+        .map((user) => this.usersMap[user].acronym)
         .join(", ");
-    }
+    },
   },
   methods: {
     open(filters) {
@@ -114,7 +114,7 @@ export default {
         this.$refs.userChart.getChartData();
       }
       this.$refs.roleChart.getChartData();
-    }
-  }
+    },
+  },
 };
 </script>

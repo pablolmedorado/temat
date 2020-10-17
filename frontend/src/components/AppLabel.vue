@@ -14,11 +14,11 @@ export default {
   name: "AppLabel",
   data() {
     return {
-      version
+      version,
     };
   },
   computed: {
-    ...mapState(["appName", "konamiCodeActive"])
-  }
+    ...mapState(["appName", "konamiCodeActive"]),
+  },
 };
 </script>

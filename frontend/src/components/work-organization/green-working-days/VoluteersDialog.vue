@@ -26,7 +26,7 @@ export default {
   mixins: [DialogMixin],
   data() {
     return {
-      item: null
+      item: null,
     };
   },
   methods: {
@@ -37,7 +37,7 @@ export default {
     close() {
       this.item = null;
       this.showDialog = false;
-    }
-  }
+    },
+  },
 };
 </script>

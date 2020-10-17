@@ -75,7 +75,7 @@
                         icon
                         :to="{
                           ...notificationTargetMap[notification.target_content_type].route,
-                          params: { id: notification.target.id }
+                          params: { id: notification.target.id },
                         }"
                         @click="onNotificationActionClick(notification)"
                       >
@@ -130,7 +130,7 @@ export default {
   filters: {
     text: function(value) {
       return isNil(value) ? "" : value.toString();
-    }
+    },
   },
   data() {
     return {
@@ -138,7 +138,7 @@ export default {
       browserNotificationsEnabled: false,
       showNotificationSummary: false,
       loadingNotificationSummary: false,
-      notifications: []
+      notifications: [],
     };
   },
   computed: {
@@ -146,14 +146,14 @@ export default {
     ...mapGetters("notifications", ["notificationTargetMap", "unreadCountBadgeColour"]),
     notificationPartition() {
       return partition(this.notifications, { unread: true });
-    }
+    },
   },
   watch: {
     unreadCount(newValue, oldValue) {
       if (this.browserNotificationsEnabled && newValue > oldValue) {
         new Notification("TeMaT", {
           body: `Tienes ${newValue} notificación/es sin leer`,
-          icon: NotificationImg
+          icon: NotificationImg,
         });
       }
     },
@@ -163,7 +163,7 @@ export default {
       } else {
         this.notifications = [];
       }
-    }
+    },
   },
   created() {
     this.checkNotificationSupport();
@@ -196,7 +196,7 @@ export default {
         console.warn("This browser does not support notifications.");
       } else {
         if (this.checkNotificationPromise()) {
-          Notification.requestPermission().then(permission => {
+          Notification.requestPermission().then((permission) => {
             this.handleNotificationPermission(permission);
           });
         } else {
@@ -225,13 +225,13 @@ export default {
     async markNotificationAsRead(id) {
       const response = await NotificationService.markAsRead(id);
       const notification = response.data;
-      const notificationIndex = this.notifications.findIndex(item => item.id === notification.id);
+      const notificationIndex = this.notifications.findIndex((item) => item.id === notification.id);
       this.notifications.splice(notificationIndex, 1, notification);
       this.getUnreadCount();
     },
     async markAllNotificationsAsRead() {
       if (this.notificationPartition[0].length) {
-        const notificationIds = this.notificationPartition[0].map(notification => notification.id);
+        const notificationIds = this.notificationPartition[0].map((notification) => notification.id);
         await NotificationService.markSummaryAsRead({ id__in: notificationIds.join(",") });
         this.getUnreadSummary();
       }
@@ -246,8 +246,8 @@ export default {
       if (notification.target) {
         this.showNotificationSummary = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

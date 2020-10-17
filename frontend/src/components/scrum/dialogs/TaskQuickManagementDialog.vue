@@ -65,13 +65,13 @@ export default {
           text: "Orden",
           align: "start",
           sortable: true,
-          value: "order"
+          value: "order",
         },
         {
           text: "Nombre",
           align: "start",
           sortable: true,
-          value: "name"
+          value: "name",
         },
         { text: "Peso", align: "start", sortable: true, value: "weight" },
         {
@@ -79,17 +79,17 @@ export default {
           align: "start",
           sortable: true,
           value: "done",
-          fields: ["done", "user_story.development_user"]
-        }
+          fields: ["done", "user_story.development_user"],
+        },
       ],
       tableOptions: {
         itemsPerPage: 10,
         sortBy: ["order"],
         sortDesc: [false],
-        mustSort: true
+        mustSort: true,
       },
       userStory: null,
-      updateTableAfterTaskMgmt: false
+      updateTableAfterTaskMgmt: false,
     };
   },
   computed: {
@@ -97,7 +97,7 @@ export default {
     ...mapGetters(["loading"]),
     systemFilters() {
       return { user_story_id: get(this.userStory, "id", null) };
-    }
+    },
   },
   methods: {
     async toggleTask(item) {
@@ -119,7 +119,7 @@ export default {
         this.$emit("updated-tasks");
       }
       this.updateTableAfterTaskMgmt = false;
-    }
-  }
+    },
+  },
 };
 </script>

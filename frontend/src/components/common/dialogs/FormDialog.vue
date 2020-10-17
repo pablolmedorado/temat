@@ -31,20 +31,20 @@ export default {
   props: {
     verboseName: {
       type: String,
-      default: "elemento"
+      default: "elemento",
     },
     formComponent: {
       type: Object,
-      required: true
+      required: true,
     },
     multiAdd: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      item: null
+      item: null,
     };
   },
   computed: {
@@ -52,7 +52,7 @@ export default {
     headerText() {
       const verb = this.item && this.item.id ? "Editar" : "Crear";
       return `${verb} ${this.verboseName.toLowerCase()}`;
-    }
+    },
   },
   methods: {
     open(item) {
@@ -80,7 +80,7 @@ export default {
     cancel() {
       this.$emit("cancel");
       this.close();
-    }
-  }
+    },
+  },
 };
 </script>

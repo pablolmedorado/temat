@@ -66,9 +66,9 @@ export default {
       $each: {
         date: { required },
         label: { maxLength: maxLength(100) },
-        support_user: { notSameAsMainUser: not(sameAs("main_user")) }
-      }
-    }
-  }
+        support_user: { notSameAsMainUser: not(sameAs("main_user")) },
+      },
+    },
+  },
 };
 </script>

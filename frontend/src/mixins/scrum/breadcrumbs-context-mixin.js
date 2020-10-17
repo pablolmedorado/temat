@@ -8,16 +8,16 @@ export default {
   props: {
     sprintId: {
       type: String,
-      default: null
+      default: null,
     },
     epicId: {
       type: String,
-      default: null
-    }
+      default: null,
+    },
   },
   data() {
     return {
-      contextItem: null
+      contextItem: null,
     };
   },
   computed: {
@@ -26,7 +26,7 @@ export default {
     },
     context() {
       return { sprint: this.sprintId, epic: this.epicId };
-    }
+    },
   },
   watch: {
     context: {
@@ -34,8 +34,8 @@ export default {
         this.getContext();
       },
       immediate: true,
-      deep: true
-    }
+      deep: true,
+    },
   },
   methods: {
     async getContext() {
@@ -54,6 +54,6 @@ export default {
       } else {
         this.contextItem = null;
       }
-    }
-  }
+    },
+  },
 };

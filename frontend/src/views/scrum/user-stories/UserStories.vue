@@ -114,7 +114,7 @@ export default {
   components: {
     TaskQuickManagementDialog,
     UserStoryActors,
-    UserStoryIndexStatus
+    UserStoryIndexStatus,
   },
   mixins: [BreadcrumbsContextMixin],
   data() {
@@ -130,7 +130,7 @@ export default {
           sortable: true,
           value: "sprint.name",
           sortingField: "sprint__name",
-          default: true
+          default: true,
         },
         { text: "Esfuerzo p.", align: "start", sortable: true, value: "planned_effort" },
         { text: "Fecha inicio p.", align: "start", sortable: true, value: "start_date" },
@@ -144,7 +144,7 @@ export default {
           value: "status",
           fields: ["status", "current_progress", "validated", "risk_level"],
           orderingField: "current_progress",
-          fixed: true
+          fixed: true,
         },
         {
           text: "Personas",
@@ -152,15 +152,15 @@ export default {
           sortable: false,
           value: "people",
           fields: ["development_user", "validation_user", "support_user"],
-          default: true
+          default: true,
         },
         { text: "Tags", align: "start", sortable: false, value: "tags" },
-        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true }
+        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
       ],
       tableOptions: {
         sortBy: ["end_date", "priority"],
         sortDesc: [false, false],
-        multiSort: true
+        multiSort: true,
       },
       service: UserStoryService,
       filterComponent: UserStoryFilters,
@@ -168,10 +168,10 @@ export default {
         sprint_id: this.sprintId,
         epic_id: this.epicId,
         status__in: this.sprintId || this.epicId ? "" : "1,2,3",
-        any_role_user__in: null
+        any_role_user__in: null,
       },
       effortFormComponent: EffortForm,
-      showTaskDialog: false
+      showTaskDialog: false,
     };
   },
   computed: {
@@ -180,20 +180,20 @@ export default {
       if (this.contextItem) {
         const result = [
           { text: this.contextItem.name, disabled: false, link: false },
-          { text: "Historias de usuario", disabled: true }
+          { text: "Historias de usuario", disabled: true },
         ];
         if (this.sprintId) {
           result.unshift({
             text: "Sprints",
             to: { name: "sprints" },
-            exact: true
+            exact: true,
           });
         }
         if (this.epicId) {
           result.unshift({
             text: "Épicas",
             to: { name: "epics" },
-            exact: true
+            exact: true,
           });
         }
         return result;
@@ -210,19 +210,19 @@ export default {
         queryParams.epic = this.epicId;
       }
       return { name: "user-story-new", query: queryParams };
-    }
+    },
   },
   watch: {
     tableHeaders(newValue) {
-      const sortingValues = newValue.map(header => header.sortingField || header.value);
-      if (this.tableOptions.sortBy.some(header => !sortingValues.includes(header))) {
+      const sortingValues = newValue.map((header) => header.sortingField || header.value);
+      if (this.tableOptions.sortBy.some((header) => !sortingValues.includes(header))) {
         this.tableOptions = {
           ...this.tableOptions,
           sortBy: [],
-          sortDesc: []
+          sortDesc: [],
         };
       }
-    }
+    },
   },
   created() {
     if (!this.hasContext && !this.loggedUser.is_staff) {
@@ -277,7 +277,7 @@ export default {
         role: this.calculateLoggedUserRole(userStory),
         user_story: userStory.id,
         effort: 1,
-        comments: ""
+        comments: "",
       });
     },
     setTagFilter(tag) {
@@ -285,7 +285,7 @@ export default {
       this.$nextTick(() => {
         this.$refs.itemIndex.fetchTableItems();
       });
-    }
-  }
+    },
+  },
 };
 </script>

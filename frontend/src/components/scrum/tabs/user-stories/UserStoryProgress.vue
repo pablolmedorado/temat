@@ -53,16 +53,16 @@ export default {
   props: {
     userStory: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      items: []
+      items: [],
     };
   },
   computed: {
-    ...mapGetters(["loading"])
+    ...mapGetters(["loading"]),
   },
   watch: {
     "userStory.id": {
@@ -73,14 +73,14 @@ export default {
           this.items = [];
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   methods: {
     async fetchItems() {
       const response = await UserStoryService.progressByUserStory(this.userStory.id);
       this.items = response.data.results ? response.data.results : response.data;
-    }
-  }
+    },
+  },
 };
 </script>

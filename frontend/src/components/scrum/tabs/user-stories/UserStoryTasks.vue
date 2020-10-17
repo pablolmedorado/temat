@@ -63,8 +63,8 @@ export default {
   props: {
     userStory: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -72,10 +72,10 @@ export default {
         itemsPerPage: -1,
         sortBy: ["order"],
         sortDesc: [false],
-        mustSort: true
+        mustSort: true,
       },
       service: TaskService,
-      formComponent: TaskForm
+      formComponent: TaskForm,
     };
   },
   computed: {
@@ -83,7 +83,7 @@ export default {
     ...mapGetters(["loading"]),
     systemFilters() {
       return {
-        user_story_id: this.userStory.id
+        user_story_id: this.userStory.id,
       };
     },
     defaultItem() {
@@ -99,17 +99,17 @@ export default {
           align: "start",
           sortable: true,
           value: "order",
-          fixed: true
+          fixed: true,
         },
         {
           text: "Nombre",
           align: "start",
           sortable: true,
           value: "name",
-          fixed: true
+          fixed: true,
         },
         { text: "Peso", align: "start", sortable: true, value: "weight", fixed: true },
-        { text: "Terminada", align: "start", sortable: true, value: "done", fixed: true }
+        { text: "Terminada", align: "start", sortable: true, value: "done", fixed: true },
       ];
       const adminOptions = [
         ...defaultOptions,
@@ -119,11 +119,11 @@ export default {
           sortable: false,
           value: "table_actions",
           fields: ["user_story"],
-          fixed: true
-        }
+          fixed: true,
+        },
       ];
       return this.loggedUser.is_staff ? adminOptions : defaultOptions;
-    }
+    },
   },
   mounted() {
     if (this.$refs.itemIndex) {
@@ -145,7 +145,7 @@ export default {
       await this.service.toggle(item.id);
       this.$refs.itemIndex.fetchTableItems();
       this.$emit("change:progress");
-    }
-  }
+    },
+  },
 };
 </script>

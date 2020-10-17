@@ -49,7 +49,7 @@ export default {
     ...mapState(["loggedUser"]),
     userFilter() {
       return this.splitFilterValue("user_id__in", true);
-    }
-  }
+    },
+  },
 };
 </script>

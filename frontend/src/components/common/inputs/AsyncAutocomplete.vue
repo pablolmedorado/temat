@@ -19,54 +19,54 @@ export default {
   props: {
     value: {
       type: [String, Object],
-      default: null
+      default: null,
     },
     service: {
       type: Function,
-      required: true
+      required: true,
     },
     searchFunctionName: {
       type: String,
-      default: "list"
+      default: "list",
     },
     searchField: {
       type: String,
-      default: "search"
+      default: "search",
     },
     searchLookup: {
       type: String,
-      default: ""
+      default: "",
     },
     getFunctionName: {
       type: String,
-      default: "retrieve"
+      default: "retrieve",
     },
     itemText: {
       type: [String, Array, Function],
-      default: "name"
+      default: "name",
     },
     itemValue: {
       type: [String, Array, Function],
-      default: "id"
+      default: "id",
     },
     returnObject: {
       type: Boolean,
-      default: false
+      default: false,
     },
     clearable: {
       type: Boolean,
-      default: true
+      default: true,
     },
     placeholder: {
       type: String,
-      default: "Escribe para iniciar la búsqueda..."
-    }
+      default: "Escribe para iniciar la búsqueda...",
+    },
   },
   data() {
     return {
       options: [],
       loading: false,
-      searchInput: null
+      searchInput: null,
     };
   },
   watch: {
@@ -97,21 +97,21 @@ export default {
           }
         }
       },
-      immediate: true
+      immediate: true,
     },
     searchInput(newValue) {
       if (newValue) {
         if (this.loading) {
           return;
         }
-        const exactMatch = this.options.find(item => newValue.toLowerCase() === item[this.itemText].toLowerCase());
+        const exactMatch = this.options.find((item) => newValue.toLowerCase() === item[this.itemText].toLowerCase());
         if (!exactMatch) {
           this.debouncedSearch(newValue);
         }
       } else {
         this.options = [];
       }
-    }
+    },
   },
   methods: {
     async search(query) {
@@ -139,7 +139,7 @@ export default {
       const normalizedQueryText = this.normalizeText(queryText).toLowerCase();
       const normalizedItemText = this.normalizeText(itemText).toLowerCase();
       return normalizedItemText.includes(normalizedQueryText);
-    }
-  }
+    },
+  },
 };
 </script>

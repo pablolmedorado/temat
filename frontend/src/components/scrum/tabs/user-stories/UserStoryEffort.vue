@@ -72,8 +72,8 @@ export default {
   props: {
     userStory: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -85,7 +85,7 @@ export default {
           sortable: true,
           value: "user",
           sortingField: "user__acronym",
-          fixed: true
+          fixed: true,
         },
         { text: "Rol", align: "start", sortable: false, value: "role", fixed: true },
         { text: "Esfuerzo", align: "start", sortable: true, value: "effort", fixed: true },
@@ -96,16 +96,16 @@ export default {
           sortable: false,
           value: "table_actions",
           fields: ["user_story", "creation_datetime"],
-          fixed: true
-        }
+          fixed: true,
+        },
       ],
       tableOptions: {
         sortBy: ["date"],
         sortDesc: [true],
-        multiSort: true
+        multiSort: true,
       },
       service: EffortService,
-      formComponent: EffortForm
+      formComponent: EffortForm,
     };
   },
   computed: {
@@ -113,7 +113,7 @@ export default {
     ...mapGetters("scrum", ["effortRolesMap"]),
     systemFilters() {
       return {
-        user_story_id: this.userStory.id
+        user_story_id: this.userStory.id,
       };
     },
     loggedUserRole() {
@@ -136,9 +136,9 @@ export default {
         role: this.loggedUserRole,
         user_story: this.userStory.id,
         effort: 1,
-        comments: ""
+        comments: "",
       };
-    }
+    },
   },
   mounted() {
     if (this.$refs.itemIndex) {
@@ -161,7 +161,7 @@ export default {
     },
     onDeleteItem() {
       this.$emit("change:effort");
-    }
-  }
+    },
+  },
 };
 </script>

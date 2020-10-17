@@ -11,13 +11,13 @@ export default {
     breads: [],
     bases: [],
     ingredients: [],
-    drinks: []
+    drinks: [],
   },
   getters: {
-    breadsMap: state => keyBy(state.breads, "id"),
-    basesMap: state => keyBy(state.bases, "id"),
-    ingredientsMap: state => keyBy(state.ingredients, "id"),
-    drinksMap: state => keyBy(state.drinks, "id")
+    breadsMap: (state) => keyBy(state.breads, "id"),
+    basesMap: (state) => keyBy(state.bases, "id"),
+    ingredientsMap: (state) => keyBy(state.ingredients, "id"),
+    drinksMap: (state) => keyBy(state.drinks, "id"),
   },
   mutations: {
     setBreads(state, breads) {
@@ -31,7 +31,7 @@ export default {
     },
     setDrinks(state, drinks) {
       state.drinks = drinks;
-    }
+    },
   },
   actions: {
     async getBreads({ commit }) {
@@ -53,6 +53,6 @@ export default {
       const response = await DrinkService.list();
       commit("setDrinks", response.data);
       return response.data;
-    }
-  }
+    },
+  },
 };

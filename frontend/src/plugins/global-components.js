@@ -12,7 +12,7 @@ const requireComponent = require.context(
   /[A-Z]\w+\.(vue|js)$/
 );
 
-requireComponent.keys().forEach(fileName => {
+requireComponent.keys().forEach((fileName) => {
   // Get component config
   const componentConfig = requireComponent(fileName);
 

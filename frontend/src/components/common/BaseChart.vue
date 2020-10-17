@@ -27,21 +27,21 @@ import darkUnica from "@/utils/highcharts/themes/dark-unica-custom";
 export default {
   name: "BaseChart",
   components: {
-    highcharts: Chart
+    highcharts: Chart,
   },
   props: {
     filter: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     reactiveFilters: {
       type: Boolean,
-      default: true
+      default: true,
     },
     height: {
       type: Number,
-      default: 400
-    }
+      default: 400,
+    },
   },
   data() {
     return {
@@ -55,8 +55,8 @@ export default {
         chart: {
           height: this.height,
           style: {
-            fontFamily: "Roboto"
-          }
+            fontFamily: "Roboto",
+          },
         },
         credits: { enabled: false },
         exporting: { enabled: true },
@@ -68,10 +68,10 @@ export default {
             '<td style="padding:0"><strong>{point.y:.1f}</strong></td></tr>',
           footerFormat: "</table>",
           shared: true,
-          useHTML: true
+          useHTML: true,
         },
-        series: []
-      }
+        series: [],
+      },
     };
   },
   computed: {
@@ -85,7 +85,7 @@ export default {
     chartOptions() {
       const defaultTheme = this.$vuetify.theme.isDark ? darkUnica : Highcharts.getOptions();
       return Highcharts.merge(defaultTheme, this.defaultChartOptions, this.localChartOptions);
-    }
+    },
   },
   watch: {
     filter: {
@@ -95,8 +95,8 @@ export default {
         }
       },
       deep: true,
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   activated() {
     this.getChartData();
@@ -114,7 +114,7 @@ export default {
       } finally {
         this.chartLoading = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>

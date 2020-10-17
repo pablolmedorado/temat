@@ -26,12 +26,12 @@ export default {
   props: {
     userStory: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
-    isoDateTimeToLocaleString
-  }
+    isoDateTimeToLocaleString,
+  },
 };
 </script>
 

@@ -37,19 +37,19 @@ export default {
   props: {
     userStory: {
       type: Object,
-      required: true
+      required: true,
     },
     avatarSize: {
       type: Number,
-      default: 32
+      default: 32,
     },
     fontSize: {
       type: Number,
-      default: 12
-    }
+      default: 12,
+    },
   },
   computed: {
-    ...mapGetters("scrum", ["effortRolesMap"])
-  }
+    ...mapGetters("scrum", ["effortRolesMap"]),
+  },
 };
 </script>

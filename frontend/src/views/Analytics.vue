@@ -175,15 +175,15 @@ export default {
     UserStoryDelayedChart,
     UserStoryOverworkedChart,
     UserStoryTypeChart,
-    UserStoryUserChart
+    UserStoryUserChart,
   },
   data() {
     return {
-      year: DateTime.local().year
+      year: DateTime.local().year,
     };
   },
   computed: {
-    ...mapGetters(["loading", "yearOptions"])
-  }
+    ...mapGetters(["loading", "yearOptions"]),
+  },
 };
 </script>

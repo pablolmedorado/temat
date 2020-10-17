@@ -86,11 +86,11 @@ export default {
         ...defaultTableOptions,
         sortBy: ["planned_date"],
         sortDesc: [true],
-        mustSort: true
+        mustSort: true,
       },
       filters: {
-        planned_date__isnull: false
-      }
+        planned_date__isnull: false,
+      },
     };
   },
   computed: {
@@ -102,21 +102,21 @@ export default {
           align: "start",
           sortable: true,
           value: "user",
-          sortingField: "user__acronym"
+          sortingField: "user__acronym",
         },
         {
           text: "Estado",
           align: "start",
           sortable: true,
-          value: "approved"
-        }
+          value: "approved",
+        },
       ];
       const adminOptions = [
         ...defaultOptions,
-        { text: "Acciones", align: "left", sortable: false, value: "table_actions" }
+        { text: "Acciones", align: "left", sortable: false, value: "table_actions" },
       ];
       return this.loggedUser.is_staff ? adminOptions : defaultOptions;
-    }
+    },
   },
   methods: {
     fetchItems() {
@@ -130,9 +130,9 @@ export default {
       this.fetchItems();
       this.showSnackbar({
         color: "success",
-        message: "Día de vacaciones modificado correctamente"
+        message: "Día de vacaciones modificado correctamente",
       });
-    }
-  }
+    },
+  },
 };
 </script>

@@ -32,7 +32,7 @@ const router = new Router({
     {
       path: "/",
       name: "home",
-      redirect: { name: "timeline" }
+      redirect: { name: "timeline" },
     },
 
     {
@@ -41,8 +41,8 @@ const router = new Router({
       component: Timeline,
       meta: {
         title: "Timeline",
-        keepAlive: true
-      }
+        keepAlive: true,
+      },
     },
     {
       path: "/calendar",
@@ -50,9 +50,9 @@ const router = new Router({
       component: Calendar,
       meta: {
         title: "Calendario",
-        keepAlive: true
+        keepAlive: true,
       },
-      props: true
+      props: true,
     },
     {
       path: "/calendar/events",
@@ -60,8 +60,8 @@ const router = new Router({
       component: Events,
       meta: {
         title: "Eventos",
-        keepAlive: true
-      }
+        keepAlive: true,
+      },
     },
     {
       path: "/calendar/events/:id",
@@ -69,15 +69,15 @@ const router = new Router({
       component: EventDetail,
       meta: {
         title: "Evento",
-        keepAlive: false
+        keepAlive: false,
       },
-      props: true
+      props: true,
     },
 
     {
       path: "/scrum",
       name: "scrum",
-      redirect: { name: "sprints" }
+      redirect: { name: "sprints" },
     },
     {
       path: "/scrum/sprints",
@@ -85,8 +85,8 @@ const router = new Router({
       component: Sprints,
       meta: {
         title: "Sprints",
-        keepAlive: true
-      }
+        keepAlive: true,
+      },
     },
     {
       path: "/scrum/sprints/:sprintId/kanban",
@@ -94,9 +94,9 @@ const router = new Router({
       component: SprintKanban,
       meta: {
         title: "Sprint - Kanban",
-        keepAlive: true
+        keepAlive: true,
       },
-      props: true
+      props: true,
     },
     {
       path: "/scrum/sprints/:sprintId/chart",
@@ -104,9 +104,9 @@ const router = new Router({
       component: SprintChart,
       meta: {
         title: "Sprint - Gráfica",
-        keepAlive: true
+        keepAlive: true,
       },
-      props: true
+      props: true,
     },
     {
       path: "/scrum/sprints/:sprintId/gantt",
@@ -114,9 +114,9 @@ const router = new Router({
       component: SprintGantt,
       meta: {
         title: "Sprint - Gantt",
-        keepAlive: true
+        keepAlive: true,
       },
-      props: true
+      props: true,
     },
     {
       path: "/scrum/sprints/:sprintId/user-stories",
@@ -124,9 +124,9 @@ const router = new Router({
       component: UserStories,
       meta: {
         title: "Sprint - historias de usuario",
-        keepAlive: true
+        keepAlive: true,
       },
-      props: true
+      props: true,
     },
     {
       path: "/scrum/epics",
@@ -134,8 +134,8 @@ const router = new Router({
       component: Epics,
       meta: {
         title: "Épicas",
-        keepAlive: true
-      }
+        keepAlive: true,
+      },
     },
     {
       path: "/scrum/epics/:epicId/user-stories",
@@ -143,9 +143,9 @@ const router = new Router({
       component: UserStories,
       meta: {
         title: "Épica - historias de usuario",
-        keepAlive: true
+        keepAlive: true,
       },
-      props: true
+      props: true,
     },
     {
       path: "/scrum/user-stories",
@@ -153,8 +153,8 @@ const router = new Router({
       component: UserStories,
       meta: {
         title: "Índice historias de usuario",
-        keepAlive: true
-      }
+        keepAlive: true,
+      },
     },
     {
       path: "/scrum/user-stories/new",
@@ -162,9 +162,9 @@ const router = new Router({
       component: UserStoryDetail,
       meta: {
         title: "Nueva historia de usuario",
-        keepAlive: false
+        keepAlive: false,
       },
-      props: route => ({ sprintId: route.query.sprint, epicId: route.query.epic })
+      props: (route) => ({ sprintId: route.query.sprint, epicId: route.query.epic }),
     },
     {
       path: "/scrum/user-stories/:id",
@@ -173,8 +173,8 @@ const router = new Router({
       props: true,
       meta: {
         title: "Historia de usuario",
-        keepAlive: false
-      }
+        keepAlive: false,
+      },
     },
     {
       path: "/scrum/sprints/:sprintId/user-stories/:id",
@@ -182,9 +182,9 @@ const router = new Router({
       component: UserStoryDetail,
       meta: {
         title: "Historia de usuario",
-        keepAlive: false
+        keepAlive: false,
       },
-      props: true
+      props: true,
     },
     {
       path: "/scrum/epics/:epicId/user-stories/:id",
@@ -192,9 +192,9 @@ const router = new Router({
       component: UserStoryDetail,
       meta: {
         title: "Historia de usuario",
-        keepAlive: false
+        keepAlive: false,
       },
-      props: true
+      props: true,
     },
     {
       path: "/scrum/effort",
@@ -202,8 +202,8 @@ const router = new Router({
       component: Effort,
       meta: {
         title: "Esfuerzo",
-        keepAlive: true
-      }
+        keepAlive: true,
+      },
     },
 
     {
@@ -212,8 +212,8 @@ const router = new Router({
       component: GreenWorkingDays,
       meta: {
         title: "Jornadas especiales",
-        keepAlive: true
-      }
+        keepAlive: true,
+      },
     },
     {
       path: "/support",
@@ -221,13 +221,13 @@ const router = new Router({
       component: Support,
       meta: {
         title: "Soporte",
-        keepAlive: true
-      }
+        keepAlive: true,
+      },
     },
     {
       path: "/holidays",
       name: "holidays",
-      redirect: { name: "user-holidays" }
+      redirect: { name: "user-holidays" },
     },
     {
       path: "/holidays/user",
@@ -235,8 +235,8 @@ const router = new Router({
       component: UserHolidays,
       meta: {
         title: "Vacaciones usuario",
-        keepAlive: true
-      }
+        keepAlive: true,
+      },
     },
     {
       path: "/holidays/team",
@@ -244,8 +244,8 @@ const router = new Router({
       component: TeamHolidays,
       meta: {
         title: "Vacaciones equipo",
-        keepAlive: true
-      }
+        keepAlive: true,
+      },
     },
 
     {
@@ -254,8 +254,8 @@ const router = new Router({
       component: Breakfasts,
       meta: {
         title: "Desayunos",
-        keepAlive: true
-      }
+        keepAlive: true,
+      },
     },
     {
       path: "/analytics",
@@ -263,8 +263,8 @@ const router = new Router({
       component: Analytics,
       meta: {
         title: "Análisis",
-        keepAlive: true
-      }
+        keepAlive: true,
+      },
     },
     {
       path: "/notifications",
@@ -272,15 +272,15 @@ const router = new Router({
       component: Notifications,
       meta: {
         title: "Notificaciones",
-        keepAlive: true
-      }
+        keepAlive: true,
+      },
     },
     {
       path: "/admin",
       name: "admin",
       beforeEnter() {
         window.open("/admin", "_blank");
-      }
+      },
     },
     {
       path: "/logout",
@@ -288,14 +288,14 @@ const router = new Router({
       beforeEnter() {
         localStorage.clear();
         if (window.caches) {
-          caches.keys().then(cacheNames => {
-            cacheNames.forEach(cacheName => {
+          caches.keys().then((cacheNames) => {
+            cacheNames.forEach((cacheName) => {
               caches.delete(cacheName);
             });
           });
         }
         location.href = "/accounts/logout/";
-      }
+      },
     },
     {
       path: "*",
@@ -303,10 +303,10 @@ const router = new Router({
       component: NotFound,
       meta: {
         title: "No encontrado",
-        keepAlive: true
-      }
-    }
-  ]
+        keepAlive: true,
+      },
+    },
+  ],
 });
 
 // https://alligator.io/vuejs/vue-router-modify-head/
@@ -317,13 +317,13 @@ router.beforeEach((to, from, next) => {
   const nearestWithTitle = to.matched
     .slice()
     .reverse()
-    .find(r => r.meta && r.meta.title);
+    .find((r) => r.meta && r.meta.title);
 
   // Find the nearest route element with meta tags.
   const nearestWithMeta = to.matched
     .slice()
     .reverse()
-    .find(r => r.meta && r.meta.metaTags);
+    .find((r) => r.meta && r.meta.metaTags);
 
   // If a route with a title was found, set the document (page) title to that value.
   if (nearestWithTitle) {
@@ -331,7 +331,7 @@ router.beforeEach((to, from, next) => {
   }
 
   // Remove any stale meta tags from the document using the key attribute we set below.
-  Array.from(document.querySelectorAll("[data-vue-router-controlled]")).forEach(el => el.parentNode.removeChild(el));
+  Array.from(document.querySelectorAll("[data-vue-router-controlled]")).forEach((el) => el.parentNode.removeChild(el));
 
   // Skip rendering meta tags if there are none.
   if (!nearestWithMeta) {
@@ -339,10 +339,10 @@ router.beforeEach((to, from, next) => {
   } else {
     // Turn the meta tag definitions into actual elements in the head.
     nearestWithMeta.meta.metaTags
-      .map(tagDef => {
+      .map((tagDef) => {
         const tag = document.createElement("meta");
 
-        Object.keys(tagDef).forEach(key => {
+        Object.keys(tagDef).forEach((key) => {
           tag.setAttribute(key, tagDef[key]);
         });
 
@@ -352,7 +352,7 @@ router.beforeEach((to, from, next) => {
         return tag;
       })
       // Add the meta tags to the document head.
-      .forEach(tag => document.head.appendChild(tag));
+      .forEach((tag) => document.head.appendChild(tag));
 
     next();
   }

@@ -67,8 +67,8 @@ export default {
   props: {
     item: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     applyDarkVariant,
@@ -80,7 +80,7 @@ export default {
       await this.service.delete(this.item.id);
       this.$emit("delete:event", this.item);
       this.$emit("close:dialog");
-    }
-  }
+    },
+  },
 };
 </script>

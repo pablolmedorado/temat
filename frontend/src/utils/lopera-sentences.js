@@ -13,5 +13,5 @@ export default [
   '"¿Usted sigue viviendo donde nació? Yo puedo decirlo: yo nací aquí."',
   '"Ustedes, los béticos, tenéis colapsada La Palmera. Ustedes, los béticos tenéis un jugador que se llama Alfonso que está cedido al R.Madrid. Ustedes los béticos tenéis la mejor ciudad deportiva de Andalucía. Ustedes, los béticos, habeis invertido como el tercer mejor equipo de España."',
   '"Antes de vender yo las acciones del Betis me voy debajo de un puente, que me gusta mucho el pan con aceitunas."',
-  '"Y el muchacho me mira todos los domingos, cuando el Betis marca un gol, y abraza a su padre."'
+  '"Y el muchacho me mira todos los domingos, cuando el Betis marca un gol, y abraza a su padre."',
 ];

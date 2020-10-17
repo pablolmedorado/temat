@@ -13,7 +13,7 @@ export default {
   data() {
     return {
       service: EventService,
-      fetchFunctionName: "attendeesChartData"
+      fetchFunctionName: "attendeesChartData",
     };
   },
   computed: {
@@ -23,27 +23,27 @@ export default {
           {
             name: "",
             color: colors.green.base,
-            data: []
+            data: [],
           },
           {
             name: "",
             color: colors.cyan.base,
-            data: []
-          }
+            data: [],
+          },
         ],
         get(this.chartData, "series", [])
       );
       return {
         chart: {
-          type: "packedbubble"
+          type: "packedbubble",
         },
         title: {
-          text: "Eventos por invitado"
+          text: "Eventos por invitado",
         },
         tooltip: {
           pointFormat:
             '<tr><td style="color:{series.color};padding:0">Número de invitaciones: </td>' +
-            '<td style="padding:0"><strong>{point.y}</strong></td></tr>'
+            '<td style="padding:0"><strong>{point.y}</strong></td></tr>',
         },
         plotOptions: {
           packedbubble: {
@@ -51,21 +51,21 @@ export default {
             maxSize: "120%",
             layoutAlgorithm: {
               splitSeries: false,
-              gravitationalConstant: 0.02
+              gravitationalConstant: 0.02,
             },
             dataLabels: {
               enabled: true,
               format: "{point.name}",
               style: {
                 color: "black",
-                fontWeight: "bold"
-              }
-            }
-          }
+                fontWeight: "bold",
+              },
+            },
+          },
         },
-        series
+        series,
       };
-    }
-  }
+    },
+  },
 };
 </script>

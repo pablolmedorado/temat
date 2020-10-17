@@ -58,21 +58,21 @@ export default {
   props: {
     formComponent: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       step: 1,
       datesToCreate: [],
-      itemsToCreate: []
+      itemsToCreate: [],
     };
   },
   computed: {
     ...mapState(["locale"]),
     nextText() {
       return this.step < 2 ? "Siguiente" : "Guardar";
-    }
+    },
   },
   methods: {
     reset() {
@@ -85,7 +85,7 @@ export default {
       this.showDialog = false;
     },
     step2() {
-      this.itemsToCreate = this.datesToCreate.map(date => {
+      this.itemsToCreate = this.datesToCreate.map((date) => {
         return { date, user: null };
       });
       this.step = 2;
@@ -99,7 +99,7 @@ export default {
     },
     next() {
       this.step < 2 ? this.step2() : this.submit();
-    }
-  }
+    },
+  },
 };
 </script>

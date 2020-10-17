@@ -2,14 +2,14 @@ module.exports = {
   root: true,
   env: {
     node: true,
-    browser: true
+    browser: true,
   },
   globals: {
-    Urls: "readonly"
+    Urls: "readonly",
   },
   extends: ["plugin:vue/recommended", "eslint:recommended", "@vue/prettier"],
   parserOptions: {
-    parser: "babel-eslint"
+    parser: "babel-eslint",
   },
   plugins: ["vuetify"],
   rules: {
@@ -32,6 +32,6 @@ module.exports = {
     "vue/valid-v-slot": "off", // TODO: activate after migrating to vue3/vuetify3
     "vuetify/no-deprecated-classes": "error",
     "vuetify/grid-unknown-attributes": "error",
-    "vuetify/no-legacy-grid": "error"
-  }
+    "vuetify/no-legacy-grid": "error",
+  },
 };

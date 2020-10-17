@@ -56,20 +56,20 @@ export default {
           {
             text: "Sprints",
             to: { name: "sprints" },
-            exact: true
+            exact: true,
           },
           { text: this.contextItem.name, disabled: false, link: false },
-          { text: "Diagrama de Gantt", disabled: true }
+          { text: "Diagrama de Gantt", disabled: true },
         ];
       } else {
         return [];
       }
-    }
+    },
   },
   methods: {
     getChartData() {
       this.$refs.chart.getChartData();
-    }
-  }
+    },
+  },
 };
 </script>

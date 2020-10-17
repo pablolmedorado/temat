@@ -80,11 +80,11 @@ import { applyDarkVariant, getFontColourFromBackground } from "@/utils/colours";
 export default {
   name: "Timeline",
   components: {
-    EventRepresentation
+    EventRepresentation,
   },
   data() {
     return {
-      events: []
+      events: [],
     };
   },
   computed: {
@@ -92,10 +92,10 @@ export default {
     ...mapGetters(["loading"]),
     ...mapGetters("calendar", ["eventTypesMap", "eventVisibilityTypesMap"]),
     eventsMap() {
-      return groupBy(this.events, event => {
+      return groupBy(this.events, (event) => {
         return event.luxonStart.setLocale(this.locale).toLocaleString(DateTime.DATE_HUGE);
       });
-    }
+    },
   },
   created() {
     if (!Object.keys(this.eventTypesMap).length) {
@@ -111,14 +111,14 @@ export default {
     getFontColourFromBackground,
     async getTimeLine() {
       const response = await EventService.myTimeline();
-      this.events = response.data.results.map(event => {
+      this.events = response.data.results.map((event) => {
         return new CalendarEvent(event);
       });
     },
     viewInCalendar(event) {
       const date = DateTime.fromISO(event.start_datetime).toISODate();
       this.$router.push({ name: "calendar", params: { initialDate: date } });
-    }
-  }
+    },
+  },
 };
 </script>

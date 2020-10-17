@@ -7,7 +7,7 @@
           local-storage-key="effort"
           verbose-name="Esfuerzo"
           verbose-name-plural="Esfuerzo"
-          :item-text="item => `${item.date} / ${item.user_story.name} / ${item.effort}UT`"
+          :item-text="(item) => `${item.date} / ${item.user_story.name} / ${item.effort}UT`"
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
@@ -95,7 +95,7 @@ export default {
         sortBy: ["date", "user_story"],
         sortDesc: [true, false],
         mustSort: false,
-        multiSort: true
+        multiSort: true,
       },
       service: EffortService,
       filterComponent: EffortFilters,
@@ -103,9 +103,9 @@ export default {
         date__gte: DateTime.local()
           .minus({ weeks: 1 })
           .toISODate(),
-        date__lte: DateTime.local().toISODate()
+        date__lte: DateTime.local().toISODate(),
       },
-      formComponent: EffortForm
+      formComponent: EffortForm,
     };
   },
   computed: {
@@ -123,7 +123,7 @@ export default {
           value: "user_story",
           sortingField: "user_story__name",
           fields: ["user_story.id", "user_story.name"],
-          fixed: true
+          fixed: true,
         },
         {
           text: "Usuario",
@@ -131,7 +131,7 @@ export default {
           sortable: true,
           value: "user",
           sortingField: "user__acronym",
-          default: this.loggedUser.is_staff
+          default: this.loggedUser.is_staff,
         },
         { text: "Rol", align: "start", sortable: false, value: "role", fixed: true },
         { text: "Esfuerzo", align: "start", sortable: true, value: "effort", fixed: true },
@@ -142,10 +142,10 @@ export default {
           sortable: false,
           value: "table_actions",
           fields: ["user", "creation_datetime"],
-          fixed: true
-        }
+          fixed: true,
+        },
       ];
-    }
+    },
   },
   created() {
     if (!this.loggedUser.is_staff) {
@@ -165,8 +165,8 @@ export default {
     },
     openReportDialog(filters) {
       this.$refs.reportDialog.open(filters);
-    }
-  }
+    },
+  },
 };
 </script>
 

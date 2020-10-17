@@ -350,17 +350,17 @@ export default {
       disableEpicFilter: Boolean(this.filters.epic_id),
       tab: "general",
       priorityOptions: range(1, 11),
-      basicFilters: ["search", "status__in", "any_role_user__in"]
+      basicFilters: ["search", "status__in", "any_role_user__in"],
     };
   },
   computed: {
     ...mapState("users", {
-      userOptions: "users"
+      userOptions: "users",
     }),
     ...mapState("scrum", {
       riskLevelOptions: "riskLevels",
       userStoryStatusOptions: "userStoryStatus",
-      userStoryTypesOptions: "userStoryTypes"
+      userStoryTypesOptions: "userStoryTypes",
     }),
     statusFilter() {
       return this.splitFilterValue("status__in", true);
@@ -382,7 +382,7 @@ export default {
     },
     supportUserFilter() {
       return this.splitFilterValue("support_user_id__in", true);
-    }
+    },
   },
   created() {
     if (!Object.keys(this.userStoryTypesOptions).length) {
@@ -390,7 +390,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("scrum", ["getUserStoryTypes"])
-  }
+    ...mapActions("scrum", ["getUserStoryTypes"]),
+  },
 };
 </script>

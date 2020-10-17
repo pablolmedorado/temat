@@ -461,7 +461,7 @@ import { isoDateTimeToLocaleString, isoDateToLocaleString } from "@/utils/dates"
 export default {
   name: "UserStoryForm",
   filters: {
-    date: isoDateToLocaleString
+    date: isoDateToLocaleString,
   },
   mixins: [FormMixin({ service: UserStoryService })],
   validations: {
@@ -480,7 +480,7 @@ export default {
             (DateTime.fromISO(vm.start_date) >= DateTime.fromISO(vm.sprint.start_date) &&
               DateTime.fromISO(vm.start_date) <= DateTime.fromISO(vm.sprint.end_date))
           );
-        }
+        },
       },
       end_date: {
         requiredIfSprint: requiredIf("sprint"),
@@ -498,7 +498,7 @@ export default {
             !helpers.req(vm.start_date) ||
             DateTime.fromISO(vm.start_date) <= DateTime.fromISO(vm.end_date)
           );
-        }
+        },
       },
       planned_effort: { required, numeric, minValue: minValue(1) },
       priority: { required, numeric, between: between(1, 10) },
@@ -508,8 +508,8 @@ export default {
       validation_comments: { maxLength: maxLength(2000) },
       support_comments: { maxLength: maxLength(2000) },
       risk_level: { required },
-      risk_comments: { maxLength: maxLength(2000) }
-    }
+      risk_comments: { maxLength: maxLength(2000) },
+    },
   },
   data() {
     return {
@@ -520,21 +520,21 @@ export default {
       validatedOptions: [
         { value: null, text: "Sin validar" },
         { value: false, text: "Rechazada" },
-        { value: true, text: "Validada" }
+        { value: true, text: "Validada" },
       ],
       validationErrorMessages: {
         endDateBeforeStartDate: "Fecha de fin anterior a la de inicio",
         outOfSprint: "Fecha fuera del sprint",
-        requiredIfSprint: "Requerido si hay sprint"
+        requiredIfSprint: "Requerido si hay sprint",
       },
-      successMessage: "Historia de usuario guardada correctamente"
+      successMessage: "Historia de usuario guardada correctamente",
     };
   },
   computed: {
     ...mapState(["locale", "loggedUser"]),
     ...mapState("scrum", {
       riskLevelOptions: "riskLevels",
-      userStoryTypesOptions: "userStoryTypes"
+      userStoryTypesOptions: "userStoryTypes",
     }),
     read_only() {
       return (
@@ -547,7 +547,7 @@ export default {
         return `Última modificación: ${isoDateTimeToLocaleString(this.item.validated_changed)}`;
       }
       return undefined;
-    }
+    },
   },
   created() {
     if (!Object.keys(this.userStoryTypesOptions).length) {
@@ -561,13 +561,13 @@ export default {
       return [
         this.replaceUndefined({
           ...this.item,
-          sprint: this.item.sprint ? this.item.sprint.id : null
+          sprint: this.item.sprint ? this.item.sprint.id : null,
         }),
         {
           params: {
-            expand: "sprint"
-          }
-        }
+            expand: "sprint",
+          },
+        },
       ];
     },
     setStartDateFromSprint() {
@@ -580,7 +580,7 @@ export default {
       this.item.sprint = null;
       this.item.start_date = null;
       this.item.end_date = null;
-    }
-  }
+    },
+  },
 };
 </script>
