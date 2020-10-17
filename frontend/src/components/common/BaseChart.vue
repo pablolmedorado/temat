@@ -8,9 +8,12 @@
       :options="chartOptions"
     />
     <v-card v-else :height="height || 400" flat>
-      <v-overlay absolute>
+      <v-overlay v-if="chartLoading" absolute>
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
+      <v-alert v-else type="error" text outlined border="left">
+        Ocurrió un error cargando la gráfica.
+      </v-alert>
     </v-card>
   </div>
 </template>
@@ -45,6 +48,7 @@ export default {
       service: null,
       fetchFunctionName: null,
       chartData: null,
+      chartLoading: false,
       constructorType: "chart",
       defaultChartOptions: {
         title: { text: "Análisis" },
@@ -102,8 +106,14 @@ export default {
       return [this.filter];
     },
     async getChartData() {
-      const response = await this.service[this.fetchFunctionName].apply(this.service, this.buildFetchFunctionArgs());
-      this.chartData = response.data;
+      this.chartLoading = true;
+      this.chartData = null;
+      try {
+        const response = await this.service[this.fetchFunctionName].apply(this.service, this.buildFetchFunctionArgs());
+        this.chartData = response.data;
+      } finally {
+        this.chartLoading = false;
+      }
     }
   }
 };

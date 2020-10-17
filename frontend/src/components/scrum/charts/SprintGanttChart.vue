@@ -38,6 +38,9 @@ export default {
           text: this.chartData.name
         },
         legend: { enabled: false },
+        tooltip: {
+          shared: false
+        },
         xAxis: {
           min: new Date(this.chartData.start_date).getTime(),
           max: new Date(this.chartData.end_date).getTime()
