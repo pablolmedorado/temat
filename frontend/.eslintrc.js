@@ -7,11 +7,11 @@ module.exports = {
   globals: {
     Urls: "readonly"
   },
-  extends: ["eslint:recommended", "plugin:vue/recommended", "plugin:prettier/recommended", "prettier/vue"],
+  extends: ["plugin:vue/recommended", "eslint:recommended", "@vue/prettier"],
   parserOptions: {
     parser: "babel-eslint"
   },
-  plugins: ["vue", "prettier", "vuetify"],
+  plugins: ["vuetify"],
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
