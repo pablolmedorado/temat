@@ -34,17 +34,17 @@ export default {
   props: {
     itemText: {
       type: [String, Function],
-      default: "name"
+      default: "name",
     },
     deleteChildItemsWarning: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       dataToDelete: null,
-      deletionConfirmation: false
+      deletionConfirmation: false,
     };
   },
   computed: {
@@ -60,12 +60,12 @@ export default {
           : this.dataToDelete[this.itemText];
         return `Confirmo que deseo eliminar el elemento '${representation}'`;
       }
-    }
+    },
   },
   watch: {
     showDialog() {
       this.deletionConfirmation = false;
-    }
+    },
   },
   methods: {
     open(data) {
@@ -79,8 +79,8 @@ export default {
     confirmDeletion() {
       this.$emit("confirm", this.dataToDelete);
       this.close();
-    }
-  }
+    },
+  },
 };
 </script>
 

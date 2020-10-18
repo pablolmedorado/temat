@@ -49,58 +49,58 @@ import { isoDateToLocaleString } from "@/utils/dates";
 export default {
   name: "DatePickerInput",
   filters: {
-    date: isoDateToLocaleString
+    date: isoDateToLocaleString,
   },
   inheritAttrs: false,
   props: {
     value: {
       type: String,
-      default: null
+      default: null,
     },
     label: {
       type: String,
-      default: ""
+      default: "",
     },
     prependIcon: {
       type: String,
-      default: undefined
+      default: undefined,
     },
     appendIcon: {
       type: String,
-      default: undefined
+      default: undefined,
     },
     min: {
       type: String,
-      default: undefined
+      default: undefined,
     },
     max: {
       type: String,
-      default: undefined
+      default: undefined,
     },
     rules: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     errorMessages: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     readonly: {
       type: Boolean,
-      default: false
+      default: false,
     },
     clearable: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      showDatepicker: false
+      showDatepicker: false,
     };
   },
   computed: {
-    ...mapState(["locale"])
-  }
+    ...mapState(["locale"]),
+  },
 };
 </script>

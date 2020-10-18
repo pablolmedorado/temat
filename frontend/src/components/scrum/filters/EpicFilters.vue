@@ -53,14 +53,14 @@ export default {
     return {
       finishedOptions: [
         { label: "Sí", value: true },
-        { label: "No", value: false }
-      ]
+        { label: "No", value: false },
+      ],
     };
   },
   computed: {
     tagFilter() {
       return this.splitFilterValue("tags__name__in");
-    }
-  }
+    },
+  },
 };
 </script>

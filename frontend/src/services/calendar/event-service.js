@@ -12,13 +12,13 @@ export default class EventService extends BaseService {
     const params = {
       ordering: "start_datetime,name",
       end_datetime__date__gte: luxonInterval.start.toISODate(),
-      start_datetime__date__lte: luxonInterval.end.toISODate()
+      start_datetime__date__lte: luxonInterval.end.toISODate(),
     };
     if (excludeSystemEvents) {
       params["type__system"] = false;
     }
     const response = await this.list(params);
-    return response.data.map(event => new CalendarEvent(event));
+    return response.data.map((event) => new CalendarEvent(event));
   }
 
   static myImportantDatesByYear(year) {
@@ -32,29 +32,29 @@ export default class EventService extends BaseService {
       params: {
         end_datetime__date__gte: DateTime.local().toISODate(),
         ordering: "start_datetime",
-        page_size: 10
-      }
+        page_size: 10,
+      },
     });
   }
 
   static typeChartData(queryParams) {
     const url = Urls[`${this.baseUrlName}-type-pie-chart`]();
     return Api.get(url, {
-      params: queryParams
+      params: queryParams,
     });
   }
 
   static attendeesChartData(queryParams) {
     const url = Urls[`${this.baseUrlName}-attendee-packedbubble-chart`]();
     return Api.get(url, {
-      params: queryParams
+      params: queryParams,
     });
   }
 
   static monthlyChartData(queryParams) {
     const url = Urls[`${this.baseUrlName}-monthly-chart`]();
     return Api.get(url, {
-      params: queryParams
+      params: queryParams,
     });
   }
 }

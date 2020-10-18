@@ -18,17 +18,17 @@ export default {
   props: {
     value: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     truncateResults: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
     ...mapGetters("tags", {
-      tagOptions: "tagFlatList"
-    })
-  }
+      tagOptions: "tagFlatList",
+    }),
+  },
 };
 </script>

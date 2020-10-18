@@ -12,32 +12,32 @@ export default {
   data() {
     return {
       service: EventService,
-      fetchFunctionName: "monthlyChartData"
+      fetchFunctionName: "monthlyChartData",
     };
   },
   computed: {
     localChartOptions() {
       return {
         chart: {
-          type: "column"
+          type: "column",
         },
         title: {
-          text: "Eventos por mes"
+          text: "Eventos por mes",
         },
         xAxis: {
-          categories: get(this.chartData, "categories", [])
+          categories: get(this.chartData, "categories", []),
         },
         yAxis: {
           allowDecimals: false,
           title: {
-            text: "Cantidad"
+            text: "Cantidad",
           },
           stackLabels: {
             enabled: true,
             style: {
               fontWeight: "bold",
-              color: colors.grey.base
-            }
+              color: colors.grey.base,
+            },
           },
           plotLines: [
             {
@@ -47,10 +47,10 @@ export default {
               width: 2,
               label: {
                 text: "Media",
-                style: { color: this.$vuetify.theme.isDark ? "#ffffff" : "#000000" }
-              }
-            }
-          ]
+                style: { color: this.$vuetify.theme.isDark ? "#ffffff" : "#000000" },
+              },
+            },
+          ],
         },
         tooltip: {
           headerFormat: '<span style="font-size:10px">{point.x}</span><table>',
@@ -59,23 +59,23 @@ export default {
             '<td style="padding:0"><strong>{point.y}</strong></td></tr>' +
             '<tr><td style="padding:0">Total: </td>' +
             '<td style="padding:0"><strong>{point.stackTotal}</strong></td></tr>',
-          shared: false
+          shared: false,
         },
         plotOptions: {
           column: {
             stacking: "normal",
             dataLabels: {
-              enabled: true
-            }
+              enabled: true,
+            },
           },
           series: {
             borderWidth: 1,
-            borderColor: this.$vuetify.theme.isDark ? "#ffffff" : "rgba(0, 0, 0, 0.54)"
-          }
+            borderColor: this.$vuetify.theme.isDark ? "#ffffff" : "rgba(0, 0, 0, 0.54)",
+          },
         },
-        series: get(this.chartData, "series", [])
+        series: get(this.chartData, "series", []),
       };
-    }
-  }
+    },
+  },
 };
 </script>

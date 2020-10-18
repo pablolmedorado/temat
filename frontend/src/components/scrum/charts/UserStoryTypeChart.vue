@@ -9,29 +9,29 @@ export default {
   data() {
     return {
       service: UserStoryService,
-      fetchFunctionName: "typeChartData"
+      fetchFunctionName: "typeChartData",
     };
   },
   computed: {
     localChartOptions() {
       return {
         chart: {
-          type: "pie"
+          type: "pie",
         },
         title: {
-          text: "Historias de usuario por tipo"
+          text: "Historias de usuario por tipo",
         },
         plotOptions: {
           pie: {
             allowPointSelect: true,
             cursor: "pointer",
             dataLabels: { enabled: true, format: "{point.y} ({point.percentage:.0f} %)" },
-            showInLegend: true
+            showInLegend: true,
           },
           series: {
             borderWidth: 1,
-            borderColor: this.$vuetify.theme.isDark ? "#ffffff" : "rgba(0, 0, 0, 0.54)"
-          }
+            borderColor: this.$vuetify.theme.isDark ? "#ffffff" : "rgba(0, 0, 0, 0.54)",
+          },
         },
         series: [
           {
@@ -39,11 +39,11 @@ export default {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false,
-            data: this.chartData || []
-          }
-        ]
+            data: this.chartData || [],
+          },
+        ],
       };
-    }
-  }
+    },
+  },
 };
 </script>

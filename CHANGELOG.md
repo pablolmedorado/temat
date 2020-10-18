@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/pablolmedorado/temat/compare/v1.1.0...v1.2.0) (2020-10-18)
+
+
+### Features
+
+* **sprints:** add current date indicator and navigation to the gantt chart ([96a862a](https://github.com/pablolmedorado/temat/commit/96a862a2de46478ded710d875bdd2e085116f073))
+
+
+### Bug Fixes
+
+* **breakfasts:** move main action (summary) to the fab button and add missing toolbar tooltip ([8732f4d](https://github.com/pablolmedorado/temat/commit/8732f4de3d39d665daedf1be62fb52a16ce31736))
+* **charts:** set loading state while retrieving chart data and alert users if the request fails ([041429e](https://github.com/pablolmedorado/temat/commit/041429e242b9f0ff3914e7776e96ce406ec7e682))
+* **sprints:** solve gantt chart shared tooltip issue ([30a5e31](https://github.com/pablolmedorado/temat/commit/30a5e31a1f08c22fcc9627b33f409daa6352beb0))
+
 ## [1.1.0](https://github.com/pablolmedorado/temat/compare/v1.0.1...v1.1.0) (2020-10-13)
 
 

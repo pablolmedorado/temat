@@ -116,7 +116,7 @@ export default {
           sortable: true,
           value: "ongoing",
           sortingField: "annotated_ongoing",
-          default: true
+          default: true,
         },
         {
           text: "Usuario responsable",
@@ -124,33 +124,33 @@ export default {
           sortable: true,
           value: "accountable_user",
           sortingField: "accountable_user__acronym",
-          default: true
+          default: true,
         },
         {
           text: "Historias de usuario",
           align: "start",
           sortable: true,
           sortingField: "user_stories__count",
-          value: "num_of_user_stories"
+          value: "num_of_user_stories",
         },
         {
           text: "Progreso",
           align: "start",
           sortable: true,
           sortingField: "annotated_current_progress",
-          value: "current_progress"
+          value: "current_progress",
         },
         { text: "Tags", align: "start", sortable: false, value: "tags" },
-        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true }
+        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
       ],
       tableOptions: {
         sortBy: ["ongoing", "start_date"],
         sortDesc: [true, true],
-        multiSort: true
+        multiSort: true,
       },
       service: SprintService,
       filterComponent: SprintFilters,
-      formComponent: SprintForm
+      formComponent: SprintForm,
     };
   },
   computed: {
@@ -161,9 +161,9 @@ export default {
         start_date: DateTime.local().toISODate(),
         end_date: null,
         accountable_user: null,
-        tags: []
+        tags: [],
       };
-    }
+    },
   },
   methods: {
     setTagFilter(tag) {
@@ -171,7 +171,7 @@ export default {
       this.$nextTick(() => {
         this.$refs.itemIndex.fetchTableItems();
       });
-    }
-  }
+    },
+  },
 };
 </script>

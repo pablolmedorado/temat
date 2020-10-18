@@ -147,57 +147,57 @@ export default {
       tableOptions: {
         itemsPerPage: -1,
         sortBy: ["planned_date"],
-        sortDesc: [true]
+        sortDesc: [true],
       },
       tableHeaders: [
         {
           text: "Fecha",
           align: "start",
           sortable: true,
-          value: "planned_date"
+          value: "planned_date",
         },
         {
           text: "Estado",
           align: "start",
           sortable: true,
-          value: "approved"
+          value: "approved",
         },
         {
           text: "Acciones",
           align: "start",
           sortable: false,
-          value: "table_actions"
-        }
+          value: "table_actions",
+        },
       ],
       items: [],
       datesToRequest: [],
       usedDates: [],
       pickerDate: currentDate.toFormat("yyyy-MM"),
-      showHelpDialog: false
+      showHelpDialog: false,
     };
   },
   computed: {
     plannedHolidays() {
-      return this.items.filter(holiday => holiday.planned_date);
+      return this.items.filter((holiday) => holiday.planned_date);
     },
     unplannedHolidays() {
-      return this.items.filter(holiday => !holiday.planned_date);
+      return this.items.filter((holiday) => !holiday.planned_date);
     },
     pendingHolidays() {
       const now = DateTime.local();
-      return this.unplannedHolidays.filter(holiday => {
+      return this.unplannedHolidays.filter((holiday) => {
         return now < DateTime.fromISO(holiday.expiration_date);
       });
     },
     availableHolidays() {
       const now = DateTime.local();
-      return this.pendingHolidays.filter(holiday => {
+      return this.pendingHolidays.filter((holiday) => {
         return now > DateTime.fromISO(holiday.allowance_date);
       });
     },
     expiredHolidays() {
       const now = DateTime.local();
-      return this.unplannedHolidays.filter(holiday => {
+      return this.unplannedHolidays.filter((holiday) => {
         return now > DateTime.fromISO(holiday.expiration_date);
       });
     },
@@ -206,7 +206,7 @@ export default {
       const startDate = date.startOf("year");
       const endDate = date.endOf("year").plus({ year: 1 });
       return Interval.fromDateTimes(startDate, endDate);
-    }
+    },
   },
   watch: {
     "filters.allowance_date__year": function(newValue) {
@@ -217,7 +217,7 @@ export default {
           : DateTime.fromObject({ year: newValue }).toFormat("yyyy-MM");
       this.datesToRequest = [];
       this.getusedDates();
-    }
+    },
   },
   activated() {
     this.fetchItems();
@@ -233,7 +233,7 @@ export default {
           fields: "id,planned_date,approved,expiration_date,allowance_date",
           ordering: `${this.tableOptions.sortDesc[0] ? "-" : ""}${this.tableOptions.sortBy[0]}`,
           page: this.tableOptions.page,
-          page_size: this.tableOptions.itemsPerPage
+          page_size: this.tableOptions.itemsPerPage,
         });
         this.items = this.tableOptions.itemsPerPage <= 0 ? response.data : response.data.results;
         this.itemCount = this.tableOptions.itemsPerPage <= 0 ? response.data.length : response.data.count;
@@ -249,7 +249,7 @@ export default {
         user_id: this.loggedUser.id,
         planned_date__gte: this.pickerInterval.start.toISODate(),
         planned_date__lte: this.pickerInterval.end.toISODate(),
-        fields: "planned_date"
+        fields: "planned_date",
       });
       this.usedDates = response.data.map(property("planned_date"));
     },
@@ -264,11 +264,11 @@ export default {
         this.getSummary();
         this.showSnackbar({
           color: "success",
-          message: "Días de vacaciones solicitados correctamente"
+          message: "Días de vacaciones solicitados correctamente",
         });
         this.datesToRequest = [];
       }
-    }
-  }
+    },
+  },
 };
 </script>

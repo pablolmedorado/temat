@@ -13,18 +13,18 @@ export default {
   props: {
     sprintId: {
       type: String,
-      required: true
+      required: true,
     },
     burnUp: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       constructorType: "stockChart",
       service: SprintService,
-      fetchFunctionName: "burnChartData"
+      fetchFunctionName: "burnChartData",
     };
   },
   computed: {
@@ -37,7 +37,7 @@ export default {
     },
     actualData() {
       if (has(this.chartData, "data")) {
-        return this.chartData.data.map(item => {
+        return this.chartData.data.map((item) => {
           const timestamp = new Date(item.date).getTime();
           let value = null;
           if (item.effort_burned !== null) {
@@ -69,14 +69,14 @@ export default {
     },
     effortData() {
       if (has(this.chartData, "data")) {
-        return this.chartData.data.map(item => [new Date(item.date).getTime(), item.actual_effort]);
+        return this.chartData.data.map((item) => [new Date(item.date).getTime(), item.actual_effort]);
       }
       return [];
     },
     localChartOptions() {
       return {
         chart: {
-          zoomType: "xy"
+          zoomType: "xy",
         },
         title: { text: null },
         rangeSelector: {
@@ -84,28 +84,28 @@ export default {
             {
               type: "week",
               count: 1,
-              text: "1w"
+              text: "1w",
             },
             {
               type: "month",
               count: 1,
-              text: "1m"
+              text: "1m",
             },
             {
               type: "all",
               count: 1,
-              text: "All"
-            }
-          ]
+              text: "All",
+            },
+          ],
         },
         xAxis: {
-          ordinal: false
+          ordinal: false,
         },
         yAxis: {
           allowDecimals: false,
           min: 0,
           title: {
-            text: "Esfuerzo (UT)"
+            text: "Esfuerzo (UT)",
           },
           plotLines: [
             {
@@ -117,10 +117,10 @@ export default {
               label: {
                 align: "right",
                 x: -20,
-                text: "Esfuerzo diario esperado"
-              }
-            }
-          ]
+                text: "Esfuerzo diario esperado",
+              },
+            },
+          ],
         },
         series: [
           {
@@ -130,9 +130,9 @@ export default {
             zIndex: 3,
             marker: {
               enabled: true,
-              radius: 3
+              radius: 3,
             },
-            data: this.actualData
+            data: this.actualData,
           },
           {
             name: `${this.burnUp ? "Acumulado" : "Remanente"} ideal`,
@@ -140,26 +140,26 @@ export default {
             dashStyle: "longdash",
             color: colors.lightGreen.base,
             zIndex: 2,
-            data: this.idealData
+            data: this.idealData,
           },
           {
             name: "Esfuerzo real",
             type: "column",
             color: colors.teal.lighten4,
             zIndex: 1,
-            data: this.effortData
-          }
+            data: this.effortData,
+          },
         ],
         navigator: {
-          enabled: false
-        }
+          enabled: false,
+        },
       };
-    }
+    },
   },
   methods: {
     buildFetchFunctionArgs() {
       return [this.sprintId];
-    }
-  }
+    },
+  },
 };
 </script>

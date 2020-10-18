@@ -81,21 +81,21 @@ export default {
           const startDateAux = DateTime.fromISO(vm.start_date);
           const endDateAux = DateTime.fromISO(vm.end_date);
           return endDateAux.diff(startDateAux).milliseconds >= 0;
-        }
+        },
       },
-      accountable_user: { required }
-    }
+      accountable_user: { required },
+    },
   },
   data() {
     return {
       validationErrorMessages: {
-        endDateBeforeStartDate: "Fecha de fin anterior a la de inicio"
+        endDateBeforeStartDate: "Fecha de fin anterior a la de inicio",
       },
-      successMessage: "Sprint guardado correctamente"
+      successMessage: "Sprint guardado correctamente",
     };
   },
   computed: {
-    ...mapState(["locale"])
+    ...mapState(["locale"]),
   },
   watch: {
     "item.start_date": {
@@ -109,8 +109,8 @@ export default {
           const newEndDate = newDateAux.plus(previousDiff);
           this.item.end_date = newEndDate.toISODate();
         }
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>

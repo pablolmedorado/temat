@@ -101,20 +101,20 @@ export default {
   name: "KanbanCard",
   components: { UserStoryActors },
   filters: {
-    datetime: isoDateTimeToLocaleString
+    datetime: isoDateTimeToLocaleString,
   },
   props: {
     userStory: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       greenColour: colors.green.base,
       orangeColour: colors.orange.base,
       redColour: colors.red.base,
-      blueColour: colors.blue.base
+      blueColour: colors.blue.base,
     };
   },
   computed: {
@@ -147,8 +147,8 @@ export default {
         const validationDate = DateTime.fromISO(this.userStory.validated_changed);
         return endDate <= validationDate ? "orange" : "green";
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

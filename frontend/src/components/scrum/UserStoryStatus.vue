@@ -19,11 +19,11 @@ export default {
   props: {
     userStory: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
-    ...mapState("scrum", ["userStoryStatus"])
-  }
+    ...mapState("scrum", ["userStoryStatus"]),
+  },
 };
 </script>

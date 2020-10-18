@@ -61,7 +61,7 @@ export default {
   mixins: [BreadcrumbsContextMixin],
   data() {
     return {
-      burnUp: false
+      burnUp: false,
     };
   },
   computed: {
@@ -72,20 +72,20 @@ export default {
           {
             text: "Sprints",
             to: { name: "sprints" },
-            exact: true
+            exact: true,
           },
           { text: this.contextItem.name, disabled: false, link: false },
-          { text: "Diagrama de quemado", disabled: true }
+          { text: "Diagrama de quemado", disabled: true },
         ];
       } else {
         return [];
       }
-    }
+    },
   },
   methods: {
     getChartData() {
       this.$refs.chart.getChartData();
-    }
-  }
+    },
+  },
 };
 </script>

@@ -98,13 +98,13 @@ export default {
   mixins: [FilterMixin],
   data() {
     return {
-      basicFilters: ["search", "accountable_user_id"]
+      basicFilters: ["search", "accountable_user_id"],
     };
   },
   computed: {
     tagFilter() {
       return this.splitFilterValue("tags__name__in");
-    }
-  }
+    },
+  },
 };
 </script>

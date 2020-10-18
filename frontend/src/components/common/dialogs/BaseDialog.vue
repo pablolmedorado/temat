@@ -26,6 +26,6 @@ import DialogMixin from "@/mixins/dialog-mixin";
 
 export default {
   name: "BaseDialog",
-  mixins: [DialogMixin]
+  mixins: [DialogMixin],
 };
 </script>

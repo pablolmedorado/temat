@@ -20,14 +20,14 @@ import { isoDateToLocaleString } from "@/utils/dates";
 export default {
   name: "DateRouterLink",
   filters: {
-    date: isoDateToLocaleString
+    date: isoDateToLocaleString,
   },
   props: {
     date: {
       type: String,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 };
 </script>
 

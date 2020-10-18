@@ -15,50 +15,66 @@ export default {
   props: {
     sprintId: {
       type: String,
-      required: true
+      required: true,
     },
     height: {
       type: Number,
-      default: null
-    }
+      default: null,
+    },
   },
   data() {
     return {
       constructorType: "ganttChart",
       service: SprintService,
-      fetchFunctionName: "ganttChartData"
+      fetchFunctionName: "ganttChartData",
     };
   },
   computed: {
     ...mapGetters("scrum", ["riskLevelsMap"]),
     localChartOptions() {
+      const router = this.$router;
+      function navigateToUSDetail(event) {
+        const userStoryId = event.point.id;
+        router.push({ name: "user-story", params: { id: userStoryId } });
+      }
       const userStories = get(this.chartData, "user_stories", []);
+
       return {
         title: {
-          text: this.chartData.name
+          text: this.chartData.name,
         },
         legend: { enabled: false },
-        tooltip: {
-          shared: false
+        tooltip: { shared: false },
+        plotOptions: {
+          series: {
+            cursor: "pointer",
+            point: {
+              events: {
+                click: navigateToUSDetail,
+              },
+            },
+          },
         },
         xAxis: {
+          currentDateIndicator: true,
           min: new Date(this.chartData.start_date).getTime(),
-          max: new Date(this.chartData.end_date).getTime()
+          max: new Date(this.chartData.end_date).getTime(),
         },
         series: [
           {
             name: this.chartData.name,
-            data: userStories.map(userStory => ({
-              name: truncate(userStory.name),
+            data: userStories.map((userStory) => ({
+              id: userStory.id,
+              name: truncate(userStory.name, 35),
               start: new Date(userStory.start_date).getTime(),
               end: new Date(userStory.end_date).getTime(),
               completed: userStory.current_progress / 100,
-              color: this.getUserStoryColour(userStory)
-            }))
-          }
-        ]
+              color: this.getUserStoryColour(userStory),
+            })),
+          },
+        ],
       };
-    }
+    },
   },
   methods: {
     buildFetchFunctionArgs() {
@@ -75,7 +91,7 @@ export default {
         return colors.grey.base;
       }
       return colors.blue.base;
-    }
-  }
+    },
+  },
 };
 </script>

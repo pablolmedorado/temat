@@ -115,7 +115,7 @@ export default {
         {
           icon: "mdi-timeline-text",
           text: "Mi timeline",
-          route: "timeline"
+          route: "timeline",
         },
         { icon: "mdi-calendar-month", text: "Calendario", route: "calendar" },
         {
@@ -125,30 +125,30 @@ export default {
             {
               icon: "mdi-sword-cross",
               text: "Épicas",
-              route: "epics"
+              route: "epics",
             },
             {
               icon: "mdi-run-fast",
               text: "Sprints",
-              route: "sprints"
+              route: "sprints",
             },
             {
               icon: "mdi-book-account",
               text: "Historias de usuario",
-              route: "user-stories"
+              route: "user-stories",
             },
             {
               icon: "mdi-weight-lifter",
               text: "Esfuerzo",
-              route: "effort"
-            }
-          ]
+              route: "effort",
+            },
+          ],
         },
         { icon: "mdi-face-agent", text: "Soporte", route: "support" },
         {
           icon: "mdi-briefcase",
           text: "Jornadas especiales",
-          route: "green-days"
+          route: "green-days",
         },
         {
           icon: "mdi-beach",
@@ -157,14 +157,14 @@ export default {
             {
               icon: "mdi-account",
               text: "Usuario",
-              route: "user-holidays"
+              route: "user-holidays",
             },
             {
               icon: "mdi-account-group",
               text: "Equipo",
-              route: "team-holidays"
-            }
-          ]
+              route: "team-holidays",
+            },
+          ],
         },
         { icon: "mdi-baguette", text: "Desayunos", route: "breakfasts" },
         { icon: "mdi-chart-bar", text: "Análisis", route: "analytics" },
@@ -173,18 +173,18 @@ export default {
           icon: "mdi-account-key",
           text: "Django Admin",
           route: "admin",
-          staffOnly: true
-        }
+          staffOnly: true,
+        },
       ],
       defaultThemeColours: {
         light: pick(this.$vuetify.theme.themes.light, ["primary", "secondary"]),
-        dark: pick(this.$vuetify.theme.themes.dark, ["primary", "secondary"])
-      }
+        dark: pick(this.$vuetify.theme.themes.dark, ["primary", "secondary"]),
+      },
     };
   },
   computed: {
     ...mapState(["konamiCodeActive", "loggedUser", "snackbar"]),
-    ...mapGetters(["loading"])
+    ...mapGetters(["loading"]),
   },
   watch: {
     "$vuetify.theme.dark": function(newValue) {
@@ -195,7 +195,7 @@ export default {
         alert(loperaSentences[Math.floor(Math.random() * loperaSentences.length - 1 + 1)]);
         const betisColours = {
           primary: "#009655",
-          secondary: "#d18d2a"
+          secondary: "#d18d2a",
         };
         Object.assign(this.$vuetify.theme.themes.light, betisColours);
         Object.assign(this.$vuetify.theme.themes.dark, betisColours);
@@ -203,7 +203,7 @@ export default {
         Object.assign(this.$vuetify.theme.themes.light, this.defaultThemeColours.light);
         Object.assign(this.$vuetify.theme.themes.dark, this.defaultThemeColours.dark);
       }
-    }
+    },
   },
   created() {
     this.$vuetify.theme.dark = localStorage.darkMode ? JSON.parse(localStorage.darkMode) : false;
@@ -228,8 +228,8 @@ export default {
       if (!value) {
         this.clearSnackbar();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

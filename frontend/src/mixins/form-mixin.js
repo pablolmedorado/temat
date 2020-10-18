@@ -14,8 +14,8 @@ export default function FormMixin({ service }) {
     props: {
       sourceItem: {
         type: Object,
-        required: true
-      }
+        required: true,
+      },
     },
     data() {
       return {
@@ -23,15 +23,15 @@ export default function FormMixin({ service }) {
         service,
         saveFunctionName: "save",
         item: this.initializeItem(this.sourceItem),
-        successMessage: "Elemento guardado correctamente"
+        successMessage: "Elemento guardado correctamente",
       };
     },
     watch: {
       sourceItem: {
         handler(val) {
           this.item = this.initializeItem(val);
-        }
-      }
+        },
+      },
     },
     methods: {
       ...mapActions(["showSnackbar"]),
@@ -51,14 +51,14 @@ export default function FormMixin({ service }) {
         if (this.$v.$invalid) {
           this.showSnackbar({
             color: "error",
-            message: "El formulario contiene errores"
+            message: "El formulario contiene errores",
           });
           return null;
         } else {
           const response = await this.service[this.saveFunctionName](...this.buildSaveFunctionArgs());
           this.showSnackbar({
             color: "success",
-            message: this.successMessage
+            message: this.successMessage,
           });
           return response.data;
         }
@@ -77,7 +77,7 @@ export default function FormMixin({ service }) {
           }
         });
         return newItem;
-      }
-    }
+      },
+    },
   };
 }

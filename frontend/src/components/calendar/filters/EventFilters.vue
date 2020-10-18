@@ -15,7 +15,7 @@
       <v-col cols="6" md="4" lg="3">
         <v-select
           :value="typeFilter"
-          :items="eventTypesOptions.filter(type => !type.system)"
+          :items="eventTypesOptions.filter((type) => !type.system)"
           :loading="!eventTypesOptions.length"
           item-text="name"
           item-value="id"
@@ -146,17 +146,17 @@ export default {
   mixins: [FilterMixin],
   data() {
     return {
-      basicFilters: ["search", "type_id__in"]
+      basicFilters: ["search", "type_id__in"],
     };
   },
   computed: {
     ...mapState("users", {
       attendeesOptions: "users",
-      groupsOptions: "groups"
+      groupsOptions: "groups",
     }),
     ...mapState("calendar", {
       eventTypesOptions: "eventTypes",
-      visibilityOptions: "eventVisibilityTypes"
+      visibilityOptions: "eventVisibilityTypes",
     }),
     typeFilter() {
       return this.splitFilterValue("type_id__in", true);
@@ -169,7 +169,7 @@ export default {
     },
     tagFilter() {
       return this.splitFilterValue("tags__name__in");
-    }
-  }
+    },
+  },
 };
 </script>

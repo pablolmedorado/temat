@@ -5,29 +5,29 @@ export default {
   props: {
     filters: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
   data() {
     return {
       showFiltersDialog: false,
-      basicFilters: []
+      basicFilters: [],
     };
   },
   computed: {
-    ...mapGetters(["loading"])
+    ...mapGetters(["loading"]),
   },
   watch: {
     filters: {
       handler(newValue) {
         const advancedFilterCount = Object.entries(newValue).filter(
-          filter => filter[1] && !this.basicFilters.includes(filter[0])
+          (filter) => filter[1] && !this.basicFilters.includes(filter[0])
         ).length;
         this.$emit("change:advanced-filters-count", advancedFilterCount);
       },
       deep: true,
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   methods: {
     updateFilters(filter) {
@@ -53,9 +53,9 @@ export default {
       }
       const splittedValues = filterValue.split(",");
       if (isInteger) {
-        return splittedValues.map(item => parseInt(item));
+        return splittedValues.map((item) => parseInt(item));
       }
       return splittedValues;
-    }
-  }
+    },
+  },
 };

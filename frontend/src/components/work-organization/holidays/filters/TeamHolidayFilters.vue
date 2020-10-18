@@ -77,7 +77,7 @@ export default {
       rangeSelector: false,
       importantDates: [],
       summary: {},
-      showHelpDialog: false
+      showHelpDialog: false,
     };
   },
   computed: {
@@ -85,13 +85,13 @@ export default {
     ...mapGetters(["yearOptions"]),
     userFilter() {
       return this.splitFilterValue("user_id__in", true);
-    }
+    },
   },
   methods: {
     reset() {
       this.$refs.dateFilter.clear();
       this.filters.user_id__in = "";
-    }
-  }
+    },
+  },
 };
 </script>

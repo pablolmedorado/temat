@@ -60,12 +60,12 @@ export default {
     return {
       unreadOptions: [
         { value: false, text: "Sí" },
-        { value: true, text: "No" }
-      ]
+        { value: true, text: "No" },
+      ],
     };
   },
   computed: {
-    ...mapState("notifications", ["notificationTargets"])
-  }
+    ...mapState("notifications", ["notificationTargets"]),
+  },
 };
 </script>

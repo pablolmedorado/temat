@@ -159,8 +159,8 @@ export default {
       default: undefined,
       validator: function(value) {
         return DateTime.fromISO(value).isValid;
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -170,12 +170,12 @@ export default {
       typeOptions: [
         { text: "Día", value: "day", icon: "mdi-view-day" },
         { text: "Semana", value: "week", icon: "mdi-view-week" },
-        { text: "Mes", value: "month", icon: "mdi-view-comfy" }
+        { text: "Mes", value: "month", icon: "mdi-view-comfy" },
       ],
       typeToLabel: {
         month: "Mes",
         week: "Semana",
-        day: "Día"
+        day: "Día",
       },
       excludeSystemEvents: localStorage.calendarExcludeSystemEvents
         ? JSON.parse(localStorage.calendarExcludeSystemEvents)
@@ -184,7 +184,7 @@ export default {
       showDatePicker: false,
       formComponent: EventForm,
       selectedEvent: null,
-      showEventCard: false
+      showEventCard: false,
     };
   },
   computed: {
@@ -200,7 +200,7 @@ export default {
       },
       set(value) {
         this.referenceDate = DateTime.fromISO(value).toISODate();
-      }
+      },
     },
     calendarInterval() {
       const dateTime = DateTime.fromISO(this.referenceDate);
@@ -212,7 +212,7 @@ export default {
       return DateTime.fromISO(this.referenceDate)
         .setLocale(this.locale)
         .toFormat(this.calendarType === "week" ? "'W'W (MMMM yyyy)" : "MMMM yyyy");
-    }
+    },
   },
   watch: {
     initialDate(newValue) {
@@ -226,7 +226,7 @@ export default {
     excludeSystemEvents(newValue) {
       localStorage.calendarExcludeSystemEvents = JSON.stringify(newValue);
       this.fetchEvents();
-    }
+    },
   },
   created() {
     if (!Object.keys(this.eventTypesMap).length) {
@@ -254,14 +254,14 @@ export default {
       this.$refs.formDialog.open({
         ...CalendarEvent.defaults,
         start_datetime: DateTime.fromISO(date).toISO(),
-        end_datetime: DateTime.fromISO(date).toISO()
+        end_datetime: DateTime.fromISO(date).toISO(),
       });
     },
     onEventClick({ nativeEvent, event }) {
       const open = () => {
         this.selectedEvent = {
           data: event,
-          htmlElement: nativeEvent.target
+          htmlElement: nativeEvent.target,
         };
         setTimeout(() => (this.showEventCard = true), 10);
       };
@@ -291,7 +291,7 @@ export default {
     },
     addOrUpdateEvent(event) {
       const eventsCopy = [...this.events];
-      const eventIndex = eventsCopy.findIndex(item => item.id === event.id);
+      const eventIndex = eventsCopy.findIndex((item) => item.id === event.id);
       if (eventIndex !== -1) {
         eventsCopy.splice(eventIndex, 1, event);
       } else {
@@ -300,7 +300,7 @@ export default {
       this.events = sortBy(eventsCopy, ["start_datetime", "name"]);
     },
     removeEvent(event) {
-      const eventIndex = this.events.findIndex(item => item.id === event.id);
+      const eventIndex = this.events.findIndex((item) => item.id === event.id);
       if (eventIndex !== -1) {
         this.events.splice(eventIndex, 1);
       }
@@ -348,13 +348,13 @@ export default {
 
       return {
         backgroundColor: inactive ? backgroundColor : undefined,
-        borderTop: startOfHour ? undefined : `1px dashed ${borderColor}`
+        borderTop: startOfHour ? undefined : `1px dashed ${borderColor}`,
       };
     },
     setToday() {
       this.referenceDate = DateTime.local().toISODate();
-    }
-  }
+    },
+  },
 };
 </script>
 

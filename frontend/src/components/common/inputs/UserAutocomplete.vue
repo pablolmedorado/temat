@@ -2,7 +2,7 @@
   <v-autocomplete
     v-bind="{ ...$props, ...$attrs }"
     :items="userOptions"
-    :item-text="user => `${user.first_name} ${user.last_name}`"
+    :item-text="(user) => `${user.first_name} ${user.last_name}`"
     item-value="id"
     :disabled="disabled"
     :readonly="readonly"
@@ -47,44 +47,44 @@ export default {
   props: {
     value: {
       type: [String, Number, Array],
-      default: null
+      default: null,
     },
     showRandomBtn: {
       type: Boolean,
-      default: false
+      default: false,
     },
     items: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     limitRandomChoicesTo: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     readonly: {
       type: Boolean,
-      default: false
+      default: false,
     },
     multiple: {
       type: Boolean,
-      default: false
+      default: false,
     },
     truncateResults: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
     ...mapState("users", {
-      defaultUserList: "users"
+      defaultUserList: "users",
     }),
     userOptions() {
       return this.items.length ? this.items : this.defaultUserList;
-    }
+    },
   },
   methods: {
     getRandomInt(max) {
@@ -93,7 +93,7 @@ export default {
     getRandomUser() {
       let result;
       const choices = this.limitRandomChoicesTo.length
-        ? this.userOptions.filter(user => this.limitRandomChoicesTo.includes(user.id))
+        ? this.userOptions.filter((user) => this.limitRandomChoicesTo.includes(user.id))
         : this.userOptions;
       if (!choices.length) {
         result = null;
@@ -101,7 +101,7 @@ export default {
         result = choices[this.getRandomInt(choices.length)].id;
       }
       this.$emit("input", this.multiple ? [result] : result);
-    }
-  }
+    },
+  },
 };
 </script>

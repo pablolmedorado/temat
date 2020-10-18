@@ -100,7 +100,7 @@ export default {
   name: "Events",
   filters: {
     date: isoDateToLocaleString,
-    datetime: isoDateTimeToLocaleString
+    datetime: isoDateTimeToLocaleString,
   },
   data() {
     return {
@@ -113,7 +113,7 @@ export default {
           sortable: true,
           value: "start_datetime",
           fields: ["start_datetime", "all_day"],
-          default: true
+          default: true,
         },
         {
           text: "Duración",
@@ -121,16 +121,16 @@ export default {
           sortable: false,
           value: "duration",
           fields: ["start_datetime", "end_datetime"],
-          default: true
+          default: true,
         },
         { text: "Visibilidad", align: "start", sortable: true, value: "visibility", default: true },
         { text: "Tags", align: "start", sortable: false, value: "tags" },
-        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true }
+        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
       ],
       tableOptions: {
         sortBy: ["start_datetime"],
         sortDesc: [true],
-        mustSort: true
+        mustSort: true,
       },
       service: EventService,
       filterComponent: EventFilters,
@@ -138,12 +138,12 @@ export default {
       datetimeFormat: DateTime.DATETIME_MED_WITH_WEEKDAY,
       breadcrumbs: [
         { text: "Calendario", to: { name: "calendar" }, exact: true },
-        { text: "Eventos", disabled: true }
-      ]
+        { text: "Eventos", disabled: true },
+      ],
     };
   },
   computed: {
-    ...mapGetters("calendar", ["eventTypesMap", "eventVisibilityTypesMap"])
+    ...mapGetters("calendar", ["eventTypesMap", "eventVisibilityTypesMap"]),
   },
   created() {
     if (!Object.keys(this.eventTypesMap).length) {
@@ -165,7 +165,7 @@ export default {
       this.$nextTick(() => {
         this.$refs.itemIndex.fetchTableItems();
       });
-    }
-  }
+    },
+  },
 };
 </script>

@@ -7,12 +7,12 @@ export default {
   namespaced: true,
   state: {
     users: [],
-    groups: []
+    groups: [],
   },
   getters: {
-    usersWithCompany: state => state.users.filter(user => Boolean(user.company)),
-    usersMap: state => keyBy(state.users, "id"),
-    groupsMap: state => keyBy(state.groups, "id")
+    usersWithCompany: (state) => state.users.filter((user) => Boolean(user.company)),
+    usersMap: (state) => keyBy(state.users, "id"),
+    groupsMap: (state) => keyBy(state.groups, "id"),
   },
   mutations: {
     updateUsers(state, users) {
@@ -20,7 +20,7 @@ export default {
     },
     updateGroups(state, groups) {
       state.groups = groups;
-    }
+    },
   },
   actions: {
     async getUsers({ commit }) {
@@ -32,6 +32,6 @@ export default {
       const response = await GroupService.list();
       commit("updateGroups", response.data);
       return response.data;
-    }
-  }
+    },
+  },
 };

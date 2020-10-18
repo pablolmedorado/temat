@@ -3,24 +3,24 @@ export default {
   props: {
     value: {
       type: Boolean,
-      default: false
+      default: false,
     },
     scrollable: {
       type: Boolean,
-      default: true
+      default: true,
     },
     persistent: {
       type: Boolean,
-      default: false
+      default: false,
     },
     maxWidth: {
       type: [String, Number],
-      default: 700
-    }
+      default: 700,
+    },
   },
   data() {
     return {
-      showDialog: this.value
+      showDialog: this.value,
     };
   },
   watch: {
@@ -33,7 +33,7 @@ export default {
     },
     showDialog(newValue) {
       this.$emit("input", newValue);
-    }
+    },
   },
   methods: {
     open() {
@@ -41,6 +41,6 @@ export default {
     },
     close() {
       this.showDialog = false;
-    }
-  }
+    },
+  },
 };

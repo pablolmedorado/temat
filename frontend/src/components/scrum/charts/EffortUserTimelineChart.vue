@@ -12,7 +12,7 @@ export default {
   data() {
     return {
       service: EffortService,
-      fetchFunctionName: "userTimelineChartData"
+      fetchFunctionName: "userTimelineChartData",
     };
   },
   computed: {
@@ -21,45 +21,45 @@ export default {
       return {
         chart: {
           type: "column",
-          zoomType: "xy"
+          zoomType: "xy",
         },
         title: {
-          text: "Distribución de esfuerzo por usuario"
+          text: "Distribución de esfuerzo por usuario",
         },
         rangeSelector: {
           buttons: [
             {
               type: "week",
               count: 1,
-              text: "1w"
+              text: "1w",
             },
             {
               type: "month",
               count: 1,
-              text: "1m"
+              text: "1m",
             },
             {
               type: "all",
               count: 1,
-              text: "All"
-            }
-          ]
+              text: "All",
+            },
+          ],
         },
         xAxis: {
-          ordinal: false
+          ordinal: false,
         },
         yAxis: {
           allowDecimals: false,
           min: 0,
           title: {
-            text: "Esfuerzo (UT)"
+            text: "Esfuerzo (UT)",
           },
           stackLabels: {
             enabled: true,
             style: {
               fontWeight: "bold",
-              color: "gray"
-            }
+              color: "gray",
+            },
           },
           plotBands: [
             {
@@ -69,30 +69,30 @@ export default {
               label: {
                 text: "Jornada laboral",
                 style: {
-                  color: this.$vuetify.theme.isDark ? "#ffffff" : "#606060"
-                }
-              }
-            }
-          ]
+                  color: this.$vuetify.theme.isDark ? "#ffffff" : "#606060",
+                },
+              },
+            },
+          ],
         },
         plotOptions: {
           column: {
             stacking: "normal",
             dataLabels: {
-              enabled: true
-            }
-          }
+              enabled: true,
+            },
+          },
         },
-        series: this.usersWithCompany.map(user => {
+        series: this.usersWithCompany.map((user) => {
           return {
             name: user.acronym,
             data: has(this.chartData, user.acronym)
-              ? this.chartData[user.acronym].map(item => [new Date(item.date).getTime(), item.total_effort])
-              : []
+              ? this.chartData[user.acronym].map((item) => [new Date(item.date).getTime(), item.total_effort])
+              : [],
           };
-        })
+        }),
       };
-    }
-  }
+    },
+  },
 };
 </script>

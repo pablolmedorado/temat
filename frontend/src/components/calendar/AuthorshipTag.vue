@@ -23,8 +23,8 @@ export default {
   props: {
     event: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     ...mapGetters("users", ["usersMap"]),
@@ -36,7 +36,7 @@ export default {
     lastModificationDatetime() {
       const lastModification = defaultTo(this.event.modification_datetime, this.event.creation_datetime);
       return DateTime.fromISO(lastModification).toFormat("yyyy-MM-dd HH:mm");
-    }
-  }
+    },
+  },
 };
 </script>

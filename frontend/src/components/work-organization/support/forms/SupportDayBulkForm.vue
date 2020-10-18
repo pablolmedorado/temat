@@ -46,9 +46,9 @@ export default {
       minLength: minLength(1),
       $each: {
         date: { required },
-        user: { required }
-      }
-    }
-  }
+        user: { required },
+      },
+    },
+  },
 };
 </script>

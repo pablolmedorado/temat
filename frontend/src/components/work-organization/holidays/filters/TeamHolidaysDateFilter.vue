@@ -23,29 +23,29 @@ export default {
   props: {
     year: {
       type: [String, Number],
-      required: true
+      required: true,
     },
     filters: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     showWeek: {
       type: Boolean,
-      default: true
+      default: true,
     },
     firstDayOfWeek: {
       type: [String, Number],
-      default: 1
+      default: 1,
     },
     range: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       selectedDates: null,
-      pickerDate: currentDate.toFormat("yyyy-MM")
+      pickerDate: currentDate.toFormat("yyyy-MM"),
     };
   },
   computed: {
@@ -55,7 +55,7 @@ export default {
       const startDate = date.startOf("year");
       const endDate = date.endOf("year").plus({ year: 1 });
       return Interval.fromDateTimes(startDate, endDate);
-    }
+    },
   },
   watch: {
     year(newValue) {
@@ -89,12 +89,12 @@ export default {
         }
       }
       this.$emit("update:filters", localFilters);
-    }
+    },
   },
   methods: {
     clear() {
       this.selectedDates = this.range ? [] : null;
-    }
-  }
+    },
+  },
 };
 </script>

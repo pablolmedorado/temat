@@ -51,26 +51,26 @@ export default {
   props: {
     availableHeaders: {
       type: Array,
-      required: true
+      required: true,
     },
     headers: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      selectedHeaders: this.headers.map(header => header.value)
+      selectedHeaders: this.headers.map((header) => header.value),
     };
   },
   computed: {
     defaultHeaders() {
-      return this.availableHeaders.filter(header => header.default || header.fixed).map(header => header.value);
-    }
+      return this.availableHeaders.filter((header) => header.default || header.fixed).map((header) => header.value);
+    },
   },
   methods: {
     applyChanges() {
-      const selectedHeaders = this.availableHeaders.filter(header => {
+      const selectedHeaders = this.availableHeaders.filter((header) => {
         return this.selectedHeaders.includes(header.value);
       });
       this.$emit("update:headers", selectedHeaders);
@@ -78,7 +78,7 @@ export default {
     },
     resetHeaders() {
       this.selectedHeaders = this.defaultHeaders;
-    }
-  }
+    },
+  },
 };
 </script>

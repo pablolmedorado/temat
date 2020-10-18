@@ -26,27 +26,27 @@ export default {
   props: {
     user: {
       type: [Object, Number],
-      required: true
+      required: true,
     },
     color: {
       type: String,
-      default: "teal"
+      default: "teal",
     },
     fontSize: {
       type: Number,
-      default: 12
+      default: 12,
     },
     tooltip: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
     ...mapState(["konamiCodeActive"]),
     ...mapGetters("users", ["usersMap"]),
     localUser() {
       return typeof this.user == "number" ? this.usersMap[this.user] : this.user;
-    }
-  }
+    },
+  },
 };
 </script>

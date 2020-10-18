@@ -12,15 +12,15 @@ module.exports = {
     watchOptions: {
       ignored: "./node_modules/",
       aggregateTimeout: 300,
-      poll: 1000
-    }
+      poll: 1000,
+    },
   },
-  chainWebpack: config => {
+  chainWebpack: (config) => {
     config.plugin("BundleTracker").use(BundleTracker, [
       {
-        filename: `./config/webpack-stats-${process.env.NODE_ENV}.json`
-      }
+        filename: `./config/webpack-stats-${process.env.NODE_ENV}.json`,
+      },
     ]);
     config.resolve.alias.set("__STATIC__", "static");
-  }
+  },
 };

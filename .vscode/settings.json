@@ -40,16 +40,9 @@
   "python.linting.mypyEnabled": true,
   // Javascript
   "javascript.format.enable": false,
-  "prettier.disableLanguages": [],
-  "prettier.printWidth": 120,
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[vue]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.formatOnSave": true,
   },
   /* Django */
   "files.associations": {

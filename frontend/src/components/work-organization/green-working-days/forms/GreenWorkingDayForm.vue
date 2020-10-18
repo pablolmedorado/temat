@@ -68,22 +68,22 @@ export default {
   validations: {
     item: {
       label: { maxLength: maxLength(100) },
-      support_user: { notSameAsMainUser: not(sameAs("main_user")) }
-    }
+      support_user: { notSameAsMainUser: not(sameAs("main_user")) },
+    },
   },
   data() {
     return {
       saveFunctionName: "update",
       validationErrorMessages: {
-        notSameAsMainUser: "Usuario repetido"
+        notSameAsMainUser: "Usuario repetido",
       },
-      successMessage: "Jornada especial guardada correctamente"
+      successMessage: "Jornada especial guardada correctamente",
     };
   },
   computed: {
     ...mapState("users", {
-      userOptions: "users"
-    })
-  }
+      userOptions: "users",
+    }),
+  },
 };
 </script>

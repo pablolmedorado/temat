@@ -14,8 +14,8 @@ export default function BulkFormMixin({ service }) {
     props: {
       sourceItems: {
         type: Array,
-        required: true
-      }
+        required: true,
+      },
     },
     data() {
       return {
@@ -23,7 +23,7 @@ export default function BulkFormMixin({ service }) {
         service,
         saveFunctionName: "save",
         items: this.sourceItems,
-        successMessage: "Elementos guardados correctamente"
+        successMessage: "Elementos guardados correctamente",
       };
     },
     watch: {
@@ -31,14 +31,14 @@ export default function BulkFormMixin({ service }) {
         handler(newValue) {
           this.items = newValue;
         },
-        deep: true
-      }
+        deep: true,
+      },
     },
     methods: {
       ...mapActions(["showSnackbar"]),
       buildValidationErrorMessages,
       buildSaveFunctionArgs() {
-        return [this.items.map(item => this.replaceUndefined(item))];
+        return [this.items.map((item) => this.replaceUndefined(item))];
       },
       reset() {
         this.$v.$reset();
@@ -49,14 +49,14 @@ export default function BulkFormMixin({ service }) {
         if (this.$v.$invalid) {
           this.showSnackbar({
             color: "error",
-            message: "El formulario contiene errores"
+            message: "El formulario contiene errores",
           });
           return null;
         } else {
           const response = await this.service[this.saveFunctionName](...this.buildSaveFunctionArgs());
           this.showSnackbar({
             color: "success",
-            message: this.successMessage
+            message: this.successMessage,
           });
           return response.data;
         }
@@ -69,7 +69,7 @@ export default function BulkFormMixin({ service }) {
           }
         });
         return newItem;
-      }
-    }
+      },
+    },
   };
 }

@@ -88,18 +88,18 @@ export default {
   name: "UserStoryData",
   components: { UserStoryForm, UserStoryProgressBar, UserStoryStatus },
   filters: {
-    datetime: isoDateTimeToLocaleString
+    datetime: isoDateTimeToLocaleString,
   },
   props: {
     item: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       showSpeedDial: false,
-      showdeleteUserStoryDialog: false
+      showdeleteUserStoryDialog: false,
     };
   },
   computed: {
@@ -110,7 +110,7 @@ export default {
         !this.loggedUser.is_staff &&
         ![this.item.development_user, this.item.validation_user, this.item.support_user].includes(this.loggedUser.id)
       );
-    }
+    },
   },
   methods: {
     ...mapActions(["showSnackbar"]),
@@ -132,7 +132,7 @@ export default {
       const response = await UserStoryService.copy(this.item.id);
       this.showSnackbar({
         color: "success",
-        message: "Copia creada correctamente"
+        message: "Copia creada correctamente",
       });
       this.$router.push({ name: "user-story", params: { id: response.data.id } });
     },
@@ -145,7 +145,7 @@ export default {
     },
     openDeleteDialog(item) {
       this.$refs.deleteDialog.open(item);
-    }
-  }
+    },
+  },
 };
 </script>

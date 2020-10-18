@@ -16,16 +16,16 @@ export default {
   props: {
     group: {
       type: [Object, Number],
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      localGroup: null
+      localGroup: null,
     };
   },
   computed: {
-    ...mapGetters("users", ["groupsMap"])
+    ...mapGetters("users", ["groupsMap"]),
   },
   watch: {
     group: {
@@ -33,8 +33,8 @@ export default {
       immediate: true,
       handler(newVal) {
         this.localGroup = typeof newVal == "number" ? this.groupsMap[newVal] : newVal;
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>

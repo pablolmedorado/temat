@@ -11,7 +11,7 @@ export default {
   data() {
     return {
       service: UserStoryService,
-      fetchFunctionName: "effortRoleChartData"
+      fetchFunctionName: "effortRoleChartData",
     };
   },
   computed: {
@@ -19,22 +19,22 @@ export default {
     localChartOptions() {
       return {
         chart: {
-          type: "pie"
+          type: "pie",
         },
         title: {
-          text: "Esfuerzo acumulado por rol"
+          text: "Esfuerzo acumulado por rol",
         },
         plotOptions: {
           pie: {
             allowPointSelect: true,
             cursor: "pointer",
             dataLabels: { enabled: true, format: "{point.y}UT ({point.percentage:.0f} %)" },
-            showInLegend: true
+            showInLegend: true,
           },
           series: {
             borderWidth: 1,
-            borderColor: this.$vuetify.theme.isDark ? "#ffffff" : "rgba(0, 0, 0, 0.54)"
-          }
+            borderColor: this.$vuetify.theme.isDark ? "#ffffff" : "rgba(0, 0, 0, 0.54)",
+          },
         },
         series: [
           {
@@ -42,17 +42,17 @@ export default {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false,
-            data: this.chartData.map(item => {
+            data: this.chartData.map((item) => {
               return {
                 ...item,
                 name: this.effortRolesMap[item.name].label,
-                color: this.effortRolesMap[item.name].colour
+                color: this.effortRolesMap[item.name].colour,
               };
-            })
-          }
-        ]
+            }),
+          },
+        ],
       };
-    }
-  }
+    },
+  },
 };
 </script>

@@ -6,5 +6,5 @@ export const defaultTableOptions = {
   groupBy: [],
   groupDesc: [],
   multiSort: false,
-  mustSort: false
+  mustSort: false,
 };

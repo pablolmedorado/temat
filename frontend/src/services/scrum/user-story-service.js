@@ -17,35 +17,35 @@ export default class UserStoryService extends BaseService {
   static tasksByUserStory(pk, queryParams) {
     const url = Urls["scrum:user-story-tasks-list"]({ user_story: pk });
     return Api.get(url, {
-      params: queryParams
+      params: queryParams,
     });
   }
 
   static progressByUserStory(pk, queryParams) {
     const url = Urls["scrum:user-story-progress-list"]({ user_story: pk });
     return Api.get(url, {
-      params: queryParams
+      params: queryParams,
     });
   }
 
   static effortByUserStory(pk, queryParams) {
     const url = Urls["scrum:user-story-effort-list"]({ user_story: pk });
     return Api.get(url, {
-      params: queryParams
+      params: queryParams,
     });
   }
 
   static typeChartData(queryParams) {
     const url = Urls["scrum:user-story-type-pie-chart"]();
     return Api.get(url, {
-      params: queryParams
+      params: queryParams,
     });
   }
 
   static effortRoleChartData(queryParams) {
     const url = Urls["scrum:user-story-effort-role-pie-chart"]();
     return Api.get(url, {
-      params: queryParams
+      params: queryParams,
     });
   }
 

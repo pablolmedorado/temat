@@ -11,7 +11,7 @@ export default {
   data() {
     return {
       service: EventService,
-      formComponent: EventForm
+      formComponent: EventForm,
     };
   },
   computed: {
@@ -41,7 +41,7 @@ export default {
       const dates = `${startDateStr}/${endDateStr}`;
 
       return `${baseUrl}&text=${eventType}${this.item.name}&dates=${dates}&details=${this.item.details}&location=${this.item.location}`;
-    }
+    },
   },
   created() {
     if (!Object.keys(this.eventTypesMap).length) {
@@ -58,6 +58,6 @@ export default {
     },
     buildIcalUrl(item) {
       return `${Urls["calendar:event-ical"]()}?id=${item.id}&page_size=1`;
-    }
-  }
+    },
+  },
 };

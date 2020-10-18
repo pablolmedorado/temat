@@ -87,7 +87,7 @@ def gantt_chart_data(instance: Sprint) -> Dict:
         "start_date": instance.start_date,
         "end_date": instance.end_date,
         "user_stories": instance.user_stories.values(
-            "name", "start_date", "end_date", "current_progress", "validated", "risk_level"
+            "id", "name", "start_date", "end_date", "current_progress", "validated", "risk_level"
         ).order_by("start_date"),
     }
 

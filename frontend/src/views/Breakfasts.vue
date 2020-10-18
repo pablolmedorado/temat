@@ -11,32 +11,52 @@
           :table-initial-options="tableOptions"
           :table-footer-props="tableFooterProps"
           :service="service"
-          :form-component="formComponent"
-          :default-item="defaultItem"
-          :clear-form-item-on-finish="false"
-          :can-create="() => false"
+          read-only
           custom-headers
           selectable-rows
         >
-          <template #toolbar="{ selectedItems }">
-            <v-btn icon :disabled="loading" :loading="loadingUserBreakfast" @click.stop="openFormDialog">
-              <v-icon>mdi-account</v-icon>
-            </v-btn>
-            <v-btn
-              icon
-              :disabled="!selectedItems.length"
-              @click.stop="$refs.breakfastsSummaryDialog.open(selectedItems)"
-            >
-              <v-icon>mdi-clipboard-list</v-icon>
-            </v-btn>
+          <template #toolbar>
+            <v-tooltip bottom>
+              <template #activator="{ attrs, on }">
+                <v-btn
+                  icon
+                  v-bind="attrs"
+                  :disabled="loading"
+                  :loading="loadingUserBreakfast"
+                  v-on="on"
+                  @click.stop="openFormDialog"
+                >
+                  <v-icon>mdi-account</v-icon>
+                </v-btn>
+              </template>
+              <span>Mi desayuno</span>
+            </v-tooltip>
           </template>
 
           <template #item.user="{ value }">
             <UserPill :user="value" />
           </template>
+
+          <template #fab="{ selectedItems }">
+            <v-fab-transition>
+              <v-btn
+                v-show="selectedItems.length"
+                fab
+                fixed
+                bottom
+                right
+                color="secondary"
+                @click.stop="$refs.breakfastsSummaryDialog.open(selectedItems)"
+              >
+                <v-icon>mdi-clipboard-list</v-icon>
+              </v-btn>
+            </v-fab-transition>
+          </template>
         </ItemIndex>
       </v-col>
     </v-row>
+
+    <FormDialog ref="formDialog" verbose-name="Desayuno" :form-component="formComponent" @submit="onFormSubmit" />
 
     <BreakfastsSummaryDialog ref="breakfastsSummaryDialog" />
   </v-container>
@@ -62,7 +82,7 @@ export default {
           sortable: true,
           value: "user",
           sortingField: "user__acronym",
-          fixed: true
+          fixed: true,
         },
         { text: "Pan", align: "start", sortable: true, value: "bread.name", sortingField: "bread__name", fixed: true },
         { text: "Base", align: "start", sortable: true, value: "base.name", sortingField: "base__name", fixed: true },
@@ -72,7 +92,7 @@ export default {
           sortable: true,
           value: "ingredient1.name",
           sortingField: "ingredient1__name",
-          fixed: true
+          fixed: true,
         },
         {
           text: "Segundo ingrediente",
@@ -80,22 +100,22 @@ export default {
           sortable: true,
           value: "ingredient2.name",
           sortingField: "ingredient2__name",
-          fixed: true
+          fixed: true,
         },
-        { text: "Bebida", align: "start", sortable: true, value: "drink.name", sortingField: "drink__name" }
+        { text: "Bebida", align: "start", sortable: true, value: "drink.name", sortingField: "drink__name" },
       ],
       tableOptions: {
         itemsPerPage: -1,
         sortBy: ["user"],
         sortDesc: [false],
-        multiSort: true
+        multiSort: true,
       },
       tableFooterProps: {
-        itemsPerPageOptions: [10, 25, 50, -1]
+        itemsPerPageOptions: [10, 25, 50, -1],
       },
       service: BreakfastService,
       formComponent: BreakfastForm,
-      loadingUserBreakfast: false
+      loadingUserBreakfast: false,
     };
   },
   computed: {
@@ -109,9 +129,9 @@ export default {
         base: null,
         ingredient1: null,
         ingredient2: null,
-        drink: null
+        drink: null,
       };
-    }
+    },
   },
   methods: {
     async getUserBreakfast() {
@@ -120,17 +140,20 @@ export default {
         const response = await this.service.list({
           user_id: this.loggedUser.id,
           page_size: 1,
-          page: 1
+          page: 1,
         });
-        return response.data.results.length ? response.data.results[0] : null;
+        return response.data.results.length ? response.data.results[0] : this.defaultItem;
       } finally {
         this.loadingUserBreakfast = false;
       }
     },
     async openFormDialog() {
       const userBreakfast = await this.getUserBreakfast();
-      this.$refs.itemIndex.openFormDialog(userBreakfast);
-    }
-  }
+      this.$refs.formDialog.open(userBreakfast);
+    },
+    onFormSubmit() {
+      this.$refs.itemIndex.fetchTableItems();
+    },
+  },
 };
 </script>

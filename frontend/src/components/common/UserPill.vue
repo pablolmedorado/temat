@@ -17,14 +17,14 @@ export default {
   props: {
     user: {
       type: [Object, Number],
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     ...mapGetters("users", ["usersMap"]),
     localUser() {
       return typeof this.user == "number" ? this.usersMap[this.user] : this.user;
-    }
-  }
+    },
+  },
 };
 </script>

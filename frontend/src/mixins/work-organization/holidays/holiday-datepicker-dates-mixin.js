@@ -8,17 +8,17 @@ export default {
   data() {
     return {
       importantDates: [],
-      summary: {}
+      summary: {},
     };
   },
   computed: {
-    ...mapGetters("users", ["usersWithCompany"])
+    ...mapGetters("users", ["usersWithCompany"]),
   },
   watch: {
     "filters.allowance_date__year": function(newYear) {
       this.getSummary();
       this.getImportantDatesByYear(newYear);
-    }
+    },
   },
   created() {
     this.getImportantDatesByYear(this.filters.allowance_date__year);
@@ -33,7 +33,7 @@ export default {
     },
     async getSummary() {
       const response = await HolidayService.summary({ allowance_date__year: this.filters.allowance_date__year });
-      this.summary = Object.fromEntries(response.data.map(item => [item.date, item.users]));
+      this.summary = Object.fromEntries(response.data.map((item) => [item.date, item.users]));
     },
     summaryDateColour(date) {
       const userRatio = (defaultTo(this.summary[date], 0) * 100) / this.usersWithCompany.length;
@@ -54,6 +54,6 @@ export default {
         events.push(this.summaryDateColour(date));
       }
       return events;
-    }
-  }
+    },
+  },
 };

@@ -69,15 +69,15 @@ export default {
       tableOptions: {
         sortBy: ["date"],
         sortDesc: [false],
-        mustSort: true
+        mustSort: true,
       },
       service: SupportService,
       filterComponent: SupportFilters,
       defaultFilters: {
-        date__gte: DateTime.local().toISODate()
+        date__gte: DateTime.local().toISODate(),
       },
       formComponent: SupportDayForm,
-      bulkFormComponent: SupportDayBulkForm
+      bulkFormComponent: SupportDayBulkForm,
     };
   },
   computed: {
@@ -91,20 +91,20 @@ export default {
           sortable: true,
           value: "user",
           sortingField: "user__acronym",
-          fixed: true
-        }
+          fixed: true,
+        },
       ];
       const adminOptions = [
         ...defaultOptions,
-        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true }
+        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
       ];
       return this.loggedUser.is_staff ? adminOptions : defaultOptions;
-    }
+    },
   },
   methods: {
     fetchTableItems() {
       this.$refs.itemIndex.fetchTableItems();
-    }
-  }
+    },
+  },
 };
 </script>

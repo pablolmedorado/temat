@@ -7,7 +7,7 @@ export const validationErrorMessages = {
   minLength: ({ minLength }) => `Longitud mínima ${minLength.min}`,
   minValue: ({ min }) => `Valor mínimo ${min}`,
   numeric: "Valor numérico",
-  required: "Campo requerido"
+  required: "Campo requerido",
 };
 
 export function buildValidationErrorMessages(field) {

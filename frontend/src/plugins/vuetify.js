@@ -7,7 +7,7 @@ Vue.use(Vuetify);
 export default new Vuetify({
   lang: {
     locales: { es },
-    current: "es"
+    current: "es",
   },
   theme: {
     dark: false,
@@ -20,7 +20,7 @@ export default new Vuetify({
         info: "#00aec7",
         success: "#84bd00",
         warning: "#fe5000",
-        anchor: "#00205b"
+        anchor: "#00205b",
       },
       dark: {
         primary: "#0085ad",
@@ -30,11 +30,11 @@ export default new Vuetify({
         info: "#00aec7",
         success: "#84bd00",
         warning: "#fe5000",
-        anchor: "#0085ad"
-      }
+        anchor: "#0085ad",
+      },
     },
     options: {
-      variations: false
-    }
-  }
+      variations: false,
+    },
+  },
 });

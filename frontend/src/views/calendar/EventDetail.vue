@@ -83,7 +83,7 @@ export default {
   async beforeRouteEnter(to, from, next) {
     try {
       const response = await EventService.retrieve(to.params.id);
-      next(vm => {
+      next((vm) => {
         vm.item = new CalendarEvent(response.data);
       });
     } catch (error) {
@@ -106,13 +106,13 @@ export default {
   props: {
     id: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       item: null,
-      showSpeedDial: false
+      showSpeedDial: false,
     };
   },
   computed: {
@@ -121,9 +121,9 @@ export default {
       return [
         { text: "Calendario", to: { name: "calendar" }, exact: true },
         { text: "Eventos", to: { name: "events" }, exact: true },
-        { text: truncate(text, 50), disabled: true }
+        { text: truncate(text, 50), disabled: true },
       ];
-    }
+    },
   },
   methods: {
     ...mapActions(["showSnackbar"]),
@@ -138,7 +138,7 @@ export default {
       await this.service.delete(this.item.id);
       this.showSnackbar({ color: "success", message: "Evento eliminado correctamente" });
       this.$router.push({ name: "events" });
-    }
-  }
+    },
+  },
 };
 </script>

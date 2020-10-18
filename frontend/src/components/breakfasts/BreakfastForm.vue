@@ -95,16 +95,16 @@ export default {
       bread: { required },
       base: { required },
       ingredient1: { requiredIfIngredient2: requiredIf("ingredient2") },
-      ingredient2: { notSameAsIngredient1: not(sameAs("ingredient1")) }
-    }
+      ingredient2: { notSameAsIngredient1: not(sameAs("ingredient1")) },
+    },
   },
   data() {
     return {
       successMessage: "Desayuno guardado correctamente",
       validationErrorMessages: {
         requiredIfIngredient2: "Requerido si hay ingrediente 2",
-        notSameAsIngredient1: "Ingrediente repetido"
-      }
+        notSameAsIngredient1: "Ingrediente repetido",
+      },
     };
   },
   computed: {
@@ -113,8 +113,8 @@ export default {
       breadOptions: "breads",
       baseOptions: "bases",
       ingredientOptions: "ingredients",
-      drinkOptions: "drinks"
-    })
+      drinkOptions: "drinks",
+    }),
   },
   created() {
     if (!this.breadOptions.length) {
@@ -131,7 +131,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("breakfasts", ["getBreads", "getBases", "getIngredients", "getDrinks"])
-  }
+    ...mapActions("breakfasts", ["getBreads", "getBases", "getIngredients", "getDrinks"]),
+  },
 };
 </script>

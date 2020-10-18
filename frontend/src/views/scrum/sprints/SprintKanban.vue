@@ -94,21 +94,21 @@ export default {
   props: {
     sprintId: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       items: [],
       hideEmptyColumns: false,
-      fullscreenEnabled: false
+      fullscreenEnabled: false,
     };
   },
   computed: {
     ...mapGetters(["loading"]),
     ...mapState("scrum", ["userStoryStatus"]),
     kanbanStatus() {
-      return this.userStoryStatus.filter(status => status.value);
+      return this.userStoryStatus.filter((status) => status.value);
     },
     itemsByStatus() {
       return groupBy(this.items, "status");
@@ -119,10 +119,10 @@ export default {
           {
             text: "Sprints",
             to: { name: "sprints" },
-            exact: true
+            exact: true,
           },
           { text: this.contextItem.name, disabled: false, link: false },
-          { text: "Kanban", disabled: true }
+          { text: "Kanban", disabled: true },
         ];
       } else {
         return [];
@@ -149,7 +149,7 @@ export default {
     },
     statusColumnClasses() {
       return this.$vuetify.theme.isDark ? ["grey", "darken-3"] : ["grey", "lighten-3"];
-    }
+    },
   },
   activated() {
     this.fetchItems();
@@ -165,7 +165,7 @@ export default {
         status__gte: 1,
         ordering: "status,priority,-risk_level",
         fields:
-          "id,name,status,priority,current_progress,current_progress_changed,validated,validated_changed,actual_effort,planned_effort,end_date,development_user,validation_user,support_user,risk_level"
+          "id,name,status,priority,current_progress,current_progress_changed,validated,validated_changed,actual_effort,planned_effort,end_date,development_user,validation_user,support_user,risk_level",
       });
       this.items = response.data;
     },
@@ -194,8 +194,8 @@ export default {
         document.mozFullScreenElement || // Firefox
         document.webkitFullscreenElement; // Safari
       this.fullscreenEnabled = Boolean(fullscreenElement);
-    }
-  }
+    },
+  },
 };
 </script>
 

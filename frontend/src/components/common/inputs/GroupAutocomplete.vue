@@ -33,33 +33,33 @@ export default {
   props: {
     value: {
       type: [String, Number, Array],
-      default: null
+      default: null,
     },
     items: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     readonly: {
       type: Boolean,
-      default: false
+      default: false,
     },
     multiple: {
       type: Boolean,
-      default: false
+      default: false,
     },
     truncateResults: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
     ...mapState("users", {
-      groupOptions: "groups"
-    })
-  }
+      groupOptions: "groups",
+    }),
+  },
 };
 </script>
