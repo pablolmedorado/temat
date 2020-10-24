@@ -1,5 +1,6 @@
-from rest_flex_fields.views import FlexFieldsModelViewSet
-from rest_framework import permissions, viewsets
+from django.db import transaction
+
+from rest_framework import permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_bulk import BulkCreateModelMixin
@@ -10,11 +11,11 @@ from ..models import GreenWorkingDay, SupportWorkingDay
 from ..permissions import GreenWorkingDayPermission
 from ..serializers import GreenWorkingDaySerializer, SupportWorkingDaySerializer
 from ..utils import green_working_day_user_chart_data, support_working_day_user_chart_data
-from common.mixins import AuthorshipMixin
+from common.mixins import AtomicBulkCreateModelMixin, AtomicFlexFieldsModelViewSet, AuthorshipMixin
 from common.permissions import IsAdminUserOrReadOnly
 
 
-class GreenWorkingDayApi(AuthorshipMixin, FlatDatesMixin, BulkCreateModelMixin, FlexFieldsModelViewSet):
+class GreenWorkingDayApi(AuthorshipMixin, FlatDatesMixin, AtomicBulkCreateModelMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, GreenWorkingDayPermission)
     queryset = GreenWorkingDay.objects.all()
     serializer_class = GreenWorkingDaySerializer
@@ -23,6 +24,7 @@ class GreenWorkingDayApi(AuthorshipMixin, FlatDatesMixin, BulkCreateModelMixin, 
     ordering_fields = ("date", "label", "main_user__acronym", "support_user__acronym")
     ordering = ("date",)
 
+    @transaction.atomic
     @action(detail=True, methods=["PATCH"])
     def toggle_volunteer(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -40,7 +42,7 @@ class GreenWorkingDayApi(AuthorshipMixin, FlatDatesMixin, BulkCreateModelMixin, 
         return Response(chart_data)
 
 
-class SupportWorkingDayApi(AuthorshipMixin, FlatDatesMixin, BulkCreateModelMixin, FlexFieldsModelViewSet):
+class SupportWorkingDayApi(AuthorshipMixin, FlatDatesMixin, BulkCreateModelMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
     queryset = SupportWorkingDay.objects.all()
     serializer_class = SupportWorkingDaySerializer

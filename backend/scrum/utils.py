@@ -4,10 +4,10 @@ from typing import Dict
 import pydash
 
 from django.contrib.auth import get_user_model
-from django.db.models import Count, F, Q, QuerySet, Sum
+from django.db.models import Count, Q, QuerySet, Sum
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Effort, Progress, Sprint, UserStory
+from .models import Effort, Progress, Sprint
 
 
 def burn_chart_data(instance: Sprint) -> Dict:

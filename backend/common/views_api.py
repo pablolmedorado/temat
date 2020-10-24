@@ -1,11 +1,13 @@
+from django.db import transaction
+
 from rest_flex_fields.views import FlexFieldsMixin
 from rest_framework import mixins, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework_bulk import BulkDestroyModelMixin
 from taggit.models import Tag
 
 from .filters import NotificationFilterSet, TagFilterSet
+from .mixins import AtomicBulkDestroyModelMixin, AtomicDestroyModelMixin
 from .permissions import NotificationPermission
 from .serializers import NotificationSerializer, TagSerializer
 
@@ -13,8 +15,8 @@ from .serializers import NotificationSerializer, TagSerializer
 class NotificationApi(
     FlexFieldsMixin,
     mixins.RetrieveModelMixin,
-    mixins.DestroyModelMixin,
-    BulkDestroyModelMixin,
+    AtomicDestroyModelMixin,
+    AtomicBulkDestroyModelMixin,
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
 ):
@@ -33,6 +35,7 @@ class NotificationApi(
         queryset = self.filter_queryset(self.get_queryset().unread())
         return Response({"count": queryset.count()})
 
+    @transaction.atomic
     @action(detail=True, methods=["PATCH"])
     def mark_as_read(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -40,6 +43,7 @@ class NotificationApi(
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
+    @transaction.atomic
     @action(detail=False, methods=["PATCH"])
     def mark_all_as_read(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -51,6 +55,7 @@ class NotificationApi(
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    @transaction.atomic
     @action(detail=True, methods=["PATCH"])
     def mark_as_unread(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -58,6 +63,7 @@ class NotificationApi(
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
+    @transaction.atomic
     @action(detail=False, methods=["PATCH"])
     def mark_all_as_unread(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -71,7 +77,6 @@ class NotificationApi(
 
 
 class TagApi(FlexFieldsMixin, viewsets.ReadOnlyModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
     filterset_class = TagFilterSet

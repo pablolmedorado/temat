@@ -55,7 +55,7 @@ class User(AbstractUser):
             holidays_allowance_date = date(holidays_year, 1, 1)
 
             with transaction.atomic():
-                for _ in range(self.company.yearly_holiday_allocation):
+                for number in range(self.company.yearly_holiday_allocation):
                     self.holidays.create(allowance_date=holidays_allowance_date)
 
     def __str__(self):

@@ -11,6 +11,7 @@ from django.utils.timezone import make_aware
 from notifications.signals import notify
 
 from .models import Progress, Sprint, Task, UserStory
+from common.utils import notify_item_assignation_to_user
 from events.models import Event, EventType
 
 
@@ -45,36 +46,18 @@ def notify_users_of_existing_sprint_assignation(sender, instance, *args, **kwarg
     """
     if instance.persisted:
         old_instance = Sprint.objects.get(pk=instance.id)
-        notification_sender = instance.notification_sender
-
-        if (
-            instance.accountable_user
-            and instance.accountable_user != notification_sender
-            and old_instance.accountable_user != instance.accountable_user
-        ):
-            notify.send(
-                sender=notification_sender,
-                recipient=instance.accountable_user,
-                verb="te ha designado como responsable del sprint",
-                target=instance,
-            )
+        notify_item_assignation_to_user(
+            instance, "accountable_user", "te ha designado como responsable del sprint", old_instance
+        )
 
 
 @receiver(post_save, sender=Sprint)
 def notify_users_of_new_sprint_assignation(sender, instance, created, *args, **kwargs):
     """
-    Notifies an user that has been assigned to an new Sprint
+    Notifies an user that has been assigned to a new Sprint
     """
     if created:
-        notification_sender = instance.notification_sender
-
-        if instance.accountable_user and instance.accountable_user != notification_sender:
-            notify.send(
-                sender=notification_sender,
-                recipient=instance.accountable_user,
-                verb="te ha designado como responsable del sprint",
-                target=instance,
-            )
+        notify_item_assignation_to_user(instance, "accountable_user", "te ha designado como responsable del sprint")
 
 
 @receiver(pre_save, sender=UserStory)
@@ -108,81 +91,39 @@ def notify_users_of_existing_user_story_assignation(sender, instance, raw, using
     """
     if not update_fields and instance.persisted:
         old_instance = UserStory.objects.get(pk=instance.id)
-        notification_sender = instance.notification_sender
-
-        if (
-            instance.development_user
-            and instance.development_user != notification_sender
-            and old_instance.development_user != instance.development_user
-        ):
-            notify.send(
-                sender=notification_sender,
-                recipient=instance.development_user,
-                verb="te ha asignado como desarrollador de la historia de usuario",
-                target=instance,
-            )
-        if (
-            instance.validation_user
-            and instance.validation_user != notification_sender
-            and old_instance.validation_user != instance.validation_user
-        ):
-            notify.send(
-                sender=notification_sender,
-                recipient=instance.validation_user,
-                verb="te ha asignado como validador de la historia de usuario",
-                target=instance,
-            )
-        if (
-            instance.support_user
-            and instance.support_user != notification_sender
-            and old_instance.support_user != instance.support_user
-        ):
-            notify.send(
-                sender=notification_sender,
-                recipient=instance.support_user,
-                verb="te ha asignado como soporte de la historia de usuario",
-                target=instance,
-            )
+        message = "te ha designado como {role} de la historia de usuario"
+        development_user = notify_item_assignation_to_user(
+            instance, "development_user", message.format(role="desarrollador"), old_instance
+        )
+        validation_user = notify_item_assignation_to_user(
+            instance, "validation_user", message.format(role="validador"), old_instance
+        )
+        support_user = notify_item_assignation_to_user(
+            instance, "support_user", message.format(role="soporte"), old_instance
+        )
+        instance.change_notification_excluded_users = [development_user, validation_user, support_user]
 
 
 @receiver(post_save, sender=UserStory)
 def notify_users_of_new_user_story_assignation(sender, instance, created, raw, using, update_fields, *args, **kwargs):
     """
-    Notifies users that they have been assigned to an new User Story
+    Notifies users that they have been assigned to a new User Story
     """
     if created and not update_fields:
-        notification_sender = instance.notification_sender
-
-        if instance.development_user and instance.development_user != notification_sender:
-            notify.send(
-                sender=notification_sender,
-                recipient=instance.development_user,
-                verb="te ha asignado como desarrollador de la historia de usuario",
-                target=instance,
-            )
-        if instance.validation_user and instance.validation_user != notification_sender:
-            notify.send(
-                sender=notification_sender,
-                recipient=instance.validation_user,
-                verb="te ha asignado como validador de la historia de usuario",
-                target=instance,
-            )
-        if instance.support_user and instance.support_user != notification_sender:
-            notify.send(
-                sender=notification_sender,
-                recipient=instance.support_user,
-                verb="te ha asignado como soporte de la historia de usuario",
-                target=instance,
-            )
+        message = "te ha designado como {role} de la historia de usuario"
+        notify_item_assignation_to_user(instance, "development_user", message.format(role="desarrollador"))
+        notify_item_assignation_to_user(instance, "validation_user", message.format(role="validador"))
+        notify_item_assignation_to_user(instance, "support_user", message.format(role="soporte"))
 
 
 @receiver(post_save, sender=UserStory)
 def notify_users_of_user_story_changes(sender, instance, created, raw, using, update_fields, *args, **kwargs):
     """
-    Notifies assigned users of changes made in a existing User Story
+    Notifies assigned users of changes made in an existing User Story
     """
     if not created and not update_fields:
         notification_sender = instance.notification_sender
+        excluded_users = instance.change_notification_excluded_users + [notification_sender]
         recipient_qs = (
             get_user_model()
             .objects.filter(
@@ -190,7 +131,7 @@ def notify_users_of_user_story_changes(sender, instance, created, raw, using, up
                 | Q(validated_user_stories=instance)
                 | Q(supported_user_stories=instance)
             )
-            .exclude(pk=notification_sender.pk)
+            .exclude(pk__in=[user.pk for user in excluded_users if user])
             .distinct()
         )
 

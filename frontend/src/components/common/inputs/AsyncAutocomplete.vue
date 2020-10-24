@@ -7,7 +7,11 @@
     :search-input.sync="searchInput"
     hide-no-data
     v-on="$listeners"
-  ></v-autocomplete>
+  >
+    <template #append>
+      <v-icon>mdi-database-search-outline</v-icon>
+    </template>
+  </v-autocomplete>
 </template>
 
 <script>

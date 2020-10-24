@@ -1,6 +1,6 @@
 <template>
   <v-menu
-    :disabled="value.length <= textLength"
+    :disabled="!isTruncated"
     :close-on-content-click="false"
     :open-on-hover="true"
     :nudge-width="200"
@@ -8,7 +8,9 @@
     offset-x
   >
     <template #activator="{ on, attrs }">
-      <span v-bind="attrs" v-on="on">{{ value | truncate(textLength) }}</span>
+      <span :style="{ cursor }" v-bind="attrs" v-on="on">
+        {{ text }}
+      </span>
     </template>
     <v-card>
       <v-card-text>{{ value }}</v-card-text>
@@ -30,6 +32,17 @@ export default {
     textLength: {
       type: Number,
       default: 30,
+    },
+  },
+  computed: {
+    isTruncated() {
+      return this.value.length > this.textLength;
+    },
+    text() {
+      return truncate(this.value, this.textLength);
+    },
+    cursor() {
+      return this.isTruncated ? "help" : "default";
     },
   },
 };

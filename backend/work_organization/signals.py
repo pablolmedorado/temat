@@ -7,8 +7,9 @@ from django.utils.timezone import make_aware
 
 from notifications.signals import notify
 
-from events.models import Event, EventType
 from .models import GreenWorkingDay, Holiday, HolidayType, SupportWorkingDay
+from common.utils import notify_item_assignation_to_user
+from events.models import Event, EventType
 
 
 @receiver(post_save, sender=Holiday)
@@ -85,15 +86,7 @@ def notify_users_of_existing_support_assignation(sender, instance, *args, **kwar
     """
     if instance.persisted:
         old_instance = SupportWorkingDay.objects.get(pk=instance.id)
-        notification_sender = instance.notification_sender
-
-        if instance.user and instance.user != notification_sender and old_instance.user != instance.user:
-            notify.send(
-                sender=notification_sender,
-                recipient=instance.user,
-                verb="te ha asignado la jornada de soporte",
-                target=instance,
-            )
+        notify_item_assignation_to_user(instance, "user", "te ha asignado la jornada de soporte", old_instance)
 
 
 @receiver(post_save, sender=SupportWorkingDay)
@@ -102,15 +95,7 @@ def notify_users_of_new_support_assignation(sender, instance, created, *args, **
     Notifies an user that has been assigned to an new Support Working Day
     """
     if created:
-        notification_sender = instance.notification_sender
-
-        if instance.user and instance.user != notification_sender:
-            notify.send(
-                sender=notification_sender,
-                recipient=instance.user,
-                verb="te ha asignado la jornada de soporte",
-                target=instance,
-            )
+        notify_item_assignation_to_user(instance, "user", "te ha asignado la jornada de soporte")
 
 
 @receiver(post_save, sender=GreenWorkingDay)
@@ -157,32 +142,14 @@ def notify_users_of_existing_green_assignation(sender, instance, *args, **kwargs
     """
     Notifies users that they have been assigned to an existing Green Working Day
     """
-    if instance.persisted and (instance.main_user or instance.support_user):
+    if instance.persisted:
         old_instance = GreenWorkingDay.objects.get(pk=instance.id)
-        notification_sender = instance.notification_sender
-
-        if (
-            instance.main_user
-            and instance.main_user != notification_sender
-            and old_instance.main_user != instance.main_user
-        ):
-            notify.send(
-                sender=notification_sender,
-                recipient=instance.main_user,
-                verb="te ha asignado, con rol principal, la jornada especial",
-                target=instance,
-            )
-        if (
-            instance.support_user
-            and instance.support_user != notification_sender
-            and old_instance.support_user != instance.support_user
-        ):
-            notify.send(
-                sender=notification_sender,
-                recipient=instance.support_user,
-                verb="te ha asignado, con rol de soporte, la jornada especial",
-                target=instance,
-            )
+        notify_item_assignation_to_user(
+            instance, "main_user", "te ha asignado, con rol principal, la jornada especial", old_instance
+        )
+        notify_item_assignation_to_user(
+            instance, "support_user", "te ha asignado, con rol de soporte, la jornada especial", old_instance
+        )
 
 
 @receiver(post_save, sender=GreenWorkingDay)
@@ -190,20 +157,8 @@ def notify_users_of_new_green_assignation(sender, instance, created, *args, **kw
     """
     Notifies users that they have been assigned to an new Green Working Day
     """
-    if created and (instance.main_user or instance.support_user):
-        notification_sender = instance.notification_sender
-
-        if instance.main_user and instance.main_user != notification_sender:
-            notify.send(
-                sender=notification_sender,
-                recipient=instance.main_user,
-                verb="te ha asignado, con rol principal, la jornada especial",
-                target=instance,
-            )
-        if instance.support_user and instance.support_user != notification_sender:
-            notify.send(
-                sender=notification_sender,
-                recipient=instance.support_user,
-                verb="te ha asignado, con rol de soporte, la jornada especial",
-                target=instance,
-            )
+    if created:
+        notify_item_assignation_to_user(instance, "main_user", "te ha asignado, con rol principal, la jornada especial")
+        notify_item_assignation_to_user(
+            instance, "support_user", "te ha asignado, con rol de soporte, la jornada especial"
+        )

@@ -4,23 +4,28 @@ import warnings
 
 from django.urls import reverse_lazy
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = environ.Path(__file__) - 2
+
 PROJECT_ROOT = environ.Path(__file__) - 3
-FRONTEND_DIR = os.path.join(PROJECT_ROOT, "frontend")
+BACKEND_DIR = environ.Path(__file__) - 2
+FRONTEND_DIR = environ.Path(PROJECT_ROOT("frontend"))
+
+
+# Load env config (.env file or env vars)
+
+DEFAULT_DATABASE_URL = f"sqlite:///{BACKEND_DIR('db.sqlite3')}"
 
 env = environ.Env(
     ENV=(str, os.environ.get("TEMAT_ENV", default="production")),
     DEBUG=(bool, os.environ.get("TEMAT_DEBUG", default=False)),
     SECRET_KEY=(str, os.environ.get("TEMAT_SECRET_KEY")),
-    DATABASE_URL=(
-        str,
-        os.environ.get("TEMAT_DATABASE_URL", default=f"sqlite:///{os.path.join(BASE_DIR, 'db.sqlite3')}"),
-    ),
+    DATABASE_URL=(str, os.environ.get("TEMAT_DATABASE_URL", default=DEFAULT_DATABASE_URL)),
 )
+
 environ.Env.read_env()
-if not os.environ.get("TEMAT_DATABASE_URL"):
-    warnings.warn("TEMAT_DATABASE_URL has not been set. Running using SQLite local database")
+
+if env("DATABASE_URL") == DEFAULT_DATABASE_URL:
+    warnings.warn("(TEMAT_)DATABASE_URL has not been set. Using default SQLite local database...")
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
@@ -82,7 +87,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "temat.urls"
 
-TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+TEMPLATES_DIR = BACKEND_DIR("templates")
 
 TEMPLATES = [
     {
@@ -146,10 +151,10 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = BACKEND_DIR("static")
 
 if env("ENV") == "production":
-    STATICFILES_DIRS = (os.path.join(FRONTEND_DIR, "dist"),)
+    STATICFILES_DIRS = (FRONTEND_DIR("dist"),)
     STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
     def set_static_cache_header(headers, path, url):
@@ -177,7 +182,7 @@ REST_FRAMEWORK = {
 
 JS_REVERSE_EXCLUDE_NAMESPACES = ["admin", "djdt", "rest_framework", "hijack"]
 
-JS_REVERSE_OUTPUT_PATH = os.path.join(FRONTEND_DIR, "src", "plugins")
+JS_REVERSE_OUTPUT_PATH = FRONTEND_DIR("src", "plugins")
 
 JS_REVERSE_JS_GLOBAL_OBJECT_NAME = "window"
 
@@ -203,7 +208,7 @@ WEBPACK_LOADER = {
     "DEFAULT": {
         "CACHE": env("ENV") == "development",
         "BUNDLE_DIR_NAME": "dist/",
-        "STATS_FILE": os.path.join(FRONTEND_DIR, "config", WEBPACK_STATS_FILE),
+        "STATS_FILE": FRONTEND_DIR("config", WEBPACK_STATS_FILE),
     }
 }
 
@@ -227,7 +232,7 @@ PWA_APP_SPLASH_SCREEN = [
 ]
 PWA_APP_DIR = "ltr"
 PWA_APP_LANG = "es-ES"
-PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, "common", "static", "js", "service-worker.js")
+PWA_SERVICE_WORKER_PATH = BACKEND_DIR("common", "static", "js", "service-worker.js")
 PWA_APP_DEBUG_MODE = False
 
 
