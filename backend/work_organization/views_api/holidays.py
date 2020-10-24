@@ -7,7 +7,6 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from notifications.signals import notify
-from rest_flex_fields.views import FlexFieldsModelViewSet
 from rest_framework import permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -18,11 +17,11 @@ from ..models import Holiday, HolidayType
 from ..permissions import HolidayPermission
 from ..serializers import HolidaySerializer, HolidayTypeSerializer
 from ..utils import user_availability_chart_data
-from common.mixins import AuthorshipMixin
+from common.mixins import AtomicFlexFieldsModelViewSet, AuthorshipMixin
 from common.permissions import IsAdminUserOrReadOnly
 
 
-class HolidayTypeApi(FlexFieldsModelViewSet):
+class HolidayTypeApi(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
     queryset = HolidayType.objects.all()
     serializer_class = HolidayTypeSerializer
@@ -32,7 +31,7 @@ class HolidayTypeApi(FlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class HolidayApi(AuthorshipMixin, FlatDatesMixin, FlexFieldsModelViewSet):
+class HolidayApi(AuthorshipMixin, FlatDatesMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HolidayPermission)
     queryset = Holiday.objects.with_expiration_date()
     serializer_class = HolidaySerializer
@@ -50,6 +49,7 @@ class HolidayApi(AuthorshipMixin, FlatDatesMixin, FlexFieldsModelViewSet):
 
     flat_dates_field = "planned_date"
 
+    @transaction.atomic
     @action(detail=False, methods=["POST"])
     def request(self, request, *args, **kwargs):
         if "dates" not in request.data:
@@ -92,21 +92,21 @@ class HolidayApi(AuthorshipMixin, FlatDatesMixin, FlexFieldsModelViewSet):
                 )
 
         holiday_pks = []
-        with transaction.atomic():
-            for requested_date in requested_dates:
-                holiday = available_holidays_queryset.first()
-                if holiday:
-                    base_queryset.filter(pk=holiday.pk).update(planned_date=requested_date)
-                    holiday_pks.append(holiday.pk)
-            notify.send(
-                sender=request.user,
-                recipient=get_user_model().objects.filter(is_staff=True).exclude(pk=request.user.pk),
-                verb=f"ha solicitado {len(requested_dates)} días de vacaciones",
-            )
+        for requested_date in requested_dates:
+            holiday = available_holidays_queryset.first()
+            if holiday:
+                base_queryset.filter(pk=holiday.pk).update(planned_date=requested_date)
+                holiday_pks.append(holiday.pk)
+        notify.send(
+            sender=request.user,
+            recipient=get_user_model().objects.filter(is_staff=True).exclude(pk=request.user.pk),
+            verb=f"ha solicitado {len(requested_dates)} días de vacaciones",
+        )
 
         serializer = self.get_serializer(base_queryset.filter(pk__in=holiday_pks), many=True)
         return Response(serializer.data)
 
+    @transaction.atomic
     @action(detail=True, methods=["PATCH"])
     def cancel(self, request, *args, **kwargs):
         instance = self.get_object()

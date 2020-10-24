@@ -1,12 +1,12 @@
-from rest_flex_fields.views import FlexFieldsModelViewSet
-from rest_framework import permissions, viewsets
+from rest_framework import permissions
 
 from .models import Base, Bread, Breakfast, Drink, Ingredient
 from .serializers import BaseSerializer, BreadSerializer, BreakfastSerializer, DrinkSerializer, IngredientSerializer
+from common.mixins import AtomicFlexFieldsModelViewSet
 from common.permissions import IsAdminUserOrReadOnly, IsOwnerOrReadOnly
 
 
-class BreadApi(FlexFieldsModelViewSet):
+class BreadApi(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
     queryset = Bread.objects.all()
     serializer_class = BreadSerializer
@@ -15,7 +15,7 @@ class BreadApi(FlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class BaseApi(FlexFieldsModelViewSet):
+class BaseApi(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
     queryset = Base.objects.all()
     serializer_class = BaseSerializer
@@ -24,7 +24,7 @@ class BaseApi(FlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class IngredientApi(FlexFieldsModelViewSet):
+class IngredientApi(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
@@ -33,7 +33,7 @@ class IngredientApi(FlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class DrinkApi(FlexFieldsModelViewSet):
+class DrinkApi(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
     queryset = Drink.objects.all()
     serializer_class = DrinkSerializer
@@ -42,7 +42,7 @@ class DrinkApi(FlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class BreakfastApi(FlexFieldsModelViewSet):
+class BreakfastApi(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly)
     queryset = Breakfast.objects.all()
     serializer_class = BreakfastSerializer

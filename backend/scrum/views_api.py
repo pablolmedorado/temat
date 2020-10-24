@@ -1,10 +1,11 @@
 from datetime import date
 
+from django.db import transaction
 from django.db.models import Count, F, Q, Sum
 from django.utils.translation import ugettext_lazy as _
 
 from rest_flex_fields import is_expanded
-from rest_flex_fields.views import FlexFieldsMixin, FlexFieldsModelViewSet
+from rest_flex_fields.views import FlexFieldsMixin
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -38,11 +39,11 @@ from .utils import (
     gantt_chart_data,
     user_story_user_chart_data,
 )
-from common.mixins import AuthorshipMixin, OrderedMixin
+from common.mixins import AtomicFlexFieldsModelViewSet, AuthorshipMixin, OrderedMixin
 from common.permissions import IsAdminUserOrReadOnly
 
 
-class SprintApi(AuthorshipMixin, FlexFieldsModelViewSet):
+class SprintApi(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
     serializer_class = SprintSerializer
     filterset_class = SprintFilterSet
@@ -77,7 +78,7 @@ class SprintApi(AuthorshipMixin, FlexFieldsModelViewSet):
         return Response(chart_data)
 
 
-class EpicApi(AuthorshipMixin, FlexFieldsModelViewSet):
+class EpicApi(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
     queryset = Epic.objects.with_current_progress().all().prefetch_related("tags").distinct()
     serializer_class = EpicSerializer
@@ -87,7 +88,7 @@ class EpicApi(AuthorshipMixin, FlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class UserStoryTypeApi(FlexFieldsModelViewSet):
+class UserStoryTypeApi(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
     queryset = UserStoryType.objects.all()
     serializer_class = UserStoryTypeSerializer
@@ -96,7 +97,7 @@ class UserStoryTypeApi(FlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class UserStoryApi(AuthorshipMixin, FlexFieldsModelViewSet):
+class UserStoryApi(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, UserStoryPermission)
     queryset = UserStory.objects.with_actual_effort().prefetch_related("tags").distinct()
     serializer_class = UserStorySerializer
@@ -164,6 +165,7 @@ class UserStoryApi(AuthorshipMixin, FlexFieldsModelViewSet):
     def my_user_stories(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
+    @transaction.atomic
     @action(detail=True, methods=["PATCH"])
     def validate(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -178,6 +180,7 @@ class UserStoryApi(AuthorshipMixin, FlexFieldsModelViewSet):
 
         return Response(serializer.data)
 
+    @transaction.atomic
     @action(detail=True, methods=["POST"])
     def copy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -248,8 +251,7 @@ class UserStoryApi(AuthorshipMixin, FlexFieldsModelViewSet):
         return Response(chart_data)
 
 
-class ProgressApi(AuthorshipMixin, FlexFieldsMixin, viewsets.ReadOnlyModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
+class ProgressApi(FlexFieldsMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Progress.objects.all()
     serializer_class = ProgressSerializer
     filterset_class = ProgressFilterSet
@@ -262,7 +264,7 @@ class ProgressApi(AuthorshipMixin, FlexFieldsMixin, viewsets.ReadOnlyModelViewSe
         return self.queryset
 
 
-class EffortApi(AuthorshipMixin, FlexFieldsModelViewSet):
+class EffortApi(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, EffortPermission)
     queryset = Effort.objects.all()
     serializer_class = EffortSerializer
@@ -290,7 +292,7 @@ class EffortApi(AuthorshipMixin, FlexFieldsModelViewSet):
         return Response(chart_data)
 
 
-class TaskApi(AuthorshipMixin, OrderedMixin, FlexFieldsModelViewSet):
+class TaskApi(AuthorshipMixin, OrderedMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, TaskPermission)
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
@@ -305,6 +307,7 @@ class TaskApi(AuthorshipMixin, OrderedMixin, FlexFieldsModelViewSet):
             return self.queryset.filter(user_story_id=self.kwargs["user_story"])
         return self.queryset
 
+    @transaction.atomic
     @action(detail=True, methods=["PATCH"])
     def toggle(self, request, *args, **kwargs):
         instance = self.get_object()

@@ -6,26 +6,6 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 
 
-class AtomicMixin(object):
-    """
-    Ensures we rollback db transactions on exceptions.
-    Idea from https://github.com/tomchristie/django-rest-framework/pull/1204
-    """
-
-    @transaction.atomic()
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-    def handle_exception(self, *args, **kwargs):
-        response = super().handle_exception(*args, **kwargs)
-
-        if getattr(response, "exception"):
-            # We've suppressed the exception but still need to rollback any transaction.
-            transaction.set_rollback(True)
-
-        return response
-
-
 class AuthorshipMixin(object):
     def perform_create(self, serializer):
         if type(serializer.validated_data) in [list, tuple]:
@@ -57,6 +37,7 @@ class OrderedMixin(object):
         if "order" in self.request.data:
             serializer.instance.to(int(self.request.data.get("order")))
 
+    @transaction.atomic
     @action(detail=True, methods=["PATCH"])
     def to(self, request, *args, **kwargs):  # noqa
         """
@@ -69,6 +50,7 @@ class OrderedMixin(object):
         instance.to(int(self.request.data.get("order")), extra_update=extra_update)
         return Response(status=HTTP_200_OK)
 
+    @transaction.atomic
     @action(detail=True, methods=["PATCH"])
     def up(self, request, *args, **kwargs):  # noqa
         """
@@ -78,6 +60,7 @@ class OrderedMixin(object):
         instance.up()
         return Response(status=HTTP_200_OK)
 
+    @transaction.atomic
     @action(detail=True, methods=["PATCH"])
     def down(self, request, *args, **kwargs):  # noqa
         """
@@ -87,6 +70,7 @@ class OrderedMixin(object):
         instance.down()
         return Response(status=HTTP_200_OK)
 
+    @transaction.atomic
     @action(detail=True, methods=["PATCH"])
     def top(self, request, *args, **kwargs):
         """
@@ -97,6 +81,7 @@ class OrderedMixin(object):
         instance.top(extra_update=extra_update)
         return Response(status=HTTP_200_OK)
 
+    @transaction.atomic
     @action(detail=True, methods=["PATCH"])
     def bottom(self, request, *args, **kwargs):
         """
