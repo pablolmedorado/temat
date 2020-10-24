@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/pablolmedorado/temat/compare/v1.2.0...v1.2.1) (2020-10-24)
+
+
+### Bug Fixes
+
+* **frontend:** fix form validation error messages with params ([d1f85cb](https://github.com/pablolmedorado/temat/commit/d1f85cb6d2bc9908ad0fd2e3e5e56f0bb211cdb9))
+* **frontend:** replace chevron async autocomplete icon ([83bbb3f](https://github.com/pablolmedorado/temat/commit/83bbb3f3986e7312588d1a26aaafa23dce48d487))
+* **frontend:** use help/default cursors on TruncatedText component ([ad74010](https://github.com/pablolmedorado/temat/commit/ad74010fc3952aed134659388938b78f2ce039bd))
+* **notifications:** remove useless "changes" notification when assigning users to user stories ([58b493d](https://github.com/pablolmedorado/temat/commit/58b493d03c5915680416b02077f316f93128fb75))
+
 ## [1.2.0](https://github.com/pablolmedorado/temat/compare/v1.1.0...v1.2.0) (2020-10-18)
 
 
