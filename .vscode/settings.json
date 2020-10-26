@@ -1,11 +1,17 @@
 {
-  /* Tree view */
+  /* Files */
   "files.exclude": {
     "**/*.pyc": true,
     "**/.scannerwork": true,
     "**/.sonarlint": true,
     "**/__pycache__": true,
     "**/.mypy_cache": true
+  },
+  "files.watcherExclude": {
+    "**/.venv/*/**": true
+  },
+  "search.exclude": {
+    "**/.venv": true
   },
   /* Linting & formatting */
   "editor.formatOnSave": false,
