@@ -25,6 +25,8 @@ import Analytics from "@/views/Analytics";
 import Notifications from "@/views/Notifications";
 import NotFound from "@/views/NotFound";
 
+import { adminUsersOnly } from "@/utils/router-guards";
+
 Vue.use(Router);
 
 const router = new Router({
@@ -160,6 +162,7 @@ const router = new Router({
       path: "/scrum/user-stories/new",
       name: "user-story-new",
       component: UserStoryDetail,
+      beforeEnter: adminUsersOnly,
       meta: {
         title: "Nueva historia de usuario",
         keepAlive: false,
