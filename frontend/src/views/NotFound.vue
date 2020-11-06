@@ -20,3 +20,12 @@
     </v-row>
   </v-container>
 </template>
+
+<script>
+export default {
+  name: "NotFound",
+  metaInfo: {
+    title: "404",
+  },
+};
+</script>

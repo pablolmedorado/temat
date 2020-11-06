@@ -79,6 +79,9 @@ import { applyDarkVariant, getFontColourFromBackground } from "@/utils/colours";
 
 export default {
   name: "Timeline",
+  metaInfo: {
+    title: "Timeline",
+  },
   components: {
     EventRepresentation,
   },

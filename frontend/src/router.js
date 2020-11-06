@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+import VueMeta from "vue-meta";
 
 import Timeline from "@/views/calendar/Timeline";
 import Calendar from "@/views/calendar/Calendar";
@@ -25,9 +26,10 @@ import Analytics from "@/views/Analytics";
 import Notifications from "@/views/Notifications";
 import NotFound from "@/views/NotFound";
 
-import { adminUsersOnly, setTitle } from "@/utils/router-guards";
+import { adminUsersOnly } from "@/utils/router-guards";
 
 Vue.use(Router);
+Vue.use(VueMeta);
 
 const router = new Router({
   routes: [
@@ -42,7 +44,6 @@ const router = new Router({
       name: "timeline",
       component: Timeline,
       meta: {
-        title: "Timeline",
         keepAlive: true,
       },
     },
@@ -50,18 +51,16 @@ const router = new Router({
       path: "/calendar",
       name: "calendar",
       component: Calendar,
+      props: true,
       meta: {
-        title: "Calendario",
         keepAlive: true,
       },
-      props: true,
     },
     {
       path: "/calendar/events",
       name: "events",
       component: Events,
       meta: {
-        title: "Eventos",
         keepAlive: true,
       },
     },
@@ -69,11 +68,10 @@ const router = new Router({
       path: "/calendar/events/:id",
       name: "event",
       component: EventDetail,
+      props: true,
       meta: {
-        title: "Evento",
         keepAlive: false,
       },
-      props: true,
     },
 
     {
@@ -86,7 +84,6 @@ const router = new Router({
       name: "sprints",
       component: Sprints,
       meta: {
-        title: "Sprints",
         keepAlive: true,
       },
     },
@@ -94,48 +91,43 @@ const router = new Router({
       path: "/scrum/sprints/:sprintId/kanban",
       name: "sprint-kanban",
       component: SprintKanban,
+      props: true,
       meta: {
-        title: "Sprint - Kanban",
         keepAlive: true,
       },
-      props: true,
     },
     {
       path: "/scrum/sprints/:sprintId/chart",
       name: "sprint-chart",
       component: SprintChart,
+      props: true,
       meta: {
-        title: "Sprint - Gráfica",
         keepAlive: true,
       },
-      props: true,
     },
     {
       path: "/scrum/sprints/:sprintId/gantt",
       name: "sprint-gantt",
       component: SprintGantt,
+      props: true,
       meta: {
-        title: "Sprint - Gantt",
         keepAlive: true,
       },
-      props: true,
     },
     {
       path: "/scrum/sprints/:sprintId/user-stories",
       name: "sprint-user-stories",
       component: UserStories,
+      props: true,
       meta: {
-        title: "Sprint - historias de usuario",
         keepAlive: true,
       },
-      props: true,
     },
     {
       path: "/scrum/epics",
       name: "epics",
       component: Epics,
       meta: {
-        title: "Épicas",
         keepAlive: true,
       },
     },
@@ -143,18 +135,16 @@ const router = new Router({
       path: "/scrum/epics/:epicId/user-stories",
       name: "epic-user-stories",
       component: UserStories,
+      props: true,
       meta: {
-        title: "Épica - historias de usuario",
         keepAlive: true,
       },
-      props: true,
     },
     {
       path: "/scrum/user-stories",
       name: "user-stories",
       component: UserStories,
       meta: {
-        title: "Índice historias de usuario",
         keepAlive: true,
       },
     },
@@ -163,11 +153,10 @@ const router = new Router({
       name: "user-story-new",
       component: UserStoryDetail,
       beforeEnter: adminUsersOnly,
+      props: (route) => ({ sprintId: route.query.sprint, epicId: route.query.epic }),
       meta: {
-        title: "Nueva historia de usuario",
         keepAlive: false,
       },
-      props: (route) => ({ sprintId: route.query.sprint, epicId: route.query.epic }),
     },
     {
       path: "/scrum/user-stories/:id",
@@ -175,7 +164,6 @@ const router = new Router({
       component: UserStoryDetail,
       props: true,
       meta: {
-        title: "Historia de usuario",
         keepAlive: false,
       },
     },
@@ -183,28 +171,25 @@ const router = new Router({
       path: "/scrum/sprints/:sprintId/user-stories/:id",
       name: "sprint-user-story",
       component: UserStoryDetail,
+      props: true,
       meta: {
-        title: "Historia de usuario",
         keepAlive: false,
       },
-      props: true,
     },
     {
       path: "/scrum/epics/:epicId/user-stories/:id",
       name: "epic-user-story",
       component: UserStoryDetail,
+      props: true,
       meta: {
-        title: "Historia de usuario",
         keepAlive: false,
       },
-      props: true,
     },
     {
       path: "/scrum/effort",
       name: "effort",
       component: Effort,
       meta: {
-        title: "Esfuerzo",
         keepAlive: true,
       },
     },
@@ -214,7 +199,6 @@ const router = new Router({
       name: "green-days",
       component: GreenWorkingDays,
       meta: {
-        title: "Jornadas especiales",
         keepAlive: true,
       },
     },
@@ -223,7 +207,6 @@ const router = new Router({
       name: "support",
       component: Support,
       meta: {
-        title: "Soporte",
         keepAlive: true,
       },
     },
@@ -237,7 +220,6 @@ const router = new Router({
       name: "user-holidays",
       component: UserHolidays,
       meta: {
-        title: "Vacaciones usuario",
         keepAlive: true,
       },
     },
@@ -246,7 +228,6 @@ const router = new Router({
       name: "team-holidays",
       component: TeamHolidays,
       meta: {
-        title: "Vacaciones equipo",
         keepAlive: true,
       },
     },
@@ -256,7 +237,6 @@ const router = new Router({
       name: "breakfasts",
       component: Breakfasts,
       meta: {
-        title: "Desayunos",
         keepAlive: true,
       },
     },
@@ -265,7 +245,6 @@ const router = new Router({
       name: "analytics",
       component: Analytics,
       meta: {
-        title: "Análisis",
         keepAlive: true,
       },
     },
@@ -274,7 +253,6 @@ const router = new Router({
       name: "notifications",
       component: Notifications,
       meta: {
-        title: "Notificaciones",
         keepAlive: true,
       },
     },
@@ -305,14 +283,10 @@ const router = new Router({
       name: "NotFound",
       component: NotFound,
       meta: {
-        title: "No encontrado",
         keepAlive: true,
       },
     },
   ],
 });
-
-// This callback runs before every route change, including on page load.
-router.beforeEach(setTitle);
 
 export default router;

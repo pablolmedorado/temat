@@ -163,6 +163,9 @@ import UserStoryUserChart from "@/components/scrum/charts/UserStoryUserChart";
 
 export default {
   name: "Analytics",
+  metaInfo: {
+    title: "Análisis",
+  },
   components: {
     EffortRoleChart,
     EventAttendeesChart,

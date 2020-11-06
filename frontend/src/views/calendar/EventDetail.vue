@@ -79,6 +79,9 @@ import { truncate } from "@/filters";
 
 export default {
   name: "EventDetail",
+  metaInfo: {
+    title: "Evento",
+  },
   mixins: [EventEditionMixin],
   async beforeRouteEnter(to, from, next) {
     try {

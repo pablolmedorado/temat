@@ -104,6 +104,9 @@ import SprintForm from "@/components/scrum/forms/SprintForm";
 
 export default {
   name: "Sprints",
+  metaInfo: {
+    title: "Sprints",
+  },
   data() {
     return {
       tableHeaders: [

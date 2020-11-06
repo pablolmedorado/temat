@@ -111,6 +111,14 @@ import UserStoryIndexStatus from "@/components/scrum/UserStoryIndexStatus";
 
 export default {
   name: "UserStories",
+  metaInfo() {
+    let title = "Historias de usuario";
+    if (this.hasContext) {
+      const model = this.sprintId ? "Sprint" : "Épica";
+      title = `${model} - historias de usuario`;
+    }
+    return { title };
+  },
   components: {
     TaskQuickManagementDialog,
     UserStoryActors,

@@ -63,6 +63,9 @@ import SupportFilters from "@/components/work-organization/support/SupportFilter
 
 export default {
   name: "Support",
+  metaInfo: {
+    title: "Soporte",
+  },
   components: { StepperBulkFormDialog },
   data() {
     return {

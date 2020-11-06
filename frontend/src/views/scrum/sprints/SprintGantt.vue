@@ -46,6 +46,9 @@ import SprintGanttChart from "@/components/scrum/charts/SprintGanttChart";
 
 export default {
   name: "SprintGantt",
+  metaInfo: {
+    title: "Sprint - Gantt",
+  },
   components: { SprintGanttChart },
   mixins: [BreadcrumbsContextMixin],
   computed: {

@@ -57,6 +57,9 @@ import SprintBurnChart from "@/components/scrum/charts/SprintBurnChart";
 
 export default {
   name: "SprintChart",
+  metaInfo: {
+    title: "Sprint - Gráfica",
+  },
   components: { SprintBurnChart },
   mixins: [BreadcrumbsContextMixin],
   data() {

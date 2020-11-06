@@ -98,6 +98,9 @@ import { getReadableDuration, isoDateToLocaleString, isoDateTimeToLocaleString }
 
 export default {
   name: "Events",
+  metaInfo: {
+    title: "Eventos",
+  },
   filters: {
     date: isoDateToLocaleString,
     datetime: isoDateTimeToLocaleString,

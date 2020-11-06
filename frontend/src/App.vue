@@ -107,6 +107,12 @@ import loperaSentences from "@/utils/lopera-sentences";
 
 export default {
   name: "App",
+  metaInfo() {
+    return {
+      title: "App",
+      titleTemplate: `%s | ${this.appName}`,
+    };
+  },
   components: { AppLabel, NotificationManager },
   data() {
     return {
@@ -183,7 +189,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["konamiCodeActive", "loggedUser", "snackbar"]),
+    ...mapState(["appName", "konamiCodeActive", "loggedUser", "snackbar"]),
     ...mapGetters(["loading"]),
   },
   watch: {
