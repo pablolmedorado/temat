@@ -272,6 +272,46 @@
                   />
                 </v-col>
               </v-row>
+              <v-row>
+                <v-col>
+                  <DatePickerInput
+                    :value="filters.current_progress_changed__date__gte"
+                    label="Fecha modificación de avance (desde)"
+                    prepend-icon="mdi-calendar-arrow-right"
+                    clearable
+                    @input="updateFilters({ current_progress_changed__date__gte: $event })"
+                  />
+                </v-col>
+                <v-col>
+                  <DatePickerInput
+                    :value="filters.current_progress_changed__date__lte"
+                    label="Fecha modificación de avance (hasta)"
+                    prepend-icon="mdi-calendar-arrow-left"
+                    clearable
+                    @input="updateFilters({ current_progress_changed__date__lte: $event })"
+                  />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <DatePickerInput
+                    :value="filters.validated_changed__date__gte"
+                    label="Fecha modificación de validación (desde)"
+                    prepend-icon="mdi-calendar-arrow-right"
+                    clearable
+                    @input="updateFilters({ validated_changed__date__gte: $event })"
+                  />
+                </v-col>
+                <v-col>
+                  <DatePickerInput
+                    :value="filters.validated_changed__date__lte"
+                    label="Fecha modificación de validación (hasta)"
+                    prepend-icon="mdi-calendar-arrow-left"
+                    clearable
+                    @input="updateFilters({ validated_changed__date__lte: $event })"
+                  />
+                </v-col>
+              </v-row>
             </v-tab-item>
             <v-tab-item value="people">
               <v-row>
