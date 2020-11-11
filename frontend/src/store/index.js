@@ -10,6 +10,8 @@ import scrumModule from "./modules/scrum";
 import usersModule from "./modules/users";
 import breakfastsModule from "./modules/breakfasts";
 
+import { version } from "@/../package.json";
+
 Vue.use(Vuex);
 
 const defaultSnackbarConfig = {
@@ -32,6 +34,10 @@ export default new Vuex.Store({
   },
   getters: {
     loading: (state) => Boolean(state.pendingRequests),
+    appLabel: (state) => ({
+      name: state.konamiCodeActive ? "MiBeti" : state.appName,
+      version: state.konamiCodeActive ? "1992" : version,
+    }),
     yearOptions: (state) => [state.currentYear - 1, state.currentYear, state.currentYear + 1],
   },
   mutations: {

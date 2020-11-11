@@ -51,7 +51,10 @@
 
     <v-app-bar :color="$vuetify.theme.isDark ? null : 'primary'" dark app fixed clipped-left>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <AppLabel />
+      <span class="text-h6 ml-3 mr-5">
+        {{ appLabel.name }}
+        <sub class="text-caption">{{ appLabel.version }}</sub>
+      </span>
       <v-spacer></v-spacer>
       <v-progress-circular v-show="loading" class="mr-5" :size="36" color="white" indeterminate></v-progress-circular>
       <NotificationManager class="mr-5" />
@@ -98,7 +101,6 @@
 import { pick } from "lodash";
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 
-import AppLabel from "@/components/AppLabel";
 import NotificationManager from "@/components/notifications/NotificationManager";
 
 import { handleError } from "@/utils/error-handlers";
@@ -110,10 +112,10 @@ export default {
   metaInfo() {
     return {
       title: "App",
-      titleTemplate: `%s | ${this.appName}`,
+      titleTemplate: `%s | ${this.appLabel.name}`,
     };
   },
-  components: { AppLabel, NotificationManager },
+  components: { NotificationManager },
   data() {
     return {
       drawer: null,
@@ -189,8 +191,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["appName", "konamiCodeActive", "loggedUser", "snackbar"]),
-    ...mapGetters(["loading"]),
+    ...mapState(["konamiCodeActive", "loggedUser", "snackbar"]),
+    ...mapGetters(["appLabel", "loading"]),
   },
   watch: {
     "$vuetify.theme.dark": function(newValue) {
