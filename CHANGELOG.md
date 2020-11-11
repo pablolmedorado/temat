@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/pablolmedorado/temat/compare/v1.2.1...v1.3.0) (2020-11-11)
+
+
+### Features
+
+* **user-stories:** add progress date & validated date filters ([486fa78](https://github.com/pablolmedorado/temat/commit/486fa78c414c65ff950bd0f1f7da5e8dd647470d))
+* **user-stories:** add style to status label in the index component ([b29a399](https://github.com/pablolmedorado/temat/commit/b29a3991c15d3551b8596049d0205671bdd6bddb))
+
+
+### Bug Fixes
+
+* **user-stories:** add navigation guard for 'new' route ([c79af50](https://github.com/pablolmedorado/temat/commit/c79af503908a445dd9342496cec423eb764ce0df))
+
 ### [1.2.1](https://github.com/pablolmedorado/temat/compare/v1.2.0...v1.2.1) (2020-10-24)
 
 
