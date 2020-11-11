@@ -102,6 +102,9 @@ import VoluteersDialog from "@/components/work-organization/green-working-days/V
 
 export default {
   name: "GreenWorkingDays",
+  metaInfo: {
+    title: "Jornadas especiales",
+  },
   components: { StepperBulkFormDialog, VoluteersDialog },
   data() {
     return {

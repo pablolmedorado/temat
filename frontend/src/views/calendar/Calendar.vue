@@ -152,6 +152,9 @@ import { getFontColourFromBackground, hex2rgba } from "@/utils/colours";
 
 export default {
   name: "Calendar",
+  metaInfo: {
+    title: "Calendario",
+  },
   components: { EventCard },
   props: {
     initialDate: {

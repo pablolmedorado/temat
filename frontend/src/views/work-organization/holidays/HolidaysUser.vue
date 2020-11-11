@@ -139,6 +139,9 @@ const currentDate = DateTime.local();
 
 export default {
   name: "HolidaysUser",
+  metaInfo: {
+    title: "Vacaciones usuario",
+  },
   components: { HolidaysDetailDialog, HolidaysHelpDialog },
   mixins: [DatePickerDatesMixin, HolidaysMixin],
   data() {

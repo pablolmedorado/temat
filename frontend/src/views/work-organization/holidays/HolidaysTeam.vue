@@ -77,6 +77,9 @@ import { defaultTableOptions } from "@/utils/constants";
 
 export default {
   name: "HolidaysTeam",
+  metaInfo: {
+    title: "Vacaciones equipo",
+  },
   components: { TeamHolidayFilters },
   mixins: [HolidaysMixin],
   data() {

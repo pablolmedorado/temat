@@ -4,7 +4,7 @@
     class="d-inline-flex align-center"
   >
     <v-progress-circular
-      class="mr-2"
+      class="mr-1"
       :rotate="-90"
       :size="32"
       :value="userStory.current_progress"
@@ -13,7 +13,7 @@
     >
       {{ userStory.current_progress }}
     </v-progress-circular>
-    <span>
+    <span :style="statusLabelStyle">
       {{ userStoryStatusMap[userStory.status].label }}
     </span>
     <v-tooltip v-if="userStory.validated === false" bottom>
@@ -40,6 +40,22 @@ export default {
   },
   computed: {
     ...mapGetters("scrum", ["userStoryStatusMap", "riskLevelsMap"]),
+    statusLabelStyle() {
+      if (this.userStory.risk_level) {
+        return {
+          color: this.riskLevelsMap[this.userStory.risk_level].colour,
+          fontWeight: "bold",
+        };
+      } else {
+        return {};
+      }
+    },
   },
 };
 </script>
+
+<style scoped>
+::v-deep .v-progress-circular__info {
+  font-size: 0.79rem;
+}
+</style>

@@ -117,6 +117,9 @@ import { isoDateTimeToLocaleString } from "@/utils/dates";
 
 export default {
   name: "Notifications",
+  metaInfo: {
+    title: "Notificaciones",
+  },
   filters: {
     datetime: isoDateTimeToLocaleString,
   },

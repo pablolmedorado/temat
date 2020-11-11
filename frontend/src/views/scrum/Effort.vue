@@ -88,6 +88,9 @@ import EffortReportDialog from "@/components/scrum/dialogs/EffortReportDialog";
 
 export default {
   name: "Effort",
+  metaInfo: {
+    title: "Esfuerzo",
+  },
   components: { EffortReportDialog },
   data() {
     return {

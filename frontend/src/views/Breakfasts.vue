@@ -72,6 +72,9 @@ import BreakfastsSummaryDialog from "@/components/breakfasts/BreakfastsSummaryDi
 
 export default {
   name: "Breakfasts",
+  metaInfo: {
+    title: "Desayunos",
+  },
   components: { BreakfastsSummaryDialog },
   data() {
     return {

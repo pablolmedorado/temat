@@ -67,6 +67,9 @@ import EpicForm from "@/components/scrum/forms/EpicForm";
 
 export default {
   name: "Epics",
+  metaInfo: {
+    title: "Épicas",
+  },
   data() {
     return {
       tableHeaders: [

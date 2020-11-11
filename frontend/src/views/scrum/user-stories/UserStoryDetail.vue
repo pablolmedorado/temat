@@ -72,6 +72,11 @@ const defaultItem = {
 
 export default {
   name: "UserStoryDetail",
+  metaInfo() {
+    return {
+      title: this.id ? "Historia de usuario" : "Nueva historia de usuario",
+    };
+  },
   components: {
     UserStoryData,
     UserStoryTasks,

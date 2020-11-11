@@ -89,6 +89,9 @@ import KanbanCard from "@/components/scrum/KanbanCard";
 
 export default {
   name: "SprintKanban",
+  metaInfo: {
+    title: "Sprint - Kanban",
+  },
   components: { KanbanCard },
   mixins: [BreadcrumbsContextMixin],
   props: {
