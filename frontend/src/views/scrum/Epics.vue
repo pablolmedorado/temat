@@ -10,6 +10,7 @@
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
+          :default-filters="defaultFilters"
           :service="service"
           :form-component="formComponent"
           :default-item="defaultItem"
@@ -102,6 +103,9 @@ export default {
       },
       service: EpicService,
       filterComponent: EpicFilters,
+      defaultFilters: {
+        finished: false,
+      },
       formComponent: EpicForm,
       defaultItem: {
         id: null,
