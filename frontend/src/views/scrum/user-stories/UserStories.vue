@@ -11,6 +11,7 @@
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
+          :system-filters="systemFilters"
           :default-filters="defaultFilters"
           :service="service"
           :can-edit="() => false"
@@ -172,12 +173,11 @@ export default {
       },
       service: UserStoryService,
       filterComponent: UserStoryFilters,
-      defaultFilters: {
+      systemFilters: {
         sprint_id: this.sprintId,
         epic_id: this.epicId,
-        status__in: this.sprintId || this.epicId ? "" : "1,2,3",
-        any_role_user__in: null,
       },
+      defaultFilters: {},
       effortFormComponent: EffortForm,
       showTaskDialog: false,
     };
@@ -233,8 +233,11 @@ export default {
     },
   },
   created() {
-    if (!this.hasContext && !this.loggedUser.is_staff) {
-      this.defaultFilters.any_role_user__in = String(this.loggedUser.id);
+    if (!this.hasContext) {
+      this.defaultFilters.status__in = "1,2,3";
+      if (!this.loggedUser.is_staff) {
+        this.defaultFilters.any_role_user__in = String(this.loggedUser.id);
+      }
     }
   },
   methods: {

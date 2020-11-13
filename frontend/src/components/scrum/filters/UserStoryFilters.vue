@@ -94,28 +94,26 @@
                   ></v-select>
                 </v-col>
               </v-row>
-              <v-row>
+              <v-row v-if="!context.sprint">
                 <v-col>
                   <AsyncAutocomplete
                     :value="filters.sprint_id"
                     :service="sprintService"
                     search-field="name"
                     search-lookup="icontains"
-                    :disabled="disableSprintFilter"
                     label="Sprint"
                     prepend-icon="mdi-run-fast"
                     @input="updateFilters({ sprint_id: $event })"
                   />
                 </v-col>
               </v-row>
-              <v-row>
+              <v-row v-if="!context.epic">
                 <v-col>
                   <AsyncAutocomplete
                     :value="filters.epic_id"
                     :service="epicService"
                     search-field="name"
                     search-lookup="icontains"
-                    :disabled="disableEpicFilter"
                     label="Épica"
                     prepend-icon="mdi-sword-cross"
                     @input="updateFilters({ epic_id: $event })"
@@ -382,12 +380,13 @@ import SprintService from "@/services/scrum/sprint-service";
 export default {
   name: "UserStoryFilters",
   mixins: [FilterMixin],
+  inject: {
+    context: { default: {} },
+  },
   data() {
     return {
       epicService: EpicService,
       sprintService: SprintService,
-      disableSprintFilter: Boolean(this.filters.sprint_id),
-      disableEpicFilter: Boolean(this.filters.epic_id),
       tab: "general",
       priorityOptions: range(1, 11),
       basicFilters: ["search", "status__in", "any_role_user__in"],

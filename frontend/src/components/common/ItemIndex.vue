@@ -9,26 +9,42 @@
         </v-toolbar-title>
         <v-spacer></v-spacer>
         <slot name="toolbar" v-bind="{ selectedItems, filters }"></slot>
-        <template v-if="advancedFilters">
-          <v-tooltip bottom>
-            <template #activator="{ attrs, on }">
-              <v-btn icon v-bind="attrs" v-on="on" @click="resetFilters">
-                <v-icon>mdi-filter-remove-outline</v-icon>
-              </v-btn>
-            </template>
-            <span>Limpiar filtros</span>
-          </v-tooltip>
-          <v-tooltip bottom>
-            <template #activator="{ attrs, on }">
-              <v-btn icon v-bind="attrs" v-on="on" @click.stop="openFiltersDialog">
+        <v-menu v-if="filterComponent" bottom left offset-y>
+          <template #activator="{ on: menu }">
+            <v-tooltip bottom>
+              <template #activator="{ on: tooltip }">
+                <v-btn icon :disabled="loading" v-on="{ ...tooltip, ...menu }">
+                  <v-badge :value="dialogFilterCount" color="primary" dot overlap>
+                    <v-icon>mdi-filter-menu</v-icon>
+                  </v-badge>
+                </v-btn>
+              </template>
+              <span>Filtros</span>
+            </v-tooltip>
+          </template>
+          <v-list>
+            <v-list-item v-if="advancedFilters" @click.stop="openFiltersDialog">
+              <v-list-item-icon>
                 <v-badge :value="dialogFilterCount" color="primary" :content="dialogFilterCount" overlap>
-                  <v-icon>mdi-filter</v-icon>
+                  <v-icon>mdi-filter-plus</v-icon>
                 </v-badge>
-              </v-btn>
-            </template>
-            <span>Filtros avanzados</span>
-          </v-tooltip>
-        </template>
+              </v-list-item-icon>
+              <v-list-item-title>Avanzado</v-list-item-title>
+            </v-list-item>
+            <v-list-item v-if="Boolean(Object.keys(defaultFilters))" @click="resetFilters">
+              <v-list-item-icon>
+                <v-icon>mdi-restore</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Restablecer</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="clearFilters">
+              <v-list-item-icon>
+                <v-icon>mdi-eraser</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Limpiar</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
         <v-tooltip bottom>
           <template #activator="{ attrs, on }">
             <v-btn
@@ -352,13 +368,19 @@ export default {
     addFilter(filter) {
       this.filters = { ...this.filters, ...filter };
     },
-    resetFilters() {
-      this.filters = this.defaultFilters;
+    setFiltersAndFetch(filters) {
+      this.filters = filters;
       if (!this.reactiveFilters) {
         this.$nextTick(() => {
           this.fetchTableItems(true);
         });
       }
+    },
+    resetFilters() {
+      this.setFiltersAndFetch(this.defaultFilters);
+    },
+    clearFilters() {
+      this.setFiltersAndFetch({});
     },
     loadHeadersFromLocalStorage() {
       const lsTableHeaders = localStorage[`${this.localStorageKey}TableHeaders`];
