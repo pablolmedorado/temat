@@ -6,14 +6,19 @@
           <v-toolbar flat>
             <v-toolbar-title class="text-h6">Análisis ({{ year }})</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-menu bottom right offset-y>
-              <template #activator="{ on, attrs }">
-                <v-btn icon :disabled="loading" v-bind="attrs" v-on="on">
-                  <v-icon>mdi-calendar-range</v-icon>
-                </v-btn>
+            <v-menu bottom left offset-y>
+              <template #activator="{ on: menu }">
+                <v-tooltip bottom>
+                  <template #activator="{ on: tooltip }">
+                    <v-btn icon :disabled="loading" v-on="{ ...tooltip, ...menu }">
+                      <v-icon>mdi-calendar-range</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Año</span>
+                </v-tooltip>
               </template>
               <v-list>
-                <v-list-item v-for="(item, index) in yearOptions" :key="index" @click="year = item">
+                <v-list-item v-for="item in yearOptions" :key="item" @click="year = item">
                   <v-list-item-title>{{ item }}</v-list-item-title>
                 </v-list-item>
               </v-list>
