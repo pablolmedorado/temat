@@ -1,81 +1,84 @@
 <template>
   <form v-if="item" ref="itemForm">
-    <v-row>
-      <v-col cols="6">
-        <v-select
-          v-model.number="item.bread"
-          :items="breadOptions"
-          item-text="name"
-          item-value="id"
-          label="Pan*"
-          prepend-icon="mdi-baguette"
-          :loading="!breadOptions.length"
-          :error-messages="buildValidationErrorMessages($v.item.bread)"
-          @change="$v.item.bread.$touch()"
-          @blur="$v.item.bread.$touch()"
-        ></v-select>
-      </v-col>
-      <v-col cols="6">
-        <v-select
-          v-model.number="item.base"
-          :items="baseOptions"
-          item-text="name"
-          item-value="id"
-          label="Base*"
-          prepend-icon="mdi-soy-sauce"
-          :loading="!baseOptions.length"
-          :error-messages="buildValidationErrorMessages($v.item.base)"
-          @change="$v.item.base.$touch()"
-          @blur="$v.item.base.$touch()"
-        ></v-select>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="6">
-        <v-select
-          v-model.number="item.ingredient1"
-          :items="ingredientOptions"
-          item-text="name"
-          item-value="id"
-          label="Primer ingrediente"
-          prepend-icon="mdi-numeric-1-box"
-          :loading="!ingredientOptions.length"
-          clearable
-          :error-messages="buildValidationErrorMessages($v.item.ingredient1)"
-          @change="$v.item.ingredient1.$touch()"
-          @blur="$v.item.ingredient1.$touch()"
-        ></v-select>
-      </v-col>
-      <v-col cols="6">
-        <v-select
-          v-model.number="item.ingredient2"
-          :items="ingredientOptions"
-          item-text="name"
-          item-value="id"
-          label="Segundo ingrediente"
-          prepend-icon="mdi-numeric-2-box"
-          :loading="!ingredientOptions.length"
-          clearable
-          :error-messages="buildValidationErrorMessages($v.item.ingredient2)"
-          @change="$v.item.ingredient2.$touch()"
-          @blur="$v.item.ingredient2.$touch()"
-        ></v-select>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="6">
-        <v-select
-          v-model.number="item.drink"
-          :items="drinkOptions"
-          item-text="name"
-          item-value="id"
-          label="Bebida"
-          prepend-icon="mdi-coffee"
-          :loading="!drinkOptions.length"
-          clearable
-        ></v-select>
-      </v-col>
-    </v-row>
+    <v-container>
+      <v-row>
+        <v-col cols="6">
+          <v-select
+            v-model.number="item.bread"
+            :items="breadOptions"
+            item-text="name"
+            item-value="id"
+            label="Pan*"
+            prepend-icon="mdi-baguette"
+            :loading="!breadOptions.length"
+            :error-messages="buildValidationErrorMessages($v.item.bread)"
+            @change="$v.item.bread.$touch()"
+            @blur="$v.item.bread.$touch()"
+          ></v-select>
+        </v-col>
+        <v-col cols="6">
+          <v-select
+            v-model.number="item.base"
+            :items="baseOptions"
+            item-text="name"
+            item-value="id"
+            label="Base*"
+            prepend-icon="mdi-soy-sauce"
+            :loading="!baseOptions.length"
+            :error-messages="buildValidationErrorMessages($v.item.base)"
+            @change="$v.item.base.$touch()"
+            @blur="$v.item.base.$touch()"
+          ></v-select>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="6">
+          <v-select
+            v-model.number="item.ingredient1"
+            :items="ingredientOptions"
+            item-text="name"
+            item-value="id"
+            label="Primer ingrediente"
+            prepend-icon="mdi-numeric-1-box"
+            :loading="!ingredientOptions.length"
+            clearable
+            :error-messages="buildValidationErrorMessages($v.item.ingredient1)"
+            @change="$v.item.ingredient1.$touch()"
+            @blur="$v.item.ingredient1.$touch()"
+          ></v-select>
+        </v-col>
+        <v-col cols="6">
+          <v-select
+            v-model.number="item.ingredient2"
+            :items="ingredientOptions"
+            item-text="name"
+            item-value="id"
+            label="Segundo ingrediente"
+            prepend-icon="mdi-numeric-2-box"
+            :loading="!ingredientOptions.length"
+            clearable
+            :error-messages="buildValidationErrorMessages($v.item.ingredient2)"
+            @change="$v.item.ingredient2.$touch()"
+            @blur="$v.item.ingredient2.$touch()"
+          ></v-select>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="6">
+          <v-select
+            v-model.number="item.drink"
+            :items="drinkOptions"
+            item-text="name"
+            item-value="id"
+            label="Bebida"
+            prepend-icon="mdi-coffee"
+            :loading="!drinkOptions.length"
+            clearable
+          ></v-select>
+        </v-col>
+      </v-row>
+      <small>* indica campo obligatorio</small>
+    </v-container>
   </form>
 </template>
 
