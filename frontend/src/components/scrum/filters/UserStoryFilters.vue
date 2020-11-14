@@ -71,6 +71,19 @@
             <v-tab-item value="general">
               <v-row>
                 <v-col>
+                  <v-text-field
+                    :value="filters.search"
+                    label="Buscar"
+                    placeholder="Id, nombre, descripciones, comentarios, scv..."
+                    prepend-icon="mdi-magnify"
+                    clearable
+                    @input="updateFilters({ search: $event })"
+                    @keyup.enter="$emit('apply:filters')"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
                   <v-select
                     :value="filters.type_id"
                     :items="userStoryTypesOptions"
@@ -160,6 +173,31 @@
               </v-row>
             </v-tab-item>
             <v-tab-item value="status">
+              <v-row>
+                <v-col>
+                  <v-select
+                    :value="statusFilter"
+                    :items="userStoryStatusOptions"
+                    :loading="!userStoryStatusOptions.length"
+                    item-text="label"
+                    item-value="value"
+                    label="Estado"
+                    prepend-icon="mdi-state-machine"
+                    multiple
+                    clearable
+                    @input="updateFilters({ status__in: $event.join(',') })"
+                  >
+                    <template #selection="{ item, index }">
+                      <v-chip v-if="index === 0" small>
+                        <span>{{ item.label }}</span>
+                      </v-chip>
+                      <span v-if="index === 1" class="grey--text text-caption">
+                        (+{{ statusFilter.length - 1 }} más)
+                      </span>
+                    </template>
+                  </v-select>
+                </v-col>
+              </v-row>
               <v-row>
                 <v-col>
                   <v-text-field
@@ -312,6 +350,19 @@
               </v-row>
             </v-tab-item>
             <v-tab-item value="people">
+              <v-row>
+                <v-col>
+                  <UserAutocomplete
+                    :value="anyRoleUserFilter"
+                    label="Usuario (cualquier rol)"
+                    prepend-icon="mdi-account-multiple"
+                    multiple
+                    truncate-results
+                    clearable
+                    @input="updateFilters({ any_role_user__in: $event.join(',') })"
+                  />
+                </v-col>
+              </v-row>
               <v-row>
                 <v-col>
                   <UserAutocomplete

@@ -41,6 +41,31 @@
         <v-card-text>
           <v-row>
             <v-col>
+              <v-text-field
+                :value="filters.search"
+                label="Buscar"
+                placeholder="Nombre"
+                prepend-icon="mdi-magnify"
+                clearable
+                @input="updateFilters({ search: $event })"
+                @keyup.enter="$emit('apply:filters')"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <UserAutocomplete
+                :value="filters.accountable_user_id"
+                label="Usuario responsable"
+                prepend-icon="mdi-account-tie"
+                clearable
+                @click:clear="updateFilters({ accountable_user_id: null })"
+                @input="updateFilters({ accountable_user_id: $event })"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
               <DatePickerInput
                 :value="filters.start_date__gte"
                 label="Fecha desde"

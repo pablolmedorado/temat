@@ -45,6 +45,35 @@
         <v-card-text>
           <v-row>
             <v-col>
+              <v-text-field
+                :value="filters.search"
+                label="Buscar"
+                placeholder="Título, detalles"
+                prepend-icon="mdi-magnify"
+                clearable
+                @input="updateFilters({ search: $event })"
+                @keyup.enter="$emit('apply:filters')"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-select
+                :value="typeFilter"
+                :items="eventTypesOptions.filter((type) => !type.system)"
+                :loading="!eventTypesOptions.length"
+                item-text="name"
+                item-value="id"
+                label="Tipo"
+                prepend-icon="mdi-shape"
+                multiple
+                clearable
+                @input="updateFilters({ type_id__in: $event.join(',') })"
+              ></v-select>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
               <DatePickerInput
                 :value="filters.start_datetime__date__gte"
                 label="Fecha (desde)"
