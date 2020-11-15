@@ -180,3 +180,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+::v-deep .v-progress-circular__info {
+  font-size: 0.79rem;
+}
+</style>

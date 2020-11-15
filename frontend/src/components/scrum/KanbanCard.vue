@@ -165,4 +165,7 @@ export default {
 .progress {
   font-size: 14px;
 }
+::v-deep .v-progress-circular__info {
+  font-size: 0.79rem;
+}
 </style>

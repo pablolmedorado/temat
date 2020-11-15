@@ -9,7 +9,7 @@
     />
     <v-card v-else :height="height || 400" flat>
       <v-overlay v-if="chartLoading" absolute>
-        <v-progress-circular indeterminate size="64"></v-progress-circular>
+        <v-progress-circular indeterminate size="64" />
       </v-overlay>
       <v-alert v-else type="error" text outlined border="left">
         Ocurrió un error cargando la gráfica.

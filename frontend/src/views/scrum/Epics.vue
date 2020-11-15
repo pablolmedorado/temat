@@ -133,4 +133,7 @@ export default {
 a {
   text-decoration: none;
 }
+::v-deep .v-progress-circular__info {
+  font-size: 0.79rem;
+}
 </style>
