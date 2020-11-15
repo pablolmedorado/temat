@@ -19,7 +19,7 @@
           <DatePickerInput
             v-model="startDate"
             label="Fecha de inicio*"
-            prepend-icon="mdi-calendar-arrow-right"
+            prepend-icon="mdi-calendar-start"
             :error-messages="buildValidationErrorMessages($v.startDate)"
             @input="$v.startDate.$touch()"
             @blur="$v.startDate.$touch()"
@@ -29,7 +29,7 @@
           <DatePickerInput
             v-model="endDate"
             label="Fecha de fin*"
-            prepend-icon="mdi-calendar-arrow-left"
+            prepend-icon="mdi-calendar-end"
             :error-messages="buildValidationErrorMessages($v.endDate)"
             @input="$v.endDate.$touch()"
             @blur="$v.endDate.$touch()"

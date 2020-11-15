@@ -142,7 +142,7 @@
                     <v-text-field
                       :value="item.start_date | date"
                       label="Fecha de inicio planificada"
-                      prepend-icon="mdi-calendar-arrow-right"
+                      prepend-icon="mdi-calendar-start"
                       readonly
                       :clearable="loggedUser.is_staff"
                       :error-messages="buildValidationErrorMessages($v.item.start_date)"
@@ -185,7 +185,7 @@
                     <v-text-field
                       :value="item.end_date | date"
                       label="Fecha límite"
-                      prepend-icon="mdi-calendar-arrow-left"
+                      prepend-icon="mdi-calendar-end"
                       readonly
                       :clearable="loggedUser.is_staff"
                       :error-messages="buildValidationErrorMessages($v.item.end_date)"

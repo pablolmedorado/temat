@@ -2,20 +2,10 @@
   <v-container fluid class="py-0">
     <v-row>
       <v-col cols="12" sm="6" md="3">
-        <DatePickerInput
-          v-model="filters.date__gte"
-          label="Fecha inicio"
-          prepend-icon="mdi-calendar-arrow-right"
-          clearable
-        />
+        <DatePickerInput v-model="filters.date__gte" label="Fecha inicio" prepend-icon="mdi-calendar-start" clearable />
       </v-col>
       <v-col cols="12" sm="6" md="3">
-        <DatePickerInput
-          v-model="filters.date__lte"
-          label="Fecha fin"
-          prepend-icon="mdi-calendar-arrow-left"
-          clearable
-        />
+        <DatePickerInput v-model="filters.date__lte" label="Fecha fin" prepend-icon="mdi-calendar-end" clearable />
       </v-col>
       <v-col v-if="loggedUser.is_staff" cols="12" sm="6" md="3">
         <UserAutocomplete

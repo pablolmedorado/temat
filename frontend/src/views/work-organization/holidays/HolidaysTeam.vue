@@ -88,8 +88,7 @@ export default {
       tableOptions: {
         ...defaultTableOptions,
         sortBy: ["planned_date"],
-        sortDesc: [true],
-        mustSort: true,
+        sortDesc: [false],
       },
       filters: {
         planned_date__isnull: false,

@@ -150,7 +150,7 @@ export default {
       tableOptions: {
         itemsPerPage: -1,
         sortBy: ["planned_date"],
-        sortDesc: [true],
+        sortDesc: [false],
       },
       tableHeaders: [
         {

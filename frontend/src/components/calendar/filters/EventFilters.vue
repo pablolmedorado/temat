@@ -52,8 +52,27 @@
                 prepend-icon="mdi-magnify"
                 clearable
                 @input="updateFilters({ search: $event })"
-                @keyup.enter="$emit('apply:filters')"
               ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <DatePickerInput
+                :value="filters.start_datetime__date__gte"
+                label="Fecha (desde)"
+                prepend-icon="mdi-calendar-start"
+                clearable
+                @input="updateFilters({ start_datetime__date__gte: $event })"
+              ></DatePickerInput>
+            </v-col>
+            <v-col>
+              <DatePickerInput
+                :value="filters.end_datetime__date__lte"
+                label="Fecha (hasta)"
+                prepend-icon="mdi-calendar-end"
+                clearable
+                @input="updateFilters({ end_datetime__date__lte: $event })"
+              ></DatePickerInput>
             </v-col>
           </v-row>
           <v-row>
@@ -71,29 +90,7 @@
                 @input="updateFilters({ type_id__in: $event.join(',') })"
               ></v-select>
             </v-col>
-          </v-row>
-          <v-row>
             <v-col>
-              <DatePickerInput
-                :value="filters.start_datetime__date__gte"
-                label="Fecha (desde)"
-                prepend-icon="mdi-calendar-arrow-right"
-                clearable
-                @input="updateFilters({ start_datetime__date__gte: $event })"
-              ></DatePickerInput>
-            </v-col>
-            <v-col>
-              <DatePickerInput
-                :value="filters.end_datetime__date__lte"
-                label="Fecha (hasta)"
-                prepend-icon="mdi-calendar-arrow-left"
-                clearable
-                @input="updateFilters({ end_datetime__date__lte: $event })"
-              ></DatePickerInput>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="6">
               <v-select
                 :value="filters.visibility"
                 :items="visibilityOptions"

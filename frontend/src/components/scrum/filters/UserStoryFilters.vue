@@ -78,7 +78,6 @@
                     prepend-icon="mdi-magnify"
                     clearable
                     @input="updateFilters({ search: $event })"
-                    @keyup.enter="$emit('apply:filters')"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -273,7 +272,7 @@
                   <DatePickerInput
                     :value="filters.start_date__gte"
                     label="Fecha inicio planificada (desde)"
-                    prepend-icon="mdi-calendar-arrow-right"
+                    prepend-icon="mdi-calendar-start"
                     clearable
                     @input="updateFilters({ start_date__gte: $event })"
                   />
@@ -282,7 +281,7 @@
                   <DatePickerInput
                     :value="filters.start_date__lte"
                     label="Fecha inicio planificada (hasta)"
-                    prepend-icon="mdi-calendar-arrow-left"
+                    prepend-icon="mdi-calendar-end"
                     clearable
                     @input="updateFilters({ start_date__lte: $event })"
                   />
@@ -293,7 +292,7 @@
                   <DatePickerInput
                     :value="filters.end_date__gte"
                     label="Fecha límite (desde)"
-                    prepend-icon="mdi-calendar-arrow-right"
+                    prepend-icon="mdi-calendar-start"
                     clearable
                     @input="updateFilters({ end_date__gte: $event })"
                   />
@@ -302,7 +301,7 @@
                   <DatePickerInput
                     :value="filters.end_date__lte"
                     label="Fecha límite (hasta)"
-                    prepend-icon="mdi-calendar-arrow-left"
+                    prepend-icon="mdi-calendar-end"
                     clearable
                     @input="updateFilters({ end_date__lte: $event })"
                   />
@@ -313,7 +312,7 @@
                   <DatePickerInput
                     :value="filters.current_progress_changed__date__gte"
                     label="Fecha modificación de avance (desde)"
-                    prepend-icon="mdi-calendar-arrow-right"
+                    prepend-icon="mdi-calendar-start"
                     clearable
                     @input="updateFilters({ current_progress_changed__date__gte: $event })"
                   />
@@ -322,7 +321,7 @@
                   <DatePickerInput
                     :value="filters.current_progress_changed__date__lte"
                     label="Fecha modificación de avance (hasta)"
-                    prepend-icon="mdi-calendar-arrow-left"
+                    prepend-icon="mdi-calendar-end"
                     clearable
                     @input="updateFilters({ current_progress_changed__date__lte: $event })"
                   />
@@ -333,7 +332,7 @@
                   <DatePickerInput
                     :value="filters.validated_changed__date__gte"
                     label="Fecha modificación de validación (desde)"
-                    prepend-icon="mdi-calendar-arrow-right"
+                    prepend-icon="mdi-calendar-start"
                     clearable
                     @input="updateFilters({ validated_changed__date__gte: $event })"
                   />
@@ -342,7 +341,7 @@
                   <DatePickerInput
                     :value="filters.validated_changed__date__lte"
                     label="Fecha modificación de validación (hasta)"
-                    prepend-icon="mdi-calendar-arrow-left"
+                    prepend-icon="mdi-calendar-end"
                     clearable
                     @input="updateFilters({ validated_changed__date__lte: $event })"
                   />

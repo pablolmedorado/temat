@@ -5,7 +5,7 @@
         <DatePickerInput
           :value="filters.date__gte"
           label="Fecha inicio"
-          prepend-icon="mdi-calendar-arrow-right"
+          prepend-icon="mdi-calendar-start"
           clearable
           @input="updateFilters({ date__gte: $event })"
         ></DatePickerInput>
@@ -14,7 +14,7 @@
         <DatePickerInput
           :value="filters.date__lte"
           label="Fecha fin"
-          prepend-icon="mdi-calendar-arrow-left"
+          prepend-icon="mdi-calendar-end"
           clearable
           @input="updateFilters({ date__lte: $event })"
         ></DatePickerInput>
