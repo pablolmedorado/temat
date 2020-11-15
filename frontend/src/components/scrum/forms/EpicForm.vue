@@ -11,7 +11,7 @@
             :error-messages="buildValidationErrorMessages($v.item.name)"
             @input="$v.item.name.$touch()"
             @blur="$v.item.name.$touch()"
-          ></v-text-field>
+          />
         </v-col>
       </v-row>
       <v-row>
@@ -24,7 +24,7 @@
             :error-messages="buildValidationErrorMessages($v.item.description)"
             @input="$v.item.description.$touch()"
             @blur="$v.item.description.$touch()"
-          ></v-textarea>
+          />
         </v-col>
       </v-row>
       <v-row>
@@ -42,7 +42,7 @@
             :error-messages="buildValidationErrorMessages($v.item.external_reference)"
             @input="$v.item.external_reference.$touch()"
             @blur="$v.item.external_reference.$touch()"
-          ></v-text-field>
+          />
         </v-col>
       </v-row>
       <small>* indica campo obligatorio</small>

@@ -22,7 +22,7 @@
         @click:append="$emit('click:append', $event)"
         @click:clear="$emit('input', null)"
         v-on="on"
-      ></v-text-field>
+      />
     </template>
     <v-date-picker
       :value="value"

@@ -11,7 +11,7 @@
             :error-messages="buildValidationErrorMessages($v.item.date)"
             @input="$v.item.date.$touch()"
             @blur="$v.item.date.$touch()"
-          ></DatePickerInput>
+          />
         </v-col>
       </v-row>
       <v-row>
@@ -27,7 +27,7 @@
             :error-messages="buildValidationErrorMessages($v.item.role)"
             @change="$v.item.role.$touch()"
             @blur="$v.item.role.$touch()"
-          ></v-select>
+          />
         </v-col>
         <v-col>
           <v-text-field
@@ -42,7 +42,7 @@
             :error-messages="buildValidationErrorMessages($v.item.effort)"
             @input="$v.item.effort.$touch()"
             @blur="$v.item.effort.$touch()"
-          ></v-text-field>
+          />
         </v-col>
       </v-row>
       <v-row>
@@ -55,7 +55,7 @@
             :error-messages="buildValidationErrorMessages($v.item.comments)"
             @input="$v.item.comments.$touch()"
             @blur="$v.item.comments.$touch()"
-          ></v-textarea>
+          />
         </v-col>
       </v-row>
       <small>* indica campo obligatorio</small>

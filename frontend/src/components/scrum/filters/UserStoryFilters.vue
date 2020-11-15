@@ -10,7 +10,7 @@
           clearable
           @input="updateFilters({ search: $event })"
           @keyup.enter="$emit('apply:filters')"
-        ></v-text-field>
+        />
       </v-col>
       <v-col lg="4" sm="6" cols="12">
         <v-select
@@ -78,7 +78,7 @@
                     prepend-icon="mdi-magnify"
                     clearable
                     @input="updateFilters({ search: $event })"
-                  ></v-text-field>
+                  />
                 </v-col>
               </v-row>
               <v-row>
@@ -92,7 +92,7 @@
                     prepend-icon="mdi-shape"
                     :loading="!userStoryTypesOptions.length"
                     @input="updateFilters({ type_id: $event })"
-                  ></v-select>
+                  />
                 </v-col>
                 <v-col>
                   <v-select
@@ -103,7 +103,7 @@
                     multiple
                     clearable
                     @input="updateFilters({ priority__in: $event.join(',') })"
-                  ></v-select>
+                  />
                 </v-col>
               </v-row>
               <v-row v-if="!context.sprint">
@@ -156,7 +156,7 @@
                     prepend-icon="mdi-dumbbell"
                     clearable
                     @input="updateFilters({ planned_effort__gte: $event })"
-                  ></v-text-field>
+                  />
                 </v-col>
                 <v-col>
                   <v-text-field
@@ -167,7 +167,7 @@
                     prepend-icon="mdi-dumbbell"
                     clearable
                     @input="updateFilters({ planned_effort__lte: $event })"
-                  ></v-text-field>
+                  />
                 </v-col>
               </v-row>
             </v-tab-item>
@@ -208,7 +208,7 @@
                     prepend-icon="mdi-percent"
                     clearable
                     @input="updateFilters({ current_progress__gte: $event })"
-                  ></v-text-field>
+                  />
                 </v-col>
                 <v-col>
                   <v-text-field
@@ -220,7 +220,7 @@
                     prepend-icon="mdi-percent"
                     clearable
                     @input="updateFilters({ current_progress__lte: $event })"
-                  ></v-text-field>
+                  />
                 </v-col>
               </v-row>
               <v-row>
@@ -234,7 +234,7 @@
                     prepend-icon="mdi-alert-decagram"
                     clearable
                     @input="updateFilters({ risk_level: $event })"
-                  ></v-select>
+                  />
                 </v-col>
                 <v-col>
                   <v-switch
@@ -244,7 +244,7 @@
                     label="Validación rechazada"
                     inset
                     @change="updateFilters({ validated: $event })"
-                  ></v-switch>
+                  />
                 </v-col>
               </v-row>
               <v-row>
@@ -254,7 +254,7 @@
                     label="Retrasada"
                     inset
                     @change="updateFilters({ delayed: $event })"
-                  ></v-switch>
+                  />
                 </v-col>
                 <v-col>
                   <v-switch
@@ -262,7 +262,7 @@
                     label="Con sobreesfuerzo"
                     inset
                     @change="updateFilters({ overworked: $event })"
-                  ></v-switch>
+                  />
                 </v-col>
               </v-row>
             </v-tab-item>
@@ -402,10 +402,10 @@
             </v-tab-item>
           </v-tabs-items>
         </v-card-text>
-        <v-divider></v-divider>
+        <v-divider />
         <v-card-actions>
           <v-btn color="warning" text @click="$emit('clear:filters')">Limpiar</v-btn>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-btn color="primary" text @click="closeFiltersDialog">
             Volver
           </v-btn>

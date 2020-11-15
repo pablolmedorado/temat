@@ -5,7 +5,7 @@
         <v-card>
           <v-toolbar flat>
             <v-toolbar-title class="text-h6">Análisis ({{ year }})</v-toolbar-title>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-menu bottom left offset-y>
               <template #activator="{ on: menu }">
                 <v-tooltip bottom>
@@ -26,7 +26,7 @@
           </v-toolbar>
           <v-card-text>
             <v-tabs fixed-tabs show-arrows="mobile">
-              <v-tabs-slider></v-tabs-slider>
+              <v-tabs-slider />
               <v-tab href="#events"><v-icon>mdi-calendar-month</v-icon></v-tab>
               <v-tab href="#scrum"><v-icon>mdi-cards</v-icon></v-tab>
               <v-tab href="#support"><v-icon>mdi-face-agent</v-icon></v-tab>

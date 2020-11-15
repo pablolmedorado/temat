@@ -10,7 +10,7 @@
           :error-messages="buildValidationErrorMessages($v.item.name)"
           @input="$v.item.name.$touch()"
           @blur="$v.item.name.$touch()"
-        ></v-text-field>
+        />
       </v-col>
     </v-row>
     <v-row>
@@ -26,10 +26,10 @@
           :error-messages="buildValidationErrorMessages($v.item.weight)"
           @input="$v.item.weight.$touch()"
           @blur="$v.item.weight.$touch()"
-        ></v-text-field>
+        />
       </v-col>
       <v-col v-if="item.id" cols="6">
-        <v-switch v-model="item.done" label="Terminada*" prepend-icon="mdi-check-bold" inset></v-switch>
+        <v-switch v-model="item.done" label="Terminada*" prepend-icon="mdi-check-bold" inset />
       </v-col>
     </v-row>
     <small>* indica campo obligatorio</small>

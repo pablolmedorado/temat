@@ -78,13 +78,13 @@
             </v-tooltip>
           </template>
           <template #item.actor="{ value }">
-            <UserPill :user="value"></UserPill>
+            <UserPill :user="value" />
           </template>
           <template #item.target="{ value }">
             {{ value ? value.representation : "" }}
           </template>
           <template #item.unread="{ value }">
-            <v-simple-checkbox :value="!value" disabled></v-simple-checkbox>
+            <v-simple-checkbox :value="!value" disabled />
           </template>
           <template #item.table_actions="{ item }">
             <v-btn

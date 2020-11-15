@@ -22,16 +22,16 @@
             <TruncatedText :value="value" :text-length="100" />
           </template>
           <template #item.start_date="{ value }">
-            <DateRouterLink :date="value"></DateRouterLink>
+            <DateRouterLink :date="value" />
           </template>
           <template #item.end_date="{ value }">
-            <DateRouterLink :date="value"></DateRouterLink>
+            <DateRouterLink :date="value" />
           </template>
           <template #item.ongoing="{ item }">
-            <v-simple-checkbox v-model="item.ongoing" disabled></v-simple-checkbox>
+            <v-simple-checkbox v-model="item.ongoing" disabled />
           </template>
           <template #item.accountable_user="{ value }">
-            <UserPill :user="value"></UserPill>
+            <UserPill :user="value" />
           </template>
           <template #item.current_progress="{ value }">
             <v-progress-circular :rotate="-90" :size="32" :value="value" :width="3" color="primary">

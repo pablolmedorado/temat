@@ -12,10 +12,10 @@
             y eliminará también todos los elementos hijos
           </strong>
         </p>
-        <v-checkbox v-model="deletionConfirmation" :label="confirmationLabel"></v-checkbox>
+        <v-checkbox v-model="deletionConfirmation" :label="confirmationLabel" />
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn text @click.stop="close">Cancelar</v-btn>
         <v-btn color="error" text :disabled="!deletionConfirmation" @click="confirmDeletion">Eliminar</v-btn>
       </v-card-actions>

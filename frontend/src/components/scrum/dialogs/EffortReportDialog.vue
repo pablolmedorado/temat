@@ -6,7 +6,7 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
         <v-toolbar-title>Informe de esfuerzo</v-toolbar-title>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-toolbar-items>
           <v-btn icon :disabled="loading" @click="refresh">
             <v-icon>mdi-refresh</v-icon>

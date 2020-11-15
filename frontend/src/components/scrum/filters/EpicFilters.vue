@@ -9,7 +9,7 @@
           clearable
           @input="updateFilters({ search: $event })"
           @keyup.enter="$emit('apply:filters')"
-        ></v-text-field>
+        />
       </v-col>
       <v-col cols="6" md="3">
         <TagAutocomplete

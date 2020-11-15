@@ -10,7 +10,7 @@
             <v-toolbar-title class="text-h6">
               Vacaciones del equipo
             </v-toolbar-title>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-btn icon :disabled="loading" @click="fetchItems">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>

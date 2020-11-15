@@ -10,7 +10,7 @@
           clearable
           @input="updateFilters({ search: $event })"
           @keyup.enter="$emit('apply:filters')"
-        ></v-text-field>
+        />
       </v-col>
       <v-col cols="12" sm="4" lg="3">
         <v-select
@@ -50,7 +50,7 @@
                 prepend-icon="mdi-magnify"
                 clearable
                 @input="updateFilters({ search: $event })"
-              ></v-text-field>
+              />
             </v-col>
           </v-row>
           <v-row>
@@ -85,7 +85,7 @@
                 prepend-icon="mdi-calendar-start"
                 clearable
                 @input="updateFilters({ start_date__gte: $event })"
-              ></DatePickerInput>
+              />
             </v-col>
             <v-col>
               <DatePickerInput
@@ -94,7 +94,7 @@
                 prepend-icon="mdi-calendar-end"
                 clearable
                 @input="updateFilters({ end_date__lte: $event })"
-              ></DatePickerInput>
+              />
             </v-col>
           </v-row>
           <v-row>
@@ -112,10 +112,10 @@
             </v-col>
           </v-row>
         </v-card-text>
-        <v-divider></v-divider>
+        <v-divider />
         <v-card-actions>
           <v-btn color="warning" text @click="$emit('clear:filters')">Limpiar</v-btn>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-btn color="primary" text @click="closeFiltersDialog">
             Volver
           </v-btn>

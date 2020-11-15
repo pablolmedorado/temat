@@ -8,7 +8,7 @@
       :color="effortRolesMap.D.colour"
       :user="userStory.development_user"
       tooltip
-    ></UserAvatar>
+    />
     <UserAvatar
       v-if="userStory.validation_user"
       class="mr-1"
@@ -17,7 +17,7 @@
       :color="effortRolesMap.V.colour"
       :user="userStory.validation_user"
       tooltip
-    ></UserAvatar>
+    />
     <UserAvatar
       v-if="userStory.support_user"
       :size="avatarSize"
@@ -25,7 +25,7 @@
       :color="effortRolesMap.S.colour"
       :user="userStory.support_user"
       tooltip
-    ></UserAvatar>
+    />
   </span>
 </template>
 

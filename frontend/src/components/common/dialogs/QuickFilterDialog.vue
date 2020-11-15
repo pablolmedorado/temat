@@ -15,7 +15,7 @@
               :error-messages="buildValidationErrorMessages($v.newQuickFilter)"
               @change="$v.newQuickFilter.$touch()"
               @blur="$v.newQuickFilter.$touch()"
-            ></v-combobox>
+            />
           </v-col>
         </v-row>
         <v-row>
@@ -27,9 +27,9 @@
         </v-row>
         <small>* indica campo obligatorio</small>
       </v-card-text>
-      <v-divider></v-divider>
+      <v-divider />
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn color="primary" text @click.stop="close">
           Volver
         </v-btn>

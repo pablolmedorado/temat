@@ -8,7 +8,7 @@
           prepend-icon="mdi-calendar-start"
           clearable
           @input="updateFilters({ date__gte: $event })"
-        ></DatePickerInput>
+        />
       </v-col>
       <v-col cols="12" sm="6" md="3">
         <DatePickerInput
@@ -17,7 +17,7 @@
           prepend-icon="mdi-calendar-end"
           clearable
           @input="updateFilters({ date__lte: $event })"
-        ></DatePickerInput>
+        />
       </v-col>
       <v-col cols="12" sm="6" md="3">
         <UserAutocomplete

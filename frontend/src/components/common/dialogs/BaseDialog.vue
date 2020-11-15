@@ -13,7 +13,7 @@
       <v-card-text>
         <slot name="body"></slot>
       </v-card-text>
-      <v-divider></v-divider>
+      <v-divider />
       <v-card-actions>
         <slot name="actions"></slot>
       </v-card-actions>

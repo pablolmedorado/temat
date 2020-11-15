@@ -14,7 +14,7 @@
             :error-messages="buildValidationErrorMessages($v.item.bread)"
             @change="$v.item.bread.$touch()"
             @blur="$v.item.bread.$touch()"
-          ></v-select>
+          />
         </v-col>
         <v-col cols="6">
           <v-select
@@ -28,7 +28,7 @@
             :error-messages="buildValidationErrorMessages($v.item.base)"
             @change="$v.item.base.$touch()"
             @blur="$v.item.base.$touch()"
-          ></v-select>
+          />
         </v-col>
       </v-row>
       <v-row>
@@ -45,7 +45,7 @@
             :error-messages="buildValidationErrorMessages($v.item.ingredient1)"
             @change="$v.item.ingredient1.$touch()"
             @blur="$v.item.ingredient1.$touch()"
-          ></v-select>
+          />
         </v-col>
         <v-col cols="6">
           <v-select
@@ -60,7 +60,7 @@
             :error-messages="buildValidationErrorMessages($v.item.ingredient2)"
             @change="$v.item.ingredient2.$touch()"
             @blur="$v.item.ingredient2.$touch()"
-          ></v-select>
+          />
         </v-col>
       </v-row>
       <v-row>
@@ -74,7 +74,7 @@
             prepend-icon="mdi-coffee"
             :loading="!drinkOptions.length"
             clearable
-          ></v-select>
+          />
         </v-col>
       </v-row>
       <small>* indica campo obligatorio</small>

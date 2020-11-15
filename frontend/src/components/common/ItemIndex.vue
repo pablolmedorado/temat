@@ -7,7 +7,7 @@
             {{ verboseNamePlural }}
           </slot>
         </v-toolbar-title>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <slot name="toolbar" v-bind="{ selectedItems, filters }"></slot>
         <v-menu v-if="filterComponent" bottom left offset-y>
           <template #activator="{ on: menu }">
@@ -43,7 +43,7 @@
               </v-list-item-icon>
               <v-list-item-title>Guardar filtro rápido</v-list-item-title>
             </v-list-item>
-            <v-divider class="mt-3 mb-2"></v-divider>
+            <v-divider class="mt-3 mb-2" />
             <v-subheader class="ml-2">Filtros rápidos</v-subheader>
             <v-list-item v-for="filter in quickFilters" :key="filter.label" @click="applyQuickFilter(filter)">
               <v-list-item-title>{{ filter.label }}</v-list-item-title>

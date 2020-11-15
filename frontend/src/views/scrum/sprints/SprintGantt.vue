@@ -4,7 +4,7 @@
     <v-card class="mt-2">
       <v-toolbar flat>
         <v-toolbar-title class="text-h6"> Diagrama de Gantt </v-toolbar-title>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">
             <v-btn icon :to="{ name: 'sprint-kanban', params: { sprintId } }" v-bind="attrs" v-on="on">
@@ -25,7 +25,7 @@
             Diagrama de quemado (Burn-down/up)
           </span>
         </v-tooltip>
-        <v-divider vertical inset></v-divider>
+        <v-divider vertical inset />
         <v-btn icon :disabled="loading" @click="getChartData">
           <v-icon>mdi-refresh</v-icon>
         </v-btn>

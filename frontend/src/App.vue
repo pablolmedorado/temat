@@ -11,7 +11,7 @@
       <v-list nav dense>
         <template v-for="(item, i) in items">
           <template v-if="!item.staffOnly || (item.staffOnly && loggedUser.is_staff)">
-            <v-divider v-if="item.divider" :key="i" dark class="my-3"></v-divider>
+            <v-divider v-if="item.divider" :key="i" dark class="my-3" />
 
             <v-list-group
               v-else-if="item.items && item.items.length"
@@ -50,13 +50,13 @@
     </v-navigation-drawer>
 
     <v-app-bar :color="$vuetify.theme.isDark ? null : 'primary'" dark app fixed clipped-left>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="drawer = !drawer" />
       <span class="text-h6 ml-3 mr-5">
         {{ appLabel.name }}
         <sub class="text-caption">{{ appLabel.version }}</sub>
       </span>
-      <v-spacer></v-spacer>
-      <v-progress-circular v-show="loading" class="mr-5" :size="36" color="white" indeterminate></v-progress-circular>
+      <v-spacer />
+      <v-progress-circular v-show="loading" class="mr-5" :size="36" color="white" indeterminate />
       <NotificationManager class="mr-5" />
       <v-menu bottom left offset-y>
         <template #activator="{ on, attrs }">
@@ -81,9 +81,9 @@
 
     <v-main :class="$vuetify.theme.isDark ? [] : ['grey', 'lighten-4']">
       <keep-alive>
-        <router-view v-if="$route.meta.keepAlive" :key="$route.fullPath"></router-view>
+        <router-view v-if="$route.meta.keepAlive" :key="$route.fullPath" />
       </keep-alive>
-      <router-view v-if="!$route.meta.keepAlive"></router-view>
+      <router-view v-if="!$route.meta.keepAlive" />
     </v-main>
 
     <v-snackbar v-bind="snackbar" bottom app @input="onSnackbarInput">

@@ -11,7 +11,7 @@
             :error-messages="buildValidationErrorMessages($v.item.name)"
             @input="$v.item.name.$touch()"
             @blur="$v.item.name.$touch()"
-          ></v-text-field>
+          />
         </v-col>
       </v-row>
       <v-row>
@@ -23,7 +23,7 @@
             :error-messages="buildValidationErrorMessages($v.item.start_date)"
             @input="$v.item.start_date.$touch()"
             @blur="$v.item.start_date.$touch()"
-          ></DatePickerInput>
+          />
         </v-col>
         <v-col cols="12" sm="6">
           <DatePickerInput
@@ -33,7 +33,7 @@
             :error-messages="buildValidationErrorMessages($v.item.end_date)"
             @input="$v.item.end_date.$touch()"
             @blur="$v.item.end_date.$touch()"
-          ></DatePickerInput>
+          />
         </v-col>
       </v-row>
       <v-row>
