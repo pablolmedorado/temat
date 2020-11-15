@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/pablolmedorado/temat/compare/v1.3.0...v1.4.0) (2020-11-15)
+
+
+### Features
+
+* **epics:** improve usability by adding a default filter ([0673618](https://github.com/pablolmedorado/temat/commit/06736188bf4a7720d1280107821d961d50bf532a))
+* **filters:** add basic filters to advanced filters dialog ([7832a67](https://github.com/pablolmedorado/temat/commit/7832a67c0b7187f509a0765864f381479696fbec))
+* **frontend:** add filters dropdown menu to the standard index component ([c725f35](https://github.com/pablolmedorado/temat/commit/c725f35a0f27b0eedc3c48ef50830aca881627de))
+* **index:** add quick filters to index component ([59f1c05](https://github.com/pablolmedorado/temat/commit/59f1c0582b92e77ab1a77cfa6f9cbb8f5bb00116))
+
+
+### Bug Fixes
+
+* **filters:** show tooltip on year selector filter ([b77bdc9](https://github.com/pablolmedorado/temat/commit/b77bdc9c6923beaba6e2421359e72c7e72ce4c60))
+
 ## [1.3.0](https://github.com/pablolmedorado/temat/compare/v1.2.1...v1.3.0) (2020-11-11)
 
 
