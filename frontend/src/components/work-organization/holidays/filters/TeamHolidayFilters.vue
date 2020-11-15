@@ -10,10 +10,10 @@
             label="Año"
             prepend-icon="mdi-calendar-range"
             @input="updateFilters({ allowance_date__year: $event })"
-          ></v-select>
+          />
         </v-col>
         <v-col>
-          <v-switch v-model="rangeSelector" label="Rango" inset></v-switch>
+          <v-switch v-model="rangeSelector" label="Rango" inset />
         </v-col>
       </v-row>
       <v-row>
@@ -27,7 +27,7 @@
             :locale="locale"
             full-width
             @update:filters="$emit('update:filters', $event)"
-          ></TeamHolidaysDateFilter>
+          />
         </v-col>
       </v-row>
       <v-row>
@@ -50,8 +50,8 @@
       <v-btn icon @click.stop="showHelpDialog = true">
         <v-icon>mdi-help-circle</v-icon>
       </v-btn>
-      <HolidaysHelpDialog v-model="showHelpDialog"></HolidaysHelpDialog>
-      <v-spacer></v-spacer>
+      <HolidaysHelpDialog v-model="showHelpDialog" />
+      <v-spacer />
       <v-btn color="warning" text @click="reset">
         Restablecer
       </v-btn>

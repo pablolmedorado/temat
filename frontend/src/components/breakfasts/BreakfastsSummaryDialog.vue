@@ -20,11 +20,11 @@
           hide-default-footer
           multi-sort
           must-sort
-        ></v-data-table>
+        />
       </v-card-text>
-      <v-divider></v-divider>
+      <v-divider />
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn color="primary" text @click="close">Volver</v-btn>
       </v-card-actions>
     </v-card>

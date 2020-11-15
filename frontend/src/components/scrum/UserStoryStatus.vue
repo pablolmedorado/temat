@@ -5,7 +5,7 @@
         <v-stepper-step :key="status.value" :step="status.value" :complete="userStory.status > status.value">{{
           status.label
         }}</v-stepper-step>
-        <v-divider v-if="index < userStoryStatus.length - 1" :key="status.label"></v-divider>
+        <v-divider v-if="index < userStoryStatus.length - 1" :key="status.label" />
       </template>
     </v-stepper-header>
   </v-stepper>

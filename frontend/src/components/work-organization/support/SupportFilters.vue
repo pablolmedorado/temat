@@ -5,19 +5,19 @@
         <DatePickerInput
           :value="filters.date__gte"
           label="Fecha inicio"
-          prepend-icon="mdi-calendar-arrow-right"
+          prepend-icon="mdi-calendar-start"
           clearable
           @input="updateFilters({ date__gte: $event })"
-        ></DatePickerInput>
+        />
       </v-col>
       <v-col cols="12" sm="6" md="3">
         <DatePickerInput
           :value="filters.date__lte"
           label="Fecha fin"
-          prepend-icon="mdi-calendar-arrow-left"
+          prepend-icon="mdi-calendar-end"
           clearable
           @input="updateFilters({ date__lte: $event })"
-        ></DatePickerInput>
+        />
       </v-col>
       <v-col cols="12" sm="6" md="3">
         <UserAutocomplete

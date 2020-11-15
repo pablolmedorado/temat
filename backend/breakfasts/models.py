@@ -9,6 +9,9 @@ class Bread(models.Model):
     def __str__(self):
         return self.name
 
+    def natural_key(self):
+        return (self.name,)
+
     class Meta:
         verbose_name = _("pan")
         verbose_name_plural = _("panes")
@@ -20,6 +23,9 @@ class Base(models.Model):
 
     def __str__(self):
         return self.name
+
+    def natural_key(self):
+        return (self.name,)
 
     class Meta:
         verbose_name = _("base")
@@ -33,6 +39,9 @@ class Ingredient(models.Model):
     def __str__(self):
         return self.name
 
+    def natural_key(self):
+        return (self.name,)
+
     class Meta:
         verbose_name = _("ingrediente")
         verbose_name_plural = _("ingredientes")
@@ -44,6 +53,9 @@ class Drink(models.Model):
 
     def __str__(self):
         return self.name
+
+    def natural_key(self):
+        return (self.name,)
 
     class Meta:
         verbose_name = _("bebida")

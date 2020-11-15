@@ -50,6 +50,12 @@
     "editor.defaultFormatter": "vscode.json-language-features",
     "editor.formatOnSave": true,
   },
+  // YAML
+  "yaml.format.enable": true,
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": true,
+  },
   /* Django */
   "files.associations": {
     "**/templates/*.html": "django-html",

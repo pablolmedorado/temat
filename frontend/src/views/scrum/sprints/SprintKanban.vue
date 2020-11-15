@@ -4,7 +4,7 @@
     <v-card id="kanban-card" class="mt-2" :style="{ 'min-width': kanbanMinWidth }">
       <v-toolbar flat>
         <v-toolbar-title class="text-h6">Kanban</v-toolbar-title>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">
             <v-btn icon :to="{ name: 'sprint-chart', params: { sprintId } }" v-bind="attrs" v-on="on">
@@ -25,7 +25,7 @@
             Diagrama de Gantt
           </span>
         </v-tooltip>
-        <v-divider vertical inset></v-divider>
+        <v-divider vertical inset />
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">
             <v-btn v-if="!hideEmptyColumns" icon v-bind="attrs" @click="hideEmptyColumns = true" v-on="on">
@@ -59,7 +59,7 @@
               <v-card outlined :class="statusColumnClasses">
                 <v-card-title>{{ status.label }}</v-card-title>
                 <v-card-text>
-                  <v-skeleton-loader v-if="loading" type="card" class="px-1"></v-skeleton-loader>
+                  <v-skeleton-loader v-if="loading" type="card" class="px-1" />
                   <template v-else>
                     <v-row v-for="item in itemsByStatus[status.value]" :key="item.id">
                       <v-col class="px-1">

@@ -10,7 +10,7 @@
               :items="yearOptions"
               label="Año"
               prepend-icon="mdi-calendar-range"
-            ></v-select>
+            />
             <v-row>
               <v-col class="text-center">
                 <v-chip
@@ -70,7 +70,7 @@
               <v-icon>mdi-help-circle</v-icon>
             </v-btn>
             <HolidaysHelpDialog v-model="showHelpDialog" />
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-btn color="primary" :disabled="!datesToRequest.length" @click="requestHolidays">
               Solicitar ({{ datesToRequest.length }})
             </v-btn>
@@ -83,7 +83,7 @@
             <v-toolbar-title class="text-h6">
               Mis vacaciones
             </v-toolbar-title>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-btn icon :disabled="loading" @click="fetchItems">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
@@ -99,10 +99,10 @@
             must-sort
           >
             <template #item.planned_date="{ value }">
-              <DateRouterLink :date="value"></DateRouterLink>
+              <DateRouterLink :date="value" />
             </template>
             <template #item.user="{ value }">
-              <UserPill :user="value"></UserPill>
+              <UserPill :user="value" />
             </template>
             <template #item.approved="{ value }">
               <v-chip :color="getHolidayStatusRepresentation(value).colour" dark>
@@ -150,7 +150,7 @@ export default {
       tableOptions: {
         itemsPerPage: -1,
         sortBy: ["planned_date"],
-        sortDesc: [true],
+        sortDesc: [false],
       },
       tableHeaders: [
         {

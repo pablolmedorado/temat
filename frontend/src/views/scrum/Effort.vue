@@ -11,7 +11,8 @@
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
-          :default-filters="defaultFilters"
+          :system-filters="systemFilters"
+          :quick-filters="quickFilters"
           :service="service"
           :form-component="formComponent"
           :can-create="() => false"
@@ -102,12 +103,6 @@ export default {
       },
       service: EffortService,
       filterComponent: EffortFilters,
-      defaultFilters: {
-        date__gte: DateTime.local()
-          .minus({ weeks: 1 })
-          .toISODate(),
-        date__lte: DateTime.local().toISODate(),
-      },
       formComponent: EffortForm,
     };
   },
@@ -149,11 +144,27 @@ export default {
         },
       ];
     },
-  },
-  created() {
-    if (!this.loggedUser.is_staff) {
-      this.defaultFilters.user_id = this.loggedUser.id;
-    }
+    systemFilters() {
+      const filters = {};
+      if (!this.loggedUser.is_staff) {
+        filters.user_id = this.loggedUser.id;
+      }
+      return filters;
+    },
+    quickFilters() {
+      return [
+        {
+          label: "Última semana",
+          filters: {
+            date__gte: DateTime.local()
+              .minus({ weeks: 1 })
+              .toISODate(),
+            date__lte: DateTime.local().toISODate(),
+          },
+          default: true,
+        },
+      ];
+    },
   },
   methods: {
     canModifyEffort(item) {

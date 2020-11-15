@@ -7,7 +7,7 @@
         </v-breadcrumbs-item>
       </template>
     </v-breadcrumbs>
-    <v-skeleton-loader v-else type="heading" class="pl-6 pr-4 py-4"></v-skeleton-loader>
+    <v-skeleton-loader v-else type="heading" class="pl-6 pr-4 py-4" />
   </div>
 </template>
 

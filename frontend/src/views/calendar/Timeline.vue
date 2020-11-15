@@ -42,7 +42,7 @@
                   >
                     <v-toolbar-title>{{ event.name }}</v-toolbar-title>
                   </v-toolbar>
-                  <v-divider></v-divider>
+                  <v-divider />
                   <EventRepresentation :item="event" />
                   <v-card-actions>
                     <v-btn text color="primary" @click="viewInCalendar(event)">

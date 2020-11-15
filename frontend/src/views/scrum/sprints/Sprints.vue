@@ -10,6 +10,7 @@
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
+          :quick-filters="quickFilters"
           :service="service"
           :form-component="formComponent"
           :default-item="defaultItem"
@@ -21,16 +22,16 @@
             <TruncatedText :value="value" :text-length="100" />
           </template>
           <template #item.start_date="{ value }">
-            <DateRouterLink :date="value"></DateRouterLink>
+            <DateRouterLink :date="value" />
           </template>
           <template #item.end_date="{ value }">
-            <DateRouterLink :date="value"></DateRouterLink>
+            <DateRouterLink :date="value" />
           </template>
           <template #item.ongoing="{ item }">
-            <v-simple-checkbox v-model="item.ongoing" disabled></v-simple-checkbox>
+            <v-simple-checkbox v-model="item.ongoing" disabled />
           </template>
           <template #item.accountable_user="{ value }">
-            <UserPill :user="value"></UserPill>
+            <UserPill :user="value" />
           </template>
           <template #item.current_progress="{ value }">
             <v-progress-circular :rotate="-90" :size="32" :value="value" :width="3" color="primary">
@@ -153,6 +154,7 @@ export default {
       },
       service: SprintService,
       filterComponent: SprintFilters,
+      quickFilters: [{ label: "En curso", filters: { ongoing: true }, default: true }],
       formComponent: SprintForm,
     };
   },
@@ -178,3 +180,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+::v-deep .v-progress-circular__info {
+  font-size: 0.79rem;
+}
+</style>

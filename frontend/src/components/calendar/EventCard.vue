@@ -2,7 +2,7 @@
   <v-card v-if="Object.keys(eventTypesMap).length" v-bind="$attrs">
     <v-toolbar :color="eventTypesMap[item.type].colour" :dark="applyDarkVariant(eventTypesMap[item.type].colour)" flat>
       <v-toolbar-title>{{ item.name }}</v-toolbar-title>
-      <v-spacer></v-spacer>
+      <v-space />
       <v-menu bottom offset-y>
         <template #activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on"><v-icon>mdi-export</v-icon></v-btn>
@@ -27,7 +27,7 @@
         </v-list>
       </v-menu>
       <template v-if="!eventTypesMap[item.type].system">
-        <v-divider vertical inset></v-divider>
+        <v-divider vertical inset />
         <v-btn v-if="isEditable" icon @click="onEdit(item)">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
@@ -39,13 +39,13 @@
         </v-btn>
       </template>
     </v-toolbar>
-    <v-divider></v-divider>
+    <v-divider />
 
     <EventRepresentation :item="item" />
 
-    <v-divider></v-divider>
+    <v-divider />
     <v-card-actions>
-      <v-spacer></v-spacer>
+      <v-spacer />
       <v-btn text color="primary" @click="$emit('close:dialog')">Volver</v-btn>
     </v-card-actions>
 

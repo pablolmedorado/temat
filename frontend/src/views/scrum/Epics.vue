@@ -10,6 +10,7 @@
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
+          :quick-filters="quickFilters"
           :service="service"
           :form-component="formComponent"
           :default-item="defaultItem"
@@ -102,6 +103,7 @@ export default {
       },
       service: EpicService,
       filterComponent: EpicFilters,
+      quickFilters: [{ label: "En curso", filters: { finished: false }, default: true }],
       formComponent: EpicForm,
       defaultItem: {
         id: null,
@@ -130,5 +132,8 @@ export default {
 <style scoped>
 a {
   text-decoration: none;
+}
+::v-deep .v-progress-circular__info {
+  font-size: 0.79rem;
 }
 </style>

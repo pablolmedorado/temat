@@ -5,7 +5,7 @@
         <v-card>
           <v-card-title class="text-h6">
             Estado
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-tooltip left>
               <template #activator="{ on, attrs }">
                 <v-icon v-if="item.validated === false" class="mr-2" color="error" v-bind="attrs" v-on="on">

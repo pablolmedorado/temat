@@ -15,14 +15,10 @@
                 >
                   <template #default="{ active }">
                     <v-list-item-content>
-                      <v-list-item-title v-text="header.text"></v-list-item-title>
+                      <v-list-item-title>{{ header.text }}</v-list-item-title>
                     </v-list-item-content>
                     <v-list-item-action>
-                      <v-checkbox
-                        :input-value="active"
-                        :true-value="header.value"
-                        :disabled="header.fixed"
-                      ></v-checkbox>
+                      <v-checkbox :input-value="active" :true-value="header.value" :disabled="header.fixed" />
                     </v-list-item-action>
                   </template>
                 </v-list-item>
@@ -31,10 +27,10 @@
           </v-col>
         </v-row>
       </v-card-text>
-      <v-divider></v-divider>
+      <v-divider />
       <v-card-actions>
         <v-btn color="warning" text @click="resetHeaders">Restablecer</v-btn>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn color="primary" text @click="close">Cancelar</v-btn>
         <v-btn color="primary" text @click="applyChanges">Aplicar</v-btn>
       </v-card-actions>

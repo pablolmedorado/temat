@@ -4,7 +4,7 @@
     <v-card>
       <v-toolbar flat>
         <v-toolbar-title class="text-h6">{{ item.name }}</v-toolbar-title>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn icon :to="{ name: 'calendar', params: { initialDate: item.luxonStart.toISODate() } }" exact>
           <v-icon>mdi-calendar-search</v-icon>
         </v-btn>

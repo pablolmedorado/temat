@@ -28,6 +28,11 @@ export default {
       return { sprint: this.sprintId, epic: this.epicId };
     },
   },
+  provide() {
+    return {
+      context: this.context,
+    };
+  },
   watch: {
     context: {
       handler() {

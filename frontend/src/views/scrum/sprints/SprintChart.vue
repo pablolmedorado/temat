@@ -4,7 +4,7 @@
     <v-card class="mt-2">
       <v-toolbar flat>
         <v-toolbar-title class="text-h6"> Diagrama {{ burnUp ? "Burn-Up" : "Burn-Down" }} </v-toolbar-title>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">
             <v-btn icon :to="{ name: 'sprint-kanban', params: { sprintId } }" v-bind="attrs" v-on="on">
@@ -25,7 +25,7 @@
             Diagrama de Gantt
           </span>
         </v-tooltip>
-        <v-divider vertical inset></v-divider>
+        <v-divider vertical inset />
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">
             <v-btn v-if="!burnUp" icon :disabled="loading" v-bind="attrs" @click="burnUp = true" v-on="on">

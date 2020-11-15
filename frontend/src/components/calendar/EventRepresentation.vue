@@ -83,7 +83,7 @@
       <v-col>
         <div class="text-subtitle-1 font-weight-medium">Usuarios invitados:</div>
         <v-chip-group column>
-          <UserPill v-for="(attendee, index) in item.attendees" :key="`attendee-${index}`" :user="attendee"></UserPill>
+          <UserPill v-for="(attendee, index) in item.attendees" :key="`attendee-${index}`" :user="attendee" />
         </v-chip-group>
       </v-col>
     </v-row>
@@ -91,7 +91,7 @@
       <v-col>
         <div class="text-subtitle-1 font-weight-medium">Grupos invitados:</div>
         <v-chip-group column>
-          <GroupPill v-for="(group, index) in item.groups" :key="`group-${index}`" :group="group"></GroupPill>
+          <GroupPill v-for="(group, index) in item.groups" :key="`group-${index}`" :group="group" />
         </v-chip-group>
       </v-col>
     </v-row>

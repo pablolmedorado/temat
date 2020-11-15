@@ -6,7 +6,7 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
         <v-toolbar-title>Informe de esfuerzo</v-toolbar-title>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-toolbar-items>
           <v-btn icon :disabled="loading" @click="refresh">
             <v-icon>mdi-refresh</v-icon>
@@ -18,13 +18,13 @@
           <v-col>
             <v-chip v-if="filters && filters.date__gte" class="mr-2" color="teal" dark>
               <v-avatar left>
-                <v-icon>mdi-calendar-arrow-right</v-icon>
+                <v-icon>mdi-calendar-start</v-icon>
               </v-avatar>
               {{ filters.date__gte }}
             </v-chip>
             <v-chip v-if="filters && filters.date__lte" class="mr-2" color="teal" dark>
               <v-avatar left>
-                <v-icon>mdi-calendar-arrow-left</v-icon>
+                <v-icon>mdi-calendar-end</v-icon>
               </v-avatar>
               {{ filters.date__lte }}
             </v-chip>

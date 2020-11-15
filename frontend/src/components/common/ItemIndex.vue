@@ -7,28 +7,57 @@
             {{ verboseNamePlural }}
           </slot>
         </v-toolbar-title>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <slot name="toolbar" v-bind="{ selectedItems, filters }"></slot>
-        <template v-if="advancedFilters">
-          <v-tooltip bottom>
-            <template #activator="{ attrs, on }">
-              <v-btn icon v-bind="attrs" v-on="on" @click="resetFilters">
-                <v-icon>mdi-filter-remove-outline</v-icon>
-              </v-btn>
-            </template>
-            <span>Limpiar filtros</span>
-          </v-tooltip>
-          <v-tooltip bottom>
-            <template #activator="{ attrs, on }">
-              <v-btn icon v-bind="attrs" v-on="on" @click.stop="openFiltersDialog">
+        <v-menu v-if="filterComponent" bottom left offset-y>
+          <template #activator="{ on: menu }">
+            <v-tooltip bottom>
+              <template #activator="{ on: tooltip }">
+                <v-btn icon :disabled="loading" v-on="{ ...tooltip, ...menu }">
+                  <v-badge :value="dialogFilterCount" color="primary" dot overlap>
+                    <v-icon>mdi-filter-menu</v-icon>
+                  </v-badge>
+                </v-btn>
+              </template>
+              <span>Filtros</span>
+            </v-tooltip>
+          </template>
+          <v-list dense>
+            <v-list-item v-if="advancedFilters" @click.stop="openFiltersDialog">
+              <v-list-item-icon>
                 <v-badge :value="dialogFilterCount" color="primary" :content="dialogFilterCount" overlap>
                   <v-icon>mdi-filter</v-icon>
                 </v-badge>
-              </v-btn>
-            </template>
-            <span>Filtros avanzados</span>
-          </v-tooltip>
-        </template>
+              </v-list-item-icon>
+              <v-list-item-title>Filtros avanzados</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="setFiltersAndFetch({})">
+              <v-list-item-icon>
+                <v-icon>mdi-eraser</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Limpiar</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="openQuickFilterDialog">
+              <v-list-item-icon>
+                <v-icon>mdi-filter-plus-outline</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Guardar filtro rápido</v-list-item-title>
+            </v-list-item>
+            <v-divider class="mt-3 mb-2" />
+            <v-subheader class="ml-2">Filtros rápidos</v-subheader>
+            <v-list-item v-for="filter in quickFilters" :key="filter.label" @click="applyQuickFilter(filter)">
+              <v-list-item-title>{{ filter.label }}</v-list-item-title>
+            </v-list-item>
+            <v-list-item v-for="filter in customQuickFilters" :key="filter.label" @click="applyQuickFilter(filter)">
+              <v-list-item-title>{{ filter.label }}</v-list-item-title>
+              <v-list-item-action class="my-0">
+                <v-btn icon @click.stop="deleteQuickFilter(filter)">
+                  <v-icon color="error">mdi-delete</v-icon>
+                </v-btn>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+        </v-menu>
         <v-tooltip bottom>
           <template #activator="{ attrs, on }">
             <v-btn
@@ -59,7 +88,7 @@
         v-if="filterComponent"
         ref="filterComponent"
         :filters.sync="filters"
-        @reset:filters="resetFilters"
+        @clear:filters="filters = {}"
         @apply:filters="fetchTableItems(true)"
         @change:advanced-filters-count="dialogFilterCount = $event"
       />
@@ -131,6 +160,12 @@
       :headers.sync="tableHeaders"
     />
 
+    <QuickFilterDialog
+      ref="quickFilterDialog"
+      :quick-filters="customQuickFilters"
+      @add:quick-filter="addQuickFilter($event)"
+    />
+
     <slot name="fab" v-bind="{ canCreate, canEdit, canDelete, selectedItems }">
       <v-btn
         v-if="!readOnly && canCreate(loggedUser)"
@@ -167,7 +202,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
-import { omit } from "lodash";
+import { isObject, omit, sortBy } from "lodash";
 
 import { defaultTableOptions } from "@/utils/constants";
 
@@ -244,9 +279,9 @@ export default {
       type: Object,
       default: () => ({}),
     },
-    defaultFilters: {
-      type: Object,
-      default: () => ({}),
+    quickFilters: {
+      type: Array,
+      default: () => [],
     },
     reactiveFilters: {
       type: Boolean,
@@ -274,6 +309,7 @@ export default {
       tableHeaders: null,
       tableOptions: null,
       filters: {},
+      customQuickFilters: [],
       dialogFilterCount: 0,
       selectedItems: [],
     };
@@ -281,6 +317,10 @@ export default {
   computed: {
     ...mapState(["loggedUser"]),
     ...mapGetters(["loading"]),
+    defaultFilters() {
+      const defaultFilter = this.quickFilters.find((filter) => filter.default);
+      return defaultFilter ? defaultFilter.filters : {};
+    },
   },
   watch: {
     tableHeaders: {
@@ -305,6 +345,12 @@ export default {
       },
       deep: true,
     },
+    customQuickFilters: {
+      handler(newValue) {
+        localStorage[`${this.localStorageKey}QuickFilters`] = JSON.stringify(newValue);
+      },
+      deep: true,
+    },
     defaultFilters: {
       handler(newValue) {
         this.filters = newValue;
@@ -316,9 +362,11 @@ export default {
   created() {
     this.loadOptionsFromLocalStorage();
     this.loadHeadersFromLocalStorage();
+    this.loadQuickFiltersFromLocalStorage();
   },
   methods: {
     ...mapActions(["showSnackbar"]),
+    sortBy,
     fetchTableItems(resetPagination = false) {
       this.$refs.itemTable.fetchItems(resetPagination);
     },
@@ -352,13 +400,43 @@ export default {
     addFilter(filter) {
       this.filters = { ...this.filters, ...filter };
     },
-    resetFilters() {
-      this.filters = this.defaultFilters;
+    setFiltersAndFetch(filters) {
+      this.filters = filters;
       if (!this.reactiveFilters) {
         this.$nextTick(() => {
           this.fetchTableItems(true);
         });
       }
+    },
+    openQuickFilterDialog() {
+      this.$refs.quickFilterDialog.open();
+    },
+    closeQuickFilterDialog() {
+      this.$refs.quickFilterDialog.close();
+    },
+    addQuickFilter(filter) {
+      if (isObject(filter)) {
+        filter.filters = { ...this.filters };
+      } else {
+        this.customQuickFilters.push({
+          label: filter,
+          filters: { ...this.filters },
+        });
+      }
+      this.showSnackbar({
+        color: "success",
+        message: "Filtro guardado correctamente",
+      });
+    },
+    applyQuickFilter(filter) {
+      this.setFiltersAndFetch(filter.filters);
+    },
+    deleteQuickFilter(filter) {
+      this.customQuickFilters = this.customQuickFilters.filter((item) => item.label !== filter.label);
+      this.showSnackbar({
+        color: "success",
+        message: "Filtro eliminado correctamente",
+      });
     },
     loadHeadersFromLocalStorage() {
       const lsTableHeaders = localStorage[`${this.localStorageKey}TableHeaders`];
@@ -372,6 +450,10 @@ export default {
       const localOptions = { ...defaultTableOptions, ...this.tableInitialOptions };
       const lsTableOptions = localStorage[`${this.localStorageKey}TableOptions`];
       this.tableOptions = lsTableOptions ? { ...localOptions, ...JSON.parse(lsTableOptions) } : localOptions;
+    },
+    loadQuickFiltersFromLocalStorage() {
+      const lsQuickFilters = localStorage[`${this.localStorageKey}QuickFilters`];
+      this.customQuickFilters = lsQuickFilters ? JSON.parse(lsQuickFilters) : [];
     },
   },
 };

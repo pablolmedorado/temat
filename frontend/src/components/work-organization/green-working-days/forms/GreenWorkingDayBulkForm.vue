@@ -11,7 +11,7 @@
             :error-messages="buildValidationErrorMessages($v.items.$each.$iter[index].date)"
             @change="$v.items.$each.$iter[index].date.$touch()"
             @blur="$v.items.$each.$iter[index].date.$touch()"
-          ></v-text-field>
+          />
         </v-col>
         <v-col>
           <v-text-field
@@ -22,7 +22,7 @@
             :error-messages="buildValidationErrorMessages($v.items.$each.$iter[index].label)"
             @change="$v.items.$each.$iter[index].label.$touch()"
             @blur="$v.items.$each.$iter[index].label.$touch()"
-          ></v-text-field>
+          />
         </v-col>
         <v-col>
           <UserAutocomplete

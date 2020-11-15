@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="py-0">
     <v-row>
-      <v-col cols="12" md="6">
+      <v-col cols="12" sm="5" lg="4">
         <v-text-field
           :value="filters.search"
           label="Buscar"
@@ -10,19 +10,21 @@
           clearable
           @input="updateFilters({ search: $event })"
           @keyup.enter="$emit('apply:filters')"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" sm="6" md="3">
-        <UserAutocomplete
-          :value="filters.accountable_user_id"
-          label="Usuario responsable"
-          prepend-icon="mdi-account-tie"
-          clearable
-          @click:clear="updateFilters({ accountable_user_id: null })"
-          @input="updateFilters({ accountable_user_id: $event })"
         />
       </v-col>
-      <v-col cols="12" sm="6" md="3">
+      <v-col cols="12" sm="4" lg="3">
+        <v-select
+          :value="filters.ongoing"
+          :items="ongoingOptions"
+          item-text="label"
+          item-value="value"
+          label="En curso"
+          prepend-icon="mdi-calendar-arrow-right"
+          clearable
+          @change="updateFilters({ ongoing: $event })"
+        />
+      </v-col>
+      <v-col cols="12" sm="3" lg="2">
         <v-btn class="my-2" color="primary" :loading="loading" :disabled="loading" @click="$emit('apply:filters')">
           Filtrar
         </v-btn>
@@ -41,22 +43,58 @@
         <v-card-text>
           <v-row>
             <v-col>
+              <v-text-field
+                :value="filters.search"
+                label="Buscar"
+                placeholder="Nombre"
+                prepend-icon="mdi-magnify"
+                clearable
+                @input="updateFilters({ search: $event })"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-select
+                :value="filters.ongoing"
+                :items="ongoingOptions"
+                item-text="label"
+                item-value="value"
+                label="En curso"
+                prepend-icon="mdi-calendar-arrow-right"
+                clearable
+                @change="updateFilters({ ongoing: $event })"
+              />
+            </v-col>
+            <v-col>
+              <UserAutocomplete
+                :value="filters.accountable_user_id"
+                label="Usuario responsable"
+                prepend-icon="mdi-account-tie"
+                clearable
+                @click:clear="updateFilters({ accountable_user_id: null })"
+                @input="updateFilters({ accountable_user_id: $event })"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
               <DatePickerInput
                 :value="filters.start_date__gte"
                 label="Fecha desde"
-                prepend-icon="mdi-calendar-arrow-right"
+                prepend-icon="mdi-calendar-start"
                 clearable
                 @input="updateFilters({ start_date__gte: $event })"
-              ></DatePickerInput>
+              />
             </v-col>
             <v-col>
               <DatePickerInput
                 :value="filters.end_date__lte"
                 label="Fecha hasta"
-                prepend-icon="mdi-calendar-arrow-left"
+                prepend-icon="mdi-calendar-end"
                 clearable
                 @input="updateFilters({ end_date__lte: $event })"
-              ></DatePickerInput>
+              />
             </v-col>
           </v-row>
           <v-row>
@@ -74,10 +112,10 @@
             </v-col>
           </v-row>
         </v-card-text>
-        <v-divider></v-divider>
+        <v-divider />
         <v-card-actions>
-          <v-btn color="warning" text @click="$emit('reset:filters')">Restablecer</v-btn>
-          <v-spacer></v-spacer>
+          <v-btn color="warning" text @click="$emit('clear:filters')">Limpiar</v-btn>
+          <v-spacer />
           <v-btn color="primary" text @click="closeFiltersDialog">
             Volver
           </v-btn>
@@ -98,7 +136,11 @@ export default {
   mixins: [FilterMixin],
   data() {
     return {
-      basicFilters: ["search", "accountable_user_id"],
+      basicFilters: ["ongoing", "accountable_user_id"],
+      ongoingOptions: [
+        { label: "Sí", value: true },
+        { label: "No", value: false },
+      ],
     };
   },
   computed: {

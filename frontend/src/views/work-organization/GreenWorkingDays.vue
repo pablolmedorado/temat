@@ -10,7 +10,7 @@
           item-text="date"
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
-          :default-filters="defaultFilters"
+          :quick-filters="quickFilters"
           :service="service"
           :form-component="formComponent"
           custom-headers
@@ -22,10 +22,15 @@
 
           <template #toolbar>
             <v-menu bottom left offset-y>
-              <template #activator="{ on, attrs }">
-                <v-btn icon :disabled="loading" v-bind="attrs" v-on="on">
-                  <v-icon>mdi-calendar-range</v-icon>
-                </v-btn>
+              <template #activator="{ on: menu }">
+                <v-tooltip bottom>
+                  <template #activator="{ on: tooltip }">
+                    <v-btn icon :disabled="loading" v-on="{ ...tooltip, ...menu }">
+                      <v-icon>mdi-calendar-range</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Año</span>
+                </v-tooltip>
               </template>
               <v-list>
                 <v-list-item v-for="item in yearOptions" :key="item" @click="setYearFilter(item)">
@@ -142,9 +147,7 @@ export default {
         mustSort: true,
       },
       service: GreenService,
-      defaultFilters: {
-        date__year: DateTime.local().year,
-      },
+      quickFilters: [{ label: "Año en curso", filters: { date__year: DateTime.local().year }, default: true }],
       formComponent: GreenWorkingDayForm,
       bulkFormComponent: GreenWorkingDayBulkForm,
     };

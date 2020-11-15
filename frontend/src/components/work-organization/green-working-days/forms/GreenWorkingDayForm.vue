@@ -11,7 +11,7 @@
             :error-messages="buildValidationErrorMessages($v.item.label)"
             @input="$v.item.label.$touch()"
             @blur="$v.item.label.$touch()"
-          ></v-text-field>
+          />
         </v-col>
       </v-row>
       <v-row>

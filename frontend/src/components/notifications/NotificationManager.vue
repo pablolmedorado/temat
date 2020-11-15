@@ -31,7 +31,7 @@
           <v-toolbar-title>
             Notificaciones{{ unreadCount > notifications.length ? ` (${notifications.length}/${unreadCount})` : "" }}
           </v-toolbar-title>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-tooltip bottom>
             <template #activator="{ on, attrs }">
               <v-btn
@@ -104,9 +104,9 @@
             <v-skeleton-loader v-for="n in 3" :key="n" type="list-item-avatar-three-line" />
           </template>
         </v-card-text>
-        <v-divider></v-divider>
+        <v-divider />
         <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-btn text @click="showNotificationSummary = false">Salir</v-btn>
           <v-btn color="primary" text :to="{ name: 'notifications' }" @click="showNotificationSummary = false">
             Ver todas

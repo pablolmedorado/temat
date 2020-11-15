@@ -18,7 +18,7 @@
                   :error-messages="buildValidationErrorMessages($v.item.name)"
                   @input="$v.item.name.$touch()"
                   @blur="$v.item.name.$touch()"
-                ></v-text-field>
+                />
               </v-col>
               <v-col cols="12" sm="6" lg="3">
                 <v-select
@@ -33,7 +33,7 @@
                   :error-messages="buildValidationErrorMessages($v.item.type)"
                   @change="$v.item.type.$touch()"
                   @blur="$v.item.type.$touch()"
-                ></v-select>
+                />
               </v-col>
               <v-col cols="12" sm="6" lg="3">
                 <AsyncAutocomplete
@@ -85,7 +85,7 @@
                   :error-messages="buildValidationErrorMessages($v.item.functional_description)"
                   @input="$v.item.functional_description.$touch()"
                   @blur="$v.item.functional_description.$touch()"
-                ></v-textarea>
+                />
               </v-col>
               <v-col cols="12" md="6">
                 <v-textarea
@@ -98,7 +98,7 @@
                   :error-messages="buildValidationErrorMessages($v.item.technical_description)"
                   @input="$v.item.technical_description.$touch()"
                   @blur="$v.item.technical_description.$touch()"
-                ></v-textarea>
+                />
               </v-col>
             </v-row>
           </v-card-text>
@@ -142,7 +142,7 @@
                     <v-text-field
                       :value="item.start_date | date"
                       label="Fecha de inicio planificada"
-                      prepend-icon="mdi-calendar-arrow-right"
+                      prepend-icon="mdi-calendar-start"
                       readonly
                       :clearable="loggedUser.is_staff"
                       :error-messages="buildValidationErrorMessages($v.item.start_date)"
@@ -185,7 +185,7 @@
                     <v-text-field
                       :value="item.end_date | date"
                       label="Fecha límite"
-                      prepend-icon="mdi-calendar-arrow-left"
+                      prepend-icon="mdi-calendar-end"
                       readonly
                       :clearable="loggedUser.is_staff"
                       :error-messages="buildValidationErrorMessages($v.item.end_date)"
@@ -231,7 +231,7 @@
                   :error-messages="buildValidationErrorMessages($v.item.planned_effort)"
                   @input="$v.item.planned_effort.$touch()"
                   @blur="$v.item.planned_effort.$touch()"
-                ></v-text-field>
+                />
               </v-col>
               <v-col cols="12" sm="6" lg="4">
                 <v-text-field
@@ -247,7 +247,7 @@
                   :error-messages="buildValidationErrorMessages($v.item.priority)"
                   @input="$v.item.priority.$touch()"
                   @blur="$v.item.priority.$touch()"
-                ></v-text-field>
+                />
               </v-col>
             </v-row>
           </v-card-text>
@@ -293,7 +293,7 @@
                           :error-messages="buildValidationErrorMessages($v.item.development_comments)"
                           @input="$v.item.development_comments.$touch()"
                           @blur="$v.item.development_comments.$touch()"
-                        ></v-textarea>
+                        />
                       </v-col>
                     </v-row>
                     <v-row>
@@ -307,7 +307,7 @@
                           :error-messages="buildValidationErrorMessages($v.item.cvs_reference)"
                           @input="$v.item.cvs_reference.$touch()"
                           @blur="$v.item.cvs_reference.$touch()"
-                        ></v-text-field>
+                        />
                       </v-col>
                     </v-row>
                   </v-card-text>
@@ -341,7 +341,7 @@
                           :error-messages="buildValidationErrorMessages($v.item.validation_comments)"
                           @input="$v.item.validation_comments.$touch()"
                           @blur="$v.item.validation_comments.$touch()"
-                        ></v-textarea>
+                        />
                       </v-col>
                     </v-row>
                     <v-row>
@@ -355,7 +355,7 @@
                           persistent-hint
                           label="Estado"
                           prepend-icon="mdi-check-bold"
-                        ></v-select>
+                        />
                       </v-col>
                     </v-row>
                   </v-card-text>
@@ -389,7 +389,7 @@
                           :error-messages="buildValidationErrorMessages($v.item.support_comments)"
                           @input="$v.item.support_comments.$touch()"
                           @blur="$v.item.support_comments.$touch()"
-                        ></v-textarea>
+                        />
                       </v-col>
                     </v-row>
                   </v-card-text>
@@ -420,7 +420,7 @@
                   :error-messages="buildValidationErrorMessages($v.item.risk_level)"
                   @change="$v.item.risk_level.$touch()"
                   @blur="$v.item.risk_level.$touch()"
-                ></v-select>
+                />
               </v-col>
             </v-row>
             <v-row>
@@ -434,7 +434,7 @@
                   :error-messages="buildValidationErrorMessages($v.item.risk_comments)"
                   @input="$v.item.risk_comments.$touch()"
                   @blur="$v.item.risk_comments.$touch()"
-                ></v-textarea>
+                />
               </v-col>
             </v-row>
           </v-card-text>

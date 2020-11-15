@@ -7,9 +7,9 @@
           <UserPill v-for="(volunteer, index) in item.volunteers" :key="`volunteer-${index}`" :user="volunteer" />
         </v-chip-group>
       </v-card-text>
-      <v-divider></v-divider>
+      <v-divider />
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn color="primary" text @click="close">
           Volver
         </v-btn>

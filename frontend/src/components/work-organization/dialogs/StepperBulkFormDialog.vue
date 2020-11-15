@@ -8,7 +8,7 @@
         <v-stepper v-model="step" class="elevation-0">
           <v-stepper-header>
             <v-stepper-step :complete="step > 1" step="1">Selección de fechas</v-stepper-step>
-            <v-divider></v-divider>
+            <v-divider />
             <v-stepper-step step="2">Asignación</v-stepper-step>
           </v-stepper-header>
 
@@ -34,10 +34,10 @@
           </v-stepper-items>
         </v-stepper>
       </v-card-text>
-      <v-divider></v-divider>
+      <v-divider />
       <v-card-actions>
         <v-btn color="warning" text @click="reset">Restablecer</v-btn>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn color="primary" text @click="close">Cancelar</v-btn>
         <v-btn color="primary" text :disabled="!datesToCreate.length" @click="next">
           {{ nextText }}

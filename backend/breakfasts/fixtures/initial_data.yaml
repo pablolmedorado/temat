@@ -1,0 +1,69 @@
+- model: breakfasts.bread
+  fields:
+    name: Mollete
+- model: breakfasts.bread
+  fields:
+    name: Andaluza
+- model: breakfasts.bread
+  fields:
+    name: Viena
+- model: breakfasts.bread
+  fields:
+    name: Bollo
+
+- model: breakfasts.base
+  fields:
+    name: Aceite
+- model: breakfasts.base
+  fields:
+    name: Mantequilla
+- model: breakfasts.base
+  fields:
+    name: Paté
+- model: breakfasts.base
+  fields:
+    name: Sobrasada
+- model: breakfasts.base
+  fields:
+    name: Manteca Colorá
+
+- model: breakfasts.ingredient
+  fields:
+    name: Tomate en Rodajas
+- model: breakfasts.ingredient
+  fields:
+    name: Tomate Triturado
+- model: breakfasts.ingredient
+  fields:
+    name: Jamón Serrano
+- model: breakfasts.ingredient
+  fields:
+    name: Jamón York
+- model: breakfasts.ingredient
+  fields:
+    name: Carne Mechá
+- model: breakfasts.ingredient
+  fields:
+    name: Queso Viejo
+- model: breakfasts.ingredient
+  fields:
+    name: Queso en Lonchas
+
+- model: breakfasts.drink
+  fields:
+    name: Café Solo
+- model: breakfasts.drink
+  fields:
+    name: Café con Leche
+- model: breakfasts.drink
+  fields:
+    name: Café Cortado
+- model: breakfasts.drink
+  fields:
+    name: Cola Cao
+- model: breakfasts.drink
+  fields:
+    name: Batido de Chocolate
+- model: breakfasts.drink
+  fields:
+    name: Té

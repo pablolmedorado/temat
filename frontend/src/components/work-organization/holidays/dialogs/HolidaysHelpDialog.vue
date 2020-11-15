@@ -39,7 +39,7 @@
         </v-simple-table>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn color="primary" text @click="close">
           Volver
         </v-btn>

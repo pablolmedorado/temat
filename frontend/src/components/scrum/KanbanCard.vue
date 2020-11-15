@@ -46,9 +46,9 @@
             </v-avatar>
           </v-chip>
         </v-col>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-col class="d-inline-flex justify-end">
-          <UserStoryActors :user-story="userStory" :avatar-size="32"></UserStoryActors>
+          <UserStoryActors :user-story="userStory" :avatar-size="32" />
         </v-col>
       </v-row>
       <v-row>
@@ -75,7 +75,7 @@
             <span>Esfuerzo real: {{ userStory.actual_effort }}UT</span>
           </v-tooltip>
         </v-col>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-col class="d-flex justify-end">
           <v-chip :color="endDatePillColour" :text-color="endDatePillColour" outlined>
             <v-avatar left>
@@ -164,5 +164,8 @@ export default {
 }
 .progress {
   font-size: 14px;
+}
+::v-deep .v-progress-circular__info {
+  font-size: 0.79rem;
 }
 </style>

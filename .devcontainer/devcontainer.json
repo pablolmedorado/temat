@@ -18,6 +18,7 @@
     "ms-python.python",
     "ms-python.vscode-pylance",
     "octref.vetur",
+    "redhat.vscode-yaml",
     "sdras.vue-vscode-snippets",
     "yzhang.markdown-all-in-one",
   ],

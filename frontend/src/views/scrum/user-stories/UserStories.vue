@@ -11,7 +11,8 @@
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
-          :default-filters="defaultFilters"
+          :system-filters="systemFilters"
+          :quick-filters="quickFilters"
           :service="service"
           :can-edit="() => false"
           custom-headers
@@ -172,12 +173,6 @@ export default {
       },
       service: UserStoryService,
       filterComponent: UserStoryFilters,
-      defaultFilters: {
-        sprint_id: this.sprintId,
-        epic_id: this.epicId,
-        status__in: this.sprintId || this.epicId ? "" : "1,2,3",
-        any_role_user__in: null,
-      },
       effortFormComponent: EffortForm,
       showTaskDialog: false,
     };
@@ -219,6 +214,49 @@ export default {
       }
       return { name: "user-story-new", query: queryParams };
     },
+    systemFilters() {
+      const filters = {};
+      if (this.sprintId) {
+        filters.sprint_id = this.sprintId;
+      }
+      if (this.epicId) {
+        filters.epic_id = this.epicId;
+      }
+      return filters;
+    },
+    quickFilters() {
+      return [
+        {
+          label: "Historias en curso",
+          filters: {
+            status__in: "1,2,3",
+          },
+          default: !this.hasContext && this.loggedUser.is_staff,
+        },
+        {
+          label: "Mis historias en curso",
+          filters: {
+            status__in: "1,2,3",
+            any_role_user__in: String(this.loggedUser.id),
+          },
+          default: !this.hasContext && !this.loggedUser.is_staff,
+        },
+        {
+          label: "Mis desarrollos pendientes",
+          filters: {
+            status__in: "1,2",
+            development_user_id__in: String(this.loggedUser.id),
+          },
+        },
+        {
+          label: "Mis validaciones pendientes",
+          filters: {
+            status__in: "3",
+            validation_user_id__in: String(this.loggedUser.id),
+          },
+        },
+      ];
+    },
   },
   watch: {
     tableHeaders(newValue) {
@@ -231,11 +269,6 @@ export default {
         };
       }
     },
-  },
-  created() {
-    if (!this.hasContext && !this.loggedUser.is_staff) {
-      this.defaultFilters.any_role_user__in = String(this.loggedUser.id);
-    }
   },
   methods: {
     fetchTableItems() {

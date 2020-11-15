@@ -59,7 +59,7 @@ Table of Contents:
 
 ### 🐘 Database
 
-- [PostgreSQL 13](https://www.postgresql.org/)
+- [PostgreSQL](https://www.postgresql.org/)
 
 ### 🐍 Backend
 
@@ -114,14 +114,21 @@ The app needs to be configured before running it and it can be done in 2 ways:
     pipenv run python manage.py migrate
     ```
 
-4. Creating an admin user
+4. Populating models with initial data
+
+    ```bash
+    cd backend
+    pipenv run python manage.py loaddata initial_data
+    ```
+
+5. Creating an admin user
 
     ```bash
     cd backend
     pipenv run python manage.py createsuperuser
     ```
 
-5. Serving the app
+6. Serving the app
 
     - Development mode
 
@@ -170,7 +177,13 @@ The app needs to be configured before running it and it can be done in 2 ways:
     docker exec temat pipenv run python manage.py migrate
     ```
 
-3. Creating an admin user
+3. Populating models with initial data
+
+    ```bash
+    docker exec temat pipenv run python manage.py loaddata initial_data
+    ```
+
+4. Creating an admin user
 
     ```bash
     docker exec -ti temat pipenv run python manage.py createsuperuser
@@ -186,7 +199,7 @@ Doing this you'll create 3 containers:
 - **Adminer** (database manager)
 - **VS Code dev container** with all the dependencies and extensions installed
 
-Once the dev container is ready, you'll only need to run migrations, create an admin user and serve the app.
+Once the dev container is ready, you'll only need to run migrations, populate models, create an admin user and serve the app.
 
 ## 💻 Accessing the app
 

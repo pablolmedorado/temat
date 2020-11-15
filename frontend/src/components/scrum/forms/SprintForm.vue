@@ -11,7 +11,7 @@
             :error-messages="buildValidationErrorMessages($v.item.name)"
             @input="$v.item.name.$touch()"
             @blur="$v.item.name.$touch()"
-          ></v-text-field>
+          />
         </v-col>
       </v-row>
       <v-row>
@@ -19,21 +19,21 @@
           <DatePickerInput
             v-model="item.start_date"
             label="Fecha de inicio*"
-            prepend-icon="mdi-calendar-arrow-right"
+            prepend-icon="mdi-calendar-start"
             :error-messages="buildValidationErrorMessages($v.item.start_date)"
             @input="$v.item.start_date.$touch()"
             @blur="$v.item.start_date.$touch()"
-          ></DatePickerInput>
+          />
         </v-col>
         <v-col cols="12" sm="6">
           <DatePickerInput
             v-model="item.end_date"
             label="Fecha de fin*"
-            prepend-icon="mdi-calendar-arrow-left"
+            prepend-icon="mdi-calendar-end"
             :error-messages="buildValidationErrorMessages($v.item.end_date)"
             @input="$v.item.end_date.$touch()"
             @blur="$v.item.end_date.$touch()"
-          ></DatePickerInput>
+          />
         </v-col>
       </v-row>
       <v-row>

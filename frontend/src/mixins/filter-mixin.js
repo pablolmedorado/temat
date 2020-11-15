@@ -20,10 +20,12 @@ export default {
   watch: {
     filters: {
       handler(newValue) {
-        const advancedFilterCount = Object.entries(newValue).filter(
-          (filter) => filter[1] && !this.basicFilters.includes(filter[0])
-        ).length;
-        this.$emit("change:advanced-filters-count", advancedFilterCount);
+        if (this.basicFilters.length) {
+          const advancedFilterCount = Object.entries(newValue).filter(
+            (filter) => filter[1] && !this.basicFilters.includes(filter[0])
+          ).length;
+          this.$emit("change:advanced-filters-count", advancedFilterCount);
+        }
       },
       deep: true,
       immediate: true,
@@ -42,9 +44,6 @@ export default {
     applyFiltersFromDialog() {
       this.$emit("apply:filters");
       this.closeFiltersDialog();
-    },
-    clearFilters() {
-      this.$emit("reset:filters");
     },
     splitFilterValue(field, isInteger) {
       const filterValue = get(this.filters, field);

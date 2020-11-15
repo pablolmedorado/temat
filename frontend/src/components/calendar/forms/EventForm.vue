@@ -11,7 +11,7 @@
             :error-messages="buildValidationErrorMessages($v.item.name)"
             @input="$v.item.name.$touch()"
             @blur="$v.item.name.$touch()"
-          ></v-text-field>
+          />
         </v-col>
       </v-row>
       <v-row>
@@ -19,26 +19,26 @@
           <DatePickerInput
             v-model="startDate"
             label="Fecha de inicio*"
-            prepend-icon="mdi-calendar-arrow-right"
+            prepend-icon="mdi-calendar-start"
             :error-messages="buildValidationErrorMessages($v.startDate)"
             @input="$v.startDate.$touch()"
             @blur="$v.startDate.$touch()"
-          ></DatePickerInput>
+          />
         </v-col>
         <v-col cols="12" sm="6">
           <DatePickerInput
             v-model="endDate"
             label="Fecha de fin*"
-            prepend-icon="mdi-calendar-arrow-left"
+            prepend-icon="mdi-calendar-end"
             :error-messages="buildValidationErrorMessages($v.endDate)"
             @input="$v.endDate.$touch()"
             @blur="$v.endDate.$touch()"
-          ></DatePickerInput>
+          />
         </v-col>
       </v-row>
       <v-row>
         <v-col>
-          <v-switch v-model="item.all_day" label="Todo el día" inset></v-switch>
+          <v-switch v-model="item.all_day" label="Todo el día" inset />
         </v-col>
       </v-row>
       <v-row v-show="!item.all_day">
@@ -64,7 +64,7 @@
                 v-bind="attrs"
                 v-on="on"
                 @blur="$v.startTime.$touch()"
-              ></v-text-field>
+              />
             </template>
             <v-time-picker
               v-if="showStartTimepicker"
@@ -74,7 +74,7 @@
               scrollable
               @change="$v.startTime.$touch()"
               @click:minute="$refs.startTimepicker.save(startTime)"
-            ></v-time-picker>
+            />
           </v-menu>
         </v-col>
         <v-col cols="12" sm="6">
@@ -99,7 +99,7 @@
                 v-bind="attrs"
                 v-on="on"
                 @blur="$v.endTime.$touch()"
-              ></v-text-field>
+              />
             </template>
             <v-time-picker
               v-if="showEndTimepicker"
@@ -109,7 +109,7 @@
               scrollable
               @change="$v.endTime.$touch()"
               @click:minute="$refs.endTimepicker.save(endTime)"
-            ></v-time-picker>
+            />
           </v-menu>
         </v-col>
       </v-row>
@@ -126,7 +126,7 @@
             :error-messages="buildValidationErrorMessages($v.item.type)"
             @change="$v.item.type.$touch()"
             @blur="$v.item.type.$touch()"
-          ></v-select>
+          />
         </v-col>
         <v-col cols="12" sm="6">
           <v-select
@@ -140,7 +140,7 @@
             :error-messages="buildValidationErrorMessages($v.item.visibility)"
             @change="$v.item.visibility.$touch()"
             @blur="$v.item.visibility.$touch()"
-          ></v-select>
+          />
         </v-col>
       </v-row>
       <v-row>
@@ -155,7 +155,7 @@
             @input="$v.item.location.$touch()"
             @blur="$v.item.location.$touch()"
             @click:append="openLocation(item.location)"
-          ></v-text-field>
+          />
         </v-col>
       </v-row>
       <v-row>
@@ -168,7 +168,7 @@
             :error-messages="buildValidationErrorMessages($v.item.details)"
             @input="$v.item.details.$touch()"
             @blur="$v.item.details.$touch()"
-          ></v-textarea>
+          />
         </v-col>
       </v-row>
       <v-row>

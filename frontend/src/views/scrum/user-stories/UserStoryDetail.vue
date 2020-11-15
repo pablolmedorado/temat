@@ -3,7 +3,7 @@
     <ContextBreadcrumbs :items="breadcrumbs" />
 
     <v-tabs v-if="id" v-model="tab" grow show-arrows background-color="transparent">
-      <v-tabs-slider></v-tabs-slider>
+      <v-tabs-slider />
       <v-tab href="#data"> <v-icon class="mr-1">mdi-book-account</v-icon>Información </v-tab>
       <v-tab href="#tasks"> <v-icon class="mr-1">mdi-format-list-checks</v-icon>Tareas </v-tab>
       <v-tab href="#progress"> <v-icon class="mr-1">mdi-percent</v-icon>Historial de avance </v-tab>

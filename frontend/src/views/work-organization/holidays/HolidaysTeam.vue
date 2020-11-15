@@ -10,7 +10,7 @@
             <v-toolbar-title class="text-h6">
               Vacaciones del equipo
             </v-toolbar-title>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-btn icon :disabled="loading" @click="fetchItems">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
@@ -88,8 +88,7 @@ export default {
       tableOptions: {
         ...defaultTableOptions,
         sortBy: ["planned_date"],
-        sortDesc: [true],
-        mustSort: true,
+        sortDesc: [false],
       },
       filters: {
         planned_date__isnull: false,

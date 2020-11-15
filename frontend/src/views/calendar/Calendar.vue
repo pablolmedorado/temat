@@ -34,7 +34,7 @@
           />
         </v-menu>
 
-        <v-spacer></v-spacer>
+        <v-spacer />
 
         <v-btn fab text small class="mr-2" :disabled="loading" @click="fetchEvents">
           <v-icon>mdi-refresh</v-icon>
