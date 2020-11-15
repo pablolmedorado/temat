@@ -10,7 +10,7 @@
           item-text="date"
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
-          :default-filters="defaultFilters"
+          :quick-filters="quickFilters"
           :service="service"
           :form-component="formComponent"
           custom-headers
@@ -147,9 +147,7 @@ export default {
         mustSort: true,
       },
       service: GreenService,
-      defaultFilters: {
-        date__year: DateTime.local().year,
-      },
+      quickFilters: [{ label: "Año en curso", filters: { date__year: DateTime.local().year }, default: true }],
       formComponent: GreenWorkingDayForm,
       bulkFormComponent: GreenWorkingDayBulkForm,
     };

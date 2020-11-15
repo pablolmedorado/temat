@@ -11,7 +11,7 @@
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
-          :default-filters="defaultFilters"
+          :quick-filters="quickFilters"
           :service="service"
           :form-component="formComponent"
         >
@@ -76,9 +76,6 @@ export default {
       },
       service: SupportService,
       filterComponent: SupportFilters,
-      defaultFilters: {
-        date__gte: DateTime.local().toISODate(),
-      },
       formComponent: SupportDayForm,
       bulkFormComponent: SupportDayBulkForm,
     };
@@ -102,6 +99,15 @@ export default {
         { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
       ];
       return this.loggedUser.is_staff ? adminOptions : defaultOptions;
+    },
+    quickFilters() {
+      return [
+        { label: "Próximas jornadas", filters: { date__gte: DateTime.local().toISODate() }, default: true },
+        {
+          label: "Mis próximas jornadas",
+          filters: { date__gte: DateTime.local().toISODate(), user_id: this.loggedUser.id },
+        },
+      ];
     },
   },
   methods: {

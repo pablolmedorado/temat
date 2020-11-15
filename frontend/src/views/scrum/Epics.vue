@@ -10,7 +10,7 @@
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
-          :default-filters="defaultFilters"
+          :quick-filters="quickFilters"
           :service="service"
           :form-component="formComponent"
           :default-item="defaultItem"
@@ -103,9 +103,7 @@ export default {
       },
       service: EpicService,
       filterComponent: EpicFilters,
-      defaultFilters: {
-        finished: false,
-      },
+      quickFilters: [{ label: "En curso", filters: { finished: false }, default: true }],
       formComponent: EpicForm,
       defaultItem: {
         id: null,

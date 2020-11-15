@@ -11,7 +11,8 @@
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
-          :system-filters="{ type__system: false }"
+          :system-filters="systemFilters"
+          :quick-filters="quickFilters"
           :service="service"
           custom-headers
           advanced-filters
@@ -137,6 +138,7 @@ export default {
       },
       service: EventService,
       filterComponent: EventFilters,
+      systemFilters: { type__system: false },
       formComponent: EventForm,
       datetimeFormat: DateTime.DATETIME_MED_WITH_WEEKDAY,
       breadcrumbs: [
@@ -147,6 +149,15 @@ export default {
   },
   computed: {
     ...mapGetters("calendar", ["eventTypesMap", "eventVisibilityTypesMap"]),
+    quickFilters() {
+      return [
+        {
+          label: "Próximos eventos",
+          filters: { start_datetime__date__gte: DateTime.local().toISODate() },
+          default: true,
+        },
+      ];
+    },
   },
   created() {
     if (!Object.keys(this.eventTypesMap).length) {

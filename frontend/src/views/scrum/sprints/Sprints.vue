@@ -10,6 +10,7 @@
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
+          :quick-filters="quickFilters"
           :service="service"
           :form-component="formComponent"
           :default-item="defaultItem"
@@ -153,6 +154,7 @@ export default {
       },
       service: SprintService,
       filterComponent: SprintFilters,
+      quickFilters: [{ label: "En curso", filters: { ongoing: true }, default: true }],
       formComponent: SprintForm,
     };
   },

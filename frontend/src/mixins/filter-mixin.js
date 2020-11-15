@@ -45,9 +45,6 @@ export default {
       this.$emit("apply:filters");
       this.closeFiltersDialog();
     },
-    clearFilters() {
-      this.$emit("reset:filters");
-    },
     splitFilterValue(field, isInteger) {
       const filterValue = get(this.filters, field);
       if (!filterValue) {
