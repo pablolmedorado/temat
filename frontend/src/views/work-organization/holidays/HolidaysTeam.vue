@@ -90,6 +90,7 @@ export default {
         ...defaultTableOptions,
         sortBy: ["planned_date"],
         sortDesc: [false],
+        multiSort: true,
       },
       systemFilters: {
         planned_date__isnull: false,
