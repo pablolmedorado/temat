@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/pablolmedorado/temat/compare/v1.4.0...v1.5.0) (2020-11-16)
+
+
+### Features
+
+* **holidays:** add "pending" filter ([616f9df](https://github.com/pablolmedorado/temat/commit/616f9df75edeb8c284b5a1bf7fe488ab559ced87))
+* **holidays:** add multisort in team holidays table ([ff4d8ec](https://github.com/pablolmedorado/temat/commit/ff4d8ec801e1ca2ecb6f25b1ecb71cec70eac7d5))
+
+
+### Bug Fixes
+
+* **effort:** fix user filter in effort report ([9e20bcb](https://github.com/pablolmedorado/temat/commit/9e20bcbace07b0515405079e1626c9216dc5a8ad))
+* **holidays:** fix reactive filters issue ([6cf22fc](https://github.com/pablolmedorado/temat/commit/6cf22fc485a01bd44990c70f967ebc89712e33a0))
+
 ## [1.4.0](https://github.com/pablolmedorado/temat/compare/v1.3.0...v1.4.0) (2020-11-15)
 
 
