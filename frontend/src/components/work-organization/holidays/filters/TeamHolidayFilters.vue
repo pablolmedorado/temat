@@ -3,7 +3,7 @@
     <v-card-title class="text-h6">Filtros</v-card-title>
     <v-card-text>
       <v-row>
-        <v-col>
+        <v-col class="py-1">
           <v-select
             :value="filters.allowance_date__year"
             :items="yearOptions"
@@ -12,12 +12,17 @@
             @input="updateFilters({ allowance_date__year: $event })"
           />
         </v-col>
-        <v-col>
-          <v-switch v-model="rangeSelector" label="Rango" inset />
+        <v-col class="py-1">
+          <v-switch
+            :value="filters.approved__isnull"
+            label="Pendientes"
+            inset
+            @change="updateFilters({ approved__isnull: $event ? true : undefined })"
+          />
         </v-col>
       </v-row>
       <v-row>
-        <v-col>
+        <v-col class="py-1">
           <TeamHolidaysDateFilter
             ref="dateFilter"
             :year="filters.allowance_date__year"
@@ -31,8 +36,14 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col>
+        <v-col class="py-1">
+          <v-switch v-model="rangeSelector" class="pl-1" label="Seleccionar rango" inset />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="py-0">
           <UserAutocomplete
+            class="pt-0"
             :value="userFilter"
             label="Usuarios"
             prepend-icon="mdi-account"

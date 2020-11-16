@@ -22,6 +22,7 @@ class HolidayFilterSet(django_filters.rest_framework.FilterSet):
             "type_id": ["exact", "in"],
             "allowance_date": ["exact", "gte", "lte", "year"],
             "planned_date": ["exact", "gte", "lte", "year", "isnull"],
+            "approved": ["exact", "isnull"],
         }
 
 
