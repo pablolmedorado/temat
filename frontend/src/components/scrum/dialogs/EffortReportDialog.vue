@@ -17,13 +17,13 @@
         <v-row>
           <v-col>
             <v-chip v-if="filters && filters.date__gte" class="mr-2" color="teal" dark>
-              <v-avatar left>
+              <v-avatar tile left>
                 <v-icon>mdi-calendar-start</v-icon>
               </v-avatar>
               {{ filters.date__gte }}
             </v-chip>
             <v-chip v-if="filters && filters.date__lte" class="mr-2" color="teal" dark>
-              <v-avatar left>
+              <v-avatar tile left>
                 <v-icon>mdi-calendar-end</v-icon>
               </v-avatar>
               {{ filters.date__lte }}

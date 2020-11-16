@@ -20,7 +20,8 @@
             :service="service"
             :headers="tableHeaders"
             :options.sync="tableOptions"
-            :system-filters="filters"
+            :system-filters="systemFilters"
+            :filters="filters"
             :elevation="0"
             no-data-text="No hay días de vacaciones coincidentes con los filtros aplicados"
             reactive-filters
@@ -89,8 +90,9 @@ export default {
         ...defaultTableOptions,
         sortBy: ["planned_date"],
         sortDesc: [false],
+        multiSort: true,
       },
-      filters: {
+      systemFilters: {
         planned_date__isnull: false,
       },
     };
