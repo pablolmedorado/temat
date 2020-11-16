@@ -3,12 +3,12 @@
     <v-card>
       <v-toolbar flat>
         <v-toolbar-title class="text-h6">
-          <slot name="title" v-bind="{ verboseName, verboseNamePlural, filters }">
+          <slot name="title" v-bind="{ verboseName, verboseNamePlural, filters: { ...filters, ...systemFilters } }">
             {{ verboseNamePlural }}
           </slot>
         </v-toolbar-title>
         <v-spacer />
-        <slot name="toolbar" v-bind="{ selectedItems, filters }"></slot>
+        <slot name="toolbar" v-bind="{ selectedItems, filters: { ...filters, ...systemFilters } }"></slot>
         <v-menu v-if="filterComponent" bottom left offset-y>
           <template #activator="{ on: menu }">
             <v-tooltip bottom>
