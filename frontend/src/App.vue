@@ -71,6 +71,12 @@
             <v-list-item-icon><v-icon>mdi-theme-light-dark</v-icon></v-list-item-icon>
             <v-list-item-content><v-list-item-title>Cambiar tema</v-list-item-title></v-list-item-content>
           </v-list-item>
+          <v-list-item @click="clearAppData">
+            <v-list-item-icon><v-icon>mdi-database-remove-outline</v-icon></v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Restablecer LS y caché</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item :to="{ name: 'logout' }">
             <v-list-item-icon><v-icon>mdi-logout</v-icon></v-list-item-icon>
             <v-list-item-content><v-list-item-title>Logout</v-list-item-title></v-list-item-content>
@@ -236,6 +242,20 @@ export default {
       if (!value) {
         this.clearSnackbar();
       }
+    },
+    clearAppData() {
+      localStorage.clear();
+      if (window.caches) {
+        caches.keys().then((cacheNames) => {
+          cacheNames.forEach((cacheName) => {
+            caches.delete(cacheName);
+          });
+        });
+      }
+      this.showSnackbar({
+        color: "info",
+        message: "Se ha restablecido el almacenamiento local y la caché",
+      });
     },
   },
 };
