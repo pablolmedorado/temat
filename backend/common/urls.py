@@ -1,11 +1,11 @@
 from rest_framework_bulk.routes import BulkRouter
 
-from .views_api import NotificationApi, TagApi
+from .api.viewsets import NotificationViewSet, TagViewSet
 
 app_name = "common"
 
 router = BulkRouter()
-router.register(r"notifications", NotificationApi, basename="notification")
-router.register(r"tags", TagApi, basename="tag")
+router.register(r"notifications", NotificationViewSet, basename="notification")
+router.register(r"tags", TagViewSet, basename="tag")
 
 urlpatterns = router.urls

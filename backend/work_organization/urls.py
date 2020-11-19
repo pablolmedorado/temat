@@ -1,13 +1,13 @@
 from rest_framework_bulk.routes import BulkRouter
 
-from .views_api import GreenWorkingDayApi, HolidayApi, HolidayTypeApi, SupportWorkingDayApi
+from .api.viewsets import GreenWorkingDayViewSet, HolidayViewSet, HolidayTypeViewSet, SupportWorkingDayViewSet
 
 app_name = "work_organization"
 
 router = BulkRouter()
-router.register(r"holidays", HolidayApi, basename="holiday")
-router.register(r"holiday-types", HolidayTypeApi, basename="holiday-type")
-router.register(r"green-days", GreenWorkingDayApi, basename="green-day")
-router.register(r"support", SupportWorkingDayApi, basename="support")
+router.register(r"holidays", HolidayViewSet, basename="holiday")
+router.register(r"holiday-types", HolidayTypeViewSet, basename="holiday-type")
+router.register(r"green-days", GreenWorkingDayViewSet, basename="green-day")
+router.register(r"support", SupportWorkingDayViewSet, basename="support")
 
 urlpatterns = router.urls
