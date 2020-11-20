@@ -54,13 +54,14 @@
       <span class="text-h6 ml-3 mr-5">
         {{ appLabel.name }}
         <sub class="text-caption">{{ appLabel.version }}</sub>
+        <img v-if="isXmas" id="santaHat" src="@/assets/santa_hat.svg" alt="Santa's hat" />
       </span>
       <v-spacer />
       <v-progress-circular v-show="loading" class="mr-5" :size="36" color="white" indeterminate />
       <NotificationManager class="mr-5" />
       <v-menu bottom left offset-y>
         <template #activator="{ on, attrs }">
-          <span id="user-menu" v-bind="attrs" v-on="on">
+          <span id="userMenu" v-bind="attrs" v-on="on">
             <span class="mr-3">{{ loggedUser.first_name }}</span>
             <UserAvatar size="36" :font-size="14" :user="loggedUser" />
             <v-icon right>mdi-menu-down</v-icon>
@@ -109,6 +110,7 @@ import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 
 import NotificationManager from "@/components/notifications/NotificationManager";
 
+import { isXmas } from "@/utils/dates";
 import { handleError } from "@/utils/error-handlers";
 import konamiCode from "@/utils/konami-code";
 import loperaSentences from "@/utils/lopera-sentences";
@@ -199,6 +201,7 @@ export default {
   computed: {
     ...mapState(["konamiCodeActive", "loggedUser", "snackbar"]),
     ...mapGetters(["appLabel", "loading"]),
+    isXmas,
   },
   watch: {
     "$vuetify.theme.dark": function(newValue) {
@@ -262,7 +265,13 @@ export default {
 </script>
 
 <style scoped>
-#user-menu {
+#santaHat {
+  height: 20px;
+  position: relative;
+  left: -5.3em;
+  top: -0.37em;
+}
+#userMenu {
   cursor: pointer;
 }
 ::v-deep .v-main__wrap {
