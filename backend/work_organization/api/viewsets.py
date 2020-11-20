@@ -149,7 +149,7 @@ class HolidayViewSet(AuthorshipMixin, FlatDatesMixin, AtomicFlexFieldsModelViewS
                 holiday_pks.append(holiday.pk)
         notify.send(
             sender=request.user,
-            recipient=get_user_model().objects.filter(is_staff=True).exclude(pk=request.user.pk),
+            recipient=get_user_model().objects.filter(is_superuser=True).exclude(pk=request.user.pk),
             verb=f"ha solicitado {len(requested_dates)} días de vacaciones",
         )
 

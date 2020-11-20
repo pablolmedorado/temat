@@ -40,7 +40,7 @@
     </v-row>
 
     <StepperBulkFormDialog
-      v-if="loggedUser.is_staff"
+      v-if="loggedUser.is_superuser"
       ref="supportDayBulkForm"
       :form-component="bulkFormComponent"
       @submit="fetchTableItems"
@@ -98,7 +98,7 @@ export default {
         ...defaultOptions,
         { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
       ];
-      return this.loggedUser.is_staff ? adminOptions : defaultOptions;
+      return this.loggedUser.is_superuser ? adminOptions : defaultOptions;
     },
     quickFilters() {
       return [

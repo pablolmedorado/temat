@@ -257,15 +257,15 @@ export default {
     },
     canCreate: {
       type: Function,
-      default: (user) => user.is_staff,
+      default: (user) => user.is_superuser,
     },
     canEdit: {
       type: Function,
-      default: (item, user) => user.is_staff,
+      default: (item, user) => user.is_superuser,
     },
     canDelete: {
       type: Function,
-      default: (item, user) => user.is_staff,
+      default: (item, user) => user.is_superuser,
     },
     readOnly: {
       type: Boolean,

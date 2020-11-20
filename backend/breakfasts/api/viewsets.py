@@ -60,11 +60,11 @@ class BreakfastViewSet(AtomicFlexFieldsModelViewSet):
     ordering = ("user__acronym",)
 
     def perform_create(self, serializer):
-        if not self.request.user.is_staff:
+        if not self.request.user.is_superuser:
             serializer.validated_data["user"] = self.request.user
         return super().perform_create(serializer)
 
     def perform_update(self, serializer):
-        if not self.request.user.is_staff:
+        if not self.request.user.is_superuser:
             serializer.validated_data["user"] = serializer.instance.user
         return super().perform_update(serializer)

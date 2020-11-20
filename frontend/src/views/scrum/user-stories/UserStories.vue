@@ -231,7 +231,7 @@ export default {
           filters: {
             status__in: "1,2,3",
           },
-          default: !this.hasContext && this.loggedUser.is_staff,
+          default: !this.hasContext && this.loggedUser.is_superuser,
         },
         {
           label: "Mis historias en curso",
@@ -239,7 +239,7 @@ export default {
             status__in: "1,2,3",
             any_role_user__in: String(this.loggedUser.id),
           },
-          default: !this.hasContext && !this.loggedUser.is_staff,
+          default: !this.hasContext && !this.loggedUser.is_superuser,
         },
         {
           label: "Mis desarrollos pendientes",
@@ -287,10 +287,10 @@ export default {
       return linkConfig;
     },
     canDevelop(item, user) {
-      return user.is_staff || user.id === item.development_user;
+      return user.is_superuser || user.id === item.development_user;
     },
     canValidate(item, user) {
-      return user.is_staff || user.id === item.validation_user;
+      return user.is_superuser || user.id === item.validation_user;
     },
     async validateItem(item) {
       if (confirm(`Estás seguro de que deseas validar la historia "${item.name}"`)) {

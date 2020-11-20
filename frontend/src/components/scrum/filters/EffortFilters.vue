@@ -7,7 +7,7 @@
       <v-col cols="12" sm="6" md="3">
         <DatePickerInput v-model="filters.date__lte" label="Fecha fin" prepend-icon="mdi-calendar-end" clearable />
       </v-col>
-      <v-col v-if="loggedUser.is_staff" cols="12" sm="6" md="3">
+      <v-col v-if="loggedUser.is_superuser" cols="12" sm="6" md="3">
         <UserAutocomplete
           :value="userFilter"
           label="Usuario"

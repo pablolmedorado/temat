@@ -18,7 +18,7 @@ export default {
     ...mapState(["loggedUser", "tz"]),
     ...mapGetters("calendar", ["eventTypesMap"]),
     isEditable() {
-      return this.loggedUser.is_staff || this.loggedUser.id === this.item.creation_user;
+      return this.loggedUser.is_superuser || this.loggedUser.id === this.item.creation_user;
     },
     itemForCopy() {
       const copy = cloneDeep(this.item);

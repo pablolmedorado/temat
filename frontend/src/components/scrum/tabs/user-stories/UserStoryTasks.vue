@@ -90,7 +90,7 @@ export default {
       return { id: null, user_story: this.userStory.id, name: "", weight: 1, done: false };
     },
     readOnly() {
-      return !this.loggedUser.is_staff && this.loggedUser.id !== this.userStory.development_user;
+      return !this.loggedUser.is_superuser && this.loggedUser.id !== this.userStory.development_user;
     },
     tableHeaders() {
       const defaultOptions = [
@@ -122,7 +122,7 @@ export default {
           fixed: true,
         },
       ];
-      return this.loggedUser.is_staff ? adminOptions : defaultOptions;
+      return this.loggedUser.is_superuser ? adminOptions : defaultOptions;
     },
   },
   mounted() {

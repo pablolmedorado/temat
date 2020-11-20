@@ -3,12 +3,12 @@ from rest_framework import permissions
 
 class HolidayPermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        if view.action in ["request", "cancel"] or request.user.is_staff:
+        if view.action in ["request", "cancel"] or request.user.is_superuser:
             return True
         return request.method in permissions.SAFE_METHODS
 
     def has_object_permission(self, request, view, obj):
-        if request.user.is_staff:
+        if request.user.is_superuser:
             return True
         if request.user == obj.user:
             return bool(request.method in permissions.SAFE_METHODS or view.action == "cancel")
@@ -17,11 +17,11 @@ class HolidayPermission(permissions.BasePermission):
 
 class GreenWorkingDayPermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        if view.action == "toggle_volunteer" or request.user.is_staff:
+        if view.action == "toggle_volunteer" or request.user.is_superuser:
             return True
         return request.method in permissions.SAFE_METHODS
 
     def has_object_permission(self, request, view, obj):
-        if request.user.is_staff:
+        if request.user.is_superuser:
             return True
         return bool(request.method in permissions.SAFE_METHODS or view.action == "toggle_volunteer")

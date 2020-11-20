@@ -1,7 +1,7 @@
 import store from "@/store/index";
 
 export function adminUsersOnly(to, from, next) {
-  if (store.state.loggedUser.is_staff) {
+  if (store.state.loggedUser.is_superuser) {
     next();
   } else {
     store.dispatch("showSnackbar", {

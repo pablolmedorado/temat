@@ -129,7 +129,7 @@ export default {
           sortable: true,
           value: "user",
           sortingField: "user__acronym",
-          default: this.loggedUser.is_staff,
+          default: this.loggedUser.is_superuser,
         },
         { text: "Rol", align: "start", sortable: false, value: "role", fixed: true },
         { text: "Esfuerzo", align: "start", sortable: true, value: "effort", fixed: true },
@@ -146,7 +146,7 @@ export default {
     },
     systemFilters() {
       const filters = {};
-      if (!this.loggedUser.is_staff) {
+      if (!this.loggedUser.is_superuser) {
         filters.user_id = this.loggedUser.id;
       }
       return filters;
@@ -168,7 +168,7 @@ export default {
   },
   methods: {
     canModifyEffort(item) {
-      if (this.loggedUser.is_staff) {
+      if (this.loggedUser.is_superuser) {
         return true;
       }
       if (item.user !== this.loggedUser.id) {

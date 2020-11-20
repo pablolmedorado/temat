@@ -83,7 +83,7 @@
     <VoluteersDialog ref="volunteersDialog" />
 
     <StepperBulkFormDialog
-      v-if="loggedUser.is_staff"
+      v-if="loggedUser.is_superuser"
       ref="greenWorkingDayBulkForm"
       :max-width="900"
       :form-component="bulkFormComponent"

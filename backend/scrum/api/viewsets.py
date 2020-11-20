@@ -150,7 +150,7 @@ class UserStoryViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
 
     def get_serializer_class(self):
         serializer_class = super().get_serializer_class()
-        if self.request.user.is_staff:
+        if self.request.user.is_superuser:
             return serializer_class
         if self.request.method not in permissions.SAFE_METHODS and self.detail:
             instance = self.get_object()
