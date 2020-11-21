@@ -88,7 +88,7 @@
 
     <v-main :class="$vuetify.theme.isDark ? [] : ['grey', 'lighten-4']">
       <keep-alive>
-        <router-view v-if="$route.meta.keepAlive" :key="$route.fullPath" />
+        <router-view v-if="$route.meta.keepAlive" :key="$route.name" />
       </keep-alive>
       <router-view v-if="!$route.meta.keepAlive" />
     </v-main>
