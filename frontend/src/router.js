@@ -272,7 +272,7 @@ const router = new Router({
     },
     {
       path: "*",
-      name: "NotFound",
+      name: "not-found",
       component: NotFound,
       meta: {
         keepAlive: true,
