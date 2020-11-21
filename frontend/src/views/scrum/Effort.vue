@@ -13,6 +13,7 @@
           :filter-component="filterComponent"
           :system-filters="systemFilters"
           :quick-filters="quickFilters"
+          default-quick-filter="last-week"
           :service="service"
           :form-component="formComponent"
           :can-create="() => false"
@@ -154,6 +155,7 @@ export default {
     quickFilters() {
       return [
         {
+          key: "last-week",
           label: "Última semana",
           filters: {
             date__gte: DateTime.local()
@@ -161,7 +163,6 @@ export default {
               .toISODate(),
             date__lte: DateTime.local().toISODate(),
           },
-          default: true,
         },
       ];
     },

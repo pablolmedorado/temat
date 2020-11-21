@@ -12,6 +12,7 @@
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
           :quick-filters="quickFilters"
+          default-quick-filter="next-days"
           :service="service"
           :form-component="formComponent"
         >
@@ -102,8 +103,9 @@ export default {
     },
     quickFilters() {
       return [
-        { label: "Próximas jornadas", filters: { date__gte: DateTime.local().toISODate() }, default: true },
+        { key: "next-days", label: "Próximas jornadas", filters: { date__gte: DateTime.local().toISODate() } },
         {
+          key: "my-next-days",
           label: "Mis próximas jornadas",
           filters: { date__gte: DateTime.local().toISODate(), user_id: this.loggedUser.id },
         },

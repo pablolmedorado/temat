@@ -11,6 +11,7 @@
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
           :quick-filters="quickFilters"
+          default-quick-filter="ongoing"
           :service="service"
           :form-component="formComponent"
           :default-item="defaultItem"
@@ -154,7 +155,7 @@ export default {
       },
       service: SprintService,
       filterComponent: SprintFilters,
-      quickFilters: [{ label: "En curso", filters: { ongoing: true }, default: true }],
+      quickFilters: [{ key: "ongoing", label: "En curso", filters: { ongoing: true } }],
       formComponent: SprintForm,
     };
   },

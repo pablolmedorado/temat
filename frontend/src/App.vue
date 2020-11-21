@@ -256,8 +256,8 @@ export default {
         });
       }
       this.showSnackbar({
-        color: "info",
         message: "Se ha restablecido el almacenamiento local y la caché",
+        timeout: 3000,
       });
     },
   },

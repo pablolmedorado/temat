@@ -47,6 +47,12 @@
             <v-subheader class="ml-2">Filtros rápidos</v-subheader>
             <v-list-item v-for="filter in quickFilters" :key="filter.label" @click="applyQuickFilter(filter)">
               <v-list-item-title>{{ filter.label }}</v-list-item-title>
+              <v-list-item-action class="my-0">
+                <v-btn icon @click.stop="pinQuickFilter(filter)">
+                  <v-icon v-if="pinnedQuickFilter === filter.key" color="primary">mdi-pin</v-icon>
+                  <v-icon v-else>mdi-pin-outline</v-icon>
+                </v-btn>
+              </v-list-item-action>
             </v-list-item>
             <v-list-item v-for="filter in customQuickFilters" :key="filter.label" @click="applyQuickFilter(filter)">
               <v-list-item-title>{{ filter.label }}</v-list-item-title>
@@ -202,7 +208,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
-import { isObject, omit, sortBy } from "lodash";
+import { get, isObject, omit } from "lodash";
 
 import { defaultTableOptions } from "@/utils/constants";
 
@@ -283,6 +289,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    defaultQuickFilter: {
+      type: String,
+      default: undefined,
+    },
     reactiveFilters: {
       type: Boolean,
       default: false,
@@ -309,6 +319,7 @@ export default {
       tableHeaders: null,
       tableOptions: null,
       filters: {},
+      pinnedQuickFilter: get(localStorage, `${this.localStorageKey}PinnedQuickFilter`, this.defaultQuickFilter),
       customQuickFilters: [],
       dialogFilterCount: 0,
       selectedItems: [],
@@ -317,10 +328,6 @@ export default {
   computed: {
     ...mapState(["loggedUser"]),
     ...mapGetters(["loading"]),
-    defaultFilters() {
-      const defaultFilter = this.quickFilters.find((filter) => filter.default);
-      return defaultFilter ? defaultFilter.filters : {};
-    },
   },
   watch: {
     tableHeaders: {
@@ -345,54 +352,35 @@ export default {
       },
       deep: true,
     },
+    pinnedQuickFilter: {
+      handler(newValue) {
+        localStorage[`${this.localStorageKey}PinnedQuickFilter`] = newValue;
+      },
+    },
     customQuickFilters: {
       handler(newValue) {
         localStorage[`${this.localStorageKey}QuickFilters`] = JSON.stringify(newValue);
       },
       deep: true,
     },
-    defaultFilters: {
-      handler(newValue) {
-        this.filters = newValue;
-      },
-      deep: true,
-      immediate: true,
-    },
   },
   created() {
     this.loadOptionsFromLocalStorage();
     this.loadHeadersFromLocalStorage();
     this.loadQuickFiltersFromLocalStorage();
+    this.filters = this.getDefaultFilters();
   },
   methods: {
     ...mapActions(["showSnackbar"]),
-    sortBy,
     fetchTableItems(resetPagination = false) {
       this.$refs.itemTable.fetchItems(resetPagination);
     },
-    async openFormDialog(item) {
-      if (!item) {
-        this.$refs.formDialog.open(this.defaultItem);
-      } else {
-        const response = await this.service.retrieve(item.id);
-        this.$refs.formDialog.open(response.data);
+    getDefaultFilters() {
+      if (!this.pinnedQuickFilter) {
+        return {};
       }
-    },
-    onFormSubmit(item) {
-      this.fetchTableItems();
-      this.$emit("submit:form", item);
-    },
-    openDeleteDialog(item) {
-      this.$refs.deleteDialog.open(item);
-    },
-    async deleteItem(item) {
-      await this.service.delete(item.id);
-      this.fetchTableItems();
-      this.$emit("delete:item", item);
-      this.showSnackbar({
-        color: "success",
-        message: "Elemento eliminado correctamente",
-      });
+      const defaultFilter = this.quickFilters.find((filter) => filter.key === this.pinnedQuickFilter);
+      return defaultFilter ? defaultFilter.filters : {};
     },
     openFiltersDialog() {
       this.$refs.filterComponent.openFiltersDialog();
@@ -431,11 +419,39 @@ export default {
     applyQuickFilter(filter) {
       this.setFiltersAndFetch(filter.filters);
     },
+    pinQuickFilter(filter) {
+      this.pinnedQuickFilter = filter.key;
+      this.showSnackbar({ message: `Se ha fijado el filtro "${filter.label}"` });
+    },
     deleteQuickFilter(filter) {
       this.customQuickFilters = this.customQuickFilters.filter((item) => item.label !== filter.label);
       this.showSnackbar({
         color: "success",
         message: "Filtro eliminado correctamente",
+      });
+    },
+    async openFormDialog(item) {
+      if (!item) {
+        this.$refs.formDialog.open(this.defaultItem);
+      } else {
+        const response = await this.service.retrieve(item.id);
+        this.$refs.formDialog.open(response.data);
+      }
+    },
+    onFormSubmit(item) {
+      this.fetchTableItems();
+      this.$emit("submit:form", item);
+    },
+    openDeleteDialog(item) {
+      this.$refs.deleteDialog.open(item);
+    },
+    async deleteItem(item) {
+      await this.service.delete(item.id);
+      this.fetchTableItems();
+      this.$emit("delete:item", item);
+      this.showSnackbar({
+        color: "success",
+        message: "Elemento eliminado correctamente",
       });
     },
     loadHeadersFromLocalStorage() {
