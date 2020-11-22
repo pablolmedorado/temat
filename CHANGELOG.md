@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/pablolmedorado/temat/compare/v1.5.0...v1.6.0) (2020-11-22)
+
+
+### Features
+
+* **frontend:** add Xmas icon to the navbar logo ([be96821](https://github.com/pablolmedorado/temat/commit/be968212804f0f4d2378f80c907b2f1c61b0c1f2))
+* **index:** add pinned filters ([8b62960](https://github.com/pablolmedorado/temat/commit/8b629607a1b418e3d912245853106d060a2429f6))
+
+
+### Bug Fixes
+
+* **frontend:** use $route.name as keep-alive key to prevent the app from caching unnecesary views ([43d9621](https://github.com/pablolmedorado/temat/commit/43d96212e7d54d633b7548309fd1ce86ab83397b))
+* **permissions:** replace is_staff by is_superuser to fit the real use case ([c0d99d2](https://github.com/pablolmedorado/temat/commit/c0d99d20b362ca11cf39cf8d9e4035dcb529fe25))
+* **typo:** fix typo in v-spacer tag in event card toolbar ([697d3d8](https://github.com/pablolmedorado/temat/commit/697d3d8d889aa78ed1f6f8d3446e8469fd6d7257))
+
 ## [1.5.0](https://github.com/pablolmedorado/temat/compare/v1.4.0...v1.5.0) (2020-11-16)
 
 
