@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from taggit.models import Tag
 
-from .models import UUIDTaggedItem
+from .behaviors import UUIDTaggedItem
 
 
 class TaggedItemInline(admin.StackedInline):

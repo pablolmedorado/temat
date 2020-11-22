@@ -2,7 +2,7 @@
   <v-card v-if="Object.keys(eventTypesMap).length" v-bind="$attrs">
     <v-toolbar :color="eventTypesMap[item.type].colour" :dark="applyDarkVariant(eventTypesMap[item.type].colour)" flat>
       <v-toolbar-title>{{ item.name }}</v-toolbar-title>
-      <v-space />
+      <v-spacer />
       <v-menu bottom offset-y>
         <template #activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on"><v-icon>mdi-export</v-icon></v-btn>

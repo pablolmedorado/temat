@@ -147,7 +147,7 @@ export default {
   },
   methods: {
     canModify(item, user) {
-      if (user.is_staff) {
+      if (user.is_superuser) {
         return true;
       }
       if (item.user !== user.id) {

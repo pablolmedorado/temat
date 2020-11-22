@@ -49,7 +49,7 @@
         </v-btn>
       </template>
       <v-btn
-        v-if="item.id && item.status === 3 && (loggedUser.is_staff || item.validation_user === loggedUser.id)"
+        v-if="item.id && item.status === 3 && (loggedUser.is_superuser || item.validation_user === loggedUser.id)"
         fab
         dark
         small
@@ -61,10 +61,10 @@
       <v-btn fab dark small color="orange" @click="resetForm">
         <v-icon>mdi-restore</v-icon>
       </v-btn>
-      <v-btn v-if="item.id && loggedUser.is_staff" fab dark small color="secondary" @click="copyUserStory">
+      <v-btn v-if="item.id && loggedUser.is_superuser" fab dark small color="secondary" @click="copyUserStory">
         <v-icon>mdi-content-copy</v-icon>
       </v-btn>
-      <v-btn v-if="item.id && loggedUser.is_staff" fab dark small color="red" @click.stop="openDeleteDialog(item)">
+      <v-btn v-if="item.id && loggedUser.is_superuser" fab dark small color="red" @click.stop="openDeleteDialog(item)">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </v-speed-dial>
@@ -107,7 +107,7 @@ export default {
     ...mapGetters("scrum", ["riskLevelsMap"]),
     readOnly() {
       return (
-        !this.loggedUser.is_staff &&
+        !this.loggedUser.is_superuser &&
         ![this.item.development_user, this.item.validation_user, this.item.support_user].includes(this.loggedUser.id)
       );
     },

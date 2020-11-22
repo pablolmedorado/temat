@@ -119,7 +119,7 @@ export default {
         ...defaultOptions,
         { text: "Acciones", align: "left", sortable: false, value: "table_actions" },
       ];
-      return this.loggedUser.is_staff ? adminOptions : defaultOptions;
+      return this.loggedUser.is_superuser ? adminOptions : defaultOptions;
     },
   },
   methods: {

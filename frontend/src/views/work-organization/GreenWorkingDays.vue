@@ -11,6 +11,7 @@
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :quick-filters="quickFilters"
+          default-quick-filter="current-year"
           :service="service"
           :form-component="formComponent"
           custom-headers
@@ -83,7 +84,7 @@
     <VoluteersDialog ref="volunteersDialog" />
 
     <StepperBulkFormDialog
-      v-if="loggedUser.is_staff"
+      v-if="loggedUser.is_superuser"
       ref="greenWorkingDayBulkForm"
       :max-width="900"
       :form-component="bulkFormComponent"
@@ -147,7 +148,7 @@ export default {
         mustSort: true,
       },
       service: GreenService,
-      quickFilters: [{ label: "Año en curso", filters: { date__year: DateTime.local().year }, default: true }],
+      quickFilters: [{ key: "current-year", label: "Año en curso", filters: { date__year: DateTime.local().year } }],
       formComponent: GreenWorkingDayForm,
       bulkFormComponent: GreenWorkingDayBulkForm,
     };

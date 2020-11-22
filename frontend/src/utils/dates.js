@@ -44,3 +44,10 @@ export function getReadableDuration(durationObj) {
   }
   return result;
 }
+
+export function isXmas() {
+  const now = DateTime.local();
+  const xmasStart = DateTime.fromObject({ month: 12, day: 8 });
+  const xmasEnd = DateTime.fromObject({ month: 1, day: 7 });
+  return now < xmasEnd || now > xmasStart;
+}

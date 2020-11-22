@@ -36,7 +36,7 @@
             </v-chip>
           </v-col>
         </v-row>
-        <v-row v-if="loggedUser.is_staff">
+        <v-row v-if="loggedUser.is_superuser">
           <v-col>
             <v-card outlined>
               <EffortUserTimelineChart
@@ -110,7 +110,7 @@ export default {
       this.showDialog = false;
     },
     refresh() {
-      if (this.loggedUser.is_staff) {
+      if (this.loggedUser.is_superuser) {
         this.$refs.userChart.getChartData();
       }
       this.$refs.roleChart.getChartData();

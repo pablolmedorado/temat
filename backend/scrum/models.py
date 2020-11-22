@@ -10,35 +10,14 @@ from django.utils.translation import ugettext_lazy as _
 
 from colorfield.fields import ColorField
 from model_utils.fields import MonitorField
-from ordered_model.models import OrderedModel
+from ordered_model.models import OrderedModel as Orderable
 
+from .behaviors import UserStoryContainer
 from .querysets import EpicQuerySet, SprintQuerySet, UserStoryQuerySet
-from common.models import AuthorshipModel, ModelWithEvent, ModelWithNotifications, ModelWithTags, UuidModel
+from common.behaviors import Authorable, Eventable, Notifiable, Taggable, Uuidable
 
 
-class UserStoryContainer(models.Model):
-    @property
-    def num_of_user_stories(self):
-        if hasattr(self, "user_stories__count"):
-            return self.user_stories__count
-        return self.user_stories.count()
-
-    @property
-    def current_progress(self):
-        if hasattr(self, "annotated_current_progress"):
-            return self.annotated_current_progress
-        if self.user_stories.exists():
-            current_progress = self.user_stories.all().aggregate(
-                current_progress__sum=Coalesce(Sum("current_progress"), Value(0))
-            )
-            return current_progress["current_progress__sum"] // self.user_stories.count()
-        return 0
-
-    class Meta:
-        abstract = True
-
-
-class Sprint(ModelWithTags, ModelWithNotifications, ModelWithEvent, UserStoryContainer):
+class Sprint(Taggable, Notifiable, Eventable, UserStoryContainer, models.Model):
     name = models.CharField(_("nombre"), max_length=200, blank=False, unique=True)
     start_date = models.DateField(_("fecha de inicio"), blank=False, null=False, default=date.today)
     end_date = models.DateField(_("fecha de fin"), blank=False, null=False)
@@ -68,7 +47,7 @@ class Sprint(ModelWithTags, ModelWithNotifications, ModelWithEvent, UserStoryCon
         ordering = ("-start_date",)
 
 
-class Epic(ModelWithTags, AuthorshipModel, UserStoryContainer):
+class Epic(Taggable, Authorable, UserStoryContainer, models.Model):
     name = models.CharField(_("nombre"), max_length=200, blank=False, unique=True)
     description = models.CharField(_("descripción"), max_length=2000, blank=True)
     external_reference = models.CharField(_("referencia externa"), max_length=2000, blank=True)
@@ -103,7 +82,7 @@ class UserStoryType(models.Model):
         ordering = ("name",)
 
 
-class UserStory(ModelWithTags, ModelWithNotifications):
+class UserStory(Taggable, Notifiable, models.Model):
     class Status(models.IntegerChoices):
         BACKLOG = 0, _("Backlog")
         NOT_STARTED = 1, _("Sin comenzar")
@@ -232,7 +211,7 @@ class UserStory(ModelWithTags, ModelWithNotifications):
         ]
 
 
-class Progress(UuidModel, AuthorshipModel):
+class Progress(Uuidable, Authorable, models.Model):
     user_story = models.ForeignKey(
         UserStory,
         verbose_name=_("historia de usuario"),
@@ -256,7 +235,7 @@ class Progress(UuidModel, AuthorshipModel):
         constraints = [models.UniqueConstraint(fields=["date", "user_story"], name="unique_progress")]
 
 
-class Effort(UuidModel, AuthorshipModel):
+class Effort(Uuidable, Authorable, models.Model):
     class EffortRole(models.TextChoices):
         DEVELOPMENT = "D", _("Desarrollo")
         VALIDATION = "V", _("Validación")
@@ -299,7 +278,7 @@ class Effort(UuidModel, AuthorshipModel):
         constraints = [models.UniqueConstraint(fields=["date", "user", "role", "user_story"], name="unique_effort")]
 
 
-class Task(UuidModel, OrderedModel, AuthorshipModel):
+class Task(Uuidable, Orderable, Authorable, models.Model):
     name = models.CharField(_("nombre"), max_length=2000, blank=False)
     user_story = models.ForeignKey(
         UserStory,
@@ -320,7 +299,7 @@ class Task(UuidModel, OrderedModel, AuthorshipModel):
     def __str__(self):
         return f"{self.user_story} / {self.order}.{self.name} / {self.done}"
 
-    class Meta(OrderedModel.Meta):
+    class Meta(Orderable.Meta):
         verbose_name = _("tarea")
         verbose_name_plural = _("tareas")
         constraints = [models.UniqueConstraint(fields=["name", "user_story"], name="unique_task")]

@@ -13,6 +13,7 @@
           :filter-component="filterComponent"
           :system-filters="systemFilters"
           :quick-filters="quickFilters"
+          :default-quick-filter="defaultQuickFilter"
           :service="service"
           :can-edit="() => false"
           custom-headers
@@ -227,21 +228,22 @@ export default {
     quickFilters() {
       return [
         {
+          key: "ongoing",
           label: "Historias en curso",
           filters: {
             status__in: "1,2,3",
           },
-          default: !this.hasContext && this.loggedUser.is_staff,
         },
         {
+          key: "my-stories",
           label: "Mis historias en curso",
           filters: {
             status__in: "1,2,3",
             any_role_user__in: String(this.loggedUser.id),
           },
-          default: !this.hasContext && !this.loggedUser.is_staff,
         },
         {
+          key: "my-pending-developments",
           label: "Mis desarrollos pendientes",
           filters: {
             status__in: "1,2",
@@ -249,6 +251,7 @@ export default {
           },
         },
         {
+          key: "my-`pending-validations",
           label: "Mis validaciones pendientes",
           filters: {
             status__in: "3",
@@ -256,6 +259,13 @@ export default {
           },
         },
       ];
+    },
+    defaultQuickFilter() {
+      if (this.hasContext) {
+        return null;
+      } else {
+        return this.loggedUser.is_superuser ? "ongoing" : "my-stories";
+      }
     },
   },
   watch: {
@@ -287,10 +297,10 @@ export default {
       return linkConfig;
     },
     canDevelop(item, user) {
-      return user.is_staff || user.id === item.development_user;
+      return user.is_superuser || user.id === item.development_user;
     },
     canValidate(item, user) {
-      return user.is_staff || user.id === item.validation_user;
+      return user.is_superuser || user.id === item.validation_user;
     },
     async validateItem(item) {
       if (confirm(`Estás seguro de que deseas validar la historia "${item.name}"`)) {

@@ -1,14 +1,14 @@
 from rest_framework import routers
 
-from .views_api import BaseApi, BreadApi, BreakfastApi, DrinkApi, IngredientApi
+from .api.viewsets import BaseViewSet, BreadViewSet, BreakfastViewSet, DrinkViewSet, IngredientViewSet
 
 app_name = "breakfasts"
 
 router = routers.DefaultRouter()
-router.register(r"bases", BaseApi, basename="base")
-router.register(r"breads", BreadApi, basename="bread")
-router.register(r"breakfasts", BreakfastApi, basename="breakfast")
-router.register(r"drinks", DrinkApi, basename="drink")
-router.register(r"ingredients", IngredientApi, basename="ingredient")
+router.register(r"bases", BaseViewSet, basename="base")
+router.register(r"breads", BreadViewSet, basename="bread")
+router.register(r"breakfasts", BreakfastViewSet, basename="breakfast")
+router.register(r"drinks", DrinkViewSet, basename="drink")
+router.register(r"ingredients", IngredientViewSet, basename="ingredient")
 
 urlpatterns = router.urls

@@ -267,20 +267,12 @@ const router = new Router({
       path: "/logout",
       name: "logout",
       beforeEnter() {
-        localStorage.clear();
-        if (window.caches) {
-          caches.keys().then((cacheNames) => {
-            cacheNames.forEach((cacheName) => {
-              caches.delete(cacheName);
-            });
-          });
-        }
         location.href = "/accounts/logout/";
       },
     },
     {
       path: "*",
-      name: "NotFound",
+      name: "not-found",
       component: NotFound,
       meta: {
         keepAlive: true,

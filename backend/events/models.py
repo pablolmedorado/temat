@@ -17,7 +17,7 @@ from colorfield.fields import ColorField
 from icalendar import Calendar, Event as ICalendarEvent, vCalAddress, vText
 
 from .querysets import EventQuerySet
-from common.models import ModelWithNotifications, ModelWithTags
+from common.behaviors import Notifiable, Taggable
 
 
 class EventType(models.Model):
@@ -60,7 +60,7 @@ class EventType(models.Model):
         ordering = ("name",)
 
 
-class Event(ModelWithTags, ModelWithNotifications):
+class Event(Taggable, Notifiable, models.Model):
     ALLOWED_LINK_TYPES = (
         ("work_organization", "holiday"),
         ("work_organization", "greenworkingday"),

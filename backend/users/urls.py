@@ -2,14 +2,14 @@ from django.urls import path
 
 from rest_framework import routers
 
+from .api.viewsets import GroupViewSet, UserViewSet
 from .views import login, logout
-from .views_api import GroupApi, UserApi
 
 app_name = "users"
 
 router = routers.DefaultRouter()
-router.register(r"groups", GroupApi, basename="group")
-router.register(r"users", UserApi, basename="user")
+router.register(r"groups", GroupViewSet, basename="group")
+router.register(r"users", UserViewSet, basename="user")
 
 urlpatterns = [
     path("login/", login, name="login"),

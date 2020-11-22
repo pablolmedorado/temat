@@ -26,7 +26,7 @@
           <template #item.done="{ item }">
             <v-btn
               icon
-              :disabled="loading || (!loggedUser.is_staff && loggedUser.id !== item.user_story.development_user)"
+              :disabled="loading || (!loggedUser.is_superuser && loggedUser.id !== item.user_story.development_user)"
               @click="toggleTask(item)"
             >
               <v-icon>{{ item.done ? "mdi-checkbox-marked" : "mdi-checkbox-blank-outline" }}</v-icon>

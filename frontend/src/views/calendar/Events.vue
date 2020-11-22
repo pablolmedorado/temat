@@ -13,6 +13,7 @@
           :filter-component="filterComponent"
           :system-filters="systemFilters"
           :quick-filters="quickFilters"
+          default-quick-filter="next-events"
           :service="service"
           custom-headers
           advanced-filters
@@ -152,9 +153,9 @@ export default {
     quickFilters() {
       return [
         {
+          key: "next-events",
           label: "Próximos eventos",
           filters: { start_datetime__date__gte: DateTime.local().toISODate() },
-          default: true,
         },
       ];
     },

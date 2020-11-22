@@ -174,7 +174,7 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework.authentication.SessionAuthentication",),
-    "DEFAULT_PAGINATION_CLASS": "common.pagination.Pagination",
+    "DEFAULT_PAGINATION_CLASS": "common.api.pagination.Pagination",
 }
 
 
