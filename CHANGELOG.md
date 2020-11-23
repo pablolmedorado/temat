@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.1](https://github.com/pablolmedorado/temat/compare/v1.6.0...v1.6.1) (2020-11-23)
+
+
+### Bug Fixes
+
+* **scrum:** fix lazy serializer imports after the reorganization ([445eadb](https://github.com/pablolmedorado/temat/commit/445eadb6e7eeffa1074a9b9fc450a1e2275caa6a))
+
 ## [1.6.0](https://github.com/pablolmedorado/temat/compare/v1.5.0...v1.6.0) (2020-11-22)
 
 
