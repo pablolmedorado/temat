@@ -35,7 +35,7 @@
                       </v-alert>
                     {% endif %}
 
-                    {% if next %}
+                    {% if next and next != "/" %}
                         {% if user.is_authenticated %}
                           <v-alert type="error" text outlined border="left" class="mb-4">
                             No tienes permisos para acceder a esta página. Para acceder, inicia sesión con una cuenta que tenga permisos.
