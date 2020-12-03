@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.2](https://github.com/pablolmedorado/temat/compare/v1.6.1...v1.6.2) (2020-12-03)
+
+
+### Bug Fixes
+
+* **login:** hide 'next' warning when the url is from the spa ([d0901cc](https://github.com/pablolmedorado/temat/commit/d0901cc03daffa225e493d6478cf705a1d8f0f1a))
+* **urls:** remove fallback url to get 404 if an url does not exist ([043e716](https://github.com/pablolmedorado/temat/commit/043e71624deabe0d1f7654da00e83c5cd42ba9f1))
+
 ### [1.6.1](https://github.com/pablolmedorado/temat/compare/v1.6.0...v1.6.1) (2020-11-23)
 
 
