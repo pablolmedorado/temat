@@ -39,7 +39,11 @@
       @keydown.esc="closeFiltersDialog"
     >
       <v-card>
-        <v-card-title class="text-h6">Filtros avanzados</v-card-title>
+        <v-toolbar flat>
+          <v-toolbar-title class="text-h6">
+            Filtros avanzados
+          </v-toolbar-title>
+        </v-toolbar>
         <v-card-text>
           <v-row>
             <v-col>
@@ -72,7 +76,6 @@
                 label="Usuario responsable"
                 prepend-icon="mdi-account-tie"
                 clearable
-                @click:clear="updateFilters({ accountable_user_id: null })"
                 @input="updateFilters({ accountable_user_id: $event })"
               />
             </v-col>

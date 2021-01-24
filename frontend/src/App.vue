@@ -49,7 +49,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar :color="$vuetify.theme.isDark ? null : 'primary'" dark app fixed clipped-left>
+    <v-app-bar :color="$vuetify.theme.isDark ? null : 'primary'" short dark app fixed clipped-left>
       <v-app-bar-nav-icon @click="drawer = !drawer" />
       <span class="text-h6 ml-3 mr-5">
         {{ appLabel.name }}
@@ -267,9 +267,9 @@ export default {
 <style scoped>
 #santaHat {
   height: 20px;
-  position: relative;
-  left: -5.3em;
-  top: -0.37em;
+  position: absolute;
+  left: 2.73em;
+  top: 0.4em;
 }
 #userMenu {
   cursor: pointer;

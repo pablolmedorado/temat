@@ -62,33 +62,32 @@
                     <v-list-item-avatar :color="notification.level">
                       <v-icon dark>{{ getNotificationIcon(notification) }}</v-icon>
                     </v-list-item-avatar>
-                    <v-list-item-content>
+                    <v-list-item-content
+                      :class="{ 'targeted-notification': notification.target }"
+                      v-on="notification.target ? { click: () => navigateToTarget(notification) } : {}"
+                    >
                       <v-list-item-title :class="{ 'font-weight-medium': index === 0 }">
                         {{ notification.actor.first_name }} {{ notification.actor.last_name }} {{ notification.verb }}
                         {{ notification.target ? notification.target.representation : "" }}
                       </v-list-item-title>
                       <v-list-item-subtitle>Hace {{ notification.timesince }}</v-list-item-subtitle>
                     </v-list-item-content>
-                    <v-list-item-action>
-                      <v-btn
-                        v-if="notification.target"
-                        icon
-                        :to="{
-                          ...notificationTargetMap[notification.target_content_type].route,
-                          params: { id: notification.target.id },
-                        }"
-                        @click="onNotificationActionClick(notification)"
-                      >
-                        <v-icon>mdi-open-in-app</v-icon>
-                      </v-btn>
-                      <v-btn
-                        v-else
-                        icon
-                        :disabled="!notification.unread"
-                        @click="onNotificationActionClick(notification)"
-                      >
-                        <v-icon>mdi-read</v-icon>
-                      </v-btn>
+                    <v-list-item-action v-if="notification.unread">
+                      <v-tooltip bottom>
+                        <template #activator="{ on }">
+                          <v-btn
+                            icon
+                            :disabled="!notification.unread"
+                            @click="markNotificationAsRead(notification.id)"
+                            v-on="on"
+                          >
+                            <v-icon>mdi-read</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>
+                          Marcar como leída
+                        </span>
+                      </v-tooltip>
                     </v-list-item-action>
                   </v-list-item>
                 </template>
@@ -239,13 +238,12 @@ export default {
     getNotificationIcon(notification) {
       return notification.target ? this.notificationTargetMap[notification.target_content_type].icon : "mdi-bell-alert";
     },
-    onNotificationActionClick(notification) {
-      if (notification.unread) {
-        this.markNotificationAsRead(notification.id);
-      }
-      if (notification.target) {
-        this.showNotificationSummary = false;
-      }
+    navigateToTarget(notification) {
+      this.$router.push({
+        ...this.notificationTargetMap[notification.target_content_type].route,
+        params: { id: notification.target.id },
+      });
+      this.showNotificationSummary = false;
     },
   },
 };
@@ -257,5 +255,8 @@ export default {
 }
 .v-list-item__title {
   white-space: unset;
+}
+.targeted-notification {
+  cursor: pointer;
 }
 </style>

@@ -1,9 +1,11 @@
 <template>
   <v-dialog v-model="showDialog" v-bind="$attrs" persistent :scrollable="scrollable" :max-width="maxWidth">
     <v-card>
-      <v-card-title class="text-h6">
-        {{ headerText }}
-      </v-card-title>
+      <v-toolbar flat>
+        <v-toolbar-title class="text-h6">
+          {{ headerText }}
+        </v-toolbar-title>
+      </v-toolbar>
       <v-card-text>
         <component :is="formComponent" v-if="item" ref="itemForm" :source-item="item" />
       </v-card-text>

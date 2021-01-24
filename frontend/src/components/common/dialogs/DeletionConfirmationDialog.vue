@@ -1,10 +1,12 @@
 <template>
   <v-dialog v-model="showDialog" persistent max-width="500">
     <v-card v-if="dataToDelete">
-      <v-card-title class="text-h6">
-        <span v-if="isBulk">Confirmación de eliminación múltiple</span>
-        <span v-else>Confirmación de eliminación</span>
-      </v-card-title>
+      <v-toolbar flat>
+        <v-toolbar-title class="text-h6">
+          <span v-if="isBulk">Confirmación de eliminación múltiple</span>
+          <span v-else>Confirmación de eliminación</span>
+        </v-toolbar-title>
+      </v-toolbar>
       <v-card-text>
         <p>
           Esta operación es irreversible

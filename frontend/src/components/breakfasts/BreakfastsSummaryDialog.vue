@@ -8,9 +8,11 @@
     @keydown.esc="close"
   >
     <v-card>
-      <v-card-title class="text-h6">
-        Resumen de tostadas
-      </v-card-title>
+      <v-toolbar flat>
+        <v-toolbar-title class="text-h6">
+          Resumen de tostadas
+        </v-toolbar-title>
+      </v-toolbar>
       <v-card-text class="pa-0">
         <v-data-table
           :headers="headers"

@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/pablolmedorado/temat/compare/v1.6.2...v1.7.0) (2021-01-24)
+
+
+### Features
+
+* **frontend:** add new lopera sentence (Lopera vs Cuervas) ([ed0cf4d](https://github.com/pablolmedorado/temat/commit/ed0cf4d37bd7f4776ed9f08afae972aef7790519))
+* **notifications:** add mark as read button in all notifications ([b80e3e4](https://github.com/pablolmedorado/temat/commit/b80e3e437d7c3e07d62f64cc8c52e3aaf1cb7bd3))
+
+
+### Bug Fixes
+
+* **frontend:** adapt clearable fields to new vuetify's behaviour ([2c94ebf](https://github.com/pablolmedorado/temat/commit/2c94ebf7ecf737c3b6ee621cf2e43a0bec275a9e))
+* **frontend:** fix potential issue with xmas hat and long version numbers ([db5f3cd](https://github.com/pablolmedorado/temat/commit/db5f3cd5e0d57dfd48217d0151303a3d68bed05e))
+* **frontend:** replace v-card-title by v-toolbar to improve readability in dark mode ([093b846](https://github.com/pablolmedorado/temat/commit/093b8466a1f03a5759f204b7c2213890f7ac464a))
+
 ### [1.6.2](https://github.com/pablolmedorado/temat/compare/v1.6.1...v1.6.2) (2020-12-03)
 
 

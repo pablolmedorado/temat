@@ -41,7 +41,11 @@
       @keydown.esc="closeFiltersDialog"
     >
       <v-card>
-        <v-card-title class="text-h6">Filtros avanzados</v-card-title>
+        <v-toolbar flat>
+          <v-toolbar-title class="text-h6">
+            Filtros avanzados
+          </v-toolbar-title>
+        </v-toolbar>
         <v-card-text>
           <v-row>
             <v-col>
