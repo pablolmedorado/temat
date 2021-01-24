@@ -1,9 +1,11 @@
 <template>
   <v-dialog v-model="showDialog" v-bind="$attrs" :max-width="maxWidth" persistent scrollable>
     <v-card>
-      <v-card-title class="text-h6">
-        <slot name="header">Creación múltiple</slot>
-      </v-card-title>
+      <v-toolbar flat>
+        <v-toolbar-title class="text-h6">
+          <slot name="header">Creación múltiple</slot>
+        </v-toolbar-title>
+      </v-toolbar>
       <v-card-text class="pa-0">
         <v-stepper v-model="step" class="elevation-0">
           <v-stepper-header>

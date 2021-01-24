@@ -1,7 +1,11 @@
 <template>
   <v-dialog v-model="showDialog" v-bind="$attrs" :max-width="500" @click:outside="close" @keydown.esc="close">
     <v-card>
-      <v-card-title class="text-h6">Código de colores</v-card-title>
+      <v-toolbar flat>
+        <v-toolbar-title class="text-h6">
+          Código de colores
+        </v-toolbar-title>
+      </v-toolbar>
       <v-card-text class="pa-0">
         <v-simple-table>
           <template #default>

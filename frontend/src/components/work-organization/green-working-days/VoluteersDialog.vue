@@ -1,7 +1,9 @@
 <template>
   <v-dialog v-model="showDialog" v-bind="$attrs" max-width="500" @click:outside="close" @keydown.esc="close">
     <v-card v-if="item">
-      <v-card-title class="text-h6">Voluntarios ({{ item.date }})</v-card-title>
+      <v-toolbar flat>
+        <v-toolbar-title class="text-h6"> Voluntarios ({{ item.date }}) </v-toolbar-title>
+      </v-toolbar>
       <v-card-text>
         <v-chip-group column>
           <UserPill v-for="(volunteer, index) in item.volunteers" :key="`volunteer-${index}`" :user="volunteer" />

@@ -8,10 +8,12 @@
     @keydown.esc="close"
   >
     <v-card>
-      <v-card-title class="text-h6">
-        Gestión rápida de tareas.
-        <template v-if="userStory">Historia: "{{ userStory.name | truncate(20) }}"</template>
-      </v-card-title>
+      <v-toolbar flat>
+        <v-toolbar-title class="text-h6">
+          Gestión rápida de tareas.
+          <template v-if="userStory">Historia: "{{ userStory.name | truncate(20) }}"</template>
+        </v-toolbar-title>
+      </v-toolbar>
       <v-card-text class="pa-0">
         <ItemTable
           v-if="userStory"

@@ -3,7 +3,11 @@
     <v-row>
       <v-col cols="12" md="4">
         <v-card>
-          <v-card-title class="text-h6">Solicitud</v-card-title>
+          <v-toolbar flat>
+            <v-toolbar-title class="text-h6">
+              Solicitud
+            </v-toolbar-title>
+          </v-toolbar>
           <v-card-text>
             <v-select
               v-model="filters.allowance_date__year"

@@ -1,7 +1,11 @@
 <template>
   <v-dialog v-model="showDialog" v-bind="$attrs" persistent scrollable max-width="500">
     <v-card>
-      <v-card-title class="text-h6">Selección de columnas</v-card-title>
+      <v-toolbar flat>
+        <v-toolbar-title class="text-h6">
+          Selección de columnas
+        </v-toolbar-title>
+      </v-toolbar>
       <v-card-text>
         <v-row>
           <v-col>

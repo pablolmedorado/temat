@@ -1,7 +1,9 @@
 <template>
   <v-dialog v-model="showDialog" v-bind="$attrs" scrollable persistent :max-width="600">
     <v-card>
-      <v-card-title class="text-h6"> Detalle de vacaciones {{ type }} </v-card-title>
+      <v-toolbar flat>
+        <v-toolbar-title class="text-h6"> Detalle de vacaciones {{ type }} </v-toolbar-title>
+      </v-toolbar>
       <v-card-text class="pa-0">
         <v-data-table
           :headers="headers"

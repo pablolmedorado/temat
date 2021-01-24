@@ -1,9 +1,11 @@
 <template>
   <v-dialog v-model="showDialog" max-width="500" @click:outside="close" @keydown.esc="close">
     <v-card>
-      <v-card-title class="text-h6">
-        Guardar filtro rápido
-      </v-card-title>
+      <v-toolbar flat>
+        <v-toolbar-title class="text-h6">
+          Guardar filtro rápido
+        </v-toolbar-title>
+      </v-toolbar>
       <v-card-text>
         <v-row>
           <v-col>

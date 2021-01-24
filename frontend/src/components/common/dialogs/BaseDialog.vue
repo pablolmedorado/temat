@@ -7,9 +7,11 @@
     :max-width="maxWidth"
   >
     <v-card>
-      <v-card-title class="text-h6">
-        <slot name="header"></slot>
-      </v-card-title>
+      <v-toolbar flat>
+        <v-toolbar-title class="text-h6">
+          <slot name="header"></slot>
+        </v-toolbar-title>
+      </v-toolbar>
       <v-card-text>
         <slot name="body"></slot>
       </v-card-text>
