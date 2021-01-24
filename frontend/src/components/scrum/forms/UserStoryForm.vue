@@ -44,7 +44,6 @@
                   :readonly="!loggedUser.is_superuser"
                   label="Épica"
                   prepend-icon="mdi-sword-cross"
-                  @click:clear="item.epic = null"
                 />
               </v-col>
             </v-row>
@@ -276,7 +275,6 @@
                           :clearable="loggedUser.is_superuser"
                           show-random-btn
                           :error-messages="buildValidationErrorMessages($v.item.development_user)"
-                          @click:clear="item.development_user = null"
                           @change="$v.item.development_user.$touch()"
                           @blur="$v.item.development_user.$touch()"
                         />
@@ -326,7 +324,6 @@
                           :readonly="!loggedUser.is_superuser"
                           :clearable="loggedUser.is_superuser"
                           show-random-btn
-                          @click:clear="item.validation_user = null"
                         />
                       </v-col>
                     </v-row>
@@ -374,7 +371,6 @@
                           :readonly="!loggedUser.is_superuser"
                           :clearable="loggedUser.is_superuser"
                           show-random-btn
-                          @click:clear="item.support_user = null"
                         />
                       </v-col>
                     </v-row>
@@ -577,7 +573,6 @@ export default {
       this.item.end_date = this.item.sprint ? this.item.sprint.end_date : null;
     },
     onSprintClear() {
-      this.item.sprint = null;
       this.item.start_date = null;
       this.item.end_date = null;
     },

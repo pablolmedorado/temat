@@ -25,7 +25,6 @@
           label="Usuario"
           prepend-icon="mdi-account"
           clearable
-          @click:clear="updateFilters({ user_id: null })"
           @input="updateFilters({ user_id: $event })"
         />
       </v-col>

@@ -72,7 +72,6 @@
                 label="Usuario responsable"
                 prepend-icon="mdi-account-tie"
                 clearable
-                @click:clear="updateFilters({ accountable_user_id: null })"
                 @input="updateFilters({ accountable_user_id: $event })"
               />
             </v-col>
