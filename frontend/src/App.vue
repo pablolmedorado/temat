@@ -223,7 +223,6 @@ export default {
     },
   },
   created() {
-    this.$vuetify.theme.dark = localStorage.darkMode ? JSON.parse(localStorage.darkMode) : false;
     this.getUsers();
     this.getGroups();
     this.getTags();
