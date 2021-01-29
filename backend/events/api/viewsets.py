@@ -82,7 +82,8 @@ class EventViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
                 {
                     "name": _("Usuarios"),
                     "data": get_user_model()
-                    .objects.filter(events__in=queryset)
+                    .objects.active()
+                    .filter(events__in=queryset)
                     .distinct()
                     .annotate(value=Count("events"))
                     .values("value", name=F("acronym")),

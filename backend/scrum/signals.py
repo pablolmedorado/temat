@@ -126,7 +126,8 @@ def notify_users_of_user_story_changes(sender, instance, created, raw, using, up
         excluded_users = instance.change_notification_excluded_users + [notification_sender]
         recipient_qs = (
             get_user_model()
-            .objects.filter(
+            .objects.active()
+            .filter(
                 Q(developed_user_stories=instance)
                 | Q(validated_user_stories=instance)
                 | Q(supported_user_stories=instance)

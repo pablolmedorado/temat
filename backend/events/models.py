@@ -129,7 +129,7 @@ class Event(Taggable, Notifiable, models.Model):
         ical_event.add("location", self.location)
         ical_event.add("dtstart", self.start_datetime)
         ical_event.add("dtend", self.end_datetime)
-        ical_event.add("categories", [self.type.name, self.visibility])
+        ical_event.add("categories", [self.type.name])
         ical_event.add("dtstamp", self.creation_datetime)
 
         if self.creation_user:
@@ -138,7 +138,7 @@ class Event(Taggable, Notifiable, models.Model):
             organizer.params["role"] = vText("CHAIR")
             ical_event["organizer"] = organizer
 
-        attendees_list = get_user_model().objects.filter(Q(events=self) | Q(groups__events=self)).distinct()
+        attendees_list = get_user_model().objects.active().filter(Q(events=self) | Q(groups__events=self)).distinct()
         for user in attendees_list:
             if user.email:
                 attendee = vCalAddress(f"MAILTO:{user.email}")

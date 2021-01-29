@@ -33,10 +33,14 @@ def notify_attendees_of_invitation(sender, instance, action, reverse, model, pk_
 
         recipient_qs = None
         if model == get_user_model():
-            recipient_qs = model.objects.filter(pk__in=pk_set).exclude(pk=notification_sender.pk)
+            recipient_qs = model.objects.active().filter(pk__in=pk_set).exclude(pk=notification_sender.pk)
         elif model == Group:
             recipient_qs = (
-                get_user_model().objects.filter(groups__in=pk_set).exclude(pk=notification_sender.pk).distinct()
+                get_user_model()
+                .objects.active()
+                .filter(groups__in=pk_set)
+                .exclude(pk=notification_sender.pk)
+                .distinct()
             )
 
         if recipient_qs and recipient_qs.exists():
@@ -55,7 +59,8 @@ def notify_attendees_of_changes(sender, instance, created, *args, **kwargs):
 
         recipient_qs = (
             get_user_model()
-            .objects.filter(Q(events=instance) | Q(groups__events=instance))
+            .objects.active()
+            .filter(Q(events=instance) | Q(groups__events=instance))
             .exclude(pk=notification_sender.pk)
             .distinct()
         )

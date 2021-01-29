@@ -95,7 +95,8 @@ def gantt_chart_data(instance: Sprint) -> Dict:
 def user_story_user_chart_data(queryset: QuerySet) -> Dict:
     user_list = (
         get_user_model()
-        .objects.filter(
+        .objects.active()
+        .filter(
             Q(developed_user_stories__in=queryset)
             | Q(validated_user_stories__in=queryset)
             | Q(supported_user_stories__in=queryset)
@@ -107,21 +108,24 @@ def user_story_user_chart_data(queryset: QuerySet) -> Dict:
 
     development_queryset = (
         get_user_model()
-        .objects.filter(developed_user_stories__in=queryset)
+        .objects.active()
+        .filter(developed_user_stories__in=queryset)
         .annotate(development=Count("developed_user_stories"))
         .values("acronym", "development")
     )
     development_data = {item["acronym"]: item["development"] for item in development_queryset}
     validation_queryset = (
         get_user_model()
-        .objects.filter(validated_user_stories__in=queryset)
+        .objects.active()
+        .filter(validated_user_stories__in=queryset)
         .annotate(validation=Count("validated_user_stories"))
         .values("acronym", "validation")
     )
     validation_data = {item["acronym"]: item["validation"] for item in validation_queryset}
     support_queryset = (
         get_user_model()
-        .objects.filter(supported_user_stories__in=queryset)
+        .objects.active()
+        .filter(supported_user_stories__in=queryset)
         .annotate(support=Count("supported_user_stories"))
         .values("acronym", "support")
     )
