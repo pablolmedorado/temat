@@ -28,7 +28,7 @@
     // Python
     "python.pythonPath": "/usr/src/app/backend/.venv/bin/python",
     "python.terminal.activateEnvironment": true,
-    "python.languageSever": "Pylance",
+    "python.languageServer": "Pylance",
     "python.analysis.typeCheckingMode": "off",
     "python.analysis.diagnosticMode": "workspace",
     "python.analysis.extraPaths": [
