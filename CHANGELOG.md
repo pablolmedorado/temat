@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/pablolmedorado/temat/compare/v1.7.0...v1.8.0) (2021-01-31)
+
+
+### Features
+
+* **frontend:** include confirmation before leaving an unsaved form ([7377d60](https://github.com/pablolmedorado/temat/commit/7377d60b22e1504b42c8dff241ff740b7a6d5aa4))
+
+
+### Bug Fixes
+
+* **backend:** exclude inactive users ([5eea7e6](https://github.com/pablolmedorado/temat/commit/5eea7e6726f55845be690548bd19f2b6e7b1da90))
+* **devcontainer:** fix typo in python language server setting ([9e1dd9c](https://github.com/pablolmedorado/temat/commit/9e1dd9c1fea3aaa7bc7acea21f0750c4b4e2c5d9))
+* **frontend:** fix dark mode colours not working on app reload ([b7b343f](https://github.com/pablolmedorado/temat/commit/b7b343fa52da72f82267c477ba91e007c8949298))
+* **sprints:** add user story counter on sprint kanban ([0d4d6a1](https://github.com/pablolmedorado/temat/commit/0d4d6a16277b7cd80080916001efd13b043d0cb3))
+
 ## [1.7.0](https://github.com/pablolmedorado/temat/compare/v1.6.2...v1.7.0) (2021-01-24)
 
 
