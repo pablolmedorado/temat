@@ -78,9 +78,7 @@ class Notifiable(Authorable):
 
     @property
     def notification_sender(self):
-        return (
-            self.modification_user or self.creation_user or get_user_model().objects.filter(is_superuser=True).first()
-        )
+        return self.modification_user or self.creation_user or get_user_model().objects.get_random_admin()
 
     class Meta:
         abstract = True

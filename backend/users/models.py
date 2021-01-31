@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models, transaction
 from django.utils.translation import ugettext_lazy as _
 
+from .managers import UserManager
+
 
 class Company(models.Model):
     name = models.CharField(_("nombre"), max_length=200, blank=False, unique=True)
@@ -41,6 +43,8 @@ class User(AbstractUser):
         on_delete=models.PROTECT,
     )
 
+    objects = UserManager()
+
     REQUIRED_FIELDS = ["first_name", "last_name", "acronym"]
 
     def get_full_name(self):
@@ -49,14 +53,14 @@ class User(AbstractUser):
     def get_short_name(self):
         return f"{self.acronym}"
 
+    @transaction.atomic
     def assign_year_holidays(self, year=None):
-        if self.company:
+        if self.company and self.is_active:
             holidays_year = year if year else date.today().year
             holidays_allowance_date = date(holidays_year, 1, 1)
 
-            with transaction.atomic():
-                for number in range(self.company.yearly_holiday_allocation):
-                    self.holidays.create(allowance_date=holidays_allowance_date)
+            for number in range(self.company.yearly_holiday_allocation):
+                self.holidays.create(allowance_date=holidays_allowance_date)
 
     def __str__(self):
         if self.get_full_name():

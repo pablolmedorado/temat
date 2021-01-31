@@ -12,7 +12,7 @@
 
     <v-tabs-items v-model="tab">
       <v-tab-item value="data">
-        <UserStoryData v-if="item" :item.sync="item" />
+        <UserStoryData v-if="item" :item.sync="item" @changed:item="showConfirmBeforeLeaving = $event" />
       </v-tab-item>
       <v-tab-item value="tasks">
         <UserStoryTasks v-if="item" :user-story="item" @change:progress="onProgressUpdated" />
@@ -127,6 +127,11 @@ export default {
       next({ name: "user-stories" });
     }
   },
+  beforeRouteLeave(to, from, next) {
+    if (!this.showConfirmBeforeLeaving || confirm("Hay cambios sin guardar, ¿estás seguro que deseas salir?")) {
+      next();
+    }
+  },
   props: {
     id: {
       type: String,
@@ -137,6 +142,7 @@ export default {
     return {
       item: null,
       tab: "data",
+      showConfirmBeforeLeaving: false,
     };
   },
   computed: {

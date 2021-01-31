@@ -183,23 +183,23 @@ class UserStory(Taggable, Notifiable, models.Model):
         return f"{self.name}"
 
     @classmethod
+    @transaction.atomic
     def get_copy(cls, instance, owner=None):
-        with transaction.atomic():
-            new_instance = cls.objects.create(
-                **{
-                    "name": f"{instance.name} (copia)",
-                    "type": instance.type,
-                    "functional_description": instance.functional_description,
-                    "technical_description": instance.technical_description,
-                    "planned_effort": instance.planned_effort,
-                    "priority": instance.priority,
-                    "creation_user": owner if owner else instance.creation_user,
-                }
-            )
-            # Tasks
-            for task in instance.tasks.all().iterator():
-                new_instance.tasks.create(**{"name": task.name, "weight": task.weight})
-            return new_instance
+        new_instance = cls.objects.create(
+            **{
+                "name": f"{instance.name} (copia)",
+                "type": instance.type,
+                "functional_description": instance.functional_description,
+                "technical_description": instance.technical_description,
+                "planned_effort": instance.planned_effort,
+                "priority": instance.priority,
+                "creation_user": owner if owner else instance.creation_user,
+            }
+        )
+        # Tasks
+        for task in instance.tasks.all().iterator():
+            new_instance.tasks.create(**{"name": task.name, "weight": task.weight})
+        return new_instance
 
     class Meta:
         verbose_name = _("historia de usuario")

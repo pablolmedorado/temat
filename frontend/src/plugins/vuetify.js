@@ -10,7 +10,7 @@ export default new Vuetify({
     current: "es",
   },
   theme: {
-    dark: false,
+    dark: localStorage.darkMode ? JSON.parse(localStorage.darkMode) : false,
     themes: {
       light: {
         primary: "#00205b",

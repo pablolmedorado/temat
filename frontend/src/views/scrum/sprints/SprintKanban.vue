@@ -57,8 +57,12 @@
           <template v-for="status in kanbanStatus">
             <v-col v-show="hideEmptyColumns ? itemsByStatus[status.value] : true" :key="status.value" class="px-1">
               <v-card outlined :class="statusColumnClasses">
-                <v-card-title>{{ status.label }}</v-card-title>
-                <v-card-text>
+                <v-card-title>
+                  <v-badge inline color="secondary" :content="get(itemsByStatus, [status.value, 'length'], '0')">
+                    {{ status.label }}
+                  </v-badge>
+                </v-card-title>
+                <v-card-text class="pt-4">
                   <v-skeleton-loader v-if="loading" type="card" class="px-1" />
                   <template v-else>
                     <v-row v-for="item in itemsByStatus[status.value]" :key="item.id">
@@ -79,7 +83,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { groupBy } from "lodash";
+import { get, groupBy } from "lodash";
 
 import BreadcrumbsContextMixin from "@/mixins/scrum/breadcrumbs-context-mixin";
 
@@ -162,6 +166,7 @@ export default {
     document.removeEventListener("fullscreenchange", this.onFullscreenChange);
   },
   methods: {
+    get,
     async fetchItems() {
       const response = await UserStoryService.list({
         sprint_id: this.sprintId,

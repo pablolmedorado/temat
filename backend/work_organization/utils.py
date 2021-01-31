@@ -25,7 +25,9 @@ def user_availability_chart_data(queryset: QuerySet) -> Dict:
     planned_holidays_data = {item["user__acronym"]: item["count"] for item in planned_holidays_queryset}
 
     user_model = get_user_model()
-    user_list = user_model.objects.exclude(company__isnull=True).order_by("acronym").values_list("acronym", flat=True)
+    user_list = (
+        user_model.objects.active().exclude(company__isnull=True).order_by("acronym").values_list("acronym", flat=True)
+    )
 
     chart_data = {
         "categories": user_list,
@@ -41,7 +43,8 @@ def user_availability_chart_data(queryset: QuerySet) -> Dict:
 def green_working_day_user_chart_data(queryset: QuerySet) -> Dict:
     user_list = (
         get_user_model()
-        .objects.filter(Q(green_working_days_as_main__in=queryset) | Q(green_working_days_as_support__in=queryset))
+        .objects.active()
+        .filter(Q(green_working_days_as_main__in=queryset) | Q(green_working_days_as_support__in=queryset))
         .order_by("acronym")
         .distinct()
         .values_list("acronym", flat=True)
@@ -49,14 +52,16 @@ def green_working_day_user_chart_data(queryset: QuerySet) -> Dict:
 
     main_queryset = (
         get_user_model()
-        .objects.filter(green_working_days_as_main__in=queryset)
+        .objects.active()
+        .filter(green_working_days_as_main__in=queryset)
         .annotate(main=Count("green_working_days_as_main"))
         .values("acronym", "main")
     )
     main_data = {item["acronym"]: item["main"] for item in main_queryset}
     support_queryset = (
         get_user_model()
-        .objects.filter(green_working_days_as_support__in=queryset)
+        .objects.active()
+        .filter(green_working_days_as_support__in=queryset)
         .annotate(support=Count("green_working_days_as_support"))
         .values("acronym", "support")
     )
@@ -76,7 +81,8 @@ def green_working_day_user_chart_data(queryset: QuerySet) -> Dict:
 def support_working_day_user_chart_data(queryset: QuerySet) -> Dict:
     queryset_result = (
         get_user_model()
-        .objects.filter(support_working_days__in=queryset)
+        .objects.active()
+        .filter(support_working_days__in=queryset)
         .distinct()
         .annotate(count=Count("support_working_days"))
         .order_by("acronym")

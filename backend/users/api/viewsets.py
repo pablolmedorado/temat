@@ -8,7 +8,7 @@ from ..models import User
 
 
 class UserViewSet(FlexFieldsMixin, viewsets.ReadOnlyModelViewSet):
-    queryset = User.objects.select_related("company").prefetch_related("groups").filter(is_active=True)
+    queryset = User.objects.active().select_related("company").prefetch_related("groups")
     serializer_class = UserSerializer
     permit_list_expands = ["company", "groups"]
     search_fields = ("username", "first_name", "last_name", "acronym")
