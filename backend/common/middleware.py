@@ -21,7 +21,11 @@ class QueryPrintingMiddleware(MiddlewareMixin):
             self.initial_queries = len(connection.queries)
 
     def process_response(self, request, response):
-        if settings.DEBUG and "runserver" in sys.argv and self.initial_queries is not None:
+        if (
+            settings.DEBUG
+            and ("runserver" in sys.argv or "runserver_plus" in sys.argv)
+            and self.initial_queries is not None
+        ):
             colorama.init(autoreset=True)
 
             # Colour definition
