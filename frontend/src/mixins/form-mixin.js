@@ -1,6 +1,6 @@
 import { mapActions } from "vuex";
 import { validationMixin } from "vuelidate";
-import { cloneDeep, forOwn } from "lodash";
+import { cloneDeep, difference, forOwn, isArray, isEqualWith } from "lodash";
 
 import { buildValidationErrorMessages, validationErrorMessages } from "@/utils/validation";
 
@@ -26,11 +26,24 @@ export default function FormMixin({ service }) {
         successMessage: "Elemento guardado correctamente",
       };
     },
+    computed: {
+      itemHasChanged() {
+        return !isEqualWith(this.sourceItem, this.item, (sourceValue, currentValue) => {
+          if (isArray(sourceValue) && isArray(currentValue)) {
+            return difference(sourceValue, currentValue).length == 0;
+          }
+        });
+      },
+    },
     watch: {
-      sourceItem: {
-        handler(val) {
-          this.item = this.initializeItem(val);
+      sourceItem(newValue) {
+        this.item = this.initializeItem(newValue);
+      },
+      itemHasChanged: {
+        handler(newValue) {
+          this.$emit("changed:item", newValue);
         },
+        immediate: true,
       },
     },
     methods: {

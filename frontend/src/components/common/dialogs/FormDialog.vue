@@ -7,11 +7,17 @@
         </v-toolbar-title>
       </v-toolbar>
       <v-card-text>
-        <component :is="formComponent" v-if="item" ref="itemForm" :source-item="item" />
+        <component
+          :is="formComponent"
+          v-if="item"
+          ref="itemForm"
+          :source-item="item"
+          @changed:item="itemHasChanged = $event"
+        />
       </v-card-text>
       <v-divider />
       <v-card-actions>
-        <v-btn color="warning" text @click="reset">Restablecer</v-btn>
+        <v-btn color="warning" text :disabled="!itemHasChanged" @click="reset">Restablecer</v-btn>
         <v-spacer />
         <v-btn color="primary" text @click="cancel">Cancelar</v-btn>
         <v-btn color="primary" text :loading="loading" @click="submit">
@@ -47,6 +53,7 @@ export default {
   data() {
     return {
       item: null,
+      itemHasChanged: false,
     };
   },
   computed: {
@@ -80,8 +87,9 @@ export default {
       }
     },
     cancel() {
-      this.$emit("cancel");
-      this.close();
+      if (!this.itemHasChanged || confirm("Hay cambios sin guardar, ¿estás seguro que deseas salir?")) {
+        this.close();
+      }
     },
   },
 };

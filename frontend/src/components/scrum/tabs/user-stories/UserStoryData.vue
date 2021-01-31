@@ -31,7 +31,7 @@
       </v-col>
     </v-row>
 
-    <UserStoryForm ref="userStoryForm" :source-item="item" />
+    <UserStoryForm ref="userStoryForm" :source-item="item" @changed:item="$emit('changed:item', $event)" />
 
     <v-speed-dial
       v-if="!readOnly"
