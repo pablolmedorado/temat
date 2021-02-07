@@ -120,6 +120,7 @@ export default {
         if (this.item.id) {
           this.$emit("update:item", newUserStory);
         } else {
+          this.$emit("changed:item", false);
           this.$router.push({ name: "user-story", params: { id: newUserStory.id } });
         }
       }
