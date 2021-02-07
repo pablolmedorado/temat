@@ -16,7 +16,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("users", ["usersWithCompany"]),
+    ...mapGetters("users", ["workerUsers"]),
     localChartOptions() {
       return {
         chart: {
@@ -64,7 +64,7 @@ export default {
           plotBands: [
             {
               from: 0,
-              to: this.usersWithCompany.length * 14,
+              to: this.workerUsers.length * 14,
               color: "rgba(68, 170, 213, 0.1)",
               label: {
                 text: "Jornada laboral",
@@ -83,7 +83,7 @@ export default {
             },
           },
         },
-        series: this.usersWithCompany.map((user) => {
+        series: this.workerUsers.map((user) => {
           return {
             name: user.acronym,
             data: has(this.chartData, user.acronym)

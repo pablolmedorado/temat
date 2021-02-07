@@ -33,7 +33,7 @@
               <v-tab href="#green"><v-icon>mdi-briefcase</v-icon></v-tab>
               <v-tab href="#holidays"><v-icon>mdi-beach</v-icon></v-tab>
 
-              <v-tab-item value="events">
+              <v-tab-item value="events" class="pt-4">
                 <v-row>
                   <v-col cols="12" lg="6">
                     <v-card outlined>
@@ -58,7 +58,7 @@
                   </v-col>
                 </v-row>
               </v-tab-item>
-              <v-tab-item value="scrum">
+              <v-tab-item value="scrum" class="pt-4">
                 <v-row>
                   <v-col cols="12" md="6" lg="3">
                     <v-card outlined>
@@ -99,7 +99,7 @@
                   </v-col>
                 </v-row>
               </v-tab-item>
-              <v-tab-item value="support">
+              <v-tab-item value="support" class="pt-4">
                 <v-row>
                   <v-col>
                     <v-card outlined>
@@ -110,7 +110,7 @@
                   </v-col>
                 </v-row>
               </v-tab-item>
-              <v-tab-item value="green">
+              <v-tab-item value="green" class="pt-4">
                 <v-row>
                   <v-col>
                     <v-card outlined>
@@ -121,7 +121,7 @@
                   </v-col>
                 </v-row>
               </v-tab-item>
-              <v-tab-item value="holidays">
+              <v-tab-item value="holidays" class="pt-4">
                 <v-row>
                   <v-col>
                     <v-card outlined>

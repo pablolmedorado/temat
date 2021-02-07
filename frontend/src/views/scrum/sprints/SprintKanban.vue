@@ -5,26 +5,7 @@
       <v-toolbar flat>
         <v-toolbar-title class="text-h6">Kanban</v-toolbar-title>
         <v-spacer />
-        <v-tooltip bottom>
-          <template #activator="{ on, attrs }">
-            <v-btn icon :to="{ name: 'sprint-chart', params: { sprintId } }" v-bind="attrs" v-on="on">
-              <v-icon>mdi-fire</v-icon>
-            </v-btn>
-          </template>
-          <span>
-            Diagrama de quemado (Burn-down/up)
-          </span>
-        </v-tooltip>
-        <v-tooltip bottom>
-          <template #activator="{ on, attrs }">
-            <v-btn icon :to="{ name: 'sprint-gantt', params: { sprintId } }" v-bind="attrs" v-on="on">
-              <v-icon>mdi-chart-timeline</v-icon>
-            </v-btn>
-          </template>
-          <span>
-            Diagrama de Gantt
-          </span>
-        </v-tooltip>
+        <SprintViewSelector :sprint-id="sprintId" />
         <v-divider vertical inset />
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">
@@ -67,7 +48,7 @@
                   <template v-else>
                     <v-row v-for="item in itemsByStatus[status.value]" :key="item.id">
                       <v-col class="px-1">
-                        <KanbanCard :user-story="item" />
+                        <KanbanCard class="mb-4" :user-story="item" />
                       </v-col>
                     </v-row>
                   </template>
@@ -90,13 +71,14 @@ import BreadcrumbsContextMixin from "@/mixins/scrum/breadcrumbs-context-mixin";
 import UserStoryService from "@/services/scrum/user-story-service";
 
 import KanbanCard from "@/components/scrum/KanbanCard";
+import SprintViewSelector from "@/components/scrum/SprintViewSelector";
 
 export default {
   name: "SprintKanban",
   metaInfo: {
     title: "Sprint - Kanban",
   },
-  components: { KanbanCard },
+  components: { KanbanCard, SprintViewSelector },
   mixins: [BreadcrumbsContextMixin],
   props: {
     sprintId: {
@@ -158,11 +140,13 @@ export default {
       return this.$vuetify.theme.isDark ? ["grey", "darken-3"] : ["grey", "lighten-3"];
     },
   },
-  activated() {
+  created() {
     this.fetchItems();
+  },
+  mounted() {
     document.addEventListener("fullscreenchange", this.onFullscreenChange);
   },
-  deactivated() {
+  beforeDestroy() {
     document.removeEventListener("fullscreenchange", this.onFullscreenChange);
   },
   methods: {

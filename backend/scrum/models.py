@@ -169,6 +169,8 @@ class UserStory(Taggable, Notifiable, models.Model):
         _("nivel de riesgo"), choices=RiskLevel.choices, default=RiskLevel.GREEN, blank=False
     )
     risk_comments = models.CharField(_("comentarios de riesgo"), max_length=2000, blank=True)
+    use_migrations = models.BooleanField(_("usa migraciones"), default=False)
+    deployment_notes = models.CharField(_("notas de despliegue"), max_length=2000, blank=True)
 
     @property
     def actual_effort(self):
@@ -193,6 +195,7 @@ class UserStory(Taggable, Notifiable, models.Model):
                 "technical_description": instance.technical_description,
                 "planned_effort": instance.planned_effort,
                 "priority": instance.priority,
+                "use_migrations": instance.use_migrations,
                 "creation_user": owner if owner else instance.creation_user,
             }
         )

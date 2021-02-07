@@ -110,7 +110,6 @@ export default {
   computed: {
     ...mapState(["loggedUser"]),
     ...mapGetters(["loading"]),
-    ...mapGetters("users", ["usersMap"]),
     ...mapGetters("scrum", ["effortRolesMap"]),
     tableHeaders() {
       return [

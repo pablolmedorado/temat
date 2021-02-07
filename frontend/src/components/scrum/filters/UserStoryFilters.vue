@@ -5,7 +5,7 @@
         <v-text-field
           :value="filters.search"
           label="Buscar"
-          placeholder="Id, nombre, descripciones, comentarios, scv..."
+          placeholder="Id, nombre, descripciones, comentarios, notas, scv..."
           prepend-icon="mdi-magnify"
           clearable
           @input="updateFilters({ search: $event })"
@@ -65,11 +65,12 @@
           </v-toolbar-title>
         </v-toolbar>
         <v-card-text>
-          <v-tabs v-model="tab">
+          <v-tabs v-model="tab" class="mb-4">
             <v-tab href="#general">General</v-tab>
             <v-tab href="#status">Estado</v-tab>
             <v-tab href="#dates">Fechas</v-tab>
             <v-tab href="#people">Personas</v-tab>
+            <v-tab href="#others">Otros</v-tab>
           </v-tabs>
           <v-tabs-items v-model="tab">
             <v-tab-item value="general">
@@ -78,7 +79,7 @@
                   <v-text-field
                     :value="filters.search"
                     label="Buscar"
-                    placeholder="Id, nombre, descripciones, comentarios, scv..."
+                    placeholder="Id, nombre, descripciones, comentarios, notas, scv..."
                     prepend-icon="mdi-magnify"
                     clearable
                     @input="updateFilters({ search: $event })"
@@ -150,30 +151,6 @@
                   />
                 </v-col>
               </v-row>
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    :value="filters.planned_effort__gte"
-                    label="Esfuerzo (desde)"
-                    type="number"
-                    min="0"
-                    prepend-icon="mdi-dumbbell"
-                    clearable
-                    @input="updateFilters({ planned_effort__gte: $event })"
-                  />
-                </v-col>
-                <v-col>
-                  <v-text-field
-                    :value="filters.planned_effort__lte"
-                    label="Esfuerzo (hasta)"
-                    type="number"
-                    min="0"
-                    prepend-icon="mdi-dumbbell"
-                    clearable
-                    @input="updateFilters({ planned_effort__lte: $event })"
-                  />
-                </v-col>
-              </v-row>
             </v-tab-item>
             <v-tab-item value="status">
               <v-row>
@@ -242,6 +219,7 @@
                 </v-col>
                 <v-col>
                   <v-switch
+                    class="pl-1"
                     :value="filters.validated"
                     true-value="false"
                     false-value=""
@@ -254,6 +232,7 @@
               <v-row>
                 <v-col>
                   <v-switch
+                    class="pl-1"
                     :value="filters.delayed"
                     label="Retrasada"
                     inset
@@ -262,6 +241,7 @@
                 </v-col>
                 <v-col>
                   <v-switch
+                    class="pl-1"
                     :value="filters.overworked"
                     label="Con sobreesfuerzo"
                     inset
@@ -404,6 +384,43 @@
                 </v-col>
               </v-row>
             </v-tab-item>
+            <v-tab-item value="others">
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    :value="filters.planned_effort__gte"
+                    label="Esfuerzo (desde)"
+                    type="number"
+                    min="0"
+                    prepend-icon="mdi-dumbbell"
+                    clearable
+                    @input="updateFilters({ planned_effort__gte: $event })"
+                  />
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    :value="filters.planned_effort__lte"
+                    label="Esfuerzo (hasta)"
+                    type="number"
+                    min="0"
+                    prepend-icon="mdi-dumbbell"
+                    clearable
+                    @input="updateFilters({ planned_effort__lte: $event })"
+                  />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-switch
+                    class="pl-1"
+                    :value="filters.use_migrations"
+                    label="Usa migraciones"
+                    inset
+                    @change="updateFilters({ use_migrations: $event })"
+                  />
+                </v-col>
+              </v-row>
+            </v-tab-item>
           </v-tabs-items>
         </v-card-text>
         <v-divider />
@@ -447,9 +464,6 @@ export default {
     };
   },
   computed: {
-    ...mapState("users", {
-      userOptions: "users",
-    }),
     ...mapState("scrum", {
       riskLevelOptions: "riskLevels",
       userStoryStatusOptions: "userStoryStatus",

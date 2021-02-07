@@ -170,6 +170,8 @@ class UserStorySerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "cvs_reference",
             "risk_level",
             "risk_comments",
+            "use_migrations",
+            "deployment_notes",
             "tags",
         )
         read_only_fields = (
@@ -205,7 +207,15 @@ class UserStoryDeveloperSerializer(UserStorySerializer):
         read_only_fields = tuple(  # type: ignore
             field
             for field in UserStorySerializer.Meta.fields
-            if field not in ["development_comments", "cvs_reference", "risk_level", "risk_comments"]
+            if field
+            not in [
+                "development_comments",
+                "cvs_reference",
+                "risk_level",
+                "risk_comments",
+                "use_migrations",
+                "deployment_notes",
+            ]
         )
 
 

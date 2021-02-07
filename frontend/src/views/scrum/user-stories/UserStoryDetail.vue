@@ -2,7 +2,7 @@
   <v-container fluid>
     <ContextBreadcrumbs :items="breadcrumbs" />
 
-    <v-tabs v-if="id" v-model="tab" grow show-arrows background-color="transparent">
+    <v-tabs v-if="id" v-model="tab" class="mb-4" grow show-arrows background-color="transparent">
       <v-tabs-slider />
       <v-tab href="#data"> <v-icon class="mr-1">mdi-book-account</v-icon>Información </v-tab>
       <v-tab href="#tasks"> <v-icon class="mr-1">mdi-format-list-checks</v-icon>Tareas </v-tab>
@@ -67,6 +67,8 @@ const defaultItem = {
   cvs_reference: "",
   risk_level: 0,
   risk_comments: "",
+  use_migrations: false,
+  deployment_notes: "",
   tags: [],
 };
 

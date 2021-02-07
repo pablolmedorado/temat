@@ -262,10 +262,6 @@ export default {
   },
   computed: {
     ...mapState(["locale"]),
-    ...mapState("users", {
-      attendeesOptions: "users",
-      groupsOptions: "groups",
-    }),
     ...mapState("calendar", {
       eventTypesOptions: "eventTypes",
       visibilityOptions: "eventVisibilityTypes",

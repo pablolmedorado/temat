@@ -150,10 +150,22 @@
                       @blur="$v.item.start_date.$touch()"
                       v-on="on"
                     >
-                      <template #append>
-                        <v-icon :disabled="!loggedUser.is_superuser" @click="setStartDateFromSprint">
-                          mdi-run-fast
-                        </v-icon>
+                      <template #append-outer>
+                        <v-tooltip bottom>
+                          <template #activator="{ on: onTooltip, attrs: attrTooltip }">
+                            <v-icon
+                              v-bind="attrTooltip"
+                              :disabled="!loggedUser.is_superuser"
+                              v-on="onTooltip"
+                              @click="setStartDateFromSprint"
+                            >
+                              mdi-run-fast
+                            </v-icon>
+                          </template>
+                          <span>
+                            Usar fecha del sprint
+                          </span>
+                        </v-tooltip>
                       </template>
                     </v-text-field>
                   </template>
@@ -193,10 +205,22 @@
                       @blur="$v.item.end_date.$touch()"
                       v-on="on"
                     >
-                      <template #append>
-                        <v-icon :disabled="!loggedUser.is_superuser" @click="setEndDateFromSprint">
-                          mdi-run-fast
-                        </v-icon>
+                      <template #append-outer>
+                        <v-tooltip bottom>
+                          <template #activator="{ on: onTooltip, attrs: attrTooltip }">
+                            <v-icon
+                              v-bind="attrTooltip"
+                              :disabled="!loggedUser.is_superuser"
+                              v-on="onTooltip"
+                              @click="setEndDateFromSprint"
+                            >
+                              mdi-run-fast
+                            </v-icon>
+                          </template>
+                          <span>
+                            Usar fecha del sprint
+                          </span>
+                        </v-tooltip>
                       </template>
                     </v-text-field>
                   </template>
@@ -397,7 +421,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col>
+      <v-col cols="12" lg="6">
         <v-card>
           <v-card-title class="text-h6">
             Gestión de riesgo
@@ -430,6 +454,43 @@
                   :error-messages="buildValidationErrorMessages($v.item.risk_comments)"
                   @input="$v.item.risk_comments.$touch()"
                   @blur="$v.item.risk_comments.$touch()"
+                />
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" lg="6">
+        <v-card>
+          <v-card-title class="text-h6">
+            Información de despliegue
+          </v-card-title>
+          <v-card-text>
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-select
+                  v-model.number="item.use_migrations"
+                  :items="useMigrationsOptions"
+                  label="Usa migraciones*"
+                  prepend-icon="mdi-database-arrow-right"
+                  :readonly="!loggedUser.is_superuser && loggedUser.id !== item.development_user"
+                  :error-messages="buildValidationErrorMessages($v.item.use_migrations)"
+                  @change="$v.item.use_migrations.$touch()"
+                  @blur="$v.item.use_migrations.$touch()"
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-textarea
+                  v-model="item.deployment_notes"
+                  label="Notas de despliegue"
+                  counter="2000"
+                  prepend-icon="mdi-note-text"
+                  :readonly="!loggedUser.is_superuser && loggedUser.id !== item.development_user"
+                  :error-messages="buildValidationErrorMessages($v.item.deployment_notes)"
+                  @input="$v.item.deployment_notes.$touch()"
+                  @blur="$v.item.deployment_notes.$touch()"
                 />
               </v-col>
             </v-row>
@@ -505,6 +566,8 @@ export default {
       support_comments: { maxLength: maxLength(2000) },
       risk_level: { required },
       risk_comments: { maxLength: maxLength(2000) },
+      use_migrations: { required },
+      deployment_notes: { maxLength: maxLength(2000) },
     },
   },
   data() {
@@ -517,6 +580,10 @@ export default {
         { value: null, text: "Sin validar" },
         { value: false, text: "Rechazada" },
         { value: true, text: "Validada" },
+      ],
+      useMigrationsOptions: [
+        { value: false, text: "No" },
+        { value: true, text: "Sí" },
       ],
       validationErrorMessages: {
         endDateBeforeStartDate: "Fecha de fin anterior a la de inicio",

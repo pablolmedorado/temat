@@ -151,7 +151,6 @@ export default {
   computed: {
     ...mapState(["locale"]),
     ...mapGetters("calendar", ["eventTypesMap", "eventVisibilityTypesMap"]),
-    ...mapGetters("users", ["usersMap"]),
     startDate() {
       return this.item.luxonStart.toISODate();
     },

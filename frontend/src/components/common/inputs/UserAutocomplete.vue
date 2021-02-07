@@ -4,6 +4,7 @@
     :items="userOptions"
     :item-text="(user) => `${user.first_name} ${user.last_name}`"
     item-value="id"
+    :item-disabled="(user) => !user.is_active"
     :disabled="disabled"
     :readonly="readonly"
     :loading="!userOptions.length"
@@ -15,7 +16,7 @@
       </v-chip>
       <span v-if="index === 1" class="grey--text text-caption">(+{{ value.length - 1 }} más)</span>
     </template>
-    <template v-if="showRandomBtn" #append-outer>
+    <template v-if="showRandomBtn && !readonly" #append-outer>
       <v-tooltip bottom>
         <template #activator="{ on, attrs }">
           <v-icon :disabled="disabled || readonly" v-bind="attrs" @click="getRandomUser" v-on="on">

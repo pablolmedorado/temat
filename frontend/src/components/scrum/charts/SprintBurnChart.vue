@@ -28,7 +28,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("users", ["usersWithCompany"]),
+    ...mapGetters("users", ["workerUsers"]),
     totalEffort() {
       return get(this.chartData, "total_effort", 0);
     },
@@ -109,7 +109,7 @@ export default {
           },
           plotLines: [
             {
-              value: this.usersWithCompany.length * 14,
+              value: this.workerUsers.length * 14,
               color: colors.grey.base,
               dashStyle: "Dash",
               width: 1,

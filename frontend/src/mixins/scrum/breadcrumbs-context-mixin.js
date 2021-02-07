@@ -27,6 +27,9 @@ export default {
     context() {
       return { sprint: this.sprintId, epic: this.epicId };
     },
+    breadcrumbs() {
+      return [];
+    },
   },
   provide() {
     return {

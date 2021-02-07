@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row v-if="item.id">
+    <v-row v-if="item.id" class="mb-2">
       <v-col>
         <v-card>
           <v-card-title class="text-h6">
@@ -120,6 +120,7 @@ export default {
         if (this.item.id) {
           this.$emit("update:item", newUserStory);
         } else {
+          this.$emit("changed:item", false);
           this.$router.push({ name: "user-story", params: { id: newUserStory.id } });
         }
       }

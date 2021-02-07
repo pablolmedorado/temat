@@ -180,10 +180,6 @@ export default {
     };
   },
   computed: {
-    ...mapState("users", {
-      attendeesOptions: "users",
-      groupsOptions: "groups",
-    }),
     ...mapState("calendar", {
       eventTypesOptions: "eventTypes",
       visibilityOptions: "eventVisibilityTypes",

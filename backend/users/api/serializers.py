@@ -32,6 +32,7 @@ class UserSerializer(FlexFieldsModelSerializer):
             "groups",
             "is_staff",
             "is_superuser",
+            "is_active",
         )
         read_only_fields = fields
         expandable_fields = {

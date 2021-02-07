@@ -30,6 +30,9 @@
           <template #item.end_date="{ value }">
             <DateRouterLink v-if="value" :date="value" />
           </template>
+          <template #item.priority="{ value }">
+            <v-icon>{{ `mdi-numeric-${value}-box` }}</v-icon>
+          </template>
           <template #item.status="{ item }">
             <UserStoryIndexStatus :user-story="item" />
           </template>

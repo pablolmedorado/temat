@@ -68,7 +68,7 @@
                     >
                       <v-list-item-title :class="{ 'font-weight-medium': index === 0 }">
                         {{ notification.actor.first_name }} {{ notification.actor.last_name }} {{ notification.verb }}
-                        {{ notification.target ? notification.target.representation : "" }}
+                        {{ notification.target ? `"${notification.target.representation}"` : "" }}
                       </v-list-item-title>
                       <v-list-item-subtitle>Hace {{ notification.timesince }}</v-list-item-subtitle>
                     </v-list-item-content>
@@ -239,6 +239,9 @@ export default {
       return notification.target ? this.notificationTargetMap[notification.target_content_type].icon : "mdi-bell-alert";
     },
     navigateToTarget(notification) {
+      if (notification.unread) {
+        this.markNotificationAsRead(notification.id);
+      }
       this.$router.push({
         ...this.notificationTargetMap[notification.target_content_type].route,
         params: { id: notification.target.id },
