@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row v-if="item.id">
+    <v-row v-if="item.id" class="mb-2">
       <v-col>
         <v-card>
           <v-card-title class="text-h6">

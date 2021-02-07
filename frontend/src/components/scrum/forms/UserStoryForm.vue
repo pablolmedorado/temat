@@ -150,10 +150,22 @@
                       @blur="$v.item.start_date.$touch()"
                       v-on="on"
                     >
-                      <template #append>
-                        <v-icon :disabled="!loggedUser.is_superuser" @click="setStartDateFromSprint">
-                          mdi-run-fast
-                        </v-icon>
+                      <template #append-outer>
+                        <v-tooltip bottom>
+                          <template #activator="{ on: onTooltip, attrs: attrTooltip }">
+                            <v-icon
+                              v-bind="attrTooltip"
+                              :disabled="!loggedUser.is_superuser"
+                              v-on="onTooltip"
+                              @click="setStartDateFromSprint"
+                            >
+                              mdi-run-fast
+                            </v-icon>
+                          </template>
+                          <span>
+                            Usar fecha del sprint
+                          </span>
+                        </v-tooltip>
                       </template>
                     </v-text-field>
                   </template>
@@ -193,10 +205,22 @@
                       @blur="$v.item.end_date.$touch()"
                       v-on="on"
                     >
-                      <template #append>
-                        <v-icon :disabled="!loggedUser.is_superuser" @click="setEndDateFromSprint">
-                          mdi-run-fast
-                        </v-icon>
+                      <template #append-outer>
+                        <v-tooltip bottom>
+                          <template #activator="{ on: onTooltip, attrs: attrTooltip }">
+                            <v-icon
+                              v-bind="attrTooltip"
+                              :disabled="!loggedUser.is_superuser"
+                              v-on="onTooltip"
+                              @click="setEndDateFromSprint"
+                            >
+                              mdi-run-fast
+                            </v-icon>
+                          </template>
+                          <span>
+                            Usar fecha del sprint
+                          </span>
+                        </v-tooltip>
                       </template>
                     </v-text-field>
                   </template>
