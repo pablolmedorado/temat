@@ -62,6 +62,12 @@ export default {
   },
   components: { SprintBurnChart },
   mixins: [BreadcrumbsContextMixin],
+  props: {
+    sprintId: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       burnUp: false,
@@ -84,6 +90,9 @@ export default {
         return [];
       }
     },
+  },
+  mounted() {
+    this.getChartData();
   },
   methods: {
     getChartData() {

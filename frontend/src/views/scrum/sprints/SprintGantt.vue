@@ -51,6 +51,12 @@ export default {
   },
   components: { SprintGanttChart },
   mixins: [BreadcrumbsContextMixin],
+  props: {
+    sprintId: {
+      type: String,
+      required: true,
+    },
+  },
   computed: {
     ...mapGetters(["loading"]),
     breadcrumbs() {
@@ -68,6 +74,9 @@ export default {
         return [];
       }
     },
+  },
+  mounted() {
+    this.getChartData();
   },
   methods: {
     getChartData() {

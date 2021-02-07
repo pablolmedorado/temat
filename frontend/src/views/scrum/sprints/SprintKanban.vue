@@ -158,11 +158,13 @@ export default {
       return this.$vuetify.theme.isDark ? ["grey", "darken-3"] : ["grey", "lighten-3"];
     },
   },
-  activated() {
+  created() {
     this.fetchItems();
+  },
+  mounted() {
     document.addEventListener("fullscreenchange", this.onFullscreenChange);
   },
-  deactivated() {
+  beforeDestroy() {
     document.removeEventListener("fullscreenchange", this.onFullscreenChange);
   },
   methods: {

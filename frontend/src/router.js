@@ -93,7 +93,7 @@ const router = new Router({
       component: SprintKanban,
       props: true,
       meta: {
-        keepAlive: true,
+        keepAlive: false,
       },
     },
     {
@@ -102,7 +102,7 @@ const router = new Router({
       component: SprintChart,
       props: true,
       meta: {
-        keepAlive: true,
+        keepAlive: false,
       },
     },
     {
@@ -111,7 +111,7 @@ const router = new Router({
       component: SprintGantt,
       props: true,
       meta: {
-        keepAlive: true,
+        keepAlive: false,
       },
     },
     {
