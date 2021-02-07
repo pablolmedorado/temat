@@ -239,6 +239,9 @@ export default {
       return notification.target ? this.notificationTargetMap[notification.target_content_type].icon : "mdi-bell-alert";
     },
     navigateToTarget(notification) {
+      if (notification.unread) {
+        this.markNotificationAsRead(notification.id);
+      }
       this.$router.push({
         ...this.notificationTargetMap[notification.target_content_type].route,
         params: { id: notification.target.id },
