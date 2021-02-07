@@ -65,7 +65,7 @@
           </v-toolbar-title>
         </v-toolbar>
         <v-card-text>
-          <v-tabs v-model="tab">
+          <v-tabs v-model="tab" class="mb-4">
             <v-tab href="#general">General</v-tab>
             <v-tab href="#status">Estado</v-tab>
             <v-tab href="#dates">Fechas</v-tab>
@@ -242,6 +242,7 @@
                 </v-col>
                 <v-col>
                   <v-switch
+                    class="pl-1"
                     :value="filters.validated"
                     true-value="false"
                     false-value=""
@@ -254,6 +255,7 @@
               <v-row>
                 <v-col>
                   <v-switch
+                    class="pl-1"
                     :value="filters.delayed"
                     label="Retrasada"
                     inset
@@ -262,6 +264,7 @@
                 </v-col>
                 <v-col>
                   <v-switch
+                    class="pl-1"
                     :value="filters.overworked"
                     label="Con sobreesfuerzo"
                     inset

@@ -67,7 +67,7 @@
                   <template v-else>
                     <v-row v-for="item in itemsByStatus[status.value]" :key="item.id">
                       <v-col class="px-1">
-                        <KanbanCard :user-story="item" />
+                        <KanbanCard class="mb-4" :user-story="item" />
                       </v-col>
                     </v-row>
                   </template>
