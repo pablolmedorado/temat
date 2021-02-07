@@ -5,26 +5,7 @@
       <v-toolbar flat>
         <v-toolbar-title class="text-h6"> Diagrama {{ burnUp ? "Burn-Up" : "Burn-Down" }} </v-toolbar-title>
         <v-spacer />
-        <v-tooltip bottom>
-          <template #activator="{ on, attrs }">
-            <v-btn icon :to="{ name: 'sprint-kanban', params: { sprintId } }" v-bind="attrs" v-on="on">
-              <v-icon>mdi-teach</v-icon>
-            </v-btn>
-          </template>
-          <span>
-            Kanban
-          </span>
-        </v-tooltip>
-        <v-tooltip bottom>
-          <template #activator="{ on, attrs }">
-            <v-btn icon :to="{ name: 'sprint-gantt', params: { sprintId } }" v-bind="attrs" v-on="on">
-              <v-icon>mdi-chart-timeline</v-icon>
-            </v-btn>
-          </template>
-          <span>
-            Diagrama de Gantt
-          </span>
-        </v-tooltip>
+        <SprintViewSelector :sprint-id="sprintId" />
         <v-divider vertical inset />
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">
@@ -54,13 +35,14 @@ import { mapGetters } from "vuex";
 import BreadcrumbsContextMixin from "@/mixins/scrum/breadcrumbs-context-mixin";
 
 import SprintBurnChart from "@/components/scrum/charts/SprintBurnChart";
+import SprintViewSelector from "@/components/scrum/SprintViewSelector";
 
 export default {
   name: "SprintChart",
   metaInfo: {
     title: "Sprint - Gráfica",
   },
-  components: { SprintBurnChart },
+  components: { SprintBurnChart, SprintViewSelector },
   mixins: [BreadcrumbsContextMixin],
   data() {
     return {

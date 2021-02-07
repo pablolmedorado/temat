@@ -112,6 +112,7 @@ class UserStoryFilterSet(FilterSet):
             "support_user_id": ["exact", "in"],
             "cvs_reference": ["icontains"],
             "risk_level": ["exact", "in"],
+            "use_migrations": ["exact"],
             "tags__name": ["in", "iexact", "icontains", "istartswith"],
         }
 

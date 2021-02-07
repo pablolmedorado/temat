@@ -67,6 +67,8 @@ const defaultItem = {
   cvs_reference: "",
   risk_level: 0,
   risk_comments: "",
+  use_migrations: false,
+  deployment_notes: "",
   tags: [],
 };
 
