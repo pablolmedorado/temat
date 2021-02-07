@@ -5,7 +5,7 @@
         <v-text-field
           :value="filters.search"
           label="Buscar"
-          placeholder="Id, nombre, descripciones, comentarios, scv..."
+          placeholder="Id, nombre, descripciones, comentarios, notas, scv..."
           prepend-icon="mdi-magnify"
           clearable
           @input="updateFilters({ search: $event })"
@@ -70,6 +70,7 @@
             <v-tab href="#status">Estado</v-tab>
             <v-tab href="#dates">Fechas</v-tab>
             <v-tab href="#people">Personas</v-tab>
+            <v-tab href="#others">Otros</v-tab>
           </v-tabs>
           <v-tabs-items v-model="tab">
             <v-tab-item value="general">
@@ -78,7 +79,7 @@
                   <v-text-field
                     :value="filters.search"
                     label="Buscar"
-                    placeholder="Id, nombre, descripciones, comentarios, scv..."
+                    placeholder="Id, nombre, descripciones, comentarios, notas, scv..."
                     prepend-icon="mdi-magnify"
                     clearable
                     @input="updateFilters({ search: $event })"
@@ -147,30 +148,6 @@
                     deletable-chips
                     clearable
                     @input="updateFilters({ tags__name__in: $event.join(',') })"
-                  />
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    :value="filters.planned_effort__gte"
-                    label="Esfuerzo (desde)"
-                    type="number"
-                    min="0"
-                    prepend-icon="mdi-dumbbell"
-                    clearable
-                    @input="updateFilters({ planned_effort__gte: $event })"
-                  />
-                </v-col>
-                <v-col>
-                  <v-text-field
-                    :value="filters.planned_effort__lte"
-                    label="Esfuerzo (hasta)"
-                    type="number"
-                    min="0"
-                    prepend-icon="mdi-dumbbell"
-                    clearable
-                    @input="updateFilters({ planned_effort__lte: $event })"
                   />
                 </v-col>
               </v-row>
@@ -403,6 +380,43 @@
                     truncate-results
                     clearable
                     @input="updateFilters({ support_user_id__in: $event.join(',') })"
+                  />
+                </v-col>
+              </v-row>
+            </v-tab-item>
+            <v-tab-item value="others">
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    :value="filters.planned_effort__gte"
+                    label="Esfuerzo (desde)"
+                    type="number"
+                    min="0"
+                    prepend-icon="mdi-dumbbell"
+                    clearable
+                    @input="updateFilters({ planned_effort__gte: $event })"
+                  />
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    :value="filters.planned_effort__lte"
+                    label="Esfuerzo (hasta)"
+                    type="number"
+                    min="0"
+                    prepend-icon="mdi-dumbbell"
+                    clearable
+                    @input="updateFilters({ planned_effort__lte: $event })"
+                  />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-switch
+                    class="pl-1"
+                    :value="filters.use_migrations"
+                    label="Usa migraciones"
+                    inset
+                    @change="updateFilters({ use_migrations: $event })"
                   />
                 </v-col>
               </v-row>

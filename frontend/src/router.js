@@ -11,6 +11,7 @@ import Sprints from "@/views/scrum/sprints/Sprints";
 import SprintKanban from "@/views/scrum/sprints/SprintKanban";
 import SprintChart from "@/views/scrum/sprints/SprintChart";
 import SprintGantt from "@/views/scrum/sprints/SprintGantt";
+import SprintDeploymentReport from "@/views/scrum/sprints/SprintDeploymentReport";
 import UserStories from "@/views/scrum/user-stories/UserStories";
 import UserStoryDetail from "@/views/scrum/user-stories/UserStoryDetail";
 import Epics from "@/views/scrum/Epics";
@@ -109,6 +110,15 @@ const router = new Router({
       path: "/scrum/sprints/:sprintId/gantt",
       name: "sprint-gantt",
       component: SprintGantt,
+      props: true,
+      meta: {
+        keepAlive: false,
+      },
+    },
+    {
+      path: "/scrum/sprints/:sprintId/deployment-report",
+      name: "sprint-deployment-report",
+      component: SprintDeploymentReport,
       props: true,
       meta: {
         keepAlive: false,

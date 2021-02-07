@@ -78,6 +78,19 @@ class SprintViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
         chart_data = gantt_chart_data(instance)
         return Response(chart_data)
 
+    @action(detail=True, methods=["GET"])
+    def deployment_report(self, request, *args, **kwargs):
+        instance = self.get_object()
+        report_data = {
+            "user_story_count": instance.user_stories.count(),
+            "user_stories_with_migrations": instance.user_stories.filter(use_migrations=True).values("id", "name"),
+            "development_users": instance.user_stories.values_list("development_user", flat=True).distinct(),
+            "deployment_notes": instance.user_stories.exclude(deployment_notes="").values(
+                "id", "name", "deployment_notes"
+            ),
+        }
+        return Response(report_data)
+
 
 class EpicViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
@@ -113,6 +126,7 @@ class UserStoryViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
         "support_comments",
         "cvs_reference",
         "risk_comments",
+        "deployment_notes",
     )
     ordering_fields = (
         "name",
@@ -128,6 +142,7 @@ class UserStoryViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
         "priority",
         "risk_level",
         "cvs_reference",
+        "use_migrations",
     )
     ordering = ("-start_date",)
     permit_list_expands = ["type", "epic", "sprint", "development_user", "validation_user", "support_user"]

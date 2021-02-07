@@ -13,4 +13,9 @@ export default class SprintService extends BaseService {
     const url = Urls[`${this.baseUrlName}-gantt-chart`]({ pk });
     return Api.get(url);
   }
+
+  static deploymentReportData(pk) {
+    const url = Urls[`${this.baseUrlName}-deployment-report`]({ pk });
+    return Api.get(url);
+  }
 }

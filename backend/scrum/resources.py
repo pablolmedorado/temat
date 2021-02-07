@@ -68,6 +68,8 @@ class UserStoryResource(resources.ModelResource):
             "cvs_reference",
             "risk_level",
             "risk_comments",
+            "use_migrations",
+            "deployment_notes",
         )
         export_order = fields
 

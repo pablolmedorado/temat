@@ -58,36 +58,7 @@
                 Ver historias de usuario asociadas
               </span>
             </v-tooltip>
-            <v-tooltip bottom>
-              <template #activator="{ on, attrs }">
-                <v-btn icon :to="{ name: 'sprint-kanban', params: { sprintId: item.id } }" v-bind="attrs" v-on="on">
-                  <v-icon>mdi-teach</v-icon>
-                </v-btn>
-              </template>
-              <span>
-                Kanban
-              </span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template #activator="{ on, attrs }">
-                <v-btn icon :to="{ name: 'sprint-chart', params: { sprintId: item.id } }" v-bind="attrs" v-on="on">
-                  <v-icon>mdi-fire</v-icon>
-                </v-btn>
-              </template>
-              <span>
-                Diagrama de quemado (Burn-down/up)
-              </span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template #activator="{ on, attrs }">
-                <v-btn icon :to="{ name: 'sprint-gantt', params: { sprintId: item.id } }" v-bind="attrs" v-on="on">
-                  <v-icon>mdi-chart-timeline</v-icon>
-                </v-btn>
-              </template>
-              <span>
-                Diagrama de Gantt
-              </span>
-            </v-tooltip>
+            <SprintViewSelector :sprint-id="item.id" menu />
           </template>
         </ItemIndex>
       </v-col>
@@ -103,12 +74,14 @@ import SprintService from "@/services/scrum/sprint-service";
 
 import SprintFilters from "@/components/scrum/filters/SprintFilters";
 import SprintForm from "@/components/scrum/forms/SprintForm";
+import SprintViewSelector from "@/components/scrum/SprintViewSelector";
 
 export default {
   name: "Sprints",
   metaInfo: {
     title: "Sprints",
   },
+  components: { SprintViewSelector },
   data() {
     return {
       tableHeaders: [

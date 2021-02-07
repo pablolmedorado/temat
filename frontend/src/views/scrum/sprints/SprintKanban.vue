@@ -5,26 +5,7 @@
       <v-toolbar flat>
         <v-toolbar-title class="text-h6">Kanban</v-toolbar-title>
         <v-spacer />
-        <v-tooltip bottom>
-          <template #activator="{ on, attrs }">
-            <v-btn icon :to="{ name: 'sprint-chart', params: { sprintId } }" v-bind="attrs" v-on="on">
-              <v-icon>mdi-fire</v-icon>
-            </v-btn>
-          </template>
-          <span>
-            Diagrama de quemado (Burn-down/up)
-          </span>
-        </v-tooltip>
-        <v-tooltip bottom>
-          <template #activator="{ on, attrs }">
-            <v-btn icon :to="{ name: 'sprint-gantt', params: { sprintId } }" v-bind="attrs" v-on="on">
-              <v-icon>mdi-chart-timeline</v-icon>
-            </v-btn>
-          </template>
-          <span>
-            Diagrama de Gantt
-          </span>
-        </v-tooltip>
+        <SprintViewSelector :sprint-id="sprintId" />
         <v-divider vertical inset />
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">
@@ -90,13 +71,14 @@ import BreadcrumbsContextMixin from "@/mixins/scrum/breadcrumbs-context-mixin";
 import UserStoryService from "@/services/scrum/user-story-service";
 
 import KanbanCard from "@/components/scrum/KanbanCard";
+import SprintViewSelector from "@/components/scrum/SprintViewSelector";
 
 export default {
   name: "SprintKanban",
   metaInfo: {
     title: "Sprint - Kanban",
   },
-  components: { KanbanCard },
+  components: { KanbanCard, SprintViewSelector },
   mixins: [BreadcrumbsContextMixin],
   props: {
     sprintId: {

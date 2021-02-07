@@ -130,6 +130,7 @@ class UserStoryAdmin(ImportExportActionModelAdmin):
                 )
             },
         ),
+        (_("Despliegue"), {"fields": ("use_migrations", "deployment_notes")}),
         (_("Miscelánea"), {"fields": ("cvs_reference",)}),
         (
             _("Autoría"),
