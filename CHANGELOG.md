@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/pablolmedorado/temat/compare/v1.8.0...v1.9.0) (2021-02-07)
+
+
+### Features
+
+* **sprints:** add deployment report view ([fa3c35b](https://github.com/pablolmedorado/temat/commit/fa3c35b410a5fa138e15403aec8546f544b05d09))
+* **user-stories:** use mdi icon in user story priority field ([a7853f0](https://github.com/pablolmedorado/temat/commit/a7853f061b6ec63c650be117eaf0f66b364c083a))
+
+
+### Bug Fixes
+
+* **backend:** add missing user manager migration ([aae10d1](https://github.com/pablolmedorado/temat/commit/aae10d1c5172f193955b3a1a971ae6acefa5ddda))
+* **frontend:** fix spacing after vuetify internal changes ([6b06578](https://github.com/pablolmedorado/temat/commit/6b065782b4a9b7726b5a07226b9d955f2a7aaaea))
+* **frontend:** move/hide outer form field icons ([ff908b2](https://github.com/pablolmedorado/temat/commit/ff908b2e8758acfd35df7afc14ea79c76e994198))
+* **frontend:** set keep-alive to false in sprint views ([f107fd6](https://github.com/pablolmedorado/temat/commit/f107fd677b62195cbaae3e46029083068e2341ef))
+* **frontend:** use pre-wrap to allow new lines in truncated text ([b98d75c](https://github.com/pablolmedorado/temat/commit/b98d75c72cff70308ee9cd26c582670f301efff7))
+* **notifications:** improve notifications readability adding "" to the notification target ([b8361db](https://github.com/pablolmedorado/temat/commit/b8361db4b5b8cc09aee039686b1571e769ef066b))
+* **notifications:** mark notifications as read before navigate ([f7a9bee](https://github.com/pablolmedorado/temat/commit/f7a9bee8503ef495763ecd9e495a9bc5c6090f0c))
+* **user-stories:** fix issue with unsaved changes warning on new records ([5feaa49](https://github.com/pablolmedorado/temat/commit/5feaa49198aa8da5e84739cbe97e9f33636bb89c))
+* **users:** fix active/inactive user issues ([f54e25d](https://github.com/pablolmedorado/temat/commit/f54e25d979b426d9d76e88e9fad77747fce69d68))
+
 ## [1.8.0](https://github.com/pablolmedorado/temat/compare/v1.7.0...v1.8.0) (2021-01-31)
 
 
