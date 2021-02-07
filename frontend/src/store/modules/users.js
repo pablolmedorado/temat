@@ -10,7 +10,7 @@ export default {
     groups: [],
   },
   getters: {
-    usersWithCompany: (state) => state.users.filter((user) => Boolean(user.company)),
+    workerUsers: (state) => state.users.filter((user) => user.is_active && Boolean(user.company)),
     usersMap: (state) => keyBy(state.users, "id"),
     groupsMap: (state) => keyBy(state.groups, "id"),
   },

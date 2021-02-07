@@ -12,7 +12,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("users", ["usersWithCompany"]),
+    ...mapGetters("users", ["workerUsers"]),
   },
   watch: {
     "filters.allowance_date__year": function(newYear) {
@@ -36,7 +36,7 @@ export default {
       this.summary = Object.fromEntries(response.data.map((item) => [item.date, item.users]));
     },
     summaryDateColour(date) {
-      const userRatio = (defaultTo(this.summary[date], 0) * 100) / this.usersWithCompany.length;
+      const userRatio = (defaultTo(this.summary[date], 0) * 100) / this.workerUsers.length;
       if (userRatio < 20) {
         return "green";
       }

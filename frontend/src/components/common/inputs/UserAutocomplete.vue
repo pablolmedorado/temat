@@ -4,6 +4,7 @@
     :items="userOptions"
     :item-text="(user) => `${user.first_name} ${user.last_name}`"
     item-value="id"
+    :item-disabled="(user) => !user.is_active"
     :disabled="disabled"
     :readonly="readonly"
     :loading="!userOptions.length"
