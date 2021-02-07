@@ -55,7 +55,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import { maxLength, not, sameAs } from "vuelidate/lib/validators";
 
 import FormMixin from "@/mixins/form-mixin";
@@ -79,11 +78,6 @@ export default {
       },
       successMessage: "Jornada especial guardada correctamente",
     };
-  },
-  computed: {
-    ...mapState("users", {
-      userOptions: "users",
-    }),
   },
 };
 </script>

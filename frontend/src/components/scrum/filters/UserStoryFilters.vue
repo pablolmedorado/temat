@@ -450,9 +450,6 @@ export default {
     };
   },
   computed: {
-    ...mapState("users", {
-      userOptions: "users",
-    }),
     ...mapState("scrum", {
       riskLevelOptions: "riskLevels",
       userStoryStatusOptions: "userStoryStatus",
