@@ -68,7 +68,7 @@
                     >
                       <v-list-item-title :class="{ 'font-weight-medium': index === 0 }">
                         {{ notification.actor.first_name }} {{ notification.actor.last_name }} {{ notification.verb }}
-                        {{ notification.target ? notification.target.representation : "" }}
+                        {{ notification.target ? `"${notification.target.representation}"` : "" }}
                       </v-list-item-title>
                       <v-list-item-subtitle>Hace {{ notification.timesince }}</v-list-item-subtitle>
                     </v-list-item-content>
