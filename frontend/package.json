@@ -23,7 +23,7 @@
     "vue-meta": "^2.4.0",
     "vue-router": "^3.5.1",
     "vuelidate": "^0.7.6",
-    "vuetify": "^2.4.3",
+    "vuetify": "^2.4.4",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
@@ -40,7 +40,7 @@
     "eslint-plugin-vuetify": "^1.0.0-beta.7",
     "node-sass": "^4.14.1",
     "prettier": "^1.19.1",
-    "sass": "^1.32.6",
+    "sass": "^1.32.7",
     "sass-loader": "^8.0.2",
     "vue-cli-plugin-vuetify": "^2.1.0",
     "vue-template-compiler": "^2.6.12",
