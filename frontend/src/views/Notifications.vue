@@ -28,9 +28,7 @@
                   <v-icon>mdi-email-open</v-icon>
                 </v-btn>
               </template>
-              <span>
-                Marcar como leído
-              </span>
+              <span> Marcar como leído </span>
             </v-tooltip>
             <v-tooltip bottom>
               <template #activator="{ on, attrs }">
@@ -44,9 +42,7 @@
                   <v-icon>mdi-email-mark-as-unread</v-icon>
                 </v-btn>
               </template>
-              <span>
-                Marcar como no leído
-              </span>
+              <span> Marcar como no leído </span>
             </v-tooltip>
             <v-btn icon :disabled="loading || !Boolean(selectedItems.length)" @click="openDeleteDialog(selectedItems)">
               <v-icon>mdi-delete</v-icon>

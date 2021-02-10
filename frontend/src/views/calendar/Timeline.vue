@@ -45,9 +45,7 @@
                   <v-divider />
                   <EventRepresentation :item="event" />
                   <v-card-actions>
-                    <v-btn text color="primary" @click="viewInCalendar(event)">
-                      Ver en el calendario
-                    </v-btn>
+                    <v-btn text color="primary" @click="viewInCalendar(event)"> Ver en el calendario </v-btn>
                   </v-card-actions>
                 </v-card>
               </v-timeline-item>

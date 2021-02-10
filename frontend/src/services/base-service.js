@@ -21,14 +21,14 @@ export default class BaseService {
     });
   }
 
-  static save(payload, config = {}) {
+  static save(payload, queryParams) {
     const method = payload.id ? "put" : "post";
     const url = payload.id ? this.detailUrl(payload.id) : this.listUrl;
-    return Api[method](url, payload, config);
+    return Api[method](url, payload, { params: queryParams });
   }
 
-  static update(payload, config = {}) {
-    return Api.patch(this.detailUrl(payload.id), payload, config);
+  static update(payload, queryParams) {
+    return Api.patch(this.detailUrl(payload.id), payload, { params: queryParams });
   }
 
   static delete(pk) {

@@ -126,7 +126,7 @@ export default {
       }
     },
     async validateUserStory(item) {
-      const response = await UserStoryService.validate(item.id);
+      const response = await UserStoryService.validate(item.id, { expand: "sprint" });
       this.$emit("update:item", response.data);
     },
     async copyUserStory() {

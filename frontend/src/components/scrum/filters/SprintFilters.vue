@@ -40,9 +40,7 @@
     >
       <v-card>
         <v-toolbar flat>
-          <v-toolbar-title class="text-h6">
-            Filtros avanzados
-          </v-toolbar-title>
+          <v-toolbar-title class="text-h6"> Filtros avanzados </v-toolbar-title>
         </v-toolbar>
         <v-card-text>
           <v-row>
@@ -119,9 +117,7 @@
         <v-card-actions>
           <v-btn color="warning" text @click="$emit('clear:filters')">Limpiar</v-btn>
           <v-spacer />
-          <v-btn color="primary" text @click="closeFiltersDialog">
-            Volver
-          </v-btn>
+          <v-btn color="primary" text @click="closeFiltersDialog"> Volver </v-btn>
           <v-btn color="primary" text :loading="loading" :disabled="loading" @click="applyFiltersFromDialog">
             Filtrar
           </v-btn>

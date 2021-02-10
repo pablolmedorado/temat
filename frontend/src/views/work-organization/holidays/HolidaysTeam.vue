@@ -7,9 +7,7 @@
       <v-col cols="12" md="8">
         <v-card>
           <v-toolbar flat>
-            <v-toolbar-title class="text-h6">
-              Vacaciones del equipo
-            </v-toolbar-title>
+            <v-toolbar-title class="text-h6"> Vacaciones del equipo </v-toolbar-title>
             <v-spacer />
             <v-btn icon :disabled="loading" @click="fetchItems">
               <v-icon>mdi-refresh</v-icon>

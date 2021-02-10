@@ -4,9 +4,7 @@
       <v-col cols="12" md="4">
         <v-card>
           <v-toolbar flat>
-            <v-toolbar-title class="text-h6">
-              Solicitud
-            </v-toolbar-title>
+            <v-toolbar-title class="text-h6"> Solicitud </v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-select
@@ -84,9 +82,7 @@
       <v-col cols="12" md="8">
         <v-card>
           <v-toolbar flat>
-            <v-toolbar-title class="text-h6">
-              Mis vacaciones
-            </v-toolbar-title>
+            <v-toolbar-title class="text-h6"> Mis vacaciones </v-toolbar-title>
             <v-spacer />
             <v-btn icon :disabled="loading" @click="fetchItems">
               <v-icon>mdi-refresh</v-icon>
@@ -216,7 +212,7 @@ export default {
     },
   },
   watch: {
-    "filters.allowance_date__year": function(newValue) {
+    "filters.allowance_date__year": function (newValue) {
       this.fetchItems();
       this.pickerDate =
         newValue === currentDate.year

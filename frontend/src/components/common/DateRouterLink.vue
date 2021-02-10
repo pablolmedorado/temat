@@ -6,9 +6,7 @@
         <template #activator="{ on, attrs }">
           <v-icon small v-bind="attrs" v-on="on">mdi-calendar-search</v-icon>
         </template>
-        <span>
-          Ver en el calendario
-        </span>
+        <span> Ver en el calendario </span>
       </v-tooltip>
     </router-link>
   </span>

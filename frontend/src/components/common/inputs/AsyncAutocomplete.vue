@@ -133,7 +133,7 @@ export default {
         this.loading = false;
       }
     },
-    debouncedSearch: debounce(function(query) {
+    debouncedSearch: debounce(function (query) {
       this.search(query);
     }, 200),
     normalizeText(text) {

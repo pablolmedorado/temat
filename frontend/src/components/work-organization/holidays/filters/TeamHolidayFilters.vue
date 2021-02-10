@@ -1,9 +1,7 @@
 <template>
   <v-card>
     <v-toolbar flat>
-      <v-toolbar-title class="text-h6">
-        Filtros
-      </v-toolbar-title>
+      <v-toolbar-title class="text-h6"> Filtros </v-toolbar-title>
     </v-toolbar>
     <v-card-text>
       <v-row>
@@ -67,9 +65,7 @@
       </v-btn>
       <HolidaysHelpDialog v-model="showHelpDialog" />
       <v-spacer />
-      <v-btn color="warning" text @click="reset">
-        Restablecer
-      </v-btn>
+      <v-btn color="warning" text @click="reset"> Restablecer </v-btn>
     </v-card-actions>
   </v-card>
 </template>

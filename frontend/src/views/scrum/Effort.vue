@@ -48,9 +48,7 @@
                 <template #activator="{ on, attrs }">
                   <v-icon small v-bind="attrs" v-on="on">mdi-open-in-app</v-icon>
                 </template>
-                <span>
-                  Ver historia de usuario
-                </span>
+                <span> Ver historia de usuario </span>
               </v-tooltip>
             </router-link>
           </template>
@@ -157,9 +155,7 @@ export default {
           key: "last-week",
           label: "Última semana",
           filters: {
-            date__gte: DateTime.local()
-              .minus({ weeks: 1 })
-              .toISODate(),
+            date__gte: DateTime.local().minus({ weeks: 1 }).toISODate(),
             date__lte: DateTime.local().toISODate(),
           },
         },
