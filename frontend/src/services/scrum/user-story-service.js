@@ -4,9 +4,9 @@ import BaseService from "../base-service";
 export default class UserStoryService extends BaseService {
   static baseUrlName = "scrum:user-story";
 
-  static validate(pk) {
+  static validate(pk, queryParams) {
     const url = Urls[`${this.baseUrlName}-validate`]({ pk });
-    return Api.patch(url);
+    return Api.patch(url, undefined, { params: queryParams });
   }
 
   static copy(pk) {
@@ -16,48 +16,41 @@ export default class UserStoryService extends BaseService {
 
   static tasksByUserStory(pk, queryParams) {
     const url = Urls["scrum:user-story-tasks-list"]({ user_story: pk });
-    return Api.get(url, {
-      params: queryParams,
-    });
+    return Api.get(url, { params: queryParams });
   }
 
   static progressByUserStory(pk, queryParams) {
     const url = Urls["scrum:user-story-progress-list"]({ user_story: pk });
-    return Api.get(url, {
-      params: queryParams,
-    });
+    return Api.get(url, { params: queryParams });
   }
 
   static effortByUserStory(pk, queryParams) {
     const url = Urls["scrum:user-story-effort-list"]({ user_story: pk });
-    return Api.get(url, {
-      params: queryParams,
-    });
+    return Api.get(url, { params: queryParams });
   }
 
   static typeChartData(queryParams) {
     const url = Urls["scrum:user-story-type-pie-chart"]();
-    return Api.get(url, {
-      params: queryParams,
-    });
+    return Api.get(url, { params: queryParams });
   }
 
   static effortRoleChartData(queryParams) {
     const url = Urls["scrum:user-story-effort-role-pie-chart"]();
-    return Api.get(url, {
-      params: queryParams,
-    });
+    return Api.get(url, { params: queryParams });
   }
 
   static userChartData(queryParams) {
-    return Api.get(`${this.listUrl}user_chart/`, { params: queryParams });
+    const url = Urls["scrum:user-story-user-chart"]();
+    return Api.get(url, { params: queryParams });
   }
 
   static delayedChartData(queryParams) {
-    return Api.get(`${this.listUrl}delayed_pie_chart/`, { params: queryParams });
+    const url = Urls["scrum:user-story-delayed-pie-chart"]();
+    return Api.get(url, { params: queryParams });
   }
 
   static overworkedChartData(queryParams) {
-    return Api.get(`${this.listUrl}overworked_pie_chart/`, { params: queryParams });
+    const url = Urls["scrum:user-story-overworked-pie-chart"]();
+    return Api.get(url, { params: queryParams });
   }
 }

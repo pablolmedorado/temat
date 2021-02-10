@@ -626,11 +626,7 @@ export default {
           ...this.item,
           sprint: this.item.sprint ? this.item.sprint.id : null,
         }),
-        {
-          params: {
-            expand: "sprint",
-          },
-        },
+        { expand: "sprint" },
       ];
     },
     setStartDateFromSprint() {
