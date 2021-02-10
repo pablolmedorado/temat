@@ -9,7 +9,7 @@
 ![Python version](https://img.shields.io/badge/Python-3.7-ffd343)
 ![Django version](https://img.shields.io/badge/Django-3.1-0c4b33)
 ![Django Rest Framework version](https://img.shields.io/badge/DRF-3.12-a30000)
-![Node version](https://img.shields.io/badge/Node.js-12-026e00)
+![Node version](https://img.shields.io/badge/Node.js-14-026e00)
 ![Vue.js version](https://img.shields.io/badge/Vue.js-2.6-4fc08d)
 ![Vuetify version](https://img.shields.io/badge/Vuetify-2.4-1867c0)
 

@@ -1,4 +1,4 @@
-FROM nikolaik/python-nodejs:python3.7-nodejs12
+FROM nikolaik/python-nodejs:python3.7-nodejs14
 
 # Provide an optional non-root user with sudo
 ARG USERNAME=temat
