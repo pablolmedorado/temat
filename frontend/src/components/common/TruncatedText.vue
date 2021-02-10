@@ -13,7 +13,7 @@
       </span>
     </template>
     <v-card>
-      <v-card-text class="pre-formatted">{{ value }}</v-card-text>
+      <v-card-text class="text-pre-wrap">{{ value }}</v-card-text>
     </v-card>
   </v-menu>
 </template>
@@ -49,7 +49,7 @@ export default {
 </script>
 
 <style scoped>
-.pre-formatted {
+.text-pre-wrap {
   white-space: pre-wrap;
 }
 </style>

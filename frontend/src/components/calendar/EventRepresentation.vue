@@ -76,7 +76,7 @@
     <v-row v-if="item.details">
       <v-col>
         <div class="text-subtitle-1 font-weight-medium">Detalles:</div>
-        <div>{{ item.details }}</div>
+        <div class="text-pre-wrap">{{ item.details }}</div>
       </v-col>
     </v-row>
     <v-row v-if="item.attendees.length">
@@ -186,5 +186,8 @@ export default {
 .time-label {
   display: inline-block;
   min-width: 60px;
+}
+.text-pre-wrap {
+  white-space: pre-wrap;
 }
 </style>

@@ -66,7 +66,7 @@
                     {{ userStory.name }}
                   </router-link>
                 </span>
-                <p class="pre-formatted">{{ userStory.deployment_notes }}</p>
+                <p class="text-pre-wrap">{{ userStory.deployment_notes }}</p>
               </li>
             </ul>
           </v-expansion-panel-content>
@@ -251,7 +251,7 @@ export default {
 .user-story-link {
   text-decoration: none;
 }
-.pre-formatted {
+.text-pre-wrap {
   white-space: pre-wrap;
 }
 </style>
