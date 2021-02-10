@@ -84,7 +84,9 @@ class SprintViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
         report_data = {
             "user_story_count": instance.user_stories.count(),
             "user_stories_with_migrations": instance.user_stories.filter(use_migrations=True).values("id", "name"),
-            "development_users": instance.user_stories.values_list("development_user", flat=True).distinct(),
+            "development_users": instance.user_stories.order_by("development_user")
+            .values_list("development_user", flat=True)
+            .distinct(),
             "deployment_notes": instance.user_stories.exclude(deployment_notes="").values(
                 "id", "name", "deployment_notes"
             ),
