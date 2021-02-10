@@ -9,9 +9,7 @@
   >
     <v-card>
       <v-toolbar flat>
-        <v-toolbar-title class="text-h6">
-          Resumen de tostadas
-        </v-toolbar-title>
+        <v-toolbar-title class="text-h6"> Resumen de tostadas </v-toolbar-title>
       </v-toolbar>
       <v-card-text class="pa-0">
         <v-data-table
@@ -70,12 +68,7 @@ export default {
   computed: {
     itemSummary() {
       return chain(this.items)
-        .map((item) =>
-          chain(item)
-            .pick(["bread", "base", "ingredient1", "ingredient2"])
-            .map(property("name"))
-            .value()
-        )
+        .map((item) => chain(item).pick(["bread", "base", "ingredient1", "ingredient2"]).map(property("name")).value())
         .countBy()
         .map((count, item) => {
           const elements = item.split(",");

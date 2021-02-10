@@ -20,9 +20,7 @@
       <template #activator="{ on, attrs }">
         <v-icon class="ml-1" color="error" v-bind="attrs" v-on="on">mdi-alert-circle-check-outline</v-icon>
       </template>
-      <span>
-        Validación rechazada
-      </span>
+      <span> Validación rechazada </span>
     </v-tooltip>
   </span>
 </template>

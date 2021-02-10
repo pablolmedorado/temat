@@ -204,7 +204,7 @@ export default {
     isXmas,
   },
   watch: {
-    "$vuetify.theme.dark": function(newValue) {
+    "$vuetify.theme.dark": function (newValue) {
       localStorage.darkMode = JSON.stringify(newValue);
     },
     konamiCodeActive(newValue) {

@@ -62,9 +62,7 @@
                   <v-icon>mdi-open-in-app</v-icon>
                 </v-btn>
               </template>
-              <span>
-                Ver detalle
-              </span>
+              <span> Ver detalle </span>
             </v-tooltip>
             <v-tooltip bottom>
               <template #activator="{ on, attrs }">
@@ -76,9 +74,7 @@
                   <v-icon v-bind="attrs" v-on="on">mdi-calendar-search</v-icon>
                 </v-btn>
               </template>
-              <span>
-                Ver en el calendario
-              </span>
+              <span> Ver en el calendario </span>
             </v-tooltip>
           </template>
         </ItemIndex>

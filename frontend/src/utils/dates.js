@@ -23,9 +23,7 @@ export function isoDateTimeToLocaleString(isoDateTime, format) {
 }
 
 export function getReadableDuration(durationObj) {
-  const duration = Duration.fromObject(durationObj)
-    .shiftTo("days", "hours", "minutes", "seconds")
-    .toObject();
+  const duration = Duration.fromObject(durationObj).shiftTo("days", "hours", "minutes", "seconds").toObject();
   let result = "";
   if (duration.days) {
     result += `${duration.days} ${duration.days === 1 ? "día" : "días"}`;

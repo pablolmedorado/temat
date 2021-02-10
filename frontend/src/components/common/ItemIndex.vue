@@ -133,9 +133,7 @@
                     <v-icon>mdi-pencil</v-icon>
                   </v-btn>
                 </template>
-                <span>
-                  Editar
-                </span>
+                <span> Editar </span>
               </v-tooltip>
               <v-tooltip v-if="canDelete(slotProps.item, loggedUser)" bottom>
                 <template #activator="{ on, attrs }">
@@ -149,9 +147,7 @@
                     <v-icon>mdi-delete</v-icon>
                   </v-btn>
                 </template>
-                <span>
-                  Eliminar
-                </span>
+                <span> Eliminar </span>
               </v-tooltip>
             </template>
           </span>

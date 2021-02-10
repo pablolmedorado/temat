@@ -49,9 +49,7 @@
                   <v-icon>mdi-open-in-app</v-icon>
                 </v-btn>
               </template>
-              <span>
-                Ver detalle
-              </span>
+              <span> Ver detalle </span>
             </v-tooltip>
             <v-tooltip v-if="item.status < 3 && canDevelop(item, loggedUser)" bottom>
               <template #activator="{ on, attrs }">
@@ -59,9 +57,7 @@
                   <v-icon>mdi-format-list-checks</v-icon>
                 </v-btn>
               </template>
-              <span>
-                Ver tareas
-              </span>
+              <span> Ver tareas </span>
             </v-tooltip>
             <v-tooltip v-if="item.status < 4" bottom>
               <template #activator="{ on, attrs }">
@@ -69,9 +65,7 @@
                   <v-icon>mdi-dumbbell</v-icon>
                 </v-btn>
               </template>
-              <span>
-                Añadir esfuerzo
-              </span>
+              <span> Añadir esfuerzo </span>
             </v-tooltip>
             <v-tooltip v-if="item.status === 3 && canValidate(item, loggedUser)" bottom>
               <template #activator="{ on, attrs }">
@@ -79,9 +73,7 @@
                   <v-icon>mdi-check-bold</v-icon>
                 </v-btn>
               </template>
-              <span>
-                Validar
-              </span>
+              <span> Validar </span>
             </v-tooltip>
           </template>
 

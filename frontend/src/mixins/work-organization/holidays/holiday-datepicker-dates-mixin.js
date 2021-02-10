@@ -15,7 +15,7 @@ export default {
     ...mapGetters("users", ["workerUsers"]),
   },
   watch: {
-    "filters.allowance_date__year": function(newYear) {
+    "filters.allowance_date__year": function (newYear) {
       this.getSummary();
       this.getImportantDatesByYear(newYear);
     },

@@ -2,9 +2,7 @@
   <v-dialog v-model="showDialog" v-bind="$attrs" :max-width="500" @click:outside="close" @keydown.esc="close">
     <v-card>
       <v-toolbar flat>
-        <v-toolbar-title class="text-h6">
-          Código de colores
-        </v-toolbar-title>
+        <v-toolbar-title class="text-h6"> Código de colores </v-toolbar-title>
       </v-toolbar>
       <v-card-text class="pa-0">
         <v-simple-table>
@@ -44,9 +42,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="primary" text @click="close">
-          Volver
-        </v-btn>
+        <v-btn color="primary" text @click="close"> Volver </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

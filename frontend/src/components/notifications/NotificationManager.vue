@@ -20,9 +20,7 @@
               </v-badge>
             </v-btn>
           </template>
-          <span>
-            Notificaciones
-          </span>
+          <span> Notificaciones </span>
         </v-tooltip>
       </template>
 
@@ -44,9 +42,7 @@
                 <v-icon>mdi-notification-clear-all</v-icon>
               </v-btn>
             </template>
-            <span>
-              Marcar todas como leídas
-            </span>
+            <span> Marcar todas como leídas </span>
           </v-tooltip>
           <v-btn icon @click="getUnreadSummary">
             <v-icon>mdi-refresh</v-icon>
@@ -84,9 +80,7 @@
                             <v-icon>mdi-read</v-icon>
                           </v-btn>
                         </template>
-                        <span>
-                          Marcar como leída
-                        </span>
+                        <span> Marcar como leída </span>
                       </v-tooltip>
                     </v-list-item-action>
                   </v-list-item>
@@ -127,7 +121,7 @@ import NotificationImg from "@/assets/notification.png";
 export default {
   name: "NotificationManager",
   filters: {
-    text: function(value) {
+    text: function (value) {
       return isNil(value) ? "" : value.toString();
     },
   },
@@ -199,7 +193,7 @@ export default {
             this.handleNotificationPermission(permission);
           });
         } else {
-          Notification.requestPermission(function(permission) {
+          Notification.requestPermission(function (permission) {
             this.handleNotificationPermission(permission);
           });
         }

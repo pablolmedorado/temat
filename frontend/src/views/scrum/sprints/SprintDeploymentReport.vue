@@ -76,9 +76,7 @@
           <v-expansion-panel-header class="panel-header">
             <span>
               <v-icon class="mr-2">mdi-book-account</v-icon>
-              <v-badge inline color="secondary" :content="userStoryCount.toString()">
-                Historias de usuario
-              </v-badge>
+              <v-badge inline color="secondary" :content="userStoryCount.toString()"> Historias de usuario </v-badge>
             </span>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
@@ -97,9 +95,7 @@
                     <template #activator="{ on, attrs }">
                       <v-icon small v-bind="attrs" v-on="on">mdi-open-in-app</v-icon>
                     </template>
-                    <span>
-                      Ver historia de usuario
-                    </span>
+                    <span> Ver historia de usuario </span>
                   </v-tooltip>
                 </router-link>
               </template>

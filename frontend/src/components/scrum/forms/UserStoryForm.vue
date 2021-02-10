@@ -3,9 +3,7 @@
     <v-row>
       <v-col>
         <v-card>
-          <v-card-title class="text-h6">
-            Información básica y clasificación
-          </v-card-title>
+          <v-card-title class="text-h6"> Información básica y clasificación </v-card-title>
           <v-card-text>
             <v-row>
               <v-col cols="12" md="6">
@@ -68,9 +66,7 @@
     <v-row>
       <v-col>
         <v-card>
-          <v-card-title class="text-h6">
-            Descripción
-          </v-card-title>
+          <v-card-title class="text-h6"> Descripción </v-card-title>
           <v-card-text>
             <v-row>
               <v-col cols="12" md="6">
@@ -107,9 +103,7 @@
     <v-row>
       <v-col>
         <v-card>
-          <v-card-title class="text-h6">
-            Planificación
-          </v-card-title>
+          <v-card-title class="text-h6"> Planificación </v-card-title>
           <v-card-text>
             <v-row>
               <v-col cols="12" lg="4">
@@ -162,9 +156,7 @@
                               mdi-run-fast
                             </v-icon>
                           </template>
-                          <span>
-                            Usar fecha del sprint
-                          </span>
+                          <span> Usar fecha del sprint </span>
                         </v-tooltip>
                       </template>
                     </v-text-field>
@@ -217,9 +209,7 @@
                               mdi-run-fast
                             </v-icon>
                           </template>
-                          <span>
-                            Usar fecha del sprint
-                          </span>
+                          <span> Usar fecha del sprint </span>
                         </v-tooltip>
                       </template>
                     </v-text-field>
@@ -280,9 +270,7 @@
     <v-row>
       <v-col>
         <v-card>
-          <v-card-title class="text-h6">
-            Asignación
-          </v-card-title>
+          <v-card-title class="text-h6"> Asignación </v-card-title>
           <v-card-text>
             <v-row>
               <v-col cols="12" md="6">
@@ -423,9 +411,7 @@
     <v-row>
       <v-col cols="12" lg="6">
         <v-card>
-          <v-card-title class="text-h6">
-            Gestión de riesgo
-          </v-card-title>
+          <v-card-title class="text-h6"> Gestión de riesgo </v-card-title>
           <v-card-text>
             <v-row>
               <v-col cols="12" md="6">
@@ -462,9 +448,7 @@
       </v-col>
       <v-col cols="12" lg="6">
         <v-card>
-          <v-card-title class="text-h6">
-            Información de despliegue
-          </v-card-title>
+          <v-card-title class="text-h6"> Información de despliegue </v-card-title>
           <v-card-text>
             <v-row>
               <v-col cols="12" md="6">

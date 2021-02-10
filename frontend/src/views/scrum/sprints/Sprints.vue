@@ -54,9 +54,7 @@
                   <v-icon>mdi-book-account</v-icon>
                 </v-btn>
               </template>
-              <span>
-                Ver historias de usuario asociadas
-              </span>
+              <span> Ver historias de usuario asociadas </span>
             </v-tooltip>
             <SprintViewSelector :sprint-id="item.id" menu />
           </template>

@@ -160,7 +160,7 @@ export default {
     initialDate: {
       type: String,
       default: undefined,
-      validator: function(value) {
+      validator: function (value) {
         return DateTime.fromISO(value).isValid;
       },
     },

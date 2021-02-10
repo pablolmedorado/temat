@@ -1,6 +1,3 @@
 {
-  "arrowParens": "always",
-  "endOfLine": "lf",
-  "printWidth": 120,
-  "trailingComma": "es5"
+  "printWidth": 120
 }

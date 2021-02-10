@@ -23,9 +23,7 @@
             mdi-dice-multiple
           </v-icon>
         </template>
-        <span>
-          Selección aleatoria
-        </span>
+        <span> Selección aleatoria </span>
       </v-tooltip>
     </template>
     <template #item="{ item }">
