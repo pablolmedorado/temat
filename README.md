@@ -11,7 +11,7 @@
 ![Django Rest Framework version](https://img.shields.io/badge/DRF-3.12-a30000)
 ![Node version](https://img.shields.io/badge/Node.js-12-026e00)
 ![Vue.js version](https://img.shields.io/badge/Vue.js-2.6-4fc08d)
-![Vuetify version](https://img.shields.io/badge/Vuetify-2.3-1867c0)
+![Vuetify version](https://img.shields.io/badge/Vuetify-2.4-1867c0)
 
 ## 👀 Overview
 
@@ -195,7 +195,7 @@ The app has been developed using [VS Code Dev Containers](https://code.visualstu
 
 Doing this you'll create 3 containers:
 
-- **PosgreSQL** database
+- **PostgreSQL** database
 - **Adminer** (database manager)
 - **VS Code dev container** with all the dependencies and extensions installed
 
