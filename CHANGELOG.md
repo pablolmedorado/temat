@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.9.1](https://github.com/pablolmedorado/temat/compare/v1.9.0...v1.9.1) (2021-02-10)
+
+
+### Bug Fixes
+
+* **calendar:** allow new lines in event details representation ([098e30f](https://github.com/pablolmedorado/temat/commit/098e30f7c76d3326bf8df8cfdb12fe795b983d26))
+* **sprints:** fix duplicated developers issue in deployment report ([8d392d8](https://github.com/pablolmedorado/temat/commit/8d392d82a7def3945d06c571f3d8ff54871b2942))
+* **user-stories:** fix issue with unsaved changes warning when validating a record ([505632d](https://github.com/pablolmedorado/temat/commit/505632dca518c6284797dc4e4f81097225ce8da5))
+
 ## [1.9.0](https://github.com/pablolmedorado/temat/compare/v1.8.0...v1.9.0) (2021-02-07)
 
 
