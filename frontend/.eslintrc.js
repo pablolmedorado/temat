@@ -33,6 +33,7 @@ module.exports = {
     "vue/valid-v-slot": "off", // TODO: activate after migrating to vue3/vuetify3
     "vuetify/grid-unknown-attributes": "error",
     "vuetify/no-deprecated-classes": "error",
+    "vuetify/no-deprecated-components": "error",
     "vuetify/no-legacy-grid": "error",
   },
 };
