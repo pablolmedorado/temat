@@ -41,6 +41,9 @@ export default new Vuex.Store({
     yearOptions: (state) => [state.currentYear - 1, state.currentYear, state.currentYear + 1],
   },
   mutations: {
+    setLoggedUser(state, user) {
+      state.loggedUser = user;
+    },
     addPendingRequest(state) {
       state.pendingRequests += 1;
     },
@@ -49,6 +52,9 @@ export default new Vuex.Store({
     },
     setSnackbar(state, payload) {
       state.snackbar = payload;
+    },
+    setKonamiCodeActive(state, active) {
+      state.konamiCodeActive = active;
     },
     toggleKonamiCode(state) {
       state.konamiCodeActive = !state.konamiCodeActive;

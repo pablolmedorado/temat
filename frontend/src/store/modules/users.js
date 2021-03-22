@@ -15,22 +15,22 @@ export default {
     groupsMap: (state) => keyBy(state.groups, "id"),
   },
   mutations: {
-    updateUsers(state, users) {
+    setUsers(state, users) {
       state.users = users;
     },
-    updateGroups(state, groups) {
+    setGroups(state, groups) {
       state.groups = groups;
     },
   },
   actions: {
     async getUsers({ commit }) {
       const response = await UserService.list();
-      commit("updateUsers", response.data);
+      commit("setUsers", response.data);
       return response.data;
     },
     async getGroups({ commit }) {
       const response = await GroupService.list();
-      commit("updateGroups", response.data);
+      commit("setGroups", response.data);
       return response.data;
     },
   },
