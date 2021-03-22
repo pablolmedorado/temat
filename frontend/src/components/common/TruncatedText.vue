@@ -9,16 +9,18 @@
   >
     <template #activator="{ on, attrs }">
       <span :style="{ cursor }" v-bind="attrs" v-on="on">
-        {{ text }}
+        {{ truncatedText }}
       </span>
     </template>
     <v-card>
-      <v-card-text class="text-pre-wrap">{{ value }}</v-card-text>
+      <v-card-text class="text-pre-wrap">{{ text }}</v-card-text>
     </v-card>
   </v-menu>
 </template>
 
 <script>
+import { get } from "lodash";
+
 import { truncate } from "@/filters";
 
 export default {
@@ -35,11 +37,14 @@ export default {
     },
   },
   computed: {
-    isTruncated() {
-      return this.value.length > this.textLength;
-    },
     text() {
-      return truncate(this.value, this.textLength);
+      return this.value || get(this.$slots, ["default", 0, "text"], "");
+    },
+    truncatedText() {
+      return truncate(this.text, this.textLength);
+    },
+    isTruncated() {
+      return this.text.length > this.textLength;
     },
     cursor() {
       return this.isTruncated ? "help" : "default";
