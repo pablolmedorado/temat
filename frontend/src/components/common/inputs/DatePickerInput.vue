@@ -1,6 +1,7 @@
 <template>
   <v-menu
     v-model="showDatepicker"
+    :disabled="readonly"
     :close-on-content-click="false"
     :nudge-right="40"
     transition="scale-transition"
@@ -13,7 +14,6 @@
         :label="label"
         :prepend-icon="prependIcon"
         :append-icon="appendIcon"
-        :rules="rules"
         :error-messages="errorMessages"
         :clearable="clearable && !readonly"
         readonly
@@ -76,10 +76,6 @@ export default {
     max: {
       type: String,
       default: undefined,
-    },
-    rules: {
-      type: Array,
-      default: () => [],
     },
     errorMessages: {
       type: Array,

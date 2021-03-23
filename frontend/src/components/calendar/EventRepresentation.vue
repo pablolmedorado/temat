@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <template v-if="startDate === endDate">
       <v-row>
         <v-col>
@@ -127,7 +127,7 @@
         </div>
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>

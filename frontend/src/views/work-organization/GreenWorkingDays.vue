@@ -86,7 +86,7 @@
     <StepperBulkFormDialog
       v-if="loggedUser.is_superuser"
       ref="greenWorkingDayBulkForm"
-      :max-width="900"
+      :max-width="1000"
       :form-component="bulkFormComponent"
       @submit="fetchTableItems"
     >

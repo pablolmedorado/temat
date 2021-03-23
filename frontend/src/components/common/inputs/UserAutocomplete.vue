@@ -39,13 +39,14 @@
 
 <script>
 import { mapState } from "vuex";
+import { intersectionBy } from "lodash";
 
 export default {
   name: "UserAutocomplete",
   inheritAttrs: false,
   props: {
     value: {
-      type: [String, Number, Array],
+      type: [String, Number, Object, Array],
       default: null,
     },
     showRandomBtn: {
@@ -76,6 +77,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    returnObject: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     ...mapState("users", {
@@ -91,13 +96,17 @@ export default {
     },
     getRandomUser() {
       let result;
-      const choices = this.limitRandomChoicesTo.length
-        ? this.userOptions.filter((user) => this.limitRandomChoicesTo.includes(user.id))
-        : this.userOptions;
+      let choices = this.userOptions.filter((user) => user.is_active);
+      if (this.limitRandomChoicesTo.length) {
+        choices = this.returnObject
+          ? intersectionBy(choices, this.limitRandomChoicesTo, "id")
+          : choices.filter((user) => this.limitRandomChoicesTo.includes(user.id));
+      }
       if (!choices.length) {
         result = null;
       } else {
-        result = choices[this.getRandomInt(choices.length)].id;
+        const randomIndex = this.getRandomInt(choices.length);
+        result = this.returnObject ? choices[randomIndex] : choices[randomIndex].id;
       }
       this.$emit("input", this.multiple ? [result] : result);
     },

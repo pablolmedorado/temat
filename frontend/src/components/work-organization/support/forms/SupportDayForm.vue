@@ -1,21 +1,19 @@
 <template>
   <form v-if="item" ref="itemForm">
-    <v-container>
-      <v-row>
-        <v-col>
-          <UserAutocomplete
-            v-model.number="item.user"
-            label="Usuario*"
-            prepend-icon="mdi-account"
-            show-random-btn
-            :error-messages="buildValidationErrorMessages($v.item.user)"
-            @input="$v.item.user.$touch()"
-            @blur="$v.item.user.$touch()"
-          />
-        </v-col>
-      </v-row>
-      <small>* indica campo obligatorio</small>
-    </v-container>
+    <v-row>
+      <v-col>
+        <UserAutocomplete
+          v-model.number="item.user"
+          label="Usuario*"
+          prepend-icon="mdi-account"
+          show-random-btn
+          :error-messages="buildValidationErrorMessages($v.item.user)"
+          @input="$v.item.user.$touch()"
+          @blur="$v.item.user.$touch()"
+        />
+      </v-col>
+    </v-row>
+    <small>* indica campo obligatorio</small>
   </form>
 </template>
 

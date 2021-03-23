@@ -89,15 +89,16 @@
         </v-tooltip>
       </v-toolbar>
 
-      <component
-        :is="filterComponent"
-        v-if="filterComponent"
-        ref="filterComponent"
-        :filters.sync="filters"
-        @clear:filters="filters = {}"
-        @apply:filters="fetchTableItems(true)"
-        @change:advanced-filters-count="dialogFilterCount = $event"
-      />
+      <div v-if="filterComponent" class="pa-3">
+        <component
+          :is="filterComponent"
+          ref="filterComponent"
+          :filters.sync="filters"
+          @clear:filters="filters = {}"
+          @apply:filters="fetchTableItems(true)"
+          @change:advanced-filters-count="dialogFilterCount = $event"
+        />
+      </div>
 
       <ItemTable
         ref="itemTable"

@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   app:
@@ -17,6 +17,7 @@ services:
     ports:
       - 8000:8000
       - 8080:8080
+      - 6006:6006
     command: sleep infinity
     links:
       - db

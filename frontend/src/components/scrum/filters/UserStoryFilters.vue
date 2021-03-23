@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="py-0">
+  <div>
     <v-row>
       <v-col lg="3" sm="6" cols="12">
         <v-text-field
@@ -432,7 +432,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-container>
+  </div>
 </template>
 
 <script>

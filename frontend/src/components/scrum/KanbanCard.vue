@@ -1,6 +1,6 @@
 <template>
   <v-card class="elevation-5" :style="borderStyle">
-    <v-container fluid class="py-0">
+    <v-card-text class="py-0">
       <v-row>
         <v-col class="d-inline-flex">
           <v-tooltip bottom>
@@ -53,7 +53,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <router-link class="title text-h6" :to="{ name: 'user-story', params: { id: userStory.id } }">
+          <router-link class="user-story-link text-h6" :to="{ name: 'user-story', params: { id: userStory.id } }">
             <TruncatedText :value="userStory.name" :text-length="70" />
           </router-link>
         </v-col>
@@ -85,7 +85,7 @@
           </v-chip>
         </v-col>
       </v-row>
-    </v-container>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -158,7 +158,7 @@ export default {
   border-left-style: solid;
   border-left-width: 8px;
 }
-.title {
+.user-story-link {
   color: unset;
   text-decoration: none;
 }
