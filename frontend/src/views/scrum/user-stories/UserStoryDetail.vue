@@ -223,4 +223,7 @@ export default {
 ::v-deep .v-tabs-items {
   background-color: transparent !important;
 }
+::v-deep .v-window {
+  overflow: visible;
+}
 </style>

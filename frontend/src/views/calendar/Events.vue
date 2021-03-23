@@ -90,7 +90,6 @@ import { DateTime } from "luxon";
 import EventService from "@/services/calendar/event-service";
 
 import EventFilters from "@/components/calendar/filters/EventFilters";
-import EventForm from "@/components/calendar/forms/EventForm";
 
 import { getReadableDuration, isoDateToLocaleString, isoDateTimeToLocaleString } from "@/utils/dates";
 
@@ -136,7 +135,6 @@ export default {
       service: EventService,
       filterComponent: EventFilters,
       systemFilters: { type__system: false },
-      formComponent: EventForm,
       datetimeFormat: DateTime.DATETIME_MED_WITH_WEEKDAY,
       breadcrumbs: [
         { text: "Calendario", to: { name: "calendar" }, exact: true },
