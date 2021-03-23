@@ -27,9 +27,9 @@
         </v-col>
         <v-col cols="12" lg="8">
           <v-card>
-            <v-container>
+            <v-card-text>
               <UserStoryProgressChart :chart-data="items" :from="userStory.start_date" :to="userStory.end_date" />
-            </v-container>
+            </v-card-text>
           </v-card>
         </v-col>
       </template>

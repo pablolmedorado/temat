@@ -32,7 +32,9 @@
           </v-list>
         </v-menu>
       </v-toolbar>
-      <EventRepresentation :item="item" />
+      <v-card-text>
+        <EventRepresentation :item="item" />
+      </v-card-text>
     </v-card>
 
     <v-speed-dial

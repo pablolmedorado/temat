@@ -1,6 +1,6 @@
 <template>
   <v-card class="elevation-5" :style="borderStyle">
-    <v-container fluid class="py-0">
+    <v-card-text class="py-0">
       <v-row>
         <v-col class="d-inline-flex">
           <v-tooltip bottom>
@@ -85,7 +85,7 @@
           </v-chip>
         </v-col>
       </v-row>
-    </v-container>
+    </v-card-text>
   </v-card>
 </template>
 

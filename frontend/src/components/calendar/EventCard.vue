@@ -41,7 +41,9 @@
     </v-toolbar>
     <v-divider />
 
-    <EventRepresentation :item="item" />
+    <v-card-text>
+      <EventRepresentation :item="item" />
+    </v-card-text>
 
     <v-divider />
     <v-card-actions>
