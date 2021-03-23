@@ -133,8 +133,8 @@ class UserStoryViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
     ordering_fields = (
         "name",
         "type__name",
-        "epic",
-        "sprint",
+        "epic__name",
+        "sprint__name",
         "start_date",
         "end_date",
         "current_progress",
