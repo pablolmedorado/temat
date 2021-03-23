@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.9.2](https://github.com/pablolmedorado/temat/compare/v1.9.1...v1.9.2) (2021-03-23)
+
+
+### Bug Fixes
+
+* **user-stories:** fix epic & sprint ordering ([1a85ecd](https://github.com/pablolmedorado/temat/commit/1a85ecd6a10197ae54b31ce533d7ece7be68b41c))
+
 ### [1.9.1](https://github.com/pablolmedorado/temat/compare/v1.9.0...v1.9.1) (2021-02-10)
 
 
