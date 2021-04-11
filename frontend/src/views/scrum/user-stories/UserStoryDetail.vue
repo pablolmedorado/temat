@@ -201,6 +201,13 @@ export default {
       }
     },
   },
+  watch: {
+    tab(newValue, oldValue) {
+      if (oldValue === "data" && this.showConfirmBeforeLeaving) {
+        alert("Hay cambios sin guardar en el formulario que podrían perderse al interactuar con otras pestañas.");
+      }
+    },
+  },
   methods: {
     async fetchItem(id) {
       const response = await UserStoryService.retrieve(id, { expand: "sprint" });

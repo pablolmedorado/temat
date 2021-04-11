@@ -4,10 +4,10 @@
 ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/pablolmedorado/temat)
 ![GitHub](https://img.shields.io/github/license/pablolmedorado/temat)
 
-![Docker version](https://img.shields.io/badge/Docker-19-2496ed)
+![Docker version](https://img.shields.io/badge/Docker-20-2496ed)
 ![PostgreSQL version](https://img.shields.io/badge/PostgreSQL-13-336791)
 ![Python version](https://img.shields.io/badge/Python-3.7-ffd343)
-![Django version](https://img.shields.io/badge/Django-3.1-0c4b33)
+![Django version](https://img.shields.io/badge/Django-3.2-0c4b33)
 ![Django Rest Framework version](https://img.shields.io/badge/DRF-3.12-a30000)
 ![Node version](https://img.shields.io/badge/Node.js-14-026e00)
 ![Vue.js version](https://img.shields.io/badge/Vue.js-2.6-4fc08d)
@@ -15,11 +15,11 @@
 
 ## 👀 Overview
 
-In order to embrace a **paperless** team management, I decided to develop a simple but useful SPA that allowed our team to get rid of those **annoying excel files**.
+Our development team used to manage all the team-related stuff using Excel files in a shared drive. I decided, as a side project, to develop a simple SPA that allowed us to get rid of them.
 
 The app consists of 6 main modules:
 
-- A **calendar** where see all team-related events.
+- A **calendar** where see relevant common events.
 - A **Scrum-based** work manager.
 - **Holidays** management.
 - "**Support**" management (each day a team member is responsible for the support inbox).
@@ -191,7 +191,7 @@ The app needs to be configured before running it and it can be done in 2 ways:
 
 ### 📦 VS Code Dev Container
 
-The app has been developed using [VS Code Dev Containers](https://code.visualstudio.com/docs/remote/containers). You can use them to run the app just opening the project folder in VS Code and clicking in "Open in remote container" option.
+The app has been developed using [VS Code Dev Containers](https://code.visualstudio.com/docs/remote/containers). You can use them to run the app: just open the project folder in VS Code and click in "Open in remote container" option.
 
 Doing this you'll create 3 containers:
 
