@@ -7,7 +7,7 @@
 ![Docker version](https://img.shields.io/badge/Docker-20-2496ed)
 ![PostgreSQL version](https://img.shields.io/badge/PostgreSQL-13-336791)
 ![Python version](https://img.shields.io/badge/Python-3.7-ffd343)
-![Django version](https://img.shields.io/badge/Django-3.1-0c4b33)
+![Django version](https://img.shields.io/badge/Django-3.2-0c4b33)
 ![Django Rest Framework version](https://img.shields.io/badge/DRF-3.12-a30000)
 ![Node version](https://img.shields.io/badge/Node.js-14-026e00)
 ![Vue.js version](https://img.shields.io/badge/Vue.js-2.6-4fc08d)

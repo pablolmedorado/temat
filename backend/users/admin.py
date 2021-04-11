@@ -42,6 +42,7 @@ class UserAdmin(ImportExportActionModelAdmin, HijackUserAdminMixin, DjangoUserAd
     resource_class = UserResource
     actions = admin.ModelAdmin.actions + ["export_admin_action", "assign_year_holidays", "assign_next_year_holidays"]
 
+    @admin.action(description=_("Asignar vacaciones anuales (año en curso)"))
     def assign_year_holidays(self, request, queryset, year=None):
         rows_updated = queryset.count()
 
@@ -51,15 +52,15 @@ class UserAdmin(ImportExportActionModelAdmin, HijackUserAdminMixin, DjangoUserAd
         if rows_updated == 1:
             message_bit = _("1 usuario")
         else:
-            message_bit = _(f"{rows_updated} usuarios")
-        self.message_user(request, _(f"Vacaciones de {message_bit} asignadas correctamente."))
+            message_bit = _("{rows_updated} usuarios").format(rows_updated=rows_updated)
+        self.message_user(
+            request, _("Vacaciones de {message_bit} asignadas correctamente.").format(message_bit=message_bit)
+        )
 
+    @admin.action(description=_("Asignar vacaciones anuales (año que viene)"))
     def assign_next_year_holidays(self, request, queryset):
         year = date.today().year + 1
         self.assign_year_holidays(request, queryset, year)
-
-    assign_year_holidays.short_description = _("Asignar vacaciones anuales (año en curso)")  # type: ignore
-    assign_next_year_holidays.short_description = _("Asignar vacaciones anuales (año que viene)")  # type: ignore
 
 
 @admin.register(Company)
