@@ -1,16 +1,20 @@
 import Api from "../api";
 import BaseService from "../base-service";
 
-export default class SupportService extends BaseService {
-  static baseUrlName = "work-organization:support";
+class SupportService extends BaseService {
+  baseUrlName = "work-organization:support";
 
-  static flatDates(queryParams) {
+  flatDates(queryParams) {
     const url = Urls[`${this.baseUrlName}-flat-dates`]();
     return Api.get(url, { params: queryParams });
   }
 
-  static userChartData(queryParams) {
+  userChartData(queryParams) {
     const url = Urls[`${this.baseUrlName}-user-chart`]();
     return Api.get(url, { params: queryParams });
   }
 }
+
+const service = Object.freeze(new SupportService());
+
+export default service;

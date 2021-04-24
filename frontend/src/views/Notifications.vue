@@ -105,7 +105,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 
-import NotificationService from "@/services/notifications/notification-service";
+import NotificationService from "@/services/common/notification-service";
 
 import NotificationFilters from "@/components/notifications/NotificationFilters";
 

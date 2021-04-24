@@ -114,7 +114,7 @@
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import { isNil, partition } from "lodash";
 
-import NotificationService from "@/services/notifications/notification-service";
+import NotificationService from "@/services/common/notification-service";
 
 import NotificationImg from "@/assets/notification.png";
 

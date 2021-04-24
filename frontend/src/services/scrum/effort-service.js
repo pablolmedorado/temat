@@ -1,16 +1,20 @@
 import Api from "../api";
 import BaseService from "../base-service";
 
-export default class EffortService extends BaseService {
-  static baseUrlName = "scrum:effort";
+class EffortService extends BaseService {
+  baseUrlName = "scrum:effort";
 
-  static roleTimelineChartData(queryParams) {
+  roleTimelineChartData(queryParams) {
     const url = Urls[`${this.baseUrlName}-role-timeline-chart`]();
     return Api.get(url, { params: queryParams });
   }
 
-  static userTimelineChartData(queryParams) {
+  userTimelineChartData(queryParams) {
     const url = Urls[`${this.baseUrlName}-user-timeline-chart`]();
     return Api.get(url, { params: queryParams });
   }
 }
+
+const service = Object.freeze(new EffortService());
+
+export default service;

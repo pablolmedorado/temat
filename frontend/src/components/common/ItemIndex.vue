@@ -229,7 +229,7 @@ export default {
       default: "name",
     },
     service: {
-      type: Function,
+      type: Object,
       required: true,
     },
     tableAvailableHeaders: {

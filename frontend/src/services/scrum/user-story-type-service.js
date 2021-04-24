@@ -1,6 +1,10 @@
 import BaseService from "../base-service";
 
-export default class UserStoryTypeService extends BaseService {
-  static baseUrlName = "scrum:user-story-type";
-  static defaultListParams = { ordering: "name" };
+class UserStoryTypeService extends BaseService {
+  baseUrlName = "scrum:user-story-type";
+  defaultListParams = { ordering: "name" };
 }
+
+const service = Object.freeze(new UserStoryTypeService());
+
+export default service;

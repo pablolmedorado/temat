@@ -26,7 +26,7 @@ export default {
       default: null,
     },
     service: {
-      type: Function,
+      type: Object,
       required: true,
     },
     searchFunctionName: {

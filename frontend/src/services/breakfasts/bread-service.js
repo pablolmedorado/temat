@@ -1,6 +1,10 @@
 import BaseService from "../base-service";
 
-export default class BreadService extends BaseService {
-  static baseUrlName = "breakfasts:bread";
-  static defaultListParams = { ordering: "name" };
+class BreadService extends BaseService {
+  baseUrlName = "breakfasts:bread";
+  defaultListParams = { ordering: "name" };
 }
+
+const service = Object.freeze(new BreadService());
+
+export default service;
