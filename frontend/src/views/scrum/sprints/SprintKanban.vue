@@ -20,14 +20,11 @@
         </v-tooltip>
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">
-            <v-btn v-if="!fullscreenEnabled" icon v-bind="attrs" @click="activateFullscreen" v-on="on">
-              <v-icon>mdi-fullscreen</v-icon>
-            </v-btn>
-            <v-btn v-else icon v-bind="attrs" @click="deactivateFullscreen" v-on="on">
-              <v-icon>mdi-fullscreen-exit</v-icon>
+            <v-btn icon v-bind="attrs" @click="toggleFullscreen" v-on="on">
+              <v-icon>{{ isFullscreenEnabled ? "mdi-fullscreen-exit" : "mdi-fullscreen" }}</v-icon>
             </v-btn>
           </template>
-          <span>{{ fullscreenEnabled ? "Desactivar" : "Activar" }} pantalla completa</span>
+          <span>{{ isFullscreenEnabled ? "Desactivar" : "Activar" }} pantalla completa</span>
         </v-tooltip>
         <v-btn icon :disabled="loading" @click="fetchItems">
           <v-icon>mdi-refresh</v-icon>
@@ -72,6 +69,7 @@ import ContextBreadcrumbs from "@/components/scrum/ContextBreadcrumbs";
 import KanbanCard from "@/components/scrum/KanbanCard";
 import SprintViewSelector from "@/components/scrum/SprintViewSelector";
 
+import useFullscreen from "@/composables/useFullscreen";
 import useScrumContext from "@/composables/useScrumContext";
 
 export default {
@@ -88,15 +86,17 @@ export default {
   },
   setup(props) {
     const { contextItem } = useScrumContext(props);
+    const { isFullscreenEnabled, toggleFullscreen } = useFullscreen("#kanban-card");
     return {
       contextItem,
+      isFullscreenEnabled,
+      toggleFullscreen,
     };
   },
   data() {
     return {
       items: [],
       hideEmptyColumns: false,
-      fullscreenEnabled: false,
     };
   },
   computed: {
@@ -149,12 +149,6 @@ export default {
   created() {
     this.fetchItems();
   },
-  mounted() {
-    document.addEventListener("fullscreenchange", this.onFullscreenChange);
-  },
-  beforeDestroy() {
-    document.removeEventListener("fullscreenchange", this.onFullscreenChange);
-  },
   methods: {
     get,
     async fetchItems() {
@@ -166,32 +160,6 @@ export default {
           "id,name,status,priority,current_progress,current_progress_changed,validated,validated_changed,actual_effort,planned_effort,end_date,development_user,validation_user,support_user,risk_level",
       });
       this.items = response.data;
-    },
-    activateFullscreen() {
-      const element = document.getElementById("kanban-card");
-      if (element.requestFullscreen) {
-        element.requestFullscreen(); // W3C spec
-      } else if (element.mozRequestFullScreen) {
-        element.mozRequestFullScreen(); // Firefox
-      } else if (element.webkitRequestFullscreen) {
-        element.webkitRequestFullscreen(); // Safari
-      }
-    },
-    deactivateFullscreen() {
-      if (document.exitFullscreen) {
-        document.exitFullscreen(); // W3C spec
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen(); // Firefox
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen(); // Safari
-      }
-    },
-    onFullscreenChange() {
-      const fullscreenElement =
-        document.fullscreenElement || // W3C spec
-        document.mozFullScreenElement || // Firefox
-        document.webkitFullscreenElement; // Safari
-      this.fullscreenEnabled = Boolean(fullscreenElement);
     },
   },
 };
