@@ -66,25 +66,31 @@
 import { mapGetters, mapState } from "vuex";
 import { get, groupBy } from "lodash";
 
-import BreadcrumbsContextMixin from "@/mixins/scrum/breadcrumbs-context-mixin";
-
 import UserStoryService from "@/services/scrum/user-story-service";
 
+import ContextBreadcrumbs from "@/components/scrum/ContextBreadcrumbs";
 import KanbanCard from "@/components/scrum/KanbanCard";
 import SprintViewSelector from "@/components/scrum/SprintViewSelector";
+
+import useScrumContext from "@/composables/useScrumContext";
 
 export default {
   name: "SprintKanban",
   metaInfo: {
     title: "Sprint - Kanban",
   },
-  components: { KanbanCard, SprintViewSelector },
-  mixins: [BreadcrumbsContextMixin],
+  components: { ContextBreadcrumbs, KanbanCard, SprintViewSelector },
   props: {
     sprintId: {
       type: String,
       required: true,
     },
+  },
+  setup(props) {
+    const { contextItem } = useScrumContext(props);
+    return {
+      contextItem,
+    };
   },
   data() {
     return {

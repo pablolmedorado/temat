@@ -126,14 +126,14 @@
 import { mapGetters } from "vuex";
 import { get } from "lodash";
 
-import BreadcrumbsContextMixin from "@/mixins/scrum/breadcrumbs-context-mixin";
-
 import SprintService from "@/services/scrum/sprint-service";
 import UserStoryService from "@/services/scrum/user-story-service";
 
+import ContextBreadcrumbs from "@/components/scrum/ContextBreadcrumbs";
 import SprintViewSelector from "@/components/scrum/SprintViewSelector";
 import UserStoryIndexStatus from "@/components/scrum/UserStoryIndexStatus";
 
+import useScrumContext from "@/composables/useScrumContext";
 import { defaultTableOptions } from "@/utils/constants";
 
 export default {
@@ -141,13 +141,18 @@ export default {
   metaInfo: {
     title: "Sprint - Informe de despliegue",
   },
-  components: { SprintViewSelector, UserStoryIndexStatus },
-  mixins: [BreadcrumbsContextMixin],
+  components: { ContextBreadcrumbs, SprintViewSelector, UserStoryIndexStatus },
   props: {
     sprintId: {
       type: String,
       required: true,
     },
+  },
+  setup(props) {
+    const { contextItem } = useScrumContext(props);
+    return {
+      contextItem,
+    };
   },
   data() {
     return {
