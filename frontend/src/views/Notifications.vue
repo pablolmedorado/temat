@@ -4,7 +4,7 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-key="notification"
+          local-storage-namespace="notification"
           verbose-name="Notificación"
           verbose-name-plural="Notificaciones"
           :table-available-headers="tableHeaders"

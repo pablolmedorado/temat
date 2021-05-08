@@ -4,7 +4,7 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-key="support"
+          local-storage-namespace="support"
           verbose-name="Jornada de soporte"
           verbose-name-plural="Jornadas de soporte"
           item-text="date"

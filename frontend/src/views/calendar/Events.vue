@@ -5,7 +5,7 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-key="event"
+          local-storage-namespace="event"
           verbose-name="Evento"
           verbose-name-plural="Eventos"
           :table-available-headers="tableHeaders"

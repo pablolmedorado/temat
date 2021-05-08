@@ -5,7 +5,7 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-key="userStory"
+          local-storage-namespace="userStory"
           verbose-name="Historia de usuario"
           verbose-name-plural="Historias de usuario"
           :table-available-headers="tableHeaders"
