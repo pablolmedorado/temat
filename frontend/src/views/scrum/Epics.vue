@@ -4,7 +4,7 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-key="epic"
+          local-storage-namespace="epic"
           verbose-name="Épica"
           verbose-name-plural="Épicas"
           :table-available-headers="tableHeaders"

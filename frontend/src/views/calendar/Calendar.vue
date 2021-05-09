@@ -148,6 +148,7 @@ import EventService from "@/services/calendar/event-service";
 import EventCard from "@/components/calendar/EventCard";
 import EventForm from "@/components/calendar/forms/EventForm";
 
+import useLocalStorage from "@/composables/useLocalStorage";
 import { getFontColourFromBackground, hex2rgba } from "@/utils/colours";
 
 export default {
@@ -165,11 +166,19 @@ export default {
       },
     },
   },
+  setup() {
+    const calendarType = useLocalStorage("calendarType", "month");
+    const excludeSystemEvents = useLocalStorage("calendarExcludeSystemEvents", false);
+
+    return {
+      calendarType,
+      excludeSystemEvents,
+    };
+  },
   data() {
     return {
       referenceDate: defaultTo(this.initialDate, DateTime.local().toISODate()),
       events: [],
-      calendarType: defaultTo(localStorage.calendarType, "month"),
       typeOptions: [
         { text: "Día", value: "day", icon: "mdi-view-day" },
         { text: "Semana", value: "week", icon: "mdi-view-week" },
@@ -180,9 +189,6 @@ export default {
         week: "Semana",
         day: "Día",
       },
-      excludeSystemEvents: localStorage.calendarExcludeSystemEvents
-        ? JSON.parse(localStorage.calendarExcludeSystemEvents)
-        : false,
       weekdays: [1, 2, 3, 4, 5, 6, 0],
       showDatePicker: false,
       formComponent: EventForm,
@@ -223,11 +229,7 @@ export default {
         this.referenceDate = newValue;
       }
     },
-    calendarType(newValue) {
-      localStorage.calendarType = newValue;
-    },
-    excludeSystemEvents(newValue) {
-      localStorage.calendarExcludeSystemEvents = JSON.stringify(newValue);
+    excludeSystemEvents() {
       this.fetchEvents();
     },
   },

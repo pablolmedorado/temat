@@ -4,7 +4,7 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-key="effort"
+          local-storage-namespace="effort"
           verbose-name="Esfuerzo"
           verbose-name-plural="Esfuerzo"
           :item-text="(item) => `${item.date} / ${item.user_story.name} / ${item.effort}UT`"

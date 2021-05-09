@@ -1,6 +1,10 @@
 import BaseService from "../base-service";
 
-export default class EventTypeService extends BaseService {
-  static baseUrlName = "calendar:event-type";
-  static defaultListParams = { ordering: "name" };
+class EventTypeService extends BaseService {
+  baseUrlName = "calendar:event-type";
+  defaultListParams = { ordering: "name" };
 }
+
+const service = Object.freeze(new EventTypeService());
+
+export default service;

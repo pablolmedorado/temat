@@ -205,14 +205,15 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
-import { get, isObject, omit } from "lodash";
+import { isObject, omit } from "lodash";
 
+import useLocalStorage from "@/composables/useLocalStorage";
 import { defaultTableOptions } from "@/utils/constants";
 
 export default {
   name: "ItemIndex",
   props: {
-    localStorageKey: {
+    localStorageNamespace: {
       type: String,
       required: true,
     },
@@ -229,7 +230,7 @@ export default {
       default: "name",
     },
     service: {
-      type: Function,
+      type: Object,
       required: true,
     },
     tableAvailableHeaders: {
@@ -311,13 +312,35 @@ export default {
       default: false,
     },
   },
+  setup(props) {
+    const localTableOptions = { ...defaultTableOptions, ...props.tableInitialOptions };
+    const tableOptions = useLocalStorage(`${props.localStorageNamespace}TableOptions`, localTableOptions, {
+      getter: (lsOptions) => ({ ...localTableOptions, ...lsOptions }),
+      setter: (options) => omit(options, ["page"]),
+    });
+
+    const defaultTableHeaders = props.tableAvailableHeaders.filter((header) => header.default || header.fixed);
+    const tableHeaders = useLocalStorage(`${props.localStorageNamespace}TableHeaders`, defaultTableHeaders, {
+      getter: (lsHeaders) => props.tableAvailableHeaders.filter((header) => lsHeaders.includes(header.value)),
+      setter: (headers) => headers.map((header) => header.value),
+    });
+
+    const pinnedQuickFilter = useLocalStorage(
+      `${props.localStorageNamespace}PinnedQuickFilter`,
+      props.defaultQuickFilter
+    );
+    const customQuickFilters = useLocalStorage(`${props.localStorageNamespace}QuickFilters`, []);
+
+    return {
+      tableHeaders,
+      tableOptions,
+      pinnedQuickFilter,
+      customQuickFilters,
+    };
+  },
   data() {
     return {
-      tableHeaders: null,
-      tableOptions: null,
       filters: {},
-      pinnedQuickFilter: get(localStorage, `${this.localStorageKey}PinnedQuickFilter`, this.defaultQuickFilter),
-      customQuickFilters: [],
       dialogFilterCount: 0,
       selectedItems: [],
     };
@@ -330,8 +353,6 @@ export default {
     tableHeaders: {
       handler(newValue) {
         const flatHeaders = newValue.map((header) => header.value);
-        localStorage[`${this.localStorageKey}TableHeaders`] = JSON.stringify(flatHeaders);
-
         const sortingConfig = { sortBy: [], sortDesc: [] };
         this.tableOptions.sortBy.forEach((field, index) => {
           if (flatHeaders.includes(field)) {
@@ -343,28 +364,8 @@ export default {
       },
       deep: true,
     },
-    tableOptions: {
-      handler(newValue) {
-        localStorage[`${this.localStorageKey}TableOptions`] = JSON.stringify(omit(newValue, ["page"]));
-      },
-      deep: true,
-    },
-    pinnedQuickFilter: {
-      handler(newValue) {
-        localStorage[`${this.localStorageKey}PinnedQuickFilter`] = newValue;
-      },
-    },
-    customQuickFilters: {
-      handler(newValue) {
-        localStorage[`${this.localStorageKey}QuickFilters`] = JSON.stringify(newValue);
-      },
-      deep: true,
-    },
   },
   created() {
-    this.loadOptionsFromLocalStorage();
-    this.loadHeadersFromLocalStorage();
-    this.loadQuickFiltersFromLocalStorage();
     this.filters = this.getDefaultFilters();
   },
   methods: {
@@ -450,23 +451,6 @@ export default {
         color: "success",
         message: "Elemento eliminado correctamente",
       });
-    },
-    loadHeadersFromLocalStorage() {
-      const lsTableHeaders = localStorage[`${this.localStorageKey}TableHeaders`];
-      if (lsTableHeaders) {
-        this.tableHeaders = this.tableAvailableHeaders.filter((header) => lsTableHeaders.includes(header.value));
-      } else {
-        this.tableHeaders = this.tableAvailableHeaders.filter((header) => header.default || header.fixed);
-      }
-    },
-    loadOptionsFromLocalStorage() {
-      const localOptions = { ...defaultTableOptions, ...this.tableInitialOptions };
-      const lsTableOptions = localStorage[`${this.localStorageKey}TableOptions`];
-      this.tableOptions = lsTableOptions ? { ...localOptions, ...JSON.parse(lsTableOptions) } : localOptions;
-    },
-    loadQuickFiltersFromLocalStorage() {
-      const lsQuickFilters = localStorage[`${this.localStorageKey}QuickFilters`];
-      this.customQuickFilters = lsQuickFilters ? JSON.parse(lsQuickFilters) : [];
     },
   },
 };

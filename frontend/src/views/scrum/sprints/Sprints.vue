@@ -4,7 +4,7 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-key="sprint"
+          local-storage-namespace="sprint"
           verbose-name="Sprint"
           verbose-name-plural="Sprints"
           :table-available-headers="tableHeaders"

@@ -32,23 +32,29 @@
 <script>
 import { mapGetters } from "vuex";
 
-import BreadcrumbsContextMixin from "@/mixins/scrum/breadcrumbs-context-mixin";
-
+import ContextBreadcrumbs from "@/components/scrum/ContextBreadcrumbs";
 import SprintBurnChart from "@/components/scrum/charts/SprintBurnChart";
 import SprintViewSelector from "@/components/scrum/SprintViewSelector";
+
+import useScrumContext from "@/composables/useScrumContext";
 
 export default {
   name: "SprintChart",
   metaInfo: {
     title: "Sprint - Gráfica",
   },
-  components: { SprintBurnChart, SprintViewSelector },
-  mixins: [BreadcrumbsContextMixin],
+  components: { ContextBreadcrumbs, SprintBurnChart, SprintViewSelector },
   props: {
     sprintId: {
       type: String,
       required: true,
     },
+  },
+  setup(props) {
+    const { contextItem } = useScrumContext(props);
+    return {
+      contextItem,
+    };
   },
   data() {
     return {

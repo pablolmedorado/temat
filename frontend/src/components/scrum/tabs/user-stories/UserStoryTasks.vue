@@ -4,7 +4,7 @@
       <ItemIndex
         v-if="userStory.id"
         ref="itemIndex"
-        local-storage-key="userStoryTask"
+        local-storage-namespace="userStoryTask"
         verbose-name="Tarea"
         verbose-name-plural="Tareas"
         :table-available-headers="tableHeaders"

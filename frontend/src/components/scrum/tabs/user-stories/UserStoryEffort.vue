@@ -4,7 +4,7 @@
       <ItemIndex
         v-if="userStory.id"
         ref="itemIndex"
-        local-storage-key="userStoryEffort"
+        local-storage-namespace="userStoryEffort"
         verbose-name="Esfuerzo"
         verbose-name-plural="Esfuerzo"
         item-text="date"

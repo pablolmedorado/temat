@@ -4,7 +4,7 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-key="notification"
+          local-storage-namespace="notification"
           verbose-name="Notificación"
           verbose-name-plural="Notificaciones"
           :table-available-headers="tableHeaders"
@@ -105,7 +105,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 
-import NotificationService from "@/services/notifications/notification-service";
+import NotificationService from "@/services/common/notification-service";
 
 import NotificationFilters from "@/components/notifications/NotificationFilters";
 

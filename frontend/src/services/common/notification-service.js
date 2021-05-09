@@ -2,44 +2,48 @@ import { baseApiClient as SilentApi } from "../api";
 import Api from "../api";
 import BaseService from "../base-service";
 
-export default class NotificationService extends BaseService {
-  static baseUrlName = "common:notification";
+class NotificationService extends BaseService {
+  baseUrlName = "common:notification";
 
-  static unreadCount() {
+  unreadCount() {
     const url = Urls[`${this.baseUrlName}-unread-count`]();
     return SilentApi.get(url);
   }
 
-  static unreadSummary() {
+  unreadSummary() {
     return SilentApi.get(this.listUrl, { params: { unread: true, page_size: 25, page: 1 } });
   }
 
-  static markSummaryAsRead(queryParams) {
+  markSummaryAsRead(queryParams) {
     const url = Urls[`${this.baseUrlName}-mark-all-as-read`]();
     return SilentApi.patch(url, {}, { params: queryParams });
   }
 
-  static markAsUnread(pk) {
+  markAsUnread(pk) {
     const url = Urls[`${this.baseUrlName}-mark-as-unread`]({ pk });
     return SilentApi.patch(url);
   }
 
-  static markAsRead(pk) {
+  markAsRead(pk) {
     const url = Urls[`${this.baseUrlName}-mark-as-read`]({ pk });
     return SilentApi.patch(url);
   }
 
-  static markAllAsUnread(queryParams) {
+  markAllAsUnread(queryParams) {
     const url = Urls[`${this.baseUrlName}-mark-all-as-unread`]();
     return Api.patch(url, {}, { params: queryParams });
   }
 
-  static markAllAsRead(queryParams) {
+  markAllAsRead(queryParams) {
     const url = Urls[`${this.baseUrlName}-mark-all-as-read`]();
     return Api.patch(url, {}, { params: queryParams });
   }
 
-  static bulkDelete(queryParams) {
+  bulkDelete(queryParams) {
     return Api.delete(this.listUrl, { params: queryParams });
   }
 }
+
+const service = Object.freeze(new NotificationService());
+
+export default service;
