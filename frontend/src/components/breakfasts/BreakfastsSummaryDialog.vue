@@ -10,6 +10,15 @@
     <v-card>
       <v-toolbar flat>
         <v-toolbar-title class="text-h6"> Resumen de tostadas </v-toolbar-title>
+        <v-spacer />
+        <v-tooltip bottom>
+          <template #activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" @click="copyToClipboard">
+              <v-icon>mdi-clipboard-text-multiple-outline</v-icon>
+            </v-btn>
+          </template>
+          <span> Copiar al portapapeles </span>
+        </v-tooltip>
       </v-toolbar>
       <v-card-text class="pa-0">
         <v-data-table
@@ -32,6 +41,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import { chain, property, uniqueId } from "lodash";
 
 import DialogMixin from "@/mixins/dialog-mixin";
@@ -85,6 +95,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["showSnackbar"]),
     open(items) {
       this.items = items;
       this.showDialog = true;
@@ -92,6 +103,26 @@ export default {
     close() {
       this.items = [];
       this.showDialog = false;
+    },
+    async copyToClipboard() {
+      try {
+        const textSummary = this.itemSummary
+          .map((item) => {
+            const ingredients = [item.base, item.ingredient1, item.ingredient2].filter((item) => !!item).join(", ");
+            return `${item.count} ${item.bread} con ${ingredients}`;
+          })
+          .join("\n");
+        await navigator.clipboard.writeText(textSummary);
+        this.showSnackbar({
+          color: "info",
+          message: "Desayunos copiados al portapapeles",
+        });
+      } catch {
+        this.showSnackbar({
+          color: "error",
+          message: "Error copiando desayunos al portapapeles",
+        });
+      }
     },
   },
 };
