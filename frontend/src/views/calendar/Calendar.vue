@@ -138,7 +138,7 @@
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
 import { DateTime, Interval } from "luxon";
-import { defaultTo, sortBy } from "lodash";
+import { debounce, defaultTo, sortBy } from "lodash";
 import { escapeHTML } from "vuetify/es5/util/helpers";
 
 import CalendarEvent from "@/models/event";
@@ -244,10 +244,10 @@ export default {
   methods: {
     ...mapActions(["showSnackbar"]),
     ...mapActions("calendar", ["fetchEventTypes"]),
-    onCalendarChange() {
+    onCalendarChange: debounce(function () {
       this.events = [];
       this.fetchEvents();
-    },
+    }, 500),
     onTypeChange(type) {
       this.calendarType = type;
     },
