@@ -257,7 +257,7 @@ export default {
           },
         },
         {
-          key: "my-`pending-validations",
+          key: "my-pending-validations",
           label: "Mis validaciones pendientes",
           filters: {
             status__in: "3",

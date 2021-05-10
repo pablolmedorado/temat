@@ -118,7 +118,7 @@ export default {
         ...defaultOptions,
         { text: "Acciones", align: "left", sortable: false, value: "table_actions" },
       ];
-      return loggedUser.is_superuser ? adminOptions : defaultOptions;
+      return loggedUser.value.is_superuser ? adminOptions : defaultOptions;
     });
     const filters = ref({
       allowance_date__year: currentDate.year,
@@ -139,7 +139,7 @@ export default {
     async function cancelHoliday(item) {
       await cancel(item);
       fetchItems();
-      refs.filterComponent.$refs.holidaysDatePicker.getSummary();
+      refs.filterComponent.$refs.dateFilter.getSummary();
     }
 
     return {

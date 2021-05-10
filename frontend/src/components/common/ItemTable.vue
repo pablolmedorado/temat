@@ -172,8 +172,8 @@ export default {
       } else {
         this.tableLoading = true;
         try {
-          this.$emit("input", []);
           const response = await this.service.list(this.buildFetchRequestParams());
+          this.$emit("input", []);
           this.items = this.options.itemsPerPage <= 0 ? response.data : response.data.results;
           this.itemCount = this.options.itemsPerPage <= 0 ? response.data.length : response.data.count;
         } finally {

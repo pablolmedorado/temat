@@ -37,7 +37,7 @@
               </v-list-item-icon>
               <v-list-item-title>Limpiar</v-list-item-title>
             </v-list-item>
-            <v-list-item @click="openQuickFilterDialog">
+            <v-list-item @click.stop="openQuickFilterDialog">
               <v-list-item-icon>
                 <v-icon>mdi-filter-plus-outline</v-icon>
               </v-list-item-icon>
@@ -119,9 +119,7 @@
         </template>
 
         <template v-for="header in tableAvailableHeaders" #[`item.${header.value}`]="slotProps">
-          <slot :name="`item.${header.value}`" v-bind="slotProps">
-            {{ slotProps.value }}
-          </slot>
+          <slot :name="`item.${header.value}`" v-bind="slotProps"></slot>
         </template>
 
         <template #item.table_actions="slotProps">

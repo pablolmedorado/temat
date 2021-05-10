@@ -70,7 +70,7 @@
           <v-toolbar flat>
             <v-toolbar-title class="text-h6"> Mis vacaciones </v-toolbar-title>
             <v-spacer />
-            <v-btn icon :disabled="loading" @click="fetchItems">
+            <v-btn icon :disabled="loading" @click="fetchItems()">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
           </v-toolbar>

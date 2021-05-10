@@ -44,7 +44,11 @@
               </template>
               <span> Marcar como no leído </span>
             </v-tooltip>
-            <v-btn icon :disabled="loading || !Boolean(selectedItems.length)" @click="openDeleteDialog(selectedItems)">
+            <v-btn
+              icon
+              :disabled="loading || !Boolean(selectedItems.length)"
+              @click.stop="openDeleteDialog(selectedItems)"
+            >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
             <v-divider vertical inset />
