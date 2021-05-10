@@ -113,11 +113,11 @@
 <script>
 import { mapGetters, mapMutations, mapState } from "vuex";
 import { createNamespacedHelpers } from "vuex-composition-helpers";
+import { useIntervalFn } from "@vueuse/core";
 import { isNil, partition } from "lodash";
 
 import NotificationService from "@/services/common/notification-service";
 
-import useInterval from "@/composables/useInterval";
 import useNotifications from "@/composables/useNotifications";
 
 import NotificationImg from "@/assets/notification.png";
@@ -133,8 +133,8 @@ export default {
     const { useActions } = createNamespacedHelpers("notifications");
     const { getUnreadCount } = useActions(["getUnreadCount"]);
 
-    const { areNotificationsEnabled } = useNotifications();
-    useInterval(() => getUnreadCount(), 300000, { immediate: true }); // 5 minutes
+    const { areEnabled: areNotificationsEnabled } = useNotifications();
+    useIntervalFn(() => getUnreadCount(), 300000, true); // 5 minutes
 
     return {
       areNotificationsEnabled,

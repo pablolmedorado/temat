@@ -1,66 +1,70 @@
 <template>
   <v-container fluid class="scrolled">
     <ContextBreadcrumbs :items="breadcrumbs" />
-    <v-card id="kanban-card" class="mt-2" :style="{ 'min-width': kanbanMinWidth }">
-      <v-toolbar flat>
-        <v-toolbar-title class="text-h6">Kanban</v-toolbar-title>
-        <v-spacer />
-        <SprintViewSelector :sprint-id="sprintId" />
-        <v-divider vertical inset />
-        <v-tooltip bottom>
-          <template #activator="{ on, attrs }">
-            <v-btn v-if="!hideEmptyColumns" icon v-bind="attrs" @click="hideEmptyColumns = true" v-on="on">
-              <v-icon>mdi-eye-off</v-icon>
-            </v-btn>
-            <v-btn v-else icon v-bind="attrs" @click="hideEmptyColumns = false" v-on="on">
-              <v-icon>mdi-eye</v-icon>
-            </v-btn>
-          </template>
-          <span>{{ hideEmptyColumns ? "Mostrar" : "Ocultar" }} columnas vacías</span>
-        </v-tooltip>
-        <v-tooltip bottom>
-          <template #activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" @click="toggleFullscreen" v-on="on">
-              <v-icon>{{ isFullscreenEnabled ? "mdi-fullscreen-exit" : "mdi-fullscreen" }}</v-icon>
-            </v-btn>
-          </template>
-          <span>{{ isFullscreenEnabled ? "Desactivar" : "Activar" }} pantalla completa</span>
-        </v-tooltip>
-        <v-btn icon :disabled="loading" @click="fetchItems">
-          <v-icon>mdi-refresh</v-icon>
-        </v-btn>
-      </v-toolbar>
-      <v-container fluid class="pt-0">
-        <v-row class="px-1">
-          <template v-for="status in kanbanStatus">
-            <v-col v-show="hideEmptyColumns ? itemsByStatus[status.value] : true" :key="status.value" class="px-1">
-              <v-card outlined :class="statusColumnClasses">
-                <v-card-title>
-                  <v-badge inline color="secondary" :content="get(itemsByStatus, [status.value, 'length'], '0')">
-                    {{ status.label }}
-                  </v-badge>
-                </v-card-title>
-                <v-card-text class="pt-4">
-                  <v-skeleton-loader v-if="loading" type="card" class="px-1" />
-                  <template v-else>
-                    <v-row v-for="item in itemsByStatus[status.value]" :key="item.id">
-                      <v-col class="px-1">
-                        <KanbanCard class="mb-4" :user-story="item" />
-                      </v-col>
-                    </v-row>
-                  </template>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </template>
-        </v-row>
-      </v-container>
-    </v-card>
+    <div ref="fullscreenWrapper">
+      <v-card class="mt-2" :style="{ 'min-width': kanbanMinWidth }">
+        <v-toolbar flat>
+          <v-toolbar-title class="text-h6">Kanban</v-toolbar-title>
+          <v-spacer />
+          <SprintViewSelector :sprint-id="sprintId" />
+          <v-divider vertical inset />
+          <v-tooltip bottom>
+            <template #activator="{ on, attrs }">
+              <v-btn v-if="!hideEmptyColumns" icon v-bind="attrs" @click="hideEmptyColumns = true" v-on="on">
+                <v-icon>mdi-eye-off</v-icon>
+              </v-btn>
+              <v-btn v-else icon v-bind="attrs" @click="hideEmptyColumns = false" v-on="on">
+                <v-icon>mdi-eye</v-icon>
+              </v-btn>
+            </template>
+            <span>{{ hideEmptyColumns ? "Mostrar" : "Ocultar" }} columnas vacías</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template #activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" @click="toggleFullscreen" v-on="on">
+                <v-icon>{{ isFullscreen ? "mdi-fullscreen-exit" : "mdi-fullscreen" }}</v-icon>
+              </v-btn>
+            </template>
+            <span>{{ isFullscreen ? "Desactivar" : "Activar" }} pantalla completa</span>
+          </v-tooltip>
+          <v-btn icon :disabled="loading" @click="fetchItems">
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-container fluid class="pt-0">
+          <v-row class="px-1">
+            <template v-for="status in kanbanStatus">
+              <v-col v-show="hideEmptyColumns ? itemsByStatus[status.value] : true" :key="status.value" class="px-1">
+                <v-card outlined :class="statusColumnClasses">
+                  <v-card-title>
+                    <v-badge inline color="secondary" :content="get(itemsByStatus, [status.value, 'length'], '0')">
+                      {{ status.label }}
+                    </v-badge>
+                  </v-card-title>
+                  <v-card-text class="pt-4">
+                    <v-skeleton-loader v-if="loading" type="card" class="px-1" />
+                    <template v-else>
+                      <v-row v-for="item in itemsByStatus[status.value]" :key="item.id">
+                        <v-col class="px-1">
+                          <KanbanCard class="mb-4" :user-story="item" />
+                        </v-col>
+                      </v-row>
+                    </template>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </template>
+          </v-row>
+        </v-container>
+      </v-card>
+    </div>
   </v-container>
 </template>
 
 <script>
+import { ref } from "@vue/composition-api";
 import { mapGetters, mapState } from "vuex";
+import { useFullscreen } from "@vueuse/core";
 import { get, groupBy } from "lodash";
 
 import UserStoryService from "@/services/scrum/user-story-service";
@@ -69,7 +73,6 @@ import ContextBreadcrumbs from "@/components/scrum/ContextBreadcrumbs";
 import KanbanCard from "@/components/scrum/KanbanCard";
 import SprintViewSelector from "@/components/scrum/SprintViewSelector";
 
-import useFullscreen from "@/composables/useFullscreen";
 import useScrumContext from "@/composables/useScrumContext";
 
 export default {
@@ -86,10 +89,14 @@ export default {
   },
   setup(props) {
     const { contextItem } = useScrumContext(props);
-    const { isFullscreenEnabled, toggleFullscreen } = useFullscreen("#kanban-card");
+
+    const fullscreenWrapper = ref(null);
+    const { isFullscreen, toggle: toggleFullscreen } = useFullscreen(fullscreenWrapper);
+
     return {
       contextItem,
-      isFullscreenEnabled,
+      fullscreenWrapper,
+      isFullscreen,
       toggleFullscreen,
     };
   },

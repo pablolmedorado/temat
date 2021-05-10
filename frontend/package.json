@@ -13,6 +13,7 @@
   "dependencies": {
     "@mdi/font": "^5.9.55",
     "@vue/composition-api": "^1.0.0-rc.8",
+    "@vueuse/core": "^4.9.2",
     "axios": "^0.21.1",
     "core-js": "^3.12.1",
     "highcharts": "^9.1.0",

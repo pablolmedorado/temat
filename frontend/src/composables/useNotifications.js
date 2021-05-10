@@ -1,6 +1,16 @@
 import { onMounted, ref } from "@vue/composition-api";
 
 export default function () {
+  const areSupported = ref(undefined);
+  const areEnabled = ref(false);
+
+  function handleNotificationPermission(permission) {
+    if (!("permission" in Notification)) {
+      Notification.permission = permission;
+    }
+    areEnabled.value = Notification.permission === "granted";
+  }
+
   async function checkNotificationPromise() {
     try {
       await Notification.requestPermission();
@@ -10,19 +20,13 @@ export default function () {
     }
   }
 
-  const areNotificationsEnabled = ref(false);
-  function handleNotificationPermission(permission) {
-    if (!("permission" in Notification)) {
-      Notification.permission = permission;
-    }
-    areNotificationsEnabled.value = Notification.permission === "granted";
-  }
-
   async function checkNotificationSupport() {
     if (!("Notification" in window)) {
+      areSupported.value = false;
       // eslint-disable-next-line no-console
       console.warn("This browser does not support notifications.");
     } else {
+      areSupported.value = true;
       if (checkNotificationPromise()) {
         const permission = await Notification.requestPermission();
         handleNotificationPermission(permission);
@@ -40,6 +44,7 @@ export default function () {
   });
 
   return {
-    areNotificationsEnabled,
+    areSupported,
+    areEnabled,
   };
 }
