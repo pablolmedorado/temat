@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="scrolled">
     <ContextBreadcrumbs :items="breadcrumbs" />
-    <div ref="fullscreenWrapper">
+    <div id="fs-wrapper" ref="fullscreenWrapper">
       <v-card class="mt-2" :style="{ 'min-width': kanbanMinWidth }">
         <v-toolbar flat>
           <v-toolbar-title class="text-h6">Kanban</v-toolbar-title>
@@ -90,7 +90,7 @@ export default {
   setup(props) {
     const { contextItem } = useScrumContext(props);
 
-    const fullscreenWrapper = ref(null);
+    const fullscreenWrapper = ref(null); // will be bind to the fullscreenWrapper <div> element
     const { isFullscreen, toggle: toggleFullscreen } = useFullscreen(fullscreenWrapper);
 
     return {
@@ -175,5 +175,8 @@ export default {
 <style lang="scss" scoped>
 .scrolled {
   overflow-x: auto;
+}
+#fs-wrapper:fullscreen {
+  overflow: auto;
 }
 </style>
