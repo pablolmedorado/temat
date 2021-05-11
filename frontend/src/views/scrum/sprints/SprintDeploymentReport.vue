@@ -255,4 +255,7 @@ export default {
 .text-pre-wrap {
   white-space: pre-wrap;
 }
+.v-data-table ::v-deep .v-data-table-header th {
+  white-space: nowrap;
+}
 </style>

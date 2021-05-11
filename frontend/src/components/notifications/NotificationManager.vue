@@ -219,7 +219,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .v-dialog--scrollable {
   max-height: 80%;
 }

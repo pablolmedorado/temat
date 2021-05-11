@@ -184,3 +184,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.v-data-table ::v-deep .v-data-table-header th {
+  white-space: nowrap;
+}
+</style>
