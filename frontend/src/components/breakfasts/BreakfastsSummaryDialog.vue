@@ -11,9 +11,9 @@
       <v-toolbar flat>
         <v-toolbar-title class="text-h6"> Resumen de tostadas </v-toolbar-title>
         <v-spacer />
-        <v-tooltip bottom>
+        <v-tooltip v-if="isClipboardSupported" bottom>
           <template #activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on" @click="copyToClipboard">
+            <v-btn icon v-bind="attrs" v-on="on" @click="copyBreakfastsToClipboard">
               <v-icon>mdi-clipboard-text-multiple-outline</v-icon>
             </v-btn>
           </template>
@@ -42,6 +42,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import { useClipboard } from "@vueuse/core";
 import { chain, property, uniqueId } from "lodash";
 
 import DialogMixin from "@/mixins/dialog-mixin";
@@ -49,6 +50,13 @@ import DialogMixin from "@/mixins/dialog-mixin";
 export default {
   name: "BreakfastsSummaryDialog",
   mixins: [DialogMixin],
+  setup() {
+    const { copy: copyToClipboard, isSupported: isClipboardSupported } = useClipboard();
+    return {
+      isClipboardSupported,
+      copyToClipboard,
+    };
+  },
   data() {
     return {
       headers: [
@@ -93,6 +101,14 @@ export default {
         })
         .value();
     },
+    clipboardSummary() {
+      return this.itemSummary
+        .map((item) => {
+          const ingredients = [item.base, item.ingredient1, item.ingredient2].filter((item) => !!item).join(", ");
+          return `${item.count} ${item.bread} con ${ingredients}`;
+        })
+        .join("\n");
+    },
   },
   methods: {
     ...mapActions(["showSnackbar"]),
@@ -104,15 +120,9 @@ export default {
       this.items = [];
       this.showDialog = false;
     },
-    async copyToClipboard() {
+    async copyBreakfastsToClipboard() {
       try {
-        const textSummary = this.itemSummary
-          .map((item) => {
-            const ingredients = [item.base, item.ingredient1, item.ingredient2].filter((item) => !!item).join(", ");
-            return `${item.count} ${item.bread} con ${ingredients}`;
-          })
-          .join("\n");
-        await navigator.clipboard.writeText(textSummary);
+        this.copyToClipboard(this.clipboardSummary);
         this.showSnackbar({
           color: "info",
           message: "Desayunos copiados al portapapeles",
