@@ -94,7 +94,6 @@
           :is="filterComponent"
           ref="filterComponent"
           :filters.sync="filters"
-          @clear:filters="filters = {}"
           @apply:filters="fetchTableItems(true)"
           @change:advanced-filters-count="dialogFilterCount = $event"
         />
