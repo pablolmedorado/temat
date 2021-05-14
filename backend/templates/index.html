@@ -18,7 +18,6 @@
     <!-- hijack -->
     <link rel="prefetch stylesheet" href="{% static 'hijack/hijack-styles.css' %}" />
     <!-- built files will be auto injected -->
-    {% render_bundle "chunk-vendors" "css" %}
     {% render_bundle "app" "css" %}
   </head>
   <body>
@@ -32,7 +31,6 @@
       <app></app>
     </div>
     <!-- built files will be auto injected -->
-    {% render_bundle "chunk-vendors" "js" %}
     {% render_bundle "app" "js" %}
   </body>
   {% hijack_notification %}
