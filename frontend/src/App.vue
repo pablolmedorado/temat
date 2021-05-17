@@ -106,15 +106,16 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapState } from "vuex";
+import { useMutations } from "vuex-composition-helpers";
 import { pick } from "lodash";
-import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 
 import NotificationManager from "@/components/notifications/NotificationManager";
 
 import { isXmas } from "@/utils/dates";
 import { handleError } from "@/utils/error-handlers";
-import konamiCode from "@/utils/konami-code";
 import loperaSentences from "@/utils/lopera-sentences";
+import useKonamiCode from "@/composables/useKonamiCode";
 
 export default {
   name: "App",
@@ -125,6 +126,10 @@ export default {
     };
   },
   components: { NotificationManager },
+  setup() {
+    const { toggleKonamiCode } = useMutations(["toggleKonamiCode"]);
+    useKonamiCode(() => toggleKonamiCode());
+  },
   data() {
     return {
       drawer: null,
@@ -209,29 +214,13 @@ export default {
       localStorage.darkMode = JSON.stringify(newValue);
     },
     konamiCodeActive(newValue) {
-      if (newValue) {
-        alert(loperaSentences[Math.floor(Math.random() * loperaSentences.length - 1 + 1)]);
-        const betisColours = {
-          primary: "#009655",
-          secondary: "#d18d2a",
-        };
-        Object.assign(this.$vuetify.theme.themes.light, betisColours);
-        Object.assign(this.$vuetify.theme.themes.dark, betisColours);
-      } else {
-        Object.assign(this.$vuetify.theme.themes.light, this.defaultThemeColours.light);
-        Object.assign(this.$vuetify.theme.themes.dark, this.defaultThemeColours.dark);
-      }
+      this.onKonamiCodeChange(newValue);
     },
   },
   created() {
     this.getUsers();
     this.getGroups();
     this.getTags();
-  },
-  mounted() {
-    konamiCode(() => {
-      this.toggleKonamiCode();
-    });
   },
   errorCaptured(err) {
     handleError(err);
@@ -240,7 +229,6 @@ export default {
     ...mapActions(["showSnackbar", "clearSnackbar"]),
     ...mapActions("users", ["getUsers", "getGroups"]),
     ...mapActions("tags", ["getTags"]),
-    ...mapMutations(["toggleKonamiCode"]),
     onSnackbarInput(value) {
       if (!value) {
         this.clearSnackbar();
@@ -259,6 +247,20 @@ export default {
         message: "Se ha restablecido el almacenamiento local y la caché",
         timeout: 3000,
       });
+    },
+    onKonamiCodeChange(value) {
+      if (value) {
+        alert(loperaSentences[Math.floor(Math.random() * loperaSentences.length - 1 + 1)]);
+        const betisColours = {
+          primary: "#009655",
+          secondary: "#d18d2a",
+        };
+        Object.assign(this.$vuetify.theme.themes.light, betisColours);
+        Object.assign(this.$vuetify.theme.themes.dark, betisColours);
+      } else {
+        Object.assign(this.$vuetify.theme.themes.light, this.defaultThemeColours.light);
+        Object.assign(this.$vuetify.theme.themes.dark, this.defaultThemeColours.dark);
+      }
     },
   },
 };
