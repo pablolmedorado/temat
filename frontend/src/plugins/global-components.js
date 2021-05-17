@@ -1,5 +1,5 @@
-import { camelCase, upperFirst } from "lodash";
 import Vue from "vue";
+import { camelCase, upperFirst } from "lodash";
 
 // https://timleland.com/register-global-vue-components-using-webpack/
 
