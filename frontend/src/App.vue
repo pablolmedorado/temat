@@ -58,6 +58,7 @@
       </span>
       <v-spacer />
       <v-progress-circular v-show="loading" class="mr-5" :size="36" color="white" indeterminate />
+      <LinkManager />
       <NotificationManager class="mr-5" />
       <v-menu bottom left offset-y>
         <template #activator="{ on, attrs }">

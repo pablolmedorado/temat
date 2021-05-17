@@ -3,6 +3,7 @@ from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
 from taggit.models import Tag
 
+from ..models import Link, LinkType
 from users.api.serializers import UserSerializer
 
 
@@ -43,3 +44,20 @@ class TagSerializer(FlexFieldsModelSerializer):
             "slug",
         )
         read_only_fields = fields
+
+
+class LinkTypeSerializer(FlexFieldsModelSerializer):
+    class Meta:
+        model = LinkType
+        fields = ("id", "name", "order")
+        read_only_fields = fields
+
+
+class LinkSerializer(FlexFieldsModelSerializer):
+    class Meta:
+        model = Link
+        fields = ("id", "name", "icon", "url", "type", "order")
+        read_only_fields = fields
+        expandable_fields = {
+            "type": LinkTypeSerializer,
+        }
