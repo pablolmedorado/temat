@@ -206,6 +206,7 @@ export default {
     async function cancelHoliday(item) {
       await cancel(item);
       fetchItems();
+      refs.holidaysDatePicker.getUsedDates();
       refs.holidaysDatePicker.getSummary();
     }
 
