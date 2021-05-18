@@ -48,7 +48,7 @@
     <v-divider />
     <v-card-actions>
       <v-spacer />
-      <v-btn text color="primary" @click="$emit('close:dialog')">Volver</v-btn>
+      <v-btn text @click="$emit('close:dialog')">Volver</v-btn>
     </v-card-actions>
 
     <FormDialog ref="formDialog" verbose-name="evento" :form-component="formComponent" @submit="onFormSubmit" />

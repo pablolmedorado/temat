@@ -19,8 +19,8 @@
       <v-card-actions>
         <v-btn color="warning" text :disabled="!itemHasChanged" @click="reset">Restablecer</v-btn>
         <v-spacer />
-        <v-btn color="primary" text @click="cancel">Cancelar</v-btn>
-        <v-btn color="primary" text :loading="loading" @click="submit">
+        <v-btn text @click="cancel">Cancelar</v-btn>
+        <v-btn text :loading="loading" @click="submit">
           <slot name="submit-text">Guardar</slot>
         </v-btn>
       </v-card-actions>

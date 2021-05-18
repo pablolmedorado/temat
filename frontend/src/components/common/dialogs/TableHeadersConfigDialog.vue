@@ -33,8 +33,8 @@
       <v-card-actions>
         <v-btn color="warning" text @click="resetHeaders">Restablecer</v-btn>
         <v-spacer />
-        <v-btn color="primary" text @click="close">Cancelar</v-btn>
-        <v-btn color="primary" text @click="applyChanges">Aplicar</v-btn>
+        <v-btn text @click="close">Cancelar</v-btn>
+        <v-btn text @click="applyChanges">Aplicar</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

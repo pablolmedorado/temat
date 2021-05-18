@@ -117,10 +117,8 @@
         <v-card-actions>
           <v-btn color="warning" text @click="clearFilters">Limpiar</v-btn>
           <v-spacer />
-          <v-btn color="primary" text @click="closeFiltersDialog"> Volver </v-btn>
-          <v-btn color="primary" text :loading="loading" :disabled="loading" @click="applyFiltersFromDialog">
-            Filtrar
-          </v-btn>
+          <v-btn text @click="closeFiltersDialog"> Volver </v-btn>
+          <v-btn text :loading="loading" :disabled="loading" @click="applyFiltersFromDialog"> Filtrar </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

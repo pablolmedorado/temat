@@ -101,9 +101,7 @@
         <v-card-actions>
           <v-spacer />
           <v-btn text @click="showNotificationSummary = false">Salir</v-btn>
-          <v-btn color="primary" text :to="{ name: 'notifications' }" @click="showNotificationSummary = false">
-            Ver todas
-          </v-btn>
+          <v-btn text :to="{ name: 'notifications' }" @click="showNotificationSummary = false"> Ver todas </v-btn>
         </v-card-actions>
       </v-card>
     </v-menu>
