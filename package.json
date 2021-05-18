@@ -1,6 +1,6 @@
 {
   "name": "temat",
-  "version": "1.9.3",
+  "version": "1.10.0",
   "scripts": {
     "release": "standard-version"
   },
