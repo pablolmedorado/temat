@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.10.0](https://github.com/pablolmedorado/temat/compare/v1.9.3...v1.10.0) (2021-05-18)
+
+
+### Features
+
+* add links feature ([f50e6a8](https://github.com/pablolmedorado/temat/commit/f50e6a8881eac712aded9eb6a95842bf6c27fdaf))
+* **breakfasts:** add copy to clipboard feature ([64de989](https://github.com/pablolmedorado/temat/commit/64de989c600b88a2c36521c3917d9a74f688ba5b))
+
+
+### Bug Fixes
+
+* **calendar:** debounce event fetching function to avoid unnecessary calls ([9aa9f59](https://github.com/pablolmedorado/temat/commit/9aa9f59791fcd6b48a52b2904aea0d401d5c194b))
+* **frontend:** fix multiline v-data-table headers ([a65f67a](https://github.com/pablolmedorado/temat/commit/a65f67abc86a77cbba06478c3a3d9718815755d3))
+* **frontend:** remove primary color from text buttons ([abcca73](https://github.com/pablolmedorado/temat/commit/abcca73e8025e593bd120161040fa4beaa0ed685))
+* **holidays:** fetch used dates on holiday cancel ([8d67379](https://github.com/pablolmedorado/temat/commit/8d67379ac8ce1a998023afa8d8aa96dae5e63083))
+* **scrum:** allow scroll in kanban view when fullscreen mode is active ([3cc2e42](https://github.com/pablolmedorado/temat/commit/3cc2e421477bada8274f9bf98136f786c94fa6db))
+* **sprints:** fix sprint basic filters ([47431e5](https://github.com/pablolmedorado/temat/commit/47431e5d49cb8cc50a862df94a78c1f214708dd3))
+* fix misc errors found during tests ([e5f0e19](https://github.com/pablolmedorado/temat/commit/e5f0e19a5e79287d13748990b9cd5920bca9b4c0))
+
 ### [1.9.3](https://github.com/pablolmedorado/temat/compare/v1.9.2...v1.9.3) (2021-04-11)
 
 
