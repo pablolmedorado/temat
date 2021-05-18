@@ -35,7 +35,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .progress-number {
   text-shadow: 1px 1px #000;
 }

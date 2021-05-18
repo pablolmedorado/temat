@@ -3,35 +3,35 @@ import { defaultTo } from "lodash";
 import Api from "./api";
 
 export default class BaseService {
-  static get listUrl() {
+  get listUrl() {
     return Urls[`${this.baseUrlName}-list`]();
   }
 
-  static detailUrl(pk) {
+  detailUrl(pk) {
     return Urls[`${this.baseUrlName}-detail`]({ pk });
   }
 
-  static list(queryParams) {
+  list(queryParams) {
     return Api.get(this.listUrl, { params: defaultTo(queryParams, this.defaultListParams) });
   }
 
-  static retrieve(pk, queryParams) {
+  retrieve(pk, queryParams) {
     return Api.get(this.detailUrl(pk), {
       params: defaultTo(queryParams, this.defaultRetrieveParams),
     });
   }
 
-  static save(payload, queryParams) {
+  save(payload, queryParams) {
     const method = payload.id ? "put" : "post";
     const url = payload.id ? this.detailUrl(payload.id) : this.listUrl;
     return Api[method](url, payload, { params: queryParams });
   }
 
-  static update(payload, queryParams) {
+  update(payload, queryParams) {
     return Api.patch(this.detailUrl(payload.id), payload, { params: queryParams });
   }
 
-  static delete(pk) {
+  delete(pk) {
     return Api.delete(this.detailUrl(pk));
   }
 }

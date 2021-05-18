@@ -35,6 +35,9 @@ export default {
     updateFilters(filter) {
       this.$emit("update:filters", { ...this.filters, ...filter });
     },
+    clearFilters() {
+      this.$emit("update:filters", {});
+    },
     openFiltersDialog() {
       this.showFiltersDialog = true;
     },

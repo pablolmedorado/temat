@@ -7,6 +7,7 @@ if (workbox) {
   var APP_INDEX = "app-index";
   var STATIC_RESOURCES = "static-resources";
   var NOTIFICATIONS = "notifications";
+  var LINKS = "links";
   var SELECT_OPTIONS = "select-options";
 
   workbox.setConfig({
@@ -47,6 +48,13 @@ if (workbox) {
     new RegExp("/api/common/notifications/unread_count/"),
     new workbox.strategies.NetworkFirst({
       cacheName: NOTIFICATIONS,
+    })
+  );
+
+  workbox.routing.registerRoute(
+    new RegExp("/api/common/links/"),
+    new workbox.strategies.StaleWhileRevalidate({
+      cacheName: LINKS,
     })
   );
 

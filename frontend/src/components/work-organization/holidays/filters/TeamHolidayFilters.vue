@@ -25,15 +25,11 @@
       </v-row>
       <v-row>
         <v-col class="py-1">
-          <TeamHolidaysDateFilter
+          <HolidaysDatePicker
             ref="dateFilter"
+            v-model="selectedDates"
             :year="filters.allowance_date__year"
-            :filters="filters"
             :range="rangeSelector"
-            :events="pickerEvents"
-            :locale="locale"
-            full-width
-            @update:filters="$emit('update:filters', $event)"
           />
         </v-col>
       </v-row>
@@ -71,31 +67,49 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapGetters } from "vuex";
+import { isArray } from "lodash";
 
-import DatePickerDatesMixin from "@/mixins/work-organization/holidays/holiday-datepicker-dates-mixin";
 import FilterMixin from "@/mixins/filter-mixin";
 
+import HolidaysDatePicker from "@/components/work-organization/holidays/HolidaysDatePicker";
 import HolidaysHelpDialog from "@/components/work-organization/holidays/dialogs/HolidaysHelpDialog";
-import TeamHolidaysDateFilter from "@/components/work-organization/holidays/filters/TeamHolidaysDateFilter";
 
 export default {
   name: "TeamHolidayFilters",
-  components: { HolidaysHelpDialog, TeamHolidaysDateFilter },
-  mixins: [FilterMixin, DatePickerDatesMixin],
+  components: { HolidaysDatePicker, HolidaysHelpDialog },
+  mixins: [FilterMixin],
   data() {
     return {
+      selectedDates: null,
       rangeSelector: false,
-      importantDates: [],
-      summary: {},
       showHelpDialog: false,
     };
   },
   computed: {
-    ...mapState(["locale"]),
     ...mapGetters(["yearOptions"]),
     userFilter() {
       return this.splitFilterValue("user_id__in", true);
+    },
+  },
+  watch: {
+    selectedDates(newValue) {
+      const localFilters = { ...this.filters };
+      delete localFilters.planned_date__gte;
+      delete localFilters.planned_date__lte;
+      delete localFilters.planned_date;
+      if (newValue) {
+        if (isArray(newValue)) {
+          if (newValue.length) {
+            const sorted = [...newValue].sort();
+            localFilters.planned_date__gte = sorted[0];
+            localFilters.planned_date__lte = sorted[1];
+          }
+        } else {
+          localFilters.planned_date = newValue;
+        }
+      }
+      this.$emit("update:filters", localFilters);
     },
   },
   methods: {

@@ -96,7 +96,7 @@ class EffortSerializer(FlexFieldsModelSerializer):
         model = Effort
         fields = ("id", "date", "user", "role", "user_story", "effort", "comments", "creation_datetime")
         read_only_fields = ("id", "creation_datetime", "creation_user", "modification_datetime", "modification_user")
-        expandable_fields = {"user_story": "scrum.api.UserStorySerializer"}
+        expandable_fields = {"user_story": "scrum.api.serializers.UserStorySerializer"}
         validators = [
             UniqueTogetherValidator(queryset=Effort.objects.all(), fields=["date", "user", "role", "user_story"])
         ]
@@ -115,7 +115,7 @@ class TaskSerializer(FlexFieldsModelSerializer):
             "modification_datetime",
             "modification_user",
         )
-        expandable_fields = {"user_story": "scrum.api.UserStorySerializer"}
+        expandable_fields = {"user_story": "scrum.api.serializers.UserStorySerializer"}
         validators = [UniqueTogetherValidator(queryset=Task.objects.all(), fields=["name", "user_story"])]
 
 

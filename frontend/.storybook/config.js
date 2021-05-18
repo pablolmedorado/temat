@@ -5,6 +5,7 @@ import { withKnobs } from "@storybook/addon-knobs";
 import { withTemplate } from "~storybook/addon-show-vue-markup";
 import { withVuetify } from "~storybook/addon-vuetify";
 import StoryRouter from "storybook-vue-router";
+import "~storybook/addon-composition-api";
 
 addDecorator(withA11y);
 addDecorator(withKnobs);

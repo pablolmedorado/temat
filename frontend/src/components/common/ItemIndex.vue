@@ -9,76 +9,26 @@
         </v-toolbar-title>
         <v-spacer />
         <slot name="toolbar" v-bind="{ selectedItems, filters: { ...filters, ...systemFilters } }"></slot>
-        <v-menu v-if="filterComponent" bottom left offset-y>
-          <template #activator="{ on: menu }">
-            <v-tooltip bottom>
-              <template #activator="{ on: tooltip }">
-                <v-btn icon :disabled="loading" v-on="{ ...tooltip, ...menu }">
-                  <v-badge :value="dialogFilterCount" color="primary" dot overlap>
-                    <v-icon>mdi-filter-menu</v-icon>
-                  </v-badge>
-                </v-btn>
-              </template>
-              <span>Filtros</span>
-            </v-tooltip>
-          </template>
-          <v-list dense>
-            <v-list-item v-if="advancedFilters" @click.stop="openFiltersDialog">
-              <v-list-item-icon>
-                <v-badge :value="dialogFilterCount" color="primary" :content="dialogFilterCount" overlap>
-                  <v-icon>mdi-filter</v-icon>
-                </v-badge>
-              </v-list-item-icon>
-              <v-list-item-title>Filtros avanzados</v-list-item-title>
-            </v-list-item>
-            <v-list-item @click="setFiltersAndFetch({})">
-              <v-list-item-icon>
-                <v-icon>mdi-eraser</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>Limpiar</v-list-item-title>
-            </v-list-item>
-            <v-list-item @click="openQuickFilterDialog">
-              <v-list-item-icon>
-                <v-icon>mdi-filter-plus-outline</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>Guardar filtro rápido</v-list-item-title>
-            </v-list-item>
-            <v-divider class="mt-3 mb-2" />
-            <v-subheader class="ml-2">Filtros rápidos</v-subheader>
-            <v-list-item v-for="filter in quickFilters" :key="filter.label" @click="applyQuickFilter(filter)">
-              <v-list-item-title>{{ filter.label }}</v-list-item-title>
-              <v-list-item-action class="my-0">
-                <v-btn icon @click.stop="pinQuickFilter(filter)">
-                  <v-icon v-if="pinnedQuickFilter === filter.key" color="primary">mdi-pin</v-icon>
-                  <v-icon v-else>mdi-pin-outline</v-icon>
-                </v-btn>
-              </v-list-item-action>
-            </v-list-item>
-            <v-list-item v-for="filter in customQuickFilters" :key="filter.label" @click="applyQuickFilter(filter)">
-              <v-list-item-title>{{ filter.label }}</v-list-item-title>
-              <v-list-item-action class="my-0">
-                <v-btn icon @click.stop="deleteQuickFilter(filter)">
-                  <v-icon color="error">mdi-delete</v-icon>
-                </v-btn>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-        <v-tooltip bottom>
-          <template #activator="{ attrs, on }">
-            <v-btn
-              v-if="customHeaders"
-              icon
-              :disabled="loading"
-              v-bind="attrs"
-              v-on="on"
-              @click="$refs.customHeadersDialog.open()"
-            >
-              <v-icon>mdi-table-eye</v-icon>
-            </v-btn>
-          </template>
-          <span>Columnas visibles</span>
-        </v-tooltip>
+        <FilterManager
+          v-if="filterComponent"
+          :local-storage-namespace="localStorageNamespace"
+          :filters="filters"
+          :advanced-filters="advancedFilters"
+          :advanced-filters-count="dialogFilterCount"
+          :quick-filters="quickFilters"
+          :default-quick-filter="defaultQuickFilter"
+          :pinned-quick-filter.sync="pinnedQuickFilter"
+          :disabled="loading"
+          @clear:filters="setFiltersAndFetch({})"
+          @open:config-dialog="$refs.filterComponent.openFiltersDialog()"
+          @apply:filter="applyQuickFilter"
+        />
+        <TableHeaderManager
+          v-if="customHeaders"
+          :available-headers="tableAvailableHeaders"
+          :headers.sync="tableHeaders"
+          :disabled="loading"
+        />
         <v-tooltip bottom>
           <template #activator="{ attrs, on }">
             <v-btn icon :disabled="loading" v-bind="attrs" v-on="on" @click="fetchTableItems">
@@ -94,7 +44,6 @@
           :is="filterComponent"
           ref="filterComponent"
           :filters.sync="filters"
-          @clear:filters="filters = {}"
           @apply:filters="fetchTableItems(true)"
           @change:advanced-filters-count="dialogFilterCount = $event"
         />
@@ -119,9 +68,7 @@
         </template>
 
         <template v-for="header in tableAvailableHeaders" #[`item.${header.value}`]="slotProps">
-          <slot :name="`item.${header.value}`" v-bind="slotProps">
-            {{ slotProps.value }}
-          </slot>
+          <slot :name="`item.${header.value}`" v-bind="slotProps"></slot>
         </template>
 
         <template #item.table_actions="slotProps">
@@ -142,7 +89,7 @@
                     icon
                     v-bind="attrs"
                     :disabled="loading"
-                    @click.stop="openDeleteDialog(slotProps.item)"
+                    @click.stop="$refs.deleteDialog.open(slotProps.item)"
                     v-on="on"
                   >
                     <v-icon>mdi-delete</v-icon>
@@ -155,19 +102,6 @@
         </template>
       </ItemTable>
     </v-card>
-
-    <TableHeadersConfigDialog
-      v-if="customHeaders"
-      ref="customHeadersDialog"
-      :available-headers="tableAvailableHeaders"
-      :headers.sync="tableHeaders"
-    />
-
-    <QuickFilterDialog
-      ref="quickFilterDialog"
-      :quick-filters="customQuickFilters"
-      @add:quick-filter="addQuickFilter($event)"
-    />
 
     <slot name="fab" v-bind="{ canCreate, canEdit, canDelete, selectedItems }">
       <v-btn
@@ -205,14 +139,15 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
-import { get, isObject, omit } from "lodash";
+import { get, invoke, omit } from "lodash";
 
+import useLocalStorage from "@/composables/useLocalStorage";
 import { defaultTableOptions } from "@/utils/constants";
 
 export default {
   name: "ItemIndex",
   props: {
-    localStorageKey: {
+    localStorageNamespace: {
       type: String,
       required: true,
     },
@@ -229,7 +164,7 @@ export default {
       default: "name",
     },
     service: {
-      type: Function,
+      type: Object,
       required: true,
     },
     tableAvailableHeaders: {
@@ -311,13 +246,33 @@ export default {
       default: false,
     },
   },
+  setup(props) {
+    const localTableOptions = { ...defaultTableOptions, ...props.tableInitialOptions };
+    const tableOptions = useLocalStorage(`${props.localStorageNamespace}TableOptions`, localTableOptions, {
+      getter: (lsOptions) => ({ ...localTableOptions, ...lsOptions }),
+      setter: (options) => omit(options, ["page"]),
+    });
+
+    const defaultTableHeaders = props.tableAvailableHeaders.filter((header) => header.default || header.fixed);
+    const tableHeaders = useLocalStorage(`${props.localStorageNamespace}TableHeaders`, defaultTableHeaders, {
+      getter: (lsHeaders) => props.tableAvailableHeaders.filter((header) => lsHeaders.includes(header.value)),
+      setter: (headers) => headers.map((header) => header.value),
+    });
+
+    const pinnedQuickFilter = useLocalStorage(
+      `${props.localStorageNamespace}PinnedQuickFilter`,
+      props.defaultQuickFilter
+    );
+
+    return {
+      tableHeaders,
+      tableOptions,
+      pinnedQuickFilter,
+    };
+  },
   data() {
     return {
-      tableHeaders: null,
-      tableOptions: null,
       filters: {},
-      pinnedQuickFilter: get(localStorage, `${this.localStorageKey}PinnedQuickFilter`, this.defaultQuickFilter),
-      customQuickFilters: [],
       dialogFilterCount: 0,
       selectedItems: [],
     };
@@ -330,8 +285,6 @@ export default {
     tableHeaders: {
       handler(newValue) {
         const flatHeaders = newValue.map((header) => header.value);
-        localStorage[`${this.localStorageKey}TableHeaders`] = JSON.stringify(flatHeaders);
-
         const sortingConfig = { sortBy: [], sortDesc: [] };
         this.tableOptions.sortBy.forEach((field, index) => {
           if (flatHeaders.includes(field)) {
@@ -343,44 +296,21 @@ export default {
       },
       deep: true,
     },
-    tableOptions: {
-      handler(newValue) {
-        localStorage[`${this.localStorageKey}TableOptions`] = JSON.stringify(omit(newValue, ["page"]));
-      },
-      deep: true,
-    },
-    pinnedQuickFilter: {
-      handler(newValue) {
-        localStorage[`${this.localStorageKey}PinnedQuickFilter`] = newValue;
-      },
-    },
-    customQuickFilters: {
-      handler(newValue) {
-        localStorage[`${this.localStorageKey}QuickFilters`] = JSON.stringify(newValue);
-      },
-      deep: true,
-    },
   },
   created() {
-    this.loadOptionsFromLocalStorage();
-    this.loadHeadersFromLocalStorage();
-    this.loadQuickFiltersFromLocalStorage();
     this.filters = this.getDefaultFilters();
   },
   methods: {
     ...mapActions(["showSnackbar"]),
     fetchTableItems(resetPagination = false) {
-      this.$refs.itemTable.fetchItems(resetPagination);
+      invoke(this.$refs.itemTable, "fetchItems", resetPagination);
     },
     getDefaultFilters() {
       if (!this.pinnedQuickFilter) {
         return {};
       }
       const defaultFilter = this.quickFilters.find((filter) => filter.key === this.pinnedQuickFilter);
-      return defaultFilter ? defaultFilter.filters : {};
-    },
-    openFiltersDialog() {
-      this.$refs.filterComponent.openFiltersDialog();
+      return get(defaultFilter, "filters", {});
     },
     addFilter(filter) {
       this.filters = { ...this.filters, ...filter };
@@ -393,39 +323,8 @@ export default {
         });
       }
     },
-    openQuickFilterDialog() {
-      this.$refs.quickFilterDialog.open();
-    },
-    closeQuickFilterDialog() {
-      this.$refs.quickFilterDialog.close();
-    },
-    addQuickFilter(filter) {
-      if (isObject(filter)) {
-        filter.filters = { ...this.filters };
-      } else {
-        this.customQuickFilters.push({
-          label: filter,
-          filters: { ...this.filters },
-        });
-      }
-      this.showSnackbar({
-        color: "success",
-        message: "Filtro guardado correctamente",
-      });
-    },
     applyQuickFilter(filter) {
       this.setFiltersAndFetch(filter.filters);
-    },
-    pinQuickFilter(filter) {
-      this.pinnedQuickFilter = filter.key;
-      this.showSnackbar({ message: `Se ha fijado el filtro "${filter.label}"` });
-    },
-    deleteQuickFilter(filter) {
-      this.customQuickFilters = this.customQuickFilters.filter((item) => item.label !== filter.label);
-      this.showSnackbar({
-        color: "success",
-        message: "Filtro eliminado correctamente",
-      });
     },
     async openFormDialog(item) {
       if (!item) {
@@ -439,9 +338,6 @@ export default {
       this.fetchTableItems();
       this.$emit("submit:form", item);
     },
-    openDeleteDialog(item) {
-      this.$refs.deleteDialog.open(item);
-    },
     async deleteItem(item) {
       await this.service.delete(item.id);
       this.fetchTableItems();
@@ -450,23 +346,6 @@ export default {
         color: "success",
         message: "Elemento eliminado correctamente",
       });
-    },
-    loadHeadersFromLocalStorage() {
-      const lsTableHeaders = localStorage[`${this.localStorageKey}TableHeaders`];
-      if (lsTableHeaders) {
-        this.tableHeaders = this.tableAvailableHeaders.filter((header) => lsTableHeaders.includes(header.value));
-      } else {
-        this.tableHeaders = this.tableAvailableHeaders.filter((header) => header.default || header.fixed);
-      }
-    },
-    loadOptionsFromLocalStorage() {
-      const localOptions = { ...defaultTableOptions, ...this.tableInitialOptions };
-      const lsTableOptions = localStorage[`${this.localStorageKey}TableOptions`];
-      this.tableOptions = lsTableOptions ? { ...localOptions, ...JSON.parse(lsTableOptions) } : localOptions;
-    },
-    loadQuickFiltersFromLocalStorage() {
-      const lsQuickFilters = localStorage[`${this.localStorageKey}QuickFilters`];
-      this.customQuickFilters = lsQuickFilters ? JSON.parse(lsQuickFilters) : [];
     },
   },
 };

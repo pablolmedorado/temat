@@ -30,8 +30,8 @@
       <v-divider />
       <v-card-actions>
         <v-spacer />
-        <v-btn color="primary" text @click.stop="close"> Volver </v-btn>
-        <v-btn color="primary" text :disabled="$v.$invalid" @click="addQuickFilter">
+        <v-btn text @click.stop="close"> Volver </v-btn>
+        <v-btn text :disabled="$v.$invalid" @click="addQuickFilter">
           {{ isObject(newQuickFilter) ? "Actualizar" : "Guardar" }}
         </v-btn>
       </v-card-actions>

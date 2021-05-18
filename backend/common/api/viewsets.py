@@ -15,7 +15,8 @@ from .mixins import (
     AtomicUpdateModelMixin,
 )
 from .permissions import NotificationPermission
-from .serializers import NotificationSerializer, TagSerializer
+from .serializers import LinkSerializer, NotificationSerializer, TagSerializer
+from ..models import Link
 
 
 class AtomicModelViewSet(
@@ -98,9 +99,17 @@ class NotificationViewSet(
 
 
 class TagViewSet(FlexFieldsMixin, viewsets.ReadOnlyModelViewSet):
-    serializer_class = TagSerializer
     queryset = Tag.objects.all()
+    serializer_class = TagSerializer
     filterset_class = TagFilterSet
     search_fields = ("name",)
     ordering_fields = ("id", "name")
     ordering = ("name",)
+
+
+class LinkViewSet(FlexFieldsMixin, viewsets.ReadOnlyModelViewSet):
+    queryset = Link.objects.all()
+    serializer_class = LinkSerializer
+    permit_list_expands = ["type"]
+    search_fields = ("name", "url")
+    ordering_fields = ()

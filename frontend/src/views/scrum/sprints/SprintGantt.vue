@@ -21,23 +21,29 @@
 <script>
 import { mapGetters } from "vuex";
 
-import BreadcrumbsContextMixin from "@/mixins/scrum/breadcrumbs-context-mixin";
-
+import ContextBreadcrumbs from "@/components/scrum/ContextBreadcrumbs";
 import SprintGanttChart from "@/components/scrum/charts/SprintGanttChart";
 import SprintViewSelector from "@/components/scrum/SprintViewSelector";
+
+import useScrumContext from "@/composables/useScrumContext";
 
 export default {
   name: "SprintGantt",
   metaInfo: {
     title: "Sprint - Gantt",
   },
-  components: { SprintGanttChart, SprintViewSelector },
-  mixins: [BreadcrumbsContextMixin],
+  components: { ContextBreadcrumbs, SprintGanttChart, SprintViewSelector },
   props: {
     sprintId: {
       type: String,
       required: true,
     },
+  },
+  setup(props) {
+    const { contextItem } = useScrumContext(props);
+    return {
+      contextItem,
+    };
   },
   computed: {
     ...mapGetters(["loading"]),

@@ -30,15 +30,15 @@
 <script>
 import { defaultTo } from "lodash";
 
-import BreadcrumbsContextMixin from "@/mixins/scrum/breadcrumbs-context-mixin";
-
 import UserStoryService from "@/services/scrum/user-story-service";
 
+import ContextBreadcrumbs from "@/components/scrum/ContextBreadcrumbs";
 import UserStoryData from "@/components/scrum/tabs/user-stories/UserStoryData";
 import UserStoryEffort from "@/components/scrum/tabs/user-stories/UserStoryEffort";
 import UserStoryProgress from "@/components/scrum/tabs/user-stories/UserStoryProgress";
 import UserStoryTasks from "@/components/scrum/tabs/user-stories/UserStoryTasks";
 
+import useScrumContext, { scrumContextProps } from "@/composables/useScrumContext";
 import { handleError } from "@/utils/error-handlers";
 
 const defaultItem = {
@@ -80,12 +80,12 @@ export default {
     };
   },
   components: {
+    ContextBreadcrumbs,
     UserStoryData,
     UserStoryTasks,
     UserStoryProgress,
     UserStoryEffort,
   },
-  mixins: [BreadcrumbsContextMixin],
   async beforeRouteEnter(to, from, next) {
     try {
       let item;
@@ -139,6 +139,13 @@ export default {
       type: String,
       default: undefined,
     },
+    ...scrumContextProps,
+  },
+  setup(props) {
+    const { contextItem } = useScrumContext(props);
+    return {
+      contextItem,
+    };
   },
   data() {
     return {

@@ -62,7 +62,7 @@ export const Default = () => {
           </template>
           <template #actions>
             <v-spacer />
-            <v-btn color="primary" text @click="showDialog = false">Close</v-btn>
+            <v-btn text @click="showDialog = false">Close</v-btn>
           </template>
         </BaseDialog>
       </div>

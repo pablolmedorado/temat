@@ -31,8 +31,8 @@
               <UserPill :user="value" />
             </template>
             <template #item.approved="{ value }">
-              <v-chip :color="getHolidayStatusRepresentation(value).colour" dark>
-                <v-icon small>{{ getHolidayStatusRepresentation(value).icon }}</v-icon>
+              <v-chip :color="getHolidayStatusInfo(value).colour" dark>
+                <v-icon small>{{ getHolidayStatusInfo(value).icon }}</v-icon>
               </v-chip>
             </template>
             <template #item.table_actions="{ item }">
@@ -66,13 +66,18 @@
 </template>
 
 <script>
-import HolidaysMixin from "@/mixins/work-organization/holidays/holidays-mixin";
+import { computed, ref } from "@vue/composition-api";
+import { useGetters, useState } from "vuex-composition-helpers";
+import { DateTime } from "luxon";
 
 import HolidayService from "@/services/work-organization/holiday-service";
 
 import TeamHolidayFilters from "@/components/work-organization/holidays/filters/TeamHolidayFilters";
 
+import useHolidays from "@/composables/useHolidays";
 import { defaultTableOptions } from "@/utils/constants";
+
+const currentDate = DateTime.local();
 
 export default {
   name: "HolidaysTeam",
@@ -80,23 +85,19 @@ export default {
     title: "Vacaciones equipo",
   },
   components: { TeamHolidayFilters },
-  mixins: [HolidaysMixin],
-  data() {
-    return {
-      service: HolidayService,
-      tableOptions: {
-        ...defaultTableOptions,
-        sortBy: ["planned_date"],
-        sortDesc: [false],
-        multiSort: true,
-      },
-      systemFilters: {
-        planned_date__isnull: false,
-      },
-    };
-  },
-  computed: {
-    tableHeaders() {
+  setup(props, { refs }) {
+    // Vuex
+    const { loggedUser } = useState(["loggedUser"]);
+    const { loading } = useGetters(["loading"]);
+
+    // Table management
+    const tableOptions = ref({
+      ...defaultTableOptions,
+      sortBy: ["planned_date"],
+      sortDesc: [false],
+      multiSort: true,
+    });
+    const tableHeaders = computed(() => {
       const defaultOptions = [
         { text: "Fecha", align: "start", sortable: true, value: "planned_date" },
         {
@@ -117,24 +118,45 @@ export default {
         ...defaultOptions,
         { text: "Acciones", align: "left", sortable: false, value: "table_actions" },
       ];
-      return this.loggedUser.is_superuser ? adminOptions : defaultOptions;
-    },
-  },
-  methods: {
-    fetchItems() {
-      this.$refs.itemTable.fetchItems();
-    },
-    getSummary() {
-      this.$refs.filterComponent.getSummary();
-    },
-    async editHoliday(item, approved) {
-      await HolidayService.changeApprovalStatus(item.id, approved);
-      this.fetchItems();
-      this.showSnackbar({
-        color: "success",
-        message: "Día de vacaciones modificado correctamente",
-      });
-    },
+      return loggedUser.value.is_superuser ? adminOptions : defaultOptions;
+    });
+    const filters = ref({
+      allowance_date__year: currentDate.year,
+    });
+    const systemFilters = {
+      planned_date__isnull: false,
+    };
+    function fetchItems() {
+      refs.itemTable.fetchItems();
+    }
+
+    // Holidays management
+    const { edit, cancel, getStatusInfo } = useHolidays();
+    async function editHoliday(item, approved) {
+      await edit(item, approved);
+      fetchItems();
+    }
+    async function cancelHoliday(item) {
+      await cancel(item);
+      fetchItems();
+      refs.filterComponent.$refs.dateFilter.getSummary();
+    }
+
+    return {
+      // Vuex
+      loading,
+      // Table management
+      tableOptions,
+      tableHeaders,
+      filters,
+      systemFilters,
+      service: HolidayService,
+      fetchItems,
+      // Holidays management
+      editHoliday,
+      cancelHoliday,
+      getHolidayStatusInfo: getStatusInfo,
+    };
   },
 };
 </script>

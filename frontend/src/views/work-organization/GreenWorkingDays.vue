@@ -4,7 +4,7 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-key="greenWorkingDay"
+          local-storage-namespace="greenWorkingDay"
           verbose-name="Jornada especial"
           verbose-name-plural="Jornadas especiales"
           item-text="date"

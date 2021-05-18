@@ -1,6 +1,10 @@
 import BaseService from "../base-service";
 
-export default class GroupService extends BaseService {
-  static baseUrlName = "users:group";
-  static defaultListParams = { ordering: "name" };
+class GroupService extends BaseService {
+  baseUrlName = "users:group";
+  defaultListParams = { ordering: "name" };
 }
+
+const service = Object.freeze(new GroupService());
+
+export default service;

@@ -4,7 +4,7 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-key="notification"
+          local-storage-namespace="notification"
           verbose-name="Notificación"
           verbose-name-plural="Notificaciones"
           :table-available-headers="tableHeaders"
@@ -44,7 +44,11 @@
               </template>
               <span> Marcar como no leído </span>
             </v-tooltip>
-            <v-btn icon :disabled="loading || !Boolean(selectedItems.length)" @click="openDeleteDialog(selectedItems)">
+            <v-btn
+              icon
+              :disabled="loading || !Boolean(selectedItems.length)"
+              @click.stop="openDeleteDialog(selectedItems)"
+            >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
             <v-divider vertical inset />
@@ -105,7 +109,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 
-import NotificationService from "@/services/notifications/notification-service";
+import NotificationService from "@/services/common/notification-service";
 
 import NotificationFilters from "@/components/notifications/NotificationFilters";
 

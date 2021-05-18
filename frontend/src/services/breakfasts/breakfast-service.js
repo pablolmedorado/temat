@@ -1,5 +1,9 @@
 import BaseService from "../base-service";
 
-export default class BreakfastService extends BaseService {
-  static baseUrlName = "breakfasts:breakfast";
+class BreakfastService extends BaseService {
+  baseUrlName = "breakfasts:breakfast";
 }
+
+const service = Object.freeze(new BreakfastService());
+
+export default service;

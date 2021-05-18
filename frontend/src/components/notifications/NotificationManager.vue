@@ -16,7 +16,7 @@
           <template #activator="{ on: tooltip }">
             <v-btn icon v-on="{ ...tooltip, ...menu }">
               <v-badge :color="unreadCountBadgeColour" :content="unreadCount | text" bordered overlap>
-                <v-icon>{{ browserNotificationsEnabled ? "mdi-bell-ring" : "mdi-bell" }}</v-icon>
+                <v-icon>{{ areNotificationsEnabled ? "mdi-bell-ring" : "mdi-bell" }}</v-icon>
               </v-badge>
             </v-btn>
           </template>
@@ -101,9 +101,7 @@
         <v-card-actions>
           <v-spacer />
           <v-btn text @click="showNotificationSummary = false">Salir</v-btn>
-          <v-btn color="primary" text :to="{ name: 'notifications' }" @click="showNotificationSummary = false">
-            Ver todas
-          </v-btn>
+          <v-btn text :to="{ name: 'notifications' }" @click="showNotificationSummary = false"> Ver todas </v-btn>
         </v-card-actions>
       </v-card>
     </v-menu>
@@ -111,10 +109,14 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
+import { mapGetters, mapMutations, mapState } from "vuex";
+import { createNamespacedHelpers } from "vuex-composition-helpers";
+import { useIntervalFn } from "@vueuse/core";
 import { isNil, partition } from "lodash";
 
-import NotificationService from "@/services/notifications/notification-service";
+import NotificationService from "@/services/common/notification-service";
+
+import useNotifications from "@/composables/useNotifications";
 
 import NotificationImg from "@/assets/notification.png";
 
@@ -125,10 +127,21 @@ export default {
       return isNil(value) ? "" : value.toString();
     },
   },
+  setup() {
+    const { useActions } = createNamespacedHelpers("notifications");
+    const { getUnreadCount } = useActions(["getUnreadCount"]);
+
+    const { areEnabled: areNotificationsEnabled } = useNotifications();
+    useIntervalFn(() => getUnreadCount(), 300000, true); // 5 minutes
+
+    return {
+      areNotificationsEnabled,
+      getUnreadCount,
+    };
+  },
   data() {
     return {
       updateInterval: null,
-      browserNotificationsEnabled: false,
       showNotificationSummary: false,
       loadingNotificationSummary: false,
       notifications: [],
@@ -143,7 +156,7 @@ export default {
   },
   watch: {
     unreadCount(newValue, oldValue) {
-      if (this.browserNotificationsEnabled && newValue > oldValue) {
+      if (this.areNotificationsEnabled && newValue > oldValue) {
         new Notification("TeMaT", {
           body: `Tienes ${newValue} notificación/es sin leer`,
           icon: NotificationImg,
@@ -159,52 +172,10 @@ export default {
     },
   },
   created() {
-    this.checkNotificationSupport();
     this.getUnreadCount();
-    this.setUpdateInterval();
-  },
-  beforeDestroy() {
-    clearInterval(this.updateInterval);
   },
   methods: {
     ...mapMutations("notifications", ["setUnreadCount"]),
-    ...mapActions("notifications", ["getUnreadCount"]),
-    checkNotificationPromise() {
-      try {
-        Notification.requestPermission().then();
-        return true;
-      } catch {
-        return false;
-      }
-    },
-    handleNotificationPermission(permission) {
-      if (!("permission" in Notification)) {
-        Notification.permission = permission;
-      }
-      this.browserNotificationsEnabled = Notification.permission === "granted";
-    },
-    checkNotificationSupport() {
-      if (!("Notification" in window)) {
-        // eslint-disable-next-line no-console
-        console.warn("This browser does not support notifications.");
-      } else {
-        if (this.checkNotificationPromise()) {
-          Notification.requestPermission().then((permission) => {
-            this.handleNotificationPermission(permission);
-          });
-        } else {
-          Notification.requestPermission(function (permission) {
-            this.handleNotificationPermission(permission);
-          });
-        }
-      }
-    },
-    setUpdateInterval() {
-      clearInterval(this.updateInterval);
-      this.updateInterval = setInterval(() => {
-        this.getUnreadCount();
-      }, 300000); // 5 minutes
-    },
     async getUnreadSummary() {
       this.loadingNotificationSummary = true;
       try {
@@ -246,7 +217,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .v-dialog--scrollable {
   max-height: 80%;
 }

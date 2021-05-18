@@ -138,7 +138,7 @@
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
 import { DateTime, Interval } from "luxon";
-import { defaultTo, sortBy } from "lodash";
+import { debounce, defaultTo, sortBy } from "lodash";
 import { escapeHTML } from "vuetify/es5/util/helpers";
 
 import CalendarEvent from "@/models/event";
@@ -148,6 +148,7 @@ import EventService from "@/services/calendar/event-service";
 import EventCard from "@/components/calendar/EventCard";
 import EventForm from "@/components/calendar/forms/EventForm";
 
+import useLocalStorage from "@/composables/useLocalStorage";
 import { getFontColourFromBackground, hex2rgba } from "@/utils/colours";
 
 export default {
@@ -165,11 +166,19 @@ export default {
       },
     },
   },
+  setup() {
+    const calendarType = useLocalStorage("calendarType", "month");
+    const excludeSystemEvents = useLocalStorage("calendarExcludeSystemEvents", false);
+
+    return {
+      calendarType,
+      excludeSystemEvents,
+    };
+  },
   data() {
     return {
       referenceDate: defaultTo(this.initialDate, DateTime.local().toISODate()),
       events: [],
-      calendarType: defaultTo(localStorage.calendarType, "month"),
       typeOptions: [
         { text: "Día", value: "day", icon: "mdi-view-day" },
         { text: "Semana", value: "week", icon: "mdi-view-week" },
@@ -180,9 +189,6 @@ export default {
         week: "Semana",
         day: "Día",
       },
-      excludeSystemEvents: localStorage.calendarExcludeSystemEvents
-        ? JSON.parse(localStorage.calendarExcludeSystemEvents)
-        : false,
       weekdays: [1, 2, 3, 4, 5, 6, 0],
       showDatePicker: false,
       formComponent: EventForm,
@@ -223,11 +229,7 @@ export default {
         this.referenceDate = newValue;
       }
     },
-    calendarType(newValue) {
-      localStorage.calendarType = newValue;
-    },
-    excludeSystemEvents(newValue) {
-      localStorage.calendarExcludeSystemEvents = JSON.stringify(newValue);
+    excludeSystemEvents() {
       this.fetchEvents();
     },
   },
@@ -242,10 +244,10 @@ export default {
   methods: {
     ...mapActions(["showSnackbar"]),
     ...mapActions("calendar", ["fetchEventTypes"]),
-    onCalendarChange() {
+    onCalendarChange: debounce(function () {
       this.events = [];
       this.fetchEvents();
-    },
+    }, 500),
     onTypeChange(type) {
       this.calendarType = type;
     },

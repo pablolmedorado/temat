@@ -1,5 +1,9 @@
 import BaseService from "../base-service";
 
-export default class EpicService extends BaseService {
-  static baseUrlName = "scrum:epic";
+class EpicService extends BaseService {
+  baseUrlName = "scrum:epic";
 }
+
+const service = Object.freeze(new EpicService());
+
+export default service;

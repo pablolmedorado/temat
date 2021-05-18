@@ -40,8 +40,8 @@
       <v-card-actions>
         <v-btn color="warning" text @click="reset">Restablecer</v-btn>
         <v-spacer />
-        <v-btn color="primary" text @click="close">Cancelar</v-btn>
-        <v-btn color="primary" text :disabled="!datesToCreate.length" @click="next">
+        <v-btn text @click="close">Cancelar</v-btn>
+        <v-btn text :disabled="!datesToCreate.length" @click="next">
           {{ nextText }}
         </v-btn>
       </v-card-actions>

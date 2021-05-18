@@ -5,7 +5,7 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-key="userStory"
+          local-storage-namespace="userStory"
           verbose-name="Historia de usuario"
           verbose-name-plural="Historias de usuario"
           :table-available-headers="tableHeaders"
@@ -96,15 +96,16 @@
 import { mapState } from "vuex";
 import { DateTime } from "luxon";
 
-import BreadcrumbsContextMixin from "@/mixins/scrum/breadcrumbs-context-mixin";
-
 import UserStoryService from "@/services/scrum/user-story-service";
 
+import ContextBreadcrumbs from "@/components/scrum/ContextBreadcrumbs";
 import EffortForm from "@/components/scrum/forms/EffortForm";
 import TaskQuickManagementDialog from "@/components/scrum/dialogs/TaskQuickManagementDialog";
 import UserStoryActors from "@/components/scrum/UserStoryActors";
 import UserStoryFilters from "@/components/scrum/filters/UserStoryFilters";
 import UserStoryIndexStatus from "@/components/scrum/UserStoryIndexStatus";
+
+import useScrumContext, { scrumContextProps } from "@/composables/useScrumContext";
 
 export default {
   name: "UserStories",
@@ -117,11 +118,21 @@ export default {
     return { title };
   },
   components: {
+    ContextBreadcrumbs,
     TaskQuickManagementDialog,
     UserStoryActors,
     UserStoryIndexStatus,
   },
-  mixins: [BreadcrumbsContextMixin],
+  props: {
+    ...scrumContextProps,
+  },
+  setup(props) {
+    const { hasContext, contextItem } = useScrumContext(props);
+    return {
+      hasContext,
+      contextItem,
+    };
+  },
   data() {
     return {
       tableHeaders: [
@@ -246,7 +257,7 @@ export default {
           },
         },
         {
-          key: "my-`pending-validations",
+          key: "my-pending-validations",
           label: "Mis validaciones pendientes",
           filters: {
             status__in: "3",

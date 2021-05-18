@@ -7,12 +7,7 @@
             <v-toolbar-title class="text-h6"> Solicitud </v-toolbar-title>
           </v-toolbar>
           <v-card-text>
-            <v-select
-              v-model="filters.allowance_date__year"
-              :items="yearOptions"
-              label="Año"
-              prepend-icon="mdi-calendar-range"
-            />
+            <v-select v-model="year" :items="yearOptions" label="Año" prepend-icon="mdi-calendar-range" />
             <v-row>
               <v-col class="text-center">
                 <v-chip
@@ -48,21 +43,12 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-date-picker
+                <HolidaysDatePicker
+                  ref="holidaysDatePicker"
                   v-model="datesToRequest"
-                  :picker-date.sync="pickerDate"
-                  :allowed-dates="allowedDates"
-                  :min="pickerInterval.start.toISODate()"
-                  :max="pickerInterval.end.toISODate()"
-                  :events="pickerEvents"
-                  :locale="locale"
-                  :locale-first-day-of-year="4"
-                  first-day-of-week="1"
-                  color="primary"
-                  show-week
-                  show-current
-                  full-width
+                  :year="year"
                   multiple
+                  disable-user-holidays
                 />
               </v-col>
             </v-row>
@@ -84,7 +70,7 @@
           <v-toolbar flat>
             <v-toolbar-title class="text-h6"> Mis vacaciones </v-toolbar-title>
             <v-spacer />
-            <v-btn icon :disabled="loading" @click="fetchItems">
+            <v-btn icon :disabled="loading" @click="fetchItems()">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
           </v-toolbar>
@@ -105,8 +91,8 @@
               <UserPill :user="value" />
             </template>
             <template #item.approved="{ value }">
-              <v-chip :color="getHolidayStatusRepresentation(value).colour" dark>
-                <v-icon small>{{ getHolidayStatusRepresentation(value).icon }}</v-icon>
+              <v-chip :color="getHolidayStatusInfo(value).colour" dark>
+                <v-icon small>{{ getHolidayStatusInfo(value).icon }}</v-icon>
               </v-chip>
             </template>
             <template #item.table_actions="{ item }">
@@ -124,16 +110,16 @@
 </template>
 
 <script>
-import { DateTime, Interval } from "luxon";
-import { includes, property } from "lodash";
+import { computed, ref, onActivated, watch } from "@vue/composition-api";
+import { useGetters, useState } from "vuex-composition-helpers";
+import { DateTime } from "luxon";
 
-import DatePickerDatesMixin from "@/mixins/work-organization/holidays/holiday-datepicker-dates-mixin";
-import HolidaysMixin from "@/mixins/work-organization/holidays/holidays-mixin";
-
-import HolidayService from "@/services/work-organization/holiday-service";
-
+import HolidaysDatePicker from "@/components/work-organization/holidays/HolidaysDatePicker";
 import HolidaysDetailDialog from "@/components/work-organization/holidays/dialogs/HolidaysDetailDialog";
 import HolidaysHelpDialog from "@/components/work-organization/holidays/dialogs/HolidaysHelpDialog";
+
+import useHolidays from "@/composables/useHolidays";
+import useService from "@/composables/useService";
 
 const currentDate = DateTime.local();
 
@@ -142,136 +128,120 @@ export default {
   metaInfo: {
     title: "Vacaciones usuario",
   },
-  components: { HolidaysDetailDialog, HolidaysHelpDialog },
-  mixins: [DatePickerDatesMixin, HolidaysMixin],
-  data() {
-    return {
-      tableLoading: true,
-      tableOptions: {
-        itemsPerPage: -1,
-        sortBy: ["planned_date"],
-        sortDesc: [false],
-      },
-      tableHeaders: [
-        {
-          text: "Fecha",
-          align: "start",
-          sortable: true,
-          value: "planned_date",
-        },
-        {
-          text: "Estado",
-          align: "start",
-          sortable: true,
-          value: "approved",
-        },
-        {
-          text: "Acciones",
-          align: "start",
-          sortable: false,
-          value: "table_actions",
-        },
-      ],
-      items: [],
-      datesToRequest: [],
-      usedDates: [],
-      pickerDate: currentDate.toFormat("yyyy-MM"),
-      showHelpDialog: false,
+  components: { HolidaysDatePicker, HolidaysDetailDialog, HolidaysHelpDialog },
+  setup(props, { refs }) {
+    // Vuex
+    const { loggedUser } = useState(["loggedUser"]);
+    const { loading, yearOptions } = useGetters(["loading", "yearOptions"]);
+
+    // State
+    const year = ref(currentDate.year);
+    const showHelpDialog = ref(false);
+
+    // Table Management
+    const tableOptions = {
+      sortBy: ["planned_date"],
+      sortDesc: [false],
     };
-  },
-  computed: {
-    plannedHolidays() {
-      return this.items.filter((holiday) => holiday.planned_date);
-    },
-    unplannedHolidays() {
-      return this.items.filter((holiday) => !holiday.planned_date);
-    },
-    pendingHolidays() {
-      const now = DateTime.local();
-      return this.unplannedHolidays.filter((holiday) => {
-        return now < DateTime.fromISO(holiday.expiration_date);
-      });
-    },
-    availableHolidays() {
-      const now = DateTime.local();
-      return this.pendingHolidays.filter((holiday) => {
-        return now > DateTime.fromISO(holiday.allowance_date);
-      });
-    },
-    expiredHolidays() {
-      const now = DateTime.local();
-      return this.unplannedHolidays.filter((holiday) => {
-        return now > DateTime.fromISO(holiday.expiration_date);
-      });
-    },
-    pickerInterval() {
-      const date = DateTime.fromObject({ year: this.filters.allowance_date__year });
-      const startDate = date.startOf("year");
-      const endDate = date.endOf("year").plus({ year: 1 });
-      return Interval.fromDateTimes(startDate, endDate);
-    },
-  },
-  watch: {
-    "filters.allowance_date__year": function (newValue) {
-      this.fetchItems();
-      this.pickerDate =
-        newValue === currentDate.year
-          ? currentDate.toFormat("yyyy-MM")
-          : DateTime.fromObject({ year: newValue }).toFormat("yyyy-MM");
-      this.datesToRequest = [];
-      this.getusedDates();
-    },
-  },
-  activated() {
-    this.fetchItems();
-    this.getusedDates();
-  },
-  methods: {
-    async fetchItems() {
-      this.tableLoading = true;
-      try {
-        const response = await HolidayService.list({
-          user_id: this.loggedUser.id,
-          ...this.filters,
-          fields: "id,planned_date,approved,expiration_date,allowance_date",
-          ordering: `${this.tableOptions.sortDesc[0] ? "-" : ""}${this.tableOptions.sortBy[0]}`,
-          page: this.tableOptions.page,
-          page_size: this.tableOptions.itemsPerPage,
-        });
-        this.items = this.tableOptions.itemsPerPage <= 0 ? response.data : response.data.results;
-        this.itemCount = this.tableOptions.itemsPerPage <= 0 ? response.data.length : response.data.count;
-      } finally {
-        this.tableLoading = false;
+    const tableHeaders = [
+      {
+        text: "Fecha",
+        align: "start",
+        sortable: true,
+        value: "planned_date",
+      },
+      {
+        text: "Estado",
+        align: "start",
+        sortable: true,
+        value: "approved",
+      },
+      {
+        text: "Acciones",
+        align: "start",
+        sortable: false,
+        value: "table_actions",
+      },
+    ];
+    const { requestLoading: tableLoading, requestData: items, performRequest: fetchItems } = useService(
+      "work-organization:holiday",
+      "list",
+      {
+        fnArgs: () => [
+          {
+            user_id: loggedUser.id,
+            allowance_date__year: year.value,
+            fields: "id,planned_date,approved,expiration_date,allowance_date",
+          },
+        ],
+        defaultData: [],
       }
-    },
-    allowedDates(date) {
-      return !includes(this.usedDates, date);
-    },
-    async getusedDates() {
-      const response = await HolidayService.list({
-        user_id: this.loggedUser.id,
-        planned_date__gte: this.pickerInterval.start.toISODate(),
-        planned_date__lte: this.pickerInterval.end.toISODate(),
-        fields: "planned_date",
+    );
+
+    // Holidays management
+    const plannedHolidays = computed(() => items.value.filter((holiday) => holiday.planned_date));
+    const unplannedHolidays = computed(() => items.value.filter((holiday) => !holiday.planned_date));
+    const pendingHolidays = computed(() => {
+      return unplannedHolidays.value.filter((holiday) => {
+        return currentDate < DateTime.fromISO(holiday.expiration_date);
       });
-      this.usedDates = response.data.map(property("planned_date"));
-    },
-    async requestHolidays() {
-      if (
-        this.datesToRequest.length &&
-        confirm(`¿Confirmas que deseas solicitar estos ${this.datesToRequest.length} días?`)
-      ) {
-        await HolidayService.request(this.datesToRequest);
-        this.fetchItems();
-        this.getusedDates();
-        this.getSummary();
-        this.showSnackbar({
-          color: "success",
-          message: "Días de vacaciones solicitados correctamente",
-        });
-        this.datesToRequest = [];
-      }
-    },
+    });
+    const availableHolidays = computed(() => {
+      return pendingHolidays.value.filter((holiday) => {
+        return currentDate > DateTime.fromISO(holiday.allowance_date);
+      });
+    });
+    const expiredHolidays = computed(() => {
+      return unplannedHolidays.value.filter((holiday) => {
+        return currentDate > DateTime.fromISO(holiday.expiration_date);
+      });
+    });
+    const { datesToRequest, request, cancel, getStatusInfo } = useHolidays();
+    async function requestHolidays() {
+      await request();
+      fetchItems();
+      refs.holidaysDatePicker.getUsedDates();
+      refs.holidaysDatePicker.getSummary();
+    }
+    async function cancelHoliday(item) {
+      await cancel(item);
+      fetchItems();
+      refs.holidaysDatePicker.getUsedDates();
+      refs.holidaysDatePicker.getSummary();
+    }
+
+    // Watchers
+    watch(year, () => fetchItems());
+
+    // Lifecycle hooks
+    onActivated(() => {
+      fetchItems();
+    });
+
+    return {
+      //Vuex
+      loading,
+      yearOptions,
+      // State
+      showHelpDialog,
+      year,
+      // Table management
+      items,
+      fetchItems,
+      tableOptions,
+      tableHeaders,
+      tableLoading,
+      // Holidays management
+      plannedHolidays,
+      unplannedHolidays,
+      pendingHolidays,
+      availableHolidays,
+      expiredHolidays,
+      datesToRequest,
+      requestHolidays,
+      cancelHoliday,
+      getHolidayStatusInfo: getStatusInfo,
+    };
   },
 };
 </script>

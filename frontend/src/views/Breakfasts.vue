@@ -4,7 +4,7 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-key="breakfast"
+          local-storage-namespace="breakfast"
           verbose-name="Desayuno"
           verbose-name-plural="Desayunos"
           :table-available-headers="tableHeaders"
