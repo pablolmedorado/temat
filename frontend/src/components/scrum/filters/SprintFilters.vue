@@ -133,7 +133,7 @@ export default {
   mixins: [FilterMixin],
   data() {
     return {
-      basicFilters: ["ongoing", "accountable_user_id"],
+      basicFilters: ["search", "ongoing"],
       ongoingOptions: [
         { label: "Sí", value: true },
         { label: "No", value: false },
