@@ -29,9 +29,9 @@ import { pick } from "lodash";
 import AppDrawer from "@/components/layout/AppDrawer";
 import AppNavbar from "@/components/layout/AppNavbar";
 
-import { handleError } from "@/utils/error-handlers";
-import loperaSentences from "@/utils/lopera-sentences";
 import useKonamiCode from "@/composables/useKonamiCode";
+import loperaSentences from "@/utils/lopera-sentences";
+import { handleError } from "@/utils/error-handlers";
 
 export default {
   name: "App",
@@ -52,6 +52,7 @@ export default {
       defaultThemeColours: {
         light: pick(this.$vuetify.theme.themes.light, ["primary", "secondary"]),
         dark: pick(this.$vuetify.theme.themes.dark, ["primary", "secondary"]),
+        betis: { primary: "#009655", secondary: "#d18d2a" },
       },
     };
   },
@@ -87,16 +88,13 @@ export default {
     onKonamiCodeChange(value) {
       if (value) {
         alert(loperaSentences[Math.floor(Math.random() * loperaSentences.length - 1 + 1)]);
-        const betisColours = {
-          primary: "#009655",
-          secondary: "#d18d2a",
-        };
-        Object.assign(this.$vuetify.theme.themes.light, betisColours);
-        Object.assign(this.$vuetify.theme.themes.dark, betisColours);
-      } else {
-        Object.assign(this.$vuetify.theme.themes.light, this.defaultThemeColours.light);
-        Object.assign(this.$vuetify.theme.themes.dark, this.defaultThemeColours.dark);
       }
+      const themeColours = {
+        light: this.defaultThemeColours[value ? "betis" : "light"],
+        dark: this.defaultThemeColours[value ? "betis" : "dark"],
+      };
+      Object.assign(this.$vuetify.theme.themes.light, themeColours.light);
+      Object.assign(this.$vuetify.theme.themes.dark, themeColours.dark);
     },
   },
 };
