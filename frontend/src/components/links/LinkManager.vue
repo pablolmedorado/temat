@@ -4,7 +4,6 @@
     content-class="v-dialog--scrollable"
     :min-width="400"
     :max-width="400"
-    :close-on-content-click="false"
     :nudge-width="200"
     bottom
     left
@@ -13,7 +12,7 @@
     <template #activator="{ on: menu }">
       <v-tooltip bottom>
         <template #activator="{ on: tooltip }">
-          <v-btn v-show="$vuetify.breakpoint.smAndUp" :disabled="loading" icon v-on="{ ...tooltip, ...menu }">
+          <v-btn :disabled="loading" icon v-on="{ ...tooltip, ...menu }">
             <v-icon>mdi-apps</v-icon>
           </v-btn>
         </template>

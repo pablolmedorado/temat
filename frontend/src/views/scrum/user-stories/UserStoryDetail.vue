@@ -4,10 +4,18 @@
 
     <v-tabs v-if="id" v-model="tab" class="mb-4" grow show-arrows background-color="transparent">
       <v-tabs-slider />
-      <v-tab href="#data"> <v-icon class="mr-1">mdi-book-account</v-icon>Información </v-tab>
-      <v-tab href="#tasks"> <v-icon class="mr-1">mdi-format-list-checks</v-icon>Tareas </v-tab>
-      <v-tab href="#progress"> <v-icon class="mr-1">mdi-percent</v-icon>Historial de avance </v-tab>
-      <v-tab href="#effort"> <v-icon class="mr-1">mdi-dumbbell</v-icon>Esfuerzo </v-tab>
+      <v-tab href="#data">
+        <v-icon>mdi-book-account</v-icon><span v-show="$vuetify.breakpoint.mdAndUp" class="ml-2">Información</span>
+      </v-tab>
+      <v-tab href="#tasks">
+        <v-icon>mdi-format-list-checks</v-icon><span v-show="$vuetify.breakpoint.mdAndUp" class="ml-2">Tareas</span>
+      </v-tab>
+      <v-tab href="#progress">
+        <v-icon>mdi-percent</v-icon><span v-show="$vuetify.breakpoint.mdAndUp" class="ml-2">Historial de avance</span>
+      </v-tab>
+      <v-tab href="#effort">
+        <v-icon>mdi-dumbbell</v-icon><span v-show="$vuetify.breakpoint.mdAndUp" class="ml-2">Esfuerzo</span>
+      </v-tab>
     </v-tabs>
 
     <v-tabs-items v-model="tab">
