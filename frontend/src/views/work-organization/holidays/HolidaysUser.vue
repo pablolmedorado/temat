@@ -169,7 +169,7 @@ export default {
       {
         fnArgs: () => [
           {
-            user_id: loggedUser.id,
+            user_id: loggedUser.value.id,
             allowance_date__year: year.value,
             fields: "id,planned_date,approved,expiration_date,allowance_date",
           },
