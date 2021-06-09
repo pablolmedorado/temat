@@ -4,7 +4,7 @@
       <v-tooltip :disabled="!tooltip" bottom>
         <template #activator="{ on }">
           <v-avatar v-bind="$attrs" :color="color" v-on="on">
-            <img v-if="konamiCodeActive" src="@/assets/donmanue.jpg" alt="Don Manuel Ruiz de Lopera" />
+            <img v-if="isKonamiCodeActive" src="@/assets/donmanue.jpg" alt="Don Manuel Ruiz de Lopera" />
             <span v-else class="white--text" :style="{ fontSize: fontSize + 'px' }">{{ localUser.acronym }}</span>
           </v-avatar>
         </template>
@@ -42,7 +42,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["konamiCodeActive"]),
+    ...mapState(["isKonamiCodeActive"]),
     ...mapGetters("users", ["usersMap"]),
     localUser() {
       return typeof this.user == "number" ? this.usersMap[this.user] : this.user;
