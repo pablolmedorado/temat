@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <template v-if="userStory.id">
-      <v-col v-if="!items.length && !loading">
+      <v-col v-if="!items.length && !isLoading">
         <v-alert type="info" text outlined border="left">
           Aún no existen registros de avance. Se generarán al añadir tareas e interactuar con ellas.
         </v-alert>
@@ -41,11 +41,11 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 import UserStoryService from "@/services/scrum/user-story-service";
 
 import UserStoryProgressChart from "@/components/scrum/charts/UserStoryProgressChart";
+
+import useLoading from "@/composables/useLoading";
 
 export default {
   name: "UserStoryProgress",
@@ -56,13 +56,18 @@ export default {
       required: true,
     },
   },
+  setup() {
+    const { isLoading, addTask, removeTask } = useLoading();
+    return {
+      isLoading,
+      addTask,
+      removeTask,
+    };
+  },
   data() {
     return {
       items: [],
     };
-  },
-  computed: {
-    ...mapGetters(["loading"]),
   },
   watch: {
     "userStory.id": {
@@ -78,8 +83,13 @@ export default {
   },
   methods: {
     async fetchItems() {
-      const response = await UserStoryService.progressByUserStory(this.userStory.id);
-      this.items = response.data.results ? response.data.results : response.data;
+      this.addTask("fetch-items");
+      try {
+        const response = await UserStoryService.progressByUserStory(this.userStory.id);
+        this.items = response.data.results ? response.data.results : response.data;
+      } finally {
+        this.removeTask("fetch-items");
+      }
     },
   },
 };

@@ -10,34 +10,40 @@
             <v-select v-model="year" :items="yearOptions" label="Año" prepend-icon="mdi-calendar-range" />
             <v-row>
               <v-col class="text-center">
-                <v-chip
-                  class="ma-2"
-                  color="green"
-                  text-color="white"
-                  @click="$refs.holidaysDetailDialog.open({ holidays: pendingHolidays, type: 'disponibles' })"
-                >
-                  <v-avatar left class="green darken-4">
-                    {{ availableHolidays.length }}
-                  </v-avatar>
-                  Disponibles
-                  <v-avatar right>
-                    <v-icon>mdi-calendar-check</v-icon>
-                  </v-avatar>
-                </v-chip>
-                <v-chip
-                  class="ma-2"
-                  color="orange"
-                  text-color="white"
-                  @click="$refs.holidaysDetailDialog.open({ holidays: expiredHolidays, type: 'caducadas' })"
-                >
-                  <v-avatar left class="orange darken-4">
-                    {{ expiredHolidays.length }}
-                  </v-avatar>
-                  Caducados
-                  <v-avatar right>
-                    <v-icon>mdi-calendar-remove</v-icon>
-                  </v-avatar>
-                </v-chip>
+                <template v-if="isTaskLoading('fetch-items')">
+                  <v-skeleton-loader type="chip" class="ma-2 skeleton-chip" />
+                  <v-skeleton-loader type="chip" class="ma-2 skeleton-chip" />
+                </template>
+                <template v-else>
+                  <v-chip
+                    class="ma-2"
+                    color="green"
+                    text-color="white"
+                    @click.stop="$refs.holidaysDetailDialog.open({ holidays: pendingHolidays, type: 'disponibles' })"
+                  >
+                    <v-avatar left class="green darken-4">
+                      {{ availableHolidays.length }}
+                    </v-avatar>
+                    Disponibles
+                    <v-avatar right>
+                      <v-icon>mdi-calendar-check</v-icon>
+                    </v-avatar>
+                  </v-chip>
+                  <v-chip
+                    class="ma-2"
+                    color="orange"
+                    text-color="white"
+                    @click.stop="$refs.holidaysDetailDialog.open({ holidays: expiredHolidays, type: 'caducadas' })"
+                  >
+                    <v-avatar left class="orange darken-4">
+                      {{ expiredHolidays.length }}
+                    </v-avatar>
+                    Caducados
+                    <v-avatar right>
+                      <v-icon>mdi-calendar-remove</v-icon>
+                    </v-avatar>
+                  </v-chip>
+                </template>
               </v-col>
               <HolidaysDetailDialog ref="holidaysDetailDialog" />
             </v-row>
@@ -59,7 +65,12 @@
             </v-btn>
             <HolidaysHelpDialog v-model="showHelpDialog" />
             <v-spacer />
-            <v-btn color="primary" :disabled="!datesToRequest.length" @click="requestHolidays">
+            <v-btn
+              color="primary"
+              :disabled="!datesToRequest.length"
+              :loading="isTaskLoading('request-holidays')"
+              @click="requestHolidays"
+            >
               Solicitar ({{ datesToRequest.length }})
             </v-btn>
           </v-card-actions>
@@ -70,7 +81,7 @@
           <v-toolbar flat>
             <v-toolbar-title class="text-h6"> Mis vacaciones </v-toolbar-title>
             <v-spacer />
-            <v-btn icon :disabled="loading" @click="fetchItems()">
+            <v-btn icon :disabled="isTaskLoading('fetch-items')" @click="fetchItems()">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
           </v-toolbar>
@@ -78,7 +89,7 @@
             :headers="tableHeaders"
             :items="plannedHolidays"
             :options="tableOptions"
-            :loading="tableLoading"
+            :loading="isTaskLoading('fetch-items')"
             no-data-text="No hay días de vacaciones coincidentes con los filtros aplicados"
             disable-pagination
             hide-default-footer
@@ -97,7 +108,12 @@
             </template>
             <template #item.table_actions="{ item }">
               <template v-if="!item.approved">
-                <v-btn :disabled="loading" icon @click="cancelHoliday(item)">
+                <v-btn
+                  :disabled="isLoading"
+                  :loading="isTaskLoading('cancel-holiday', item.id)"
+                  icon
+                  @click="cancelHoliday(item)"
+                >
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </template>
@@ -118,8 +134,10 @@ import HolidaysDatePicker from "@/components/work-organization/holidays/Holidays
 import HolidaysDetailDialog from "@/components/work-organization/holidays/dialogs/HolidaysDetailDialog";
 import HolidaysHelpDialog from "@/components/work-organization/holidays/dialogs/HolidaysHelpDialog";
 
+import HolidayService from "@/services/work-organization/holiday-service";
+
 import useHolidays from "@/composables/useHolidays";
-import useService from "@/composables/useService";
+import useLoading from "@/composables/useLoading";
 
 const currentDate = DateTime.local();
 
@@ -132,7 +150,10 @@ export default {
   setup(props, { refs }) {
     // Vuex
     const { loggedUser } = useState(["loggedUser"]);
-    const { loading, yearOptions } = useGetters(["loading", "yearOptions"]);
+    const { yearOptions } = useGetters(["yearOptions"]);
+
+    // General
+    const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
 
     // State
     const year = ref(currentDate.year);
@@ -163,20 +184,20 @@ export default {
         value: "table_actions",
       },
     ];
-    const { requestLoading: tableLoading, requestData: items, performRequest: fetchItems } = useService(
-      "work-organization:holiday",
-      "list",
-      {
-        fnArgs: () => [
-          {
-            user_id: loggedUser.value.id,
-            allowance_date__year: year.value,
-            fields: "id,planned_date,approved,expiration_date,allowance_date",
-          },
-        ],
-        defaultData: [],
+    const items = ref([]);
+    async function fetchItems() {
+      addTask("fetch-items");
+      try {
+        const response = await HolidayService.list({
+          user_id: loggedUser.value.id,
+          allowance_date__year: year.value,
+          fields: "id,planned_date,approved,expiration_date,allowance_date",
+        });
+        items.value = response.data.results ? response.data.results : response.data;
+      } finally {
+        removeTask("fetch-items");
       }
-    );
+    }
 
     // Holidays management
     const plannedHolidays = computed(() => items.value.filter((holiday) => holiday.planned_date));
@@ -198,16 +219,26 @@ export default {
     });
     const { datesToRequest, request, cancel, getStatusInfo } = useHolidays();
     async function requestHolidays() {
-      await request();
-      fetchItems();
-      refs.holidaysDatePicker.getUsedDates();
-      refs.holidaysDatePicker.getSummary();
+      addTask("request-holidays");
+      try {
+        await request();
+        fetchItems();
+        refs.holidaysDatePicker.getUsedDates();
+        refs.holidaysDatePicker.getSummary();
+      } finally {
+        removeTask("request-holidays");
+      }
     }
     async function cancelHoliday(item) {
-      await cancel(item);
-      fetchItems();
-      refs.holidaysDatePicker.getUsedDates();
-      refs.holidaysDatePicker.getSummary();
+      addTask("cancel-holiday", item.id);
+      try {
+        await cancel(item);
+        fetchItems();
+        refs.holidaysDatePicker.getUsedDates();
+        refs.holidaysDatePicker.getSummary();
+      } finally {
+        removeTask("cancel-holiday", item.id);
+      }
     }
 
     // Watchers
@@ -220,8 +251,10 @@ export default {
 
     return {
       //Vuex
-      loading,
       yearOptions,
+      // General
+      isLoading,
+      isTaskLoading,
       // State
       showHelpDialog,
       year,
@@ -230,7 +263,6 @@ export default {
       fetchItems,
       tableOptions,
       tableHeaders,
-      tableLoading,
       // Holidays management
       plannedHolidays,
       unplannedHolidays,
@@ -245,3 +277,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.skeleton-chip {
+  display: inline-block;
+}
+</style>

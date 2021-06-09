@@ -20,7 +20,8 @@
               <template #activator="{ on, attrs }">
                 <v-btn
                   icon
-                  :disabled="loading || !Boolean(selectedItems.length)"
+                  :disabled="isLoading || !Boolean(selectedItems.length)"
+                  :loading="isTaskLoading('bulk-action', 'markAllAsRead')"
                   v-bind="attrs"
                   @click="performBulkAction('markAllAsRead', selectedItems)"
                   v-on="on"
@@ -34,7 +35,8 @@
               <template #activator="{ on, attrs }">
                 <v-btn
                   icon
-                  :disabled="loading || !Boolean(selectedItems.length)"
+                  :disabled="isLoading || !Boolean(selectedItems.length)"
+                  :loading="isTaskLoading('bulk-action', 'markAllAsUnread')"
                   v-bind="attrs"
                   @click="performBulkAction('markAllAsUnread', selectedItems)"
                   v-on="on"
@@ -46,7 +48,8 @@
             </v-tooltip>
             <v-btn
               icon
-              :disabled="loading || !Boolean(selectedItems.length)"
+              :disabled="isLoading || !Boolean(selectedItems.length)"
+              :loading="isTaskLoading('bulk-action', 'bulkDelete')"
               @click.stop="openDeleteDialog(selectedItems)"
             >
               <v-icon>mdi-delete</v-icon>
@@ -113,6 +116,7 @@ import NotificationService from "@/services/common/notification-service";
 
 import NotificationFilters from "@/components/notifications/NotificationFilters";
 
+import useLoading from "@/composables/useLoading";
 import { isoDateTimeToLocaleString } from "@/utils/dates";
 
 export default {
@@ -122,6 +126,17 @@ export default {
   },
   filters: {
     datetime: isoDateTimeToLocaleString,
+  },
+  setup() {
+    const { isLoading, isTaskLoading, addTask, removeTask } = useLoading({
+      includedChildren: ["itemIndex"],
+    });
+    return {
+      isLoading,
+      isTaskLoading,
+      addTask,
+      removeTask,
+    };
   },
   data() {
     return {
@@ -164,19 +179,20 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["loading"]),
     ...mapGetters("notifications", ["notificationTargetMap"]),
   },
   methods: {
     ...mapActions("notifications", ["getUnreadCount"]),
     async performBulkAction(actionFunctionName, selectedItems) {
-      const params = { id__in: selectedItems.map((item) => item.id).join(",") };
-      await this.service[actionFunctionName](params);
-      this.postBulkAction();
-    },
-    postBulkAction() {
-      this.$refs.itemIndex.fetchTableItems();
-      this.getUnreadCount();
+      this.addTask("bulk-action", actionFunctionName);
+      try {
+        const params = { id__in: selectedItems.map((item) => item.id).join(",") };
+        await this.service[actionFunctionName](params);
+        this.$refs.itemIndex.fetchTableItems();
+        this.getUnreadCount();
+      } finally {
+        this.removeTask("bulk-action", actionFunctionName);
+      }
     },
     openDeleteDialog(selectedItems) {
       this.$refs.deleteDialog.open(selectedItems);

@@ -24,7 +24,7 @@
         </v-tooltip>
       </template>
 
-      <v-card :loading="loadingNotificationSummary">
+      <v-card :loading="isTaskLoading('fetch-unread-summary')">
         <v-toolbar flat dense>
           <v-toolbar-title>
             Notificaciones{{ unreadCount > notifications.length ? ` (${notifications.length}/${unreadCount})` : "" }}
@@ -34,7 +34,8 @@
             <template #activator="{ on, attrs }">
               <v-btn
                 icon
-                :disabled="!Boolean(notificationPartition[0].length)"
+                :disabled="!Boolean(notificationPartition[0].length) || isLoading"
+                :loading="isTaskLoading('mark-all-as-read')"
                 v-bind="attrs"
                 @click="markAllNotificationsAsRead"
                 v-on="on"
@@ -44,12 +45,12 @@
             </template>
             <span> Marcar todas como leídas </span>
           </v-tooltip>
-          <v-btn icon @click="getUnreadSummary">
+          <v-btn icon :disabled="isLoading" @click="getUnreadSummary">
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
         </v-toolbar>
         <v-card-text class="pa-0">
-          <template v-if="!loadingNotificationSummary">
+          <template v-if="!isTaskLoading('fetch-unread-summary')">
             <template v-if="notifications.length">
               <v-list v-for="(partition, index) in notificationPartition" :key="index" two-line class="pa-0">
                 <template v-if="partition.length">
@@ -73,7 +74,7 @@
                         <template #activator="{ on }">
                           <v-btn
                             icon
-                            :disabled="!notification.unread"
+                            :loading="isTaskLoading('mark-as-read', notification.id)"
                             @click="markNotificationAsRead(notification.id)"
                             v-on="on"
                           >
@@ -116,6 +117,7 @@ import { isNil, partition } from "lodash";
 
 import NotificationService from "@/services/common/notification-service";
 
+import useLoading from "@/composables/useLoading";
 import useNotifications from "@/composables/useNotifications";
 
 import NotificationImg from "@/assets/notification.png";
@@ -131,19 +133,23 @@ export default {
     const { useActions } = createNamespacedHelpers("notifications");
     const { getUnreadCount } = useActions(["getUnreadCount"]);
 
+    const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
+
     const { areEnabled: areNotificationsEnabled } = useNotifications();
     useIntervalFn(() => getUnreadCount(), 300000, true); // 5 minutes
 
     return {
+      isLoading,
+      isTaskLoading,
+      addTask,
+      removeTask,
       areNotificationsEnabled,
       getUnreadCount,
     };
   },
   data() {
     return {
-      updateInterval: null,
       showNotificationSummary: false,
-      loadingNotificationSummary: false,
       notifications: [],
     };
   },
@@ -177,27 +183,37 @@ export default {
   methods: {
     ...mapMutations("notifications", ["setUnreadCount"]),
     async getUnreadSummary() {
-      this.loadingNotificationSummary = true;
+      this.addTask("fetch-unread-summary");
       try {
         const response = await NotificationService.unreadSummary();
         this.notifications = response.data.results;
         this.setUnreadCount(response.data.count);
       } finally {
-        this.loadingNotificationSummary = false;
+        this.removeTask("fetch-unread-summary");
       }
     },
     async markNotificationAsRead(id) {
-      const response = await NotificationService.markAsRead(id);
-      const notification = response.data;
-      const notificationIndex = this.notifications.findIndex((item) => item.id === notification.id);
-      this.notifications.splice(notificationIndex, 1, notification);
-      this.getUnreadCount();
+      this.addTask("mark-as-read", id);
+      try {
+        const response = await NotificationService.markAsRead(id);
+        const notification = response.data;
+        const notificationIndex = this.notifications.findIndex((item) => item.id === notification.id);
+        this.notifications.splice(notificationIndex, 1, notification);
+        this.getUnreadCount();
+      } finally {
+        this.removeTask("mark-as-read", id);
+      }
     },
     async markAllNotificationsAsRead() {
       if (this.notificationPartition[0].length) {
-        const notificationIds = this.notificationPartition[0].map((notification) => notification.id);
-        await NotificationService.markSummaryAsRead({ id__in: notificationIds.join(",") });
-        this.getUnreadSummary();
+        this.addTask("mark-all-as-read");
+        try {
+          const notificationIds = this.notificationPartition[0].map((notification) => notification.id);
+          await NotificationService.markSummaryAsRead({ id__in: notificationIds.join(",") });
+          this.getUnreadSummary();
+        } finally {
+          this.removeTask("mark-all-as-read");
+        }
       }
     },
     getNotificationIcon(notification) {

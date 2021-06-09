@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-row v-show="!loading">
+    <v-row v-show="!isLoading">
       <v-col>
         <v-alert v-if="!Object.keys(eventsMap).length" type="info" text outlined border="left">
           No existen eventos futuros en los que figures como invitado.
@@ -75,6 +75,7 @@ import EventService from "@/services/calendar/event-service";
 
 import EventRepresentation from "@/components/calendar/EventRepresentation";
 
+import useLoading from "@/composables/useLoading";
 import { applyDarkVariant, getFontColourFromBackground } from "@/utils/colours";
 
 export default {
@@ -85,6 +86,14 @@ export default {
   components: {
     EventRepresentation,
   },
+  setup() {
+    const { isLoading, addTask, removeTask } = useLoading();
+    return {
+      isLoading,
+      addTask,
+      removeTask,
+    };
+  },
   data() {
     return {
       events: [],
@@ -92,7 +101,6 @@ export default {
   },
   computed: {
     ...mapState(["locale"]),
-    ...mapGetters(["loading"]),
     ...mapGetters("calendar", ["eventTypesMap", "eventVisibilityTypesMap"]),
     eventsMap() {
       return groupBy(this.events, (event) => {
@@ -106,17 +114,22 @@ export default {
     }
   },
   activated() {
-    this.getTimeLine();
+    this.fetchTimeLine();
   },
   methods: {
     ...mapActions("calendar", ["fetchEventTypes"]),
     applyDarkVariant,
     getFontColourFromBackground,
-    async getTimeLine() {
-      const response = await EventService.myTimeline();
-      this.events = response.data.results.map((event) => {
-        return new CalendarEvent(event);
-      });
+    async fetchTimeLine() {
+      this.addTask("fetch-timeline");
+      try {
+        const response = await EventService.myTimeline();
+        this.events = response.data.results.map((event) => {
+          return new CalendarEvent(event);
+        });
+      } finally {
+        this.removeTask("fetch-timeline");
+      }
     },
     viewInCalendar(event) {
       const date = DateTime.fromISO(event.start_datetime).toISODate();

@@ -2,6 +2,7 @@ import { mapActions } from "vuex";
 import { validationMixin } from "vuelidate";
 import { forOwn } from "lodash";
 
+import useLoading from "@/composables/useLoading";
 import { buildValidationErrorMessages, validationErrorMessages } from "@/utils/validation";
 
 export default function BulkFormMixin({ service }) {
@@ -16,6 +17,14 @@ export default function BulkFormMixin({ service }) {
         type: Array,
         required: true,
       },
+    },
+    setup() {
+      const { isLoading, addTask, removeTask } = useLoading();
+      return {
+        isLoading,
+        addTask,
+        removeTask,
+      };
     },
     data() {
       return {
@@ -53,12 +62,17 @@ export default function BulkFormMixin({ service }) {
           });
           return null;
         } else {
-          const response = await this.service[this.saveFunctionName](...this.buildSaveFunctionArgs());
-          this.showSnackbar({
-            color: "success",
-            message: this.successMessage,
-          });
-          return response.data;
+          this.addTask("submit");
+          try {
+            const response = await this.service[this.saveFunctionName](...this.buildSaveFunctionArgs());
+            this.showSnackbar({
+              color: "success",
+              message: this.successMessage,
+            });
+            return response.data;
+          } finally {
+            this.removeTask("submit");
+          }
         }
       },
       replaceUndefined(item) {

@@ -18,9 +18,7 @@
       />
     </v-col>
     <v-col cols="12" sm="6" md="3">
-      <v-btn class="my-2" color="primary" :loading="loading" :disabled="loading" @click="$emit('apply:filters')">
-        Filtrar
-      </v-btn>
+      <v-btn class="my-2" color="primary" :disabled="disabled" @click="$emit('apply:filters')"> Filtrar </v-btn>
     </v-col>
   </v-row>
 </template>

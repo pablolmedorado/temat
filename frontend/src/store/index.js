@@ -31,6 +31,7 @@ export default new Vuex.Store({
     pendingRequests: 0,
     snackbar: defaultSnackbarConfig,
     konamiCodeActive: false,
+    currentTasks: {},
   },
   getters: {
     loading: (state) => Boolean(state.pendingRequests),
@@ -58,6 +59,34 @@ export default new Vuex.Store({
     },
     toggleKonamiCode(state) {
       state.konamiCodeActive = !state.konamiCodeActive;
+    },
+    addComponentTask(state, { componentUid, taskName }) {
+      if (!state.currentTasks[componentUid] || !state.currentTasks[componentUid].includes(taskName)) {
+        const tasks = { ...state.currentTasks };
+        tasks[componentUid] = tasks[componentUid] ? [...tasks[componentUid], taskName] : [taskName];
+        state.currentTasks = tasks;
+      }
+    },
+    removeComponentTask(state, { componentUid, taskName }) {
+      if (state.currentTasks[componentUid]) {
+        const index = state.currentTasks[componentUid].findIndex((task) => task === taskName);
+        if (index !== -1) {
+          const tasks = { ...state.currentTasks };
+          if (tasks[componentUid].length > 1) {
+            tasks[componentUid].splice(index, 1);
+          } else {
+            delete tasks[componentUid];
+          }
+          state.currentTasks = tasks;
+        }
+      }
+    },
+    destroyComponentTasks(state, { componentUid }) {
+      if (state.currentTasks[componentUid]) {
+        const tasks = { ...state.currentTasks };
+        delete tasks[componentUid];
+        state.currentTasks = tasks;
+      }
     },
   },
   actions: {

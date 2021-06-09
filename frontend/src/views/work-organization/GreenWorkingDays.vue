@@ -21,12 +21,12 @@
             <span>{{ verboseNamePlural }}&nbsp;({{ filters.date__year }})</span>
           </template>
 
-          <template #toolbar>
+          <template #toolbar="{ isIndexLoading }">
             <v-menu bottom left offset-y>
               <template #activator="{ on: menu }">
                 <v-tooltip bottom>
                   <template #activator="{ on: tooltip }">
-                    <v-btn icon :disabled="loading" v-on="{ ...tooltip, ...menu }">
+                    <v-btn icon :disabled="isIndexLoading" v-on="{ ...tooltip, ...menu }">
                       <v-icon>mdi-calendar-range</v-icon>
                     </v-btn>
                   </template>
@@ -53,11 +53,16 @@
           <template #item.table_actions="{ item }">
             <v-badge bottom left overlap>
               <template #badge>{{ item.volunteers.length }}</template>
-              <v-btn icon @click.stop="$refs.volunteersDialog.open(item)">
+              <v-btn icon :disabled="isLoading" @click.stop="$refs.volunteersDialog.open(item)">
                 <v-icon>mdi-account-multiple</v-icon>
               </v-btn>
             </v-badge>
-            <v-btn icon :disabled="loading" @click="toggleVolunteer(item.id)">
+            <v-btn
+              icon
+              :disabled="isLoading"
+              :loading="isTaskLoading('toggle-volunteer', item.id)"
+              @click="toggleVolunteer(item)"
+            >
               <v-icon>
                 {{ item.volunteers.includes(loggedUser.id) ? "mdi-account-remove" : "mdi-account-plus-outline" }}
               </v-icon>
@@ -106,12 +111,20 @@ import GreenWorkingDayBulkForm from "@/components/work-organization/green-workin
 import GreenWorkingDayForm from "@/components/work-organization/green-working-days/forms/GreenWorkingDayForm";
 import VoluteersDialog from "@/components/work-organization/green-working-days/VoluteersDialog";
 
+import useLoading from "@/composables/useLoading";
+
 export default {
   name: "GreenWorkingDays",
   metaInfo: {
     title: "Jornadas especiales",
   },
   components: { StepperBulkFormDialog, VoluteersDialog },
+  setup() {
+    const { isLoading, isTaskLoading, addTask, removeTask } = useLoading({
+      includedChildren: ["itemIndex"],
+    });
+    return { isLoading, isTaskLoading, addTask, removeTask };
+  },
   data() {
     return {
       tableHeaders: [
@@ -155,20 +168,25 @@ export default {
   },
   computed: {
     ...mapState(["loggedUser"]),
-    ...mapGetters(["loading", "yearOptions"]),
+    ...mapGetters(["yearOptions"]),
   },
   methods: {
     ...mapActions(["showSnackbar"]),
     fetchTableItems() {
       this.$refs.itemIndex.fetchTableItems();
     },
-    async toggleVolunteer(id) {
-      await this.service.toggleVolunteer(id);
-      this.fetchTableItems();
-      this.showSnackbar({
-        color: "success",
-        message: "Estado de voluntario actualizado correctamente",
-      });
+    async toggleVolunteer(item) {
+      this.addTask("toggle-volunteer", item.id);
+      try {
+        await this.service.toggleVolunteer(item.id);
+        this.fetchTableItems();
+        this.showSnackbar({
+          color: "success",
+          message: "Estado de voluntario actualizado correctamente",
+        });
+      } finally {
+        this.removeTask("toggle-volunteer", item.id);
+      }
     },
     setYearFilter(year) {
       this.$refs.itemIndex.addFilter({ date__year: year });

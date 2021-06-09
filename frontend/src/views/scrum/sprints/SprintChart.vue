@@ -9,16 +9,16 @@
         <v-divider vertical inset />
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">
-            <v-btn v-if="!burnUp" icon :disabled="loading" v-bind="attrs" @click="burnUp = true" v-on="on">
+            <v-btn v-if="!burnUp" icon :disabled="isLoading" v-bind="attrs" @click="burnUp = true" v-on="on">
               <v-icon>mdi-trending-up</v-icon>
             </v-btn>
-            <v-btn v-else icon :disabled="loading" v-bind="attrs" @click="burnUp = false" v-on="on">
+            <v-btn v-else icon :disabled="isLoading" v-bind="attrs" @click="burnUp = false" v-on="on">
               <v-icon>mdi-trending-down</v-icon>
             </v-btn>
           </template>
           <span>Cambiar sentido ({{ burnUp ? "Burn-Down" : "Burn-Up" }})</span>
         </v-tooltip>
-        <v-btn icon :disabled="loading" @click="getChartData">
+        <v-btn icon :disabled="isLoading" @click="fetchChartData">
           <v-icon>mdi-refresh</v-icon>
         </v-btn>
       </v-toolbar>
@@ -30,12 +30,11 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 import ContextBreadcrumbs from "@/components/scrum/ContextBreadcrumbs";
 import SprintBurnChart from "@/components/scrum/charts/SprintBurnChart";
 import SprintViewSelector from "@/components/scrum/SprintViewSelector";
 
+import useLoading from "@/composables/useLoading";
 import useScrumContext from "@/composables/useScrumContext";
 
 export default {
@@ -51,8 +50,12 @@ export default {
     },
   },
   setup(props) {
+    const { isLoading } = useLoading({
+      includedChildren: ["chart"],
+    });
     const { contextItem } = useScrumContext(props);
     return {
+      isLoading,
       contextItem,
     };
   },
@@ -62,7 +65,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["loading"]),
     breadcrumbs() {
       if (this.contextItem) {
         return [
@@ -80,11 +82,11 @@ export default {
     },
   },
   mounted() {
-    this.getChartData();
+    this.fetchChartData();
   },
   methods: {
-    getChartData() {
-      this.$refs.chart.getChartData();
+    fetchChartData() {
+      this.$refs.chart.fetchChartData();
     },
   },
 };

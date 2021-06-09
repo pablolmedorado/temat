@@ -4,7 +4,7 @@
       <template #activator="{ on: onMenu }">
         <v-tooltip bottom>
           <template #activator="{ on: onTooltip }">
-            <v-btn icon v-on="{ ...onTooltip, ...onMenu }">
+            <v-btn icon :disabled="disabled" v-on="{ ...onTooltip, ...onMenu }">
               <v-icon>mdi-view-array</v-icon>
             </v-btn>
           </template>
@@ -26,7 +26,7 @@
     </v-menu>
     <v-tooltip v-for="view in availableViews" v-else :key="view.routeName" bottom>
       <template #activator="{ on, attrs }">
-        <v-btn icon :to="{ name: view.routeName, params: { sprintId } }" v-bind="attrs" v-on="on">
+        <v-btn icon :disabled="disabled" :to="{ name: view.routeName, params: { sprintId } }" v-bind="attrs" v-on="on">
           <v-icon>{{ view.icon }}</v-icon>
         </v-btn>
       </template>
@@ -46,6 +46,10 @@ export default {
       required: true,
     },
     menu: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
       type: Boolean,
       default: false,
     },

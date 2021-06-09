@@ -10,7 +10,7 @@
               <template #activator="{ on: menu }">
                 <v-tooltip bottom>
                   <template #activator="{ on: tooltip }">
-                    <v-btn icon :disabled="loading" v-on="{ ...tooltip, ...menu }">
+                    <v-btn icon :disabled="isLoading" v-on="{ ...tooltip, ...menu }">
                       <v-icon>mdi-calendar-range</v-icon>
                     </v-btn>
                   </template>
@@ -38,21 +38,21 @@
                   <v-col cols="12" lg="6">
                     <v-card outlined>
                       <v-card-text>
-                        <EventMonthlyChart :filter="{ start_datetime__year: year }" />
+                        <EventMonthlyChart ref="eventMonthlyChart" :filter="{ start_datetime__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
                   <v-col cols="12" md="6" lg="3">
                     <v-card outlined>
                       <v-card-text>
-                        <EventTypeChart :filter="{ start_datetime__year: year }" />
+                        <EventTypeChart ref="eventTypeChart" :filter="{ start_datetime__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
                   <v-col cols="12" md="6" lg="3">
                     <v-card outlined>
                       <v-card-text>
-                        <EventAttendeesChart :filter="{ start_datetime__year: year }" />
+                        <EventAttendeesChart ref="eventAttendeesChart" :filter="{ start_datetime__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
@@ -63,28 +63,31 @@
                   <v-col cols="12" md="6" lg="3">
                     <v-card outlined>
                       <v-card-text>
-                        <UserStoryTypeChart :filter="{ sprint__end_date__year: year }" />
+                        <UserStoryTypeChart ref="userStoryTypeChart" :filter="{ sprint__end_date__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
                   <v-col cols="12" md="6" lg="3">
                     <v-card outlined>
                       <v-card-text>
-                        <EffortRoleChart :filter="{ sprint__end_date__year: year }" />
+                        <EffortRoleChart ref="effortRoleChart" :filter="{ sprint__end_date__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
                   <v-col cols="12" md="6" lg="3">
                     <v-card outlined>
                       <v-card-text>
-                        <UserStoryDelayedChart :filter="{ sprint__end_date__year: year }" />
+                        <UserStoryDelayedChart ref="userStoryDelayedChart" :filter="{ sprint__end_date__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
                   <v-col cols="12" md="6" lg="3">
                     <v-card outlined>
                       <v-card-text>
-                        <UserStoryOverworkedChart :filter="{ sprint__end_date__year: year }" />
+                        <UserStoryOverworkedChart
+                          ref="userStoryOverworkedChart"
+                          :filter="{ sprint__end_date__year: year }"
+                        />
                       </v-card-text>
                     </v-card>
                   </v-col>
@@ -93,7 +96,7 @@
                   <v-col>
                     <v-card outlined>
                       <v-card-text>
-                        <UserStoryUserChart :filter="{ sprint__end_date__year: year }" />
+                        <UserStoryUserChart ref="userStoryUserChart" :filter="{ sprint__end_date__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
@@ -104,7 +107,7 @@
                   <v-col>
                     <v-card outlined>
                       <v-card-text>
-                        <SupportUsersChart :filter="{ date__year: year }" />
+                        <SupportUsersChart ref="supportUsersChart" :filter="{ date__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
@@ -115,7 +118,7 @@
                   <v-col>
                     <v-card outlined>
                       <v-card-text>
-                        <GreenWorkingDaysChart :filter="{ date__year: year }" />
+                        <GreenWorkingDaysChart ref="greenWorkingDaysChart" :filter="{ date__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
@@ -126,7 +129,7 @@
                   <v-col>
                     <v-card outlined>
                       <v-card-text>
-                        <HolidaysChart :filter="{ allowance_date__year: year }" />
+                        <HolidaysChart ref="holidaysChart" :filter="{ allowance_date__year: year }" />
                       </v-card-text>
                     </v-card>
                   </v-col>
@@ -135,7 +138,11 @@
                   <v-col>
                     <v-card outlined>
                       <v-card-text>
-                        <HolidaysDistributionChart :filter="{ allowance_date__year: year }" :height="500" />
+                        <HolidaysDistributionChart
+                          ref="holidaysDistributionChart"
+                          :filter="{ allowance_date__year: year }"
+                          :height="500"
+                        />
                       </v-card-text>
                     </v-card>
                   </v-col>
@@ -166,6 +173,8 @@ import UserStoryOverworkedChart from "@/components/scrum/charts/UserStoryOverwor
 import UserStoryTypeChart from "@/components/scrum/charts/UserStoryTypeChart";
 import UserStoryUserChart from "@/components/scrum/charts/UserStoryUserChart";
 
+import useLoading from "@/composables/useLoading";
+
 export default {
   name: "Analytics",
   metaInfo: {
@@ -185,13 +194,34 @@ export default {
     UserStoryTypeChart,
     UserStoryUserChart,
   },
+  setup() {
+    const { isLoading } = useLoading({
+      includedChildren: [
+        "eventMonthlyChart",
+        "eventTypeChart",
+        "eventAttendeesChart",
+        "userStoryTypeChart",
+        "effortRoleChart",
+        "userStoryDelayedChart",
+        "userStoryOverworkedChart",
+        "userStoryUserChart",
+        "supportUsersChart",
+        "greenWorkingDaysChart",
+        "holidaysChart",
+        "holidaysDistributionChart",
+      ],
+    });
+    return {
+      isLoading,
+    };
+  },
   data() {
     return {
       year: DateTime.local().year,
     };
   },
   computed: {
-    ...mapGetters(["loading", "yearOptions"]),
+    ...mapGetters(["yearOptions"]),
   },
 };
 </script>

@@ -9,7 +9,7 @@
           <v-toolbar flat>
             <v-toolbar-title class="text-h6"> Vacaciones del equipo </v-toolbar-title>
             <v-spacer />
-            <v-btn icon :disabled="loading" @click="fetchItems">
+            <v-btn icon :disabled="isChildLoading('itemTable')" @click="fetchItems">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
           </v-toolbar>
@@ -35,11 +35,12 @@
                 <v-icon small>{{ getHolidayStatusInfo(value).icon }}</v-icon>
               </v-chip>
             </template>
-            <template #item.table_actions="{ item }">
+            <template #item.table_actions="{ item, isTableLoading }">
               <span class="d-inline-flex">
                 <v-btn
                   v-show="[null, false].includes(item.approved)"
-                  :disabled="loading"
+                  :disabled="isTableLoading"
+                  :loading="isTaskLoading('edit-holiday-true', item.id)"
                   icon
                   @click="editHoliday(item, true)"
                 >
@@ -47,13 +48,19 @@
                 </v-btn>
                 <v-btn
                   v-show="[null, true].includes(item.approved)"
-                  :disabled="loading"
+                  :disabled="isTableLoading"
+                  :loading="isTaskLoading('edit-holiday-false', item.id)"
                   icon
                   @click="editHoliday(item, false)"
                 >
                   <v-icon>mdi-cancel</v-icon>
                 </v-btn>
-                <v-btn :disabled="loading" icon @click="cancelHoliday(item)">
+                <v-btn
+                  :disabled="isTableLoading"
+                  :loading="isTaskLoading('cancel-holiday', item.id)"
+                  icon
+                  @click="cancelHoliday(item)"
+                >
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </span>
@@ -67,7 +74,7 @@
 
 <script>
 import { computed, ref } from "@vue/composition-api";
-import { useGetters, useState } from "vuex-composition-helpers";
+import { useState } from "vuex-composition-helpers";
 import { DateTime } from "luxon";
 
 import HolidayService from "@/services/work-organization/holiday-service";
@@ -75,6 +82,7 @@ import HolidayService from "@/services/work-organization/holiday-service";
 import TeamHolidayFilters from "@/components/work-organization/holidays/filters/TeamHolidayFilters";
 
 import useHolidays from "@/composables/useHolidays";
+import useLoading from "@/composables/useLoading";
 import { defaultTableOptions } from "@/utils/constants";
 
 const currentDate = DateTime.local();
@@ -88,7 +96,11 @@ export default {
   setup(props, { refs }) {
     // Vuex
     const { loggedUser } = useState(["loggedUser"]);
-    const { loading } = useGetters(["loading"]);
+
+    // General
+    const { isLoading, isChildLoading, isTaskLoading, addTask, removeTask } = useLoading({
+      includedChildren: ["itemTable"],
+    });
 
     // Table management
     const tableOptions = ref({
@@ -133,18 +145,30 @@ export default {
     // Holidays management
     const { edit, cancel, getStatusInfo } = useHolidays();
     async function editHoliday(item, approved) {
-      await edit(item, approved);
-      fetchItems();
+      addTask(`edit-holiday-${approved}`, item.id);
+      try {
+        await edit(item, approved);
+        fetchItems();
+      } finally {
+        removeTask(`edit-holiday-${approved}`, item.id);
+      }
     }
     async function cancelHoliday(item) {
-      await cancel(item);
-      fetchItems();
-      refs.filterComponent.$refs.dateFilter.getSummary();
+      addTask("cancel-holiday", item.id);
+      try {
+        await cancel(item);
+        fetchItems();
+        refs.filterComponent.$refs.dateFilter.getSummary();
+      } finally {
+        removeTask("cancel-holiday", item.id);
+      }
     }
 
     return {
-      // Vuex
-      loading,
+      // General
+      isLoading,
+      isChildLoading,
+      isTaskLoading,
       // Table management
       tableOptions,
       tableHeaders,

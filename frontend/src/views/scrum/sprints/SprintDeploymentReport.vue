@@ -7,11 +7,11 @@
         <v-spacer />
         <SprintViewSelector :sprint-id="sprintId" />
         <v-divider vertical inset />
-        <v-btn icon :disabled="loading" @click="fetchData">
+        <v-btn icon :disabled="isTaskLoading('fetch-report-data')" @click="fetchData">
           <v-icon>mdi-refresh</v-icon>
         </v-btn>
       </v-toolbar>
-      <v-expansion-panels v-model="panels" :disabled="loading" flat multiple hover>
+      <v-expansion-panels v-model="panels" :disabled="isTaskLoading('fetch-report-data')" flat multiple hover>
         <v-expansion-panel>
           <v-expansion-panel-header class="panel-header">
             <span>
@@ -84,7 +84,7 @@
               :headers="userStoryHeaders"
               :options="userStoryTableOptions"
               :items="userStories"
-              :loading="loading"
+              :loading="isTaskLoading('fetch-user-stories')"
               disable-pagination
               hide-default-footer
             >
@@ -123,7 +123,6 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 import { get } from "lodash";
 
 import SprintService from "@/services/scrum/sprint-service";
@@ -133,6 +132,7 @@ import ContextBreadcrumbs from "@/components/scrum/ContextBreadcrumbs";
 import SprintViewSelector from "@/components/scrum/SprintViewSelector";
 import UserStoryIndexStatus from "@/components/scrum/UserStoryIndexStatus";
 
+import useLoading from "@/composables/useLoading";
 import useScrumContext from "@/composables/useScrumContext";
 import { defaultTableOptions } from "@/utils/constants";
 
@@ -149,8 +149,13 @@ export default {
     },
   },
   setup(props) {
+    const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
     const { contextItem } = useScrumContext(props);
     return {
+      isLoading,
+      isTaskLoading,
+      addTask,
+      removeTask,
       contextItem,
     };
   },
@@ -185,7 +190,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["loading"]),
     breadcrumbs() {
       if (this.contextItem) {
         return [
@@ -209,34 +213,44 @@ export default {
   methods: {
     get,
     async fetchData() {
-      this.panels = [];
-      this.userStories = [];
-      const response = await SprintService.deploymentReportData(this.sprintId);
-      this.developmentUsers = get(response, ["data", "development_users"], []);
-      if (this.developmentUsers.length) {
-        this.panels.push(0);
+      this.addTask("fetch-report-data");
+      try {
+        this.panels = [];
+        this.userStories = [];
+        const response = await SprintService.deploymentReportData(this.sprintId);
+        this.developmentUsers = get(response, ["data", "development_users"], []);
+        if (this.developmentUsers.length) {
+          this.panels.push(0);
+        }
+        this.userStoriesWithMigrations = get(response, ["data", "user_stories_with_migrations"], []);
+        if (this.userStoriesWithMigrations.length) {
+          this.panels.push(1);
+        }
+        this.deploymentNotes = get(response, ["data", "deployment_notes"], []);
+        if (this.deploymentNotes.length) {
+          this.panels.push(2);
+        }
+        this.userStoryCount = get(response, ["data", "user_story_count"], 0);
+      } finally {
+        this.removeTask("fetch-report-data");
       }
-      this.userStoriesWithMigrations = get(response, ["data", "user_stories_with_migrations"], []);
-      if (this.userStoriesWithMigrations.length) {
-        this.panels.push(1);
-      }
-      this.deploymentNotes = get(response, ["data", "deployment_notes"], []);
-      if (this.deploymentNotes.length) {
-        this.panels.push(2);
-      }
-      this.userStoryCount = get(response, ["data", "user_story_count"], 0);
     },
     fetchUserStories(forceFetch) {
       this.$nextTick(async () => {
         if (this.panels.includes(3) && (!this.userStories.length || forceFetch)) {
-          const response = await UserStoryService.list({
-            sprint_id: this.sprintId,
-            fields:
-              "id,name,priority,status,current_progress,validated,development_user,risk_level,use_migrations,deployment_notes",
-            ordering: "status,priority",
-          });
-          this.userStories = response.data;
-          this.userStoryCount = response.data.length;
+          this.addTask("fetch-user-stories");
+          try {
+            const response = await UserStoryService.list({
+              sprint_id: this.sprintId,
+              fields:
+                "id,name,priority,status,current_progress,validated,development_user,risk_level,use_migrations,deployment_notes",
+              ordering: "status,priority",
+            });
+            this.userStories = response.data;
+            this.userStoryCount = response.data.length;
+          } finally {
+            this.removeTask("fetch-user-stories");
+          }
         }
       });
     },

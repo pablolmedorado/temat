@@ -1,4 +1,3 @@
-import { mapGetters } from "vuex";
 import { get } from "lodash";
 
 export default {
@@ -7,15 +6,16 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       showFiltersDialog: false,
       basicFilters: [],
     };
-  },
-  computed: {
-    ...mapGetters(["loading"]),
   },
   watch: {
     filters: {

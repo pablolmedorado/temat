@@ -7,7 +7,7 @@
         <v-spacer />
         <SprintViewSelector :sprint-id="sprintId" />
         <v-divider vertical inset />
-        <v-btn icon :disabled="loading" @click="getChartData">
+        <v-btn icon :disabled="isLoading" @click="fetchChartData">
           <v-icon>mdi-refresh</v-icon>
         </v-btn>
       </v-toolbar>
@@ -19,12 +19,11 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 import ContextBreadcrumbs from "@/components/scrum/ContextBreadcrumbs";
 import SprintGanttChart from "@/components/scrum/charts/SprintGanttChart";
 import SprintViewSelector from "@/components/scrum/SprintViewSelector";
 
+import useLoading from "@/composables/useLoading";
 import useScrumContext from "@/composables/useScrumContext";
 
 export default {
@@ -40,13 +39,16 @@ export default {
     },
   },
   setup(props) {
+    const { isLoading } = useLoading({
+      includedChildren: ["chart"],
+    });
     const { contextItem } = useScrumContext(props);
     return {
+      isLoading,
       contextItem,
     };
   },
   computed: {
-    ...mapGetters(["loading"]),
     breadcrumbs() {
       if (this.contextItem) {
         return [
@@ -64,11 +66,11 @@ export default {
     },
   },
   mounted() {
-    this.getChartData();
+    this.fetchChartData();
   },
   methods: {
-    getChartData() {
-      this.$refs.chart.getChartData();
+    fetchChartData() {
+      this.$refs.chart.fetchChartData();
     },
   },
 };

@@ -53,7 +53,7 @@
             </v-tooltip>
             <v-tooltip v-if="item.status < 3 && canDevelop(item, loggedUser)" bottom>
               <template #activator="{ on, attrs }">
-                <v-btn icon v-bind="attrs" @click.stop="$refs.taskDialog.open(item)" v-on="on">
+                <v-btn icon v-bind="attrs" :disabled="isLoading" @click.stop="$refs.taskDialog.open(item)" v-on="on">
                   <v-icon>mdi-format-list-checks</v-icon>
                 </v-btn>
               </template>
@@ -61,7 +61,7 @@
             </v-tooltip>
             <v-tooltip v-if="item.status < 4" bottom>
               <template #activator="{ on, attrs }">
-                <v-btn icon v-bind="attrs" @click.stop="openNewEffortDialog(item)" v-on="on">
+                <v-btn icon v-bind="attrs" :disabled="isLoading" @click.stop="openNewEffortDialog(item)" v-on="on">
                   <v-icon>mdi-dumbbell</v-icon>
                 </v-btn>
               </template>
@@ -69,7 +69,14 @@
             </v-tooltip>
             <v-tooltip v-if="item.status === 3 && canValidate(item, loggedUser)" bottom>
               <template #activator="{ on, attrs }">
-                <v-btn icon v-bind="attrs" @click="validateItem(item)" v-on="on">
+                <v-btn
+                  icon
+                  v-bind="attrs"
+                  :disabled="isLoading"
+                  :loading="isTaskLoading('validate-item', item.id)"
+                  @click="validateItem(item)"
+                  v-on="on"
+                >
                   <v-icon>mdi-check-bold</v-icon>
                 </v-btn>
               </template>
@@ -105,6 +112,7 @@ import UserStoryActors from "@/components/scrum/UserStoryActors";
 import UserStoryFilters from "@/components/scrum/filters/UserStoryFilters";
 import UserStoryIndexStatus from "@/components/scrum/UserStoryIndexStatus";
 
+import useLoading from "@/composables/useLoading";
 import useScrumContext, { scrumContextProps } from "@/composables/useScrumContext";
 
 export default {
@@ -127,8 +135,15 @@ export default {
     ...scrumContextProps,
   },
   setup(props) {
+    const { isLoading, isTaskLoading, addTask, removeTask } = useLoading({
+      includedChildren: ["itemIndex"],
+    });
     const { hasContext, contextItem } = useScrumContext(props);
     return {
+      isLoading,
+      isTaskLoading,
+      addTask,
+      removeTask,
       hasContext,
       contextItem,
     };
@@ -310,8 +325,13 @@ export default {
     },
     async validateItem(item) {
       if (confirm(`Estás seguro de que deseas validar la historia "${item.name}"`)) {
-        await this.service.validate(item.id);
-        this.$refs.itemIndex.fetchTableItems();
+        this.addTask("validate-item", item.id);
+        try {
+          await this.service.validate(item.id);
+          this.$refs.itemIndex.fetchTableItems();
+        } finally {
+          this.removeTask("validate-item", item.id);
+        }
       }
     },
     calculateLoggedUserRole(userStory) {

@@ -8,7 +8,7 @@
       :options="chartOptions"
     />
     <v-card v-else :height="height || 400" flat>
-      <v-overlay v-if="chartLoading" absolute>
+      <v-overlay v-if="isLoading" absolute>
         <v-progress-circular indeterminate size="64" />
       </v-overlay>
       <v-alert v-else type="error" text outlined border="left"> Ocurrió un error cargando la gráfica. </v-alert>
@@ -19,6 +19,8 @@
 <script>
 import Highcharts from "highcharts";
 import { Chart } from "highcharts-vue";
+
+import useLoading from "@/composables/useLoading";
 
 import darkUnica from "@/utils/highcharts/themes/dark-unica-custom";
 
@@ -41,12 +43,19 @@ export default {
       default: 400,
     },
   },
+  setup() {
+    const { isLoading, addTask, removeTask } = useLoading();
+    return {
+      isLoading,
+      addTask,
+      removeTask,
+    };
+  },
   data() {
     return {
       service: null,
       fetchFunctionName: null,
       chartData: null,
-      chartLoading: false,
       constructorType: "chart",
       defaultChartOptions: {
         title: { text: "Análisis" },
@@ -89,7 +98,7 @@ export default {
     filter: {
       handler() {
         if (this.reactiveFilters) {
-          this.getChartData();
+          this.fetchChartData();
         }
       },
       deep: true,
@@ -97,20 +106,20 @@ export default {
     },
   },
   activated() {
-    this.getChartData();
+    this.fetchChartData();
   },
   methods: {
     buildFetchFunctionArgs() {
       return [this.filter];
     },
-    async getChartData() {
-      this.chartLoading = true;
+    async fetchChartData() {
       this.chartData = null;
+      this.addTask("fetch-data");
       try {
         const response = await this.service[this.fetchFunctionName].apply(this.service, this.buildFetchFunctionArgs());
         this.chartData = response.data;
       } finally {
-        this.chartLoading = false;
+        this.removeTask("fetch-data");
       }
     },
   },

@@ -8,7 +8,7 @@
         <v-toolbar-title>Informe de esfuerzo</v-toolbar-title>
         <v-spacer />
         <v-toolbar-items>
-          <v-btn icon :disabled="loading" @click="refresh">
+          <v-btn icon :disabled="isLoading" @click="refresh">
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
         </v-toolbar-items>
@@ -75,10 +75,20 @@ import DialogMixin from "@/mixins/dialog-mixin";
 import EffortRoleTimelineChart from "@/components/scrum/charts/EffortRoleTimelineChart";
 import EffortUserTimelineChart from "@/components/scrum/charts/EffortUserTimelineChart";
 
+import useLoading from "@/composables/useLoading";
+
 export default {
   name: "EffortReportDialog",
   components: { EffortRoleTimelineChart, EffortUserTimelineChart },
   mixins: [DialogMixin],
+  setup() {
+    const { isLoading } = useLoading({
+      includedChildren: ["userChart", "roleChart"],
+    });
+    return {
+      isLoading,
+    };
+  },
   data() {
     return {
       filters: null,
@@ -86,7 +96,6 @@ export default {
   },
   computed: {
     ...mapState(["loggedUser"]),
-    ...mapGetters(["loading"]),
     ...mapGetters("users", ["usersMap"]),
     filteredUsers() {
       if (!this.filters.user_id__in) {
@@ -111,9 +120,9 @@ export default {
     },
     refresh() {
       if (this.loggedUser.is_superuser) {
-        this.$refs.userChart.getChartData();
+        this.$refs.userChart.fetchChartData();
       }
-      this.$refs.roleChart.getChartData();
+      this.$refs.roleChart.fetchChartData();
     },
   },
 };

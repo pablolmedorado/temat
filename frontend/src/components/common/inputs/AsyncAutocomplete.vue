@@ -2,7 +2,7 @@
   <v-autocomplete
     v-bind="{ ...$props, ...$attrs }"
     :items="options"
-    :loading="loading"
+    :loading="isLoading"
     :filter="filter"
     :search-input.sync="searchInput"
     hide-no-data
@@ -16,6 +16,8 @@
 
 <script>
 import { debounce, isObject } from "lodash";
+
+import useLoading from "@/composables/useLoading";
 
 export default {
   name: "AsyncAutocomplete",
@@ -66,10 +68,18 @@ export default {
       default: "Escribe para iniciar la búsqueda...",
     },
   },
+  setup() {
+    const { isLoading, addTask, removeTask, isTaskLoading } = useLoading();
+    return {
+      isLoading,
+      addTask,
+      removeTask,
+      isTaskLoading,
+    };
+  },
   data() {
     return {
       options: [],
-      loading: false,
       searchInput: null,
     };
   },
@@ -87,7 +97,7 @@ export default {
             if (isObject(newValue)) {
               this.options = [newValue];
             } else {
-              this.loading = true;
+              this.addTask("fetch-item");
               try {
                 const response = await this.service[this.getFunctionName](newValueId);
                 this.options = [response.data];
@@ -95,7 +105,7 @@ export default {
                   this.$emit("input", response.data);
                 }
               } finally {
-                this.loading = false;
+                this.removeTask("fetch-item");
               }
             }
           }
@@ -105,7 +115,7 @@ export default {
     },
     searchInput(newValue) {
       if (newValue) {
-        if (this.loading) {
+        if (this.isTaskLoading("search")) {
           return;
         }
         const exactMatch = this.options.find((item) => newValue.toLowerCase() === item[this.itemText].toLowerCase());
@@ -119,8 +129,7 @@ export default {
   },
   methods: {
     async search(query) {
-      this.loading = true;
-
+      this.addTask("search");
       try {
         const requestParams = { page_size: 15, page: 1 };
         const lookup = this.searchLookup ? `__${this.searchLookup}` : "";
@@ -130,7 +139,7 @@ export default {
         const response = await this.service[this.searchFunctionName](requestParams);
         this.options = response.data.results;
       } finally {
-        this.loading = false;
+        this.removeTask("search");
       }
     },
     debouncedSearch: debounce(function (query) {

@@ -28,8 +28,9 @@
           <template #item.done="{ item }">
             <v-btn
               icon
-              :disabled="loading || (!loggedUser.is_superuser && loggedUser.id !== item.user_story.development_user)"
-              @click="toggleTask(item)"
+              :disabled="isLoading || (!loggedUser.is_superuser && loggedUser.id !== item.user_story.development_user)"
+              :loading="isTaskLoading('toggle-item', item.id)"
+              @click="toggleItem(item)"
             >
               <v-icon>{{ item.done ? "mdi-checkbox-marked" : "mdi-checkbox-blank-outline" }}</v-icon>
             </v-btn>
@@ -46,19 +47,31 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "vuex";
 import { get } from "lodash";
 
 import DialogMixin from "@/mixins/dialog-mixin";
 
 import TaskService from "@/services/scrum/task-service";
 
+import useLoading from "@/composables/useLoading";
 import { truncate } from "@/filters";
 
 export default {
   name: "TaskQuickManagementDialog",
   filters: { truncate },
   mixins: [DialogMixin],
+  setup() {
+    const { isLoading, isTaskLoading, addTask, removeTask } = useLoading({
+      includedChildren: ["itemTable"],
+    });
+    return {
+      isLoading,
+      isTaskLoading,
+      addTask,
+      removeTask,
+    };
+  },
   data() {
     return {
       service: TaskService,
@@ -96,16 +109,20 @@ export default {
   },
   computed: {
     ...mapState(["loggedUser"]),
-    ...mapGetters(["loading"]),
     systemFilters() {
       return { user_story_id: get(this.userStory, "id", null) };
     },
   },
   methods: {
-    async toggleTask(item) {
-      await TaskService.toggle(item.id);
-      this.$refs.itemTable.fetchItems();
-      this.updateTableAfterTaskMgmt = true;
+    async toggleItem(item) {
+      this.addTask("toggle-item", item.id);
+      try {
+        await TaskService.toggle(item.id);
+        this.$refs.itemTable.fetchItems();
+        this.updateTableAfterTaskMgmt = true;
+      } finally {
+        this.removeTask("toggle-item", item.id);
+      }
     },
     open(userStory) {
       this.userStory = userStory;

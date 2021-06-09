@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="showDialog" v-bind="$attrs" persistent :scrollable="scrollable" :max-width="maxWidth">
-    <v-card>
+    <v-card :loading="isFormLoading">
       <v-toolbar flat>
         <v-toolbar-title class="text-h6">
           {{ headerText }}
@@ -13,14 +13,15 @@
           ref="itemForm"
           :source-item="item"
           @changed:item="itemHasChanged = $event"
+          @change:loading="isFormLoading = $event"
         />
       </v-card-text>
       <v-divider />
       <v-card-actions>
-        <v-btn color="warning" text :disabled="!itemHasChanged" @click="reset">Restablecer</v-btn>
+        <v-btn color="warning" text :disabled="!itemHasChanged || isFormLoading" @click="reset">Restablecer</v-btn>
         <v-spacer />
-        <v-btn text @click="cancel">Cancelar</v-btn>
-        <v-btn text :loading="loading" @click="submit">
+        <v-btn text :disabled="isFormLoading" @click="cancel">Cancelar</v-btn>
+        <v-btn text :loading="isFormLoading" @click="submit">
           <slot name="submit-text">Guardar</slot>
         </v-btn>
       </v-card-actions>
@@ -29,8 +30,6 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 import DialogMixin from "@/mixins/dialog-mixin";
 
 export default {
@@ -54,10 +53,10 @@ export default {
     return {
       item: null,
       itemHasChanged: false,
+      isFormLoading: false,
     };
   },
   computed: {
-    ...mapGetters(["loading"]),
     headerText() {
       const verb = this.item && this.item.id ? "Editar" : "Crear";
       return `${verb} ${this.verboseName.toLowerCase()}`;

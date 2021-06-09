@@ -25,9 +25,7 @@
         />
       </v-col>
       <v-col cols="12" sm="3" lg="2">
-        <v-btn class="my-2" color="primary" :loading="loading" :disabled="loading" @click="$emit('apply:filters')">
-          Filtrar
-        </v-btn>
+        <v-btn class="my-2" color="primary" :disabled="disabled" @click="$emit('apply:filters')"> Filtrar </v-btn>
       </v-col>
     </v-row>
 
@@ -118,7 +116,7 @@
           <v-btn color="warning" text @click="clearFilters">Limpiar</v-btn>
           <v-spacer />
           <v-btn text @click="closeFiltersDialog"> Volver </v-btn>
-          <v-btn text :loading="loading" :disabled="loading" @click="applyFiltersFromDialog"> Filtrar </v-btn>
+          <v-btn text :disabled="disabled" @click="applyFiltersFromDialog"> Filtrar </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
