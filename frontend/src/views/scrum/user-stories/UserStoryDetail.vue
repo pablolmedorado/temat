@@ -5,16 +5,20 @@
     <v-tabs v-if="id" v-model="tab" class="mb-4" grow show-arrows background-color="transparent">
       <v-tabs-slider />
       <v-tab href="#data">
-        <v-icon>mdi-book-account</v-icon><span v-show="$vuetify.breakpoint.mdAndUp" class="ml-2">Información</span>
+        <v-icon :small="$vuetify.breakpoint.mdAndUp">mdi-book-account</v-icon>
+        <span v-show="$vuetify.breakpoint.mdAndUp" class="ml-2">Información</span>
       </v-tab>
       <v-tab href="#tasks">
-        <v-icon>mdi-format-list-checks</v-icon><span v-show="$vuetify.breakpoint.mdAndUp" class="ml-2">Tareas</span>
+        <v-icon :small="$vuetify.breakpoint.mdAndUp">mdi-format-list-checks</v-icon>
+        <span v-show="$vuetify.breakpoint.mdAndUp" class="ml-2">Tareas</span>
       </v-tab>
       <v-tab href="#progress">
-        <v-icon>mdi-percent</v-icon><span v-show="$vuetify.breakpoint.mdAndUp" class="ml-2">Historial de avance</span>
+        <v-icon :small="$vuetify.breakpoint.mdAndUp">mdi-percent</v-icon>
+        <span v-show="$vuetify.breakpoint.mdAndUp" class="ml-2">Historial de avance</span>
       </v-tab>
       <v-tab href="#effort">
-        <v-icon>mdi-dumbbell</v-icon><span v-show="$vuetify.breakpoint.mdAndUp" class="ml-2">Esfuerzo</span>
+        <v-icon :small="$vuetify.breakpoint.mdAndUp">mdi-dumbbell</v-icon>
+        <span v-show="$vuetify.breakpoint.mdAndUp" class="ml-2">Esfuerzo</span>
       </v-tab>
     </v-tabs>
 

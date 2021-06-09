@@ -9,7 +9,12 @@
     v-on="$listeners"
   >
     <template #append>
-      <v-icon>mdi-database-search-outline</v-icon>
+      <v-tooltip bottom>
+        <template #activator="{ on, attrs }">
+          <v-icon v-bind="attrs" class="db-icon" v-on="on">mdi-database-search-outline</v-icon>
+        </template>
+        <span> Realiza búsqueda en BD </span>
+      </v-tooltip>
     </template>
   </v-autocomplete>
 </template>
@@ -156,3 +161,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.db-icon {
+  cursor: help;
+  opacity: 0.6;
+}
+</style>

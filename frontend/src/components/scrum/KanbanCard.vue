@@ -152,7 +152,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .v-card {
   min-width: 285px;
   border-left-style: solid;
@@ -161,6 +161,10 @@ export default {
 .user-story-link {
   color: unset;
   text-decoration: none;
+
+  :hover {
+    cursor: alias !important;
+  }
 }
 .progress {
   font-size: 14px;
