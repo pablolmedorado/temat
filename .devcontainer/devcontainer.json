@@ -8,6 +8,7 @@
   "extensions": [
     "batisteo.vscode-django",
     "bungcip.better-toml",
+    "chakrounanas.turbo-console-log",
     "davidanson.vscode-markdownlint",
     "dbaeumer.vscode-eslint",
     "editorconfig.editorconfig",
@@ -20,6 +21,7 @@
     "octref.vetur",
     "redhat.vscode-yaml",
     "sdras.vue-vscode-snippets",
+    "vincaslt.highlight-matching-tag",
     "yzhang.markdown-all-in-one",
   ],
   "settings": {
