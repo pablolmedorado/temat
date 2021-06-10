@@ -8,7 +8,15 @@
           </slot>
         </v-toolbar-title>
         <v-spacer />
-        <slot name="toolbar" v-bind="{ selectedItems, filters: { ...filters, ...systemFilters } }"></slot>
+        <slot
+          name="toolbar"
+          v-bind="{
+            selectedItems,
+            filters: { ...filters, ...systemFilters },
+            isTableLoading: isChildLoading('itemTable'),
+            isIndexLoading: isLoading,
+          }"
+        ></slot>
         <FilterManager
           v-if="filterComponent"
           :local-storage-namespace="localStorageNamespace"
@@ -18,7 +26,7 @@
           :quick-filters="quickFilters"
           :default-quick-filter="defaultQuickFilter"
           :pinned-quick-filter.sync="pinnedQuickFilter"
-          :disabled="loading"
+          :disabled="isChildLoading('itemTable')"
           @clear:filters="setFiltersAndFetch({})"
           @open:config-dialog="$refs.filterComponent.openFiltersDialog()"
           @apply:filter="applyQuickFilter"
@@ -27,11 +35,11 @@
           v-if="customHeaders"
           :available-headers="tableAvailableHeaders"
           :headers.sync="tableHeaders"
-          :disabled="loading"
+          :disabled="isChildLoading('itemTable')"
         />
         <v-tooltip bottom>
           <template #activator="{ attrs, on }">
-            <v-btn icon :disabled="loading" v-bind="attrs" v-on="on" @click="fetchTableItems">
+            <v-btn icon :disabled="isChildLoading('itemTable')" v-bind="attrs" v-on="on" @click="fetchTableItems">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
           </template>
@@ -44,6 +52,7 @@
           :is="filterComponent"
           ref="filterComponent"
           :filters.sync="filters"
+          :disabled="isChildLoading('itemTable')"
           @apply:filters="fetchTableItems(true)"
           @change:advanced-filters-count="dialogFilterCount = $event"
         />
@@ -63,21 +72,28 @@
         :elevation="0"
         v-on="$listeners"
       >
-        <template #top>
-          <slot name="top"></slot>
+        <template #top="slotProps">
+          <slot name="top" v-bind="{ ...slotProps, isIndexLoading: isLoading }"></slot>
         </template>
 
         <template v-for="header in tableAvailableHeaders" #[`item.${header.value}`]="slotProps">
-          <slot :name="`item.${header.value}`" v-bind="slotProps"></slot>
+          <slot :name="`item.${header.value}`" v-bind="{ ...slotProps, isIndexLoading: isLoading }"></slot>
         </template>
 
         <template #item.table_actions="slotProps">
           <span class="d-inline-flex">
-            <slot name="item.table_actions" v-bind="slotProps"></slot>
+            <slot name="item.table_actions" v-bind="{ ...slotProps, isIndexLoading: isLoading }"></slot>
             <template v-if="!readOnly">
               <v-tooltip v-if="canEdit(slotProps.item, loggedUser)" bottom>
                 <template #activator="{ on, attrs }">
-                  <v-btn icon v-bind="attrs" :disabled="loading" @click.stop="openFormDialog(slotProps.item)" v-on="on">
+                  <v-btn
+                    icon
+                    v-bind="attrs"
+                    :disabled="isLoading || disableRowEdition"
+                    :loading="isTaskLoading('fetch-item', slotProps.item.id)"
+                    @click.stop="openFormDialog(slotProps.item)"
+                    v-on="on"
+                  >
                     <v-icon>mdi-pencil</v-icon>
                   </v-btn>
                 </template>
@@ -88,7 +104,8 @@
                   <v-btn
                     icon
                     v-bind="attrs"
-                    :disabled="loading"
+                    :disabled="isLoading || disableRowEdition"
+                    :loading="isTaskLoading('delete-item', slotProps.item.id)"
                     @click.stop="$refs.deleteDialog.open(slotProps.item)"
                     v-on="on"
                   >
@@ -138,9 +155,10 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 import { get, invoke, omit } from "lodash";
 
+import useLoading from "@/composables/useLoading";
 import useLocalStorage from "@/composables/useLocalStorage";
 import { defaultTableOptions } from "@/utils/constants";
 
@@ -209,6 +227,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    disableRowEdition: {
+      type: Boolean,
+      default: false,
+    },
     filterComponent: {
       type: Object,
       default: undefined,
@@ -247,6 +269,10 @@ export default {
     },
   },
   setup(props) {
+    const { isLoading, isChildLoading, isTaskLoading, addTask, removeTask } = useLoading({
+      includedChildren: ["itemTable"],
+    });
+
     const localTableOptions = { ...defaultTableOptions, ...props.tableInitialOptions };
     const tableOptions = useLocalStorage(`${props.localStorageNamespace}TableOptions`, localTableOptions, {
       getter: (lsOptions) => ({ ...localTableOptions, ...lsOptions }),
@@ -265,6 +291,11 @@ export default {
     );
 
     return {
+      isLoading,
+      isChildLoading,
+      isTaskLoading,
+      addTask,
+      removeTask,
       tableHeaders,
       tableOptions,
       pinnedQuickFilter,
@@ -279,7 +310,6 @@ export default {
   },
   computed: {
     ...mapState(["loggedUser"]),
-    ...mapGetters(["loading"]),
   },
   watch: {
     tableHeaders: {
@@ -330,8 +360,13 @@ export default {
       if (!item) {
         this.$refs.formDialog.open(this.defaultItem);
       } else {
-        const response = await this.service.retrieve(item.id);
-        this.$refs.formDialog.open(response.data);
+        this.addTask("fetch-item", item.id);
+        try {
+          const response = await this.service.retrieve(item.id);
+          this.$refs.formDialog.open(response.data);
+        } finally {
+          this.removeTask("fetch-item", item.id);
+        }
       }
     },
     onFormSubmit(item) {
@@ -339,13 +374,18 @@ export default {
       this.$emit("submit:form", item);
     },
     async deleteItem(item) {
-      await this.service.delete(item.id);
-      this.fetchTableItems();
-      this.$emit("delete:item", item);
-      this.showSnackbar({
-        color: "success",
-        message: "Elemento eliminado correctamente",
-      });
+      this.addTask("delete-item", item.id);
+      try {
+        await this.service.delete(item.id);
+        this.$emit("delete:item", item);
+        this.fetchTableItems();
+        this.showSnackbar({
+          color: "success",
+          message: "Elemento eliminado correctamente",
+        });
+      } finally {
+        this.removeTask("delete-item", item.id);
+      }
     },
   },
 };

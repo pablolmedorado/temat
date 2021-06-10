@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.10.1](https://github.com/pablolmedorado/temat/compare/v1.10.0...v1.10.1) (2021-06-10)
+
+
+### Bug Fixes
+
+* **frontend:** add css source maps to vue config ([9dab499](https://github.com/pablolmedorado/temat/commit/9dab4997fa574214bbb435f247fa4de2c4a6ded0))
+* **frontend:** change navbar user menu and links visibility in small screens ([ddac69d](https://github.com/pablolmedorado/temat/commit/ddac69da9b65f22081fd0afc59dc285c5bf6d9f6))
+* **frontend:** minor ui improvements ([ff06f93](https://github.com/pablolmedorado/temat/commit/ff06f931fe52dda8bc2599498a7ca20010e8597e))
+* **holidays:** fix user holidays fetch after migrating to composition API ([b0c0f76](https://github.com/pablolmedorado/temat/commit/b0c0f76118db28a9da73d25d8dd4fe6f6617d1ac))
+
 ## [1.10.0](https://github.com/pablolmedorado/temat/compare/v1.9.3...v1.10.0) (2021-05-18)
 
 

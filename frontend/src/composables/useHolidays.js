@@ -4,9 +4,7 @@ import { useActions } from "vuex-composition-helpers";
 import HolidayService from "@/services/work-organization/holiday-service";
 
 export default function () {
-  const { showSnackbar } = useActions({
-    showSnackbar: "showSnackbar",
-  });
+  const { showSnackbar } = useActions(["showSnackbar"]);
 
   const datesToRequest = ref([]);
   async function request() {

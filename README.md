@@ -11,7 +11,7 @@
 ![Django Rest Framework version](https://img.shields.io/badge/DRF-3.12-a30000)
 ![Node version](https://img.shields.io/badge/Node.js-14-026e00)
 ![Vue.js version](https://img.shields.io/badge/Vue.js-2.6-4fc08d)
-![Vuetify version](https://img.shields.io/badge/Vuetify-2.4-1867c0)
+![Vuetify version](https://img.shields.io/badge/Vuetify-2.5-1867c0)
 
 ## 👀 Overview
 

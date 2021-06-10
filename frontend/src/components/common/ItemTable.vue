@@ -9,18 +9,18 @@
     :items="items"
     :item-key="itemKey"
     :server-items-length="itemCount"
-    :loading="tableLoading"
+    :loading="isLoading"
     :no-data-text="noDataText"
     :class="[`elevation-${elevation}`]"
     v-on="$listeners"
   >
-    <template #top="props">
-      <slot name="top" v-bind="props"></slot>
+    <template #top="slotProps">
+      <slot name="top" v-bind="{ ...slotProps, isTableLoading: isLoading }"></slot>
     </template>
 
-    <template v-for="header in headers" #[`item.${header.value}`]="item">
-      <slot :name="`item.${header.value}`" v-bind="item">
-        {{ item.value }}
+    <template v-for="header in headers" #[`item.${header.value}`]="slotProps">
+      <slot :name="`item.${header.value}`" v-bind="{ ...slotProps, isTableLoading: isLoading }">
+        {{ slotProps.value }}
       </slot>
     </template>
   </v-data-table>
@@ -29,6 +29,7 @@
 <script>
 import { defaultTo, isEqual, uniq } from "lodash";
 
+import useLoading from "@/composables/useLoading";
 import { defaultTableOptions } from "@/utils/constants";
 
 export default {
@@ -82,9 +83,16 @@ export default {
       default: 2,
     },
   },
+  setup() {
+    const { isLoading, addTask, removeTask } = useLoading();
+    return {
+      isLoading,
+      addTask,
+      removeTask,
+    };
+  },
   data() {
     return {
-      tableLoading: true,
       items: [],
       itemCount: 0,
       resetPagination: false,
@@ -170,14 +178,14 @@ export default {
       if (resetPagination && this.options.page !== 1) {
         this.$emit("update:options", { ...this.options, page: 1 });
       } else {
-        this.tableLoading = true;
+        this.addTask("fetch-items");
         try {
           const response = await this.service.list(this.buildFetchRequestParams());
           this.$emit("input", []);
           this.items = this.options.itemsPerPage <= 0 ? response.data : response.data.results;
           this.itemCount = this.options.itemsPerPage <= 0 ? response.data.length : response.data.count;
         } finally {
-          this.tableLoading = false;
+          this.removeTask("fetch-items");
         }
       }
     },

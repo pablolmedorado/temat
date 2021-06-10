@@ -7,10 +7,11 @@
     :min="pickerInterval.start.toISODate()"
     :max="pickerInterval.end.toISODate()"
     :events="pickerEvents"
+    :disabled="isLoading"
     :multiple="multiple"
     :range="range"
     :locale="locale"
-    :locale-first-day-of-year="4"
+    locale-first-day-of-year="4"
     first-day-of-week="1"
     color="primary"
     show-week
@@ -27,6 +28,8 @@ import { defaultTo, property } from "lodash";
 
 import HolidayService from "@/services/work-organization/holiday-service";
 import EventService from "@/services/calendar/event-service";
+
+import useLoading from "@/composables/useLoading";
 
 const currentDate = DateTime.local();
 
@@ -54,6 +57,14 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+  setup() {
+    const { isLoading, addTask, removeTask } = useLoading();
+    return {
+      isLoading,
+      addTask,
+      removeTask,
+    };
   },
   data() {
     return {
@@ -105,21 +116,36 @@ export default {
   },
   methods: {
     async getImportantDatesByYear(year) {
-      const response = await EventService.myImportantDatesByYear(year);
-      this.importantDates = response.data;
+      this.addTask("fetch-important-dates");
+      try {
+        const response = await EventService.myImportantDatesByYear(year);
+        this.importantDates = response.data;
+      } finally {
+        this.removeTask("fetch-important-dates");
+      }
     },
     async getSummary() {
-      const response = await HolidayService.summary({ allowance_date__year: this.year });
-      this.summary = Object.fromEntries(response.data.map((item) => [item.date, item.users]));
+      this.addTask("fetch-summary");
+      try {
+        const response = await HolidayService.summary({ allowance_date__year: this.year });
+        this.summary = Object.fromEntries(response.data.map((item) => [item.date, item.users]));
+      } finally {
+        this.removeTask("fetch-summary");
+      }
     },
     async getUsedDates() {
-      const response = await HolidayService.list({
-        user_id: this.loggedUser.id,
-        planned_date__gte: this.pickerInterval.start.toISODate(),
-        planned_date__lte: this.pickerInterval.end.toISODate(),
-        fields: "planned_date",
-      });
-      this.usedDates = response.data.map(property("planned_date"));
+      this.addTask("fetch-used-dates");
+      try {
+        const response = await HolidayService.list({
+          user_id: this.loggedUser.id,
+          planned_date__gte: this.pickerInterval.start.toISODate(),
+          planned_date__lte: this.pickerInterval.end.toISODate(),
+          fields: "planned_date",
+        });
+        this.usedDates = response.data.map(property("planned_date"));
+      } finally {
+        this.removeTask("fetch-used-dates");
+      }
     },
     allowedDates(date) {
       return this.disableUserHolidays ? !this.usedDates.includes(date) : true;

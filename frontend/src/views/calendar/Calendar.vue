@@ -36,7 +36,7 @@
 
         <v-spacer />
 
-        <v-btn fab text small class="mr-2" :disabled="loading" @click="fetchEvents">
+        <v-btn fab text small class="mr-2" :disabled="isLoading" @click="fetchEvents">
           <v-icon>mdi-refresh</v-icon>
         </v-btn>
         <v-btn fab text small class="mr-2" :to="{ name: 'events' }">
@@ -44,7 +44,7 @@
         </v-btn>
         <v-menu bottom right offset-y>
           <template #activator="{ on, attrs }">
-            <v-btn class="mr-2" outlined :disabled="loading" v-bind="attrs" v-on="on">
+            <v-btn class="mr-2" outlined :disabled="isLoading" v-bind="attrs" v-on="on">
               <v-icon left>{{ excludeSystemEvents ? "mdi-eye-off" : "mdi-eye" }}</v-icon>
               <span>E. Sistema</span>
               <v-icon right>mdi-menu-down</v-icon>
@@ -63,7 +63,7 @@
         </v-menu>
         <v-menu bottom right offset-y>
           <template #activator="{ on, attrs }">
-            <v-btn outlined :disabled="loading" v-bind="attrs" v-on="on">
+            <v-btn outlined :disabled="isLoading" v-bind="attrs" v-on="on">
               <span>{{ typeToLabel[calendarType] }}</span>
               <v-icon right>mdi-menu-down</v-icon>
             </v-btn>
@@ -148,6 +148,7 @@ import EventService from "@/services/calendar/event-service";
 import EventCard from "@/components/calendar/EventCard";
 import EventForm from "@/components/calendar/forms/EventForm";
 
+import useLoading from "@/composables/useLoading";
 import useLocalStorage from "@/composables/useLocalStorage";
 import { getFontColourFromBackground, hex2rgba } from "@/utils/colours";
 
@@ -167,10 +168,16 @@ export default {
     },
   },
   setup() {
+    const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
+
     const calendarType = useLocalStorage("calendarType", "month");
     const excludeSystemEvents = useLocalStorage("calendarExcludeSystemEvents", false);
 
     return {
+      isLoading,
+      isTaskLoading,
+      addTask,
+      removeTask,
       calendarType,
       excludeSystemEvents,
     };
@@ -198,7 +205,6 @@ export default {
   },
   computed: {
     ...mapState(["locale", "loggedUser"]),
-    ...mapGetters(["loading"]),
     ...mapGetters("calendar", ["eventTypesMap"]),
     pickerDate: {
       get() {
@@ -290,9 +296,13 @@ export default {
       this.$refs.formDialog.open(newEventData);
     },
     async fetchEvents() {
-      const events = await EventService.listCalendar(this.calendarInterval, this.excludeSystemEvents);
-      this.events = events;
-      return events;
+      this.addTask("fetch-events");
+      try {
+        const events = await EventService.listCalendar(this.calendarInterval, this.excludeSystemEvents);
+        this.events = events;
+      } finally {
+        this.removeTask("fetch-events");
+      }
     },
     addOrUpdateEvent(event) {
       const eventsCopy = [...this.events];

@@ -30,15 +30,15 @@ export default new Vuex.Store({
     loggedUser: window.djangoUserData || {},
     pendingRequests: 0,
     snackbar: defaultSnackbarConfig,
-    konamiCodeActive: false,
+    isKonamiCodeActive: false,
   },
   getters: {
-    loading: (state) => Boolean(state.pendingRequests),
     appLabel: (state) => ({
-      name: state.konamiCodeActive ? "MiBeti" : state.appName,
-      version: state.konamiCodeActive ? "1992" : version,
+      name: state.isKonamiCodeActive ? "MiBeti" : state.appName,
+      version: state.isKonamiCodeActive ? "1992" : version,
     }),
     yearOptions: (state) => [state.currentYear - 1, state.currentYear, state.currentYear + 1],
+    loadingRequests: (state) => Boolean(state.pendingRequests),
   },
   mutations: {
     setLoggedUser(state, user) {
@@ -54,10 +54,10 @@ export default new Vuex.Store({
       state.snackbar = payload;
     },
     setKonamiCodeActive(state, active) {
-      state.konamiCodeActive = active;
+      state.isKonamiCodeActive = active;
     },
     toggleKonamiCode(state) {
-      state.konamiCodeActive = !state.konamiCodeActive;
+      state.isKonamiCodeActive = !state.isKonamiCodeActive;
     },
   },
   actions: {

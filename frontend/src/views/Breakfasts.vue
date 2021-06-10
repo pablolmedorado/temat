@@ -15,14 +15,14 @@
           custom-headers
           selectable-rows
         >
-          <template #toolbar>
+          <template #toolbar="{ isIndexLoading }">
             <v-tooltip bottom>
               <template #activator="{ attrs, on }">
                 <v-btn
                   icon
                   v-bind="attrs"
-                  :disabled="loading"
-                  :loading="loadingUserBreakfast"
+                  :disabled="isIndexLoading"
+                  :loading="isTaskLoading('fetch-user-breakfast')"
                   v-on="on"
                   @click.stop="openFormDialog"
                 >
@@ -63,12 +63,14 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "vuex";
 
 import BreakfastService from "@/services/breakfasts/breakfast-service";
 
 import BreakfastForm from "@/components/breakfasts/BreakfastForm";
 import BreakfastsSummaryDialog from "@/components/breakfasts/BreakfastsSummaryDialog";
+
+import useLoading from "@/composables/useLoading";
 
 export default {
   name: "Breakfasts",
@@ -76,6 +78,15 @@ export default {
     title: "Desayunos",
   },
   components: { BreakfastsSummaryDialog },
+  setup() {
+    const { isLoading, addTask, removeTask, isTaskLoading } = useLoading();
+    return {
+      isLoading,
+      addTask,
+      removeTask,
+      isTaskLoading,
+    };
+  },
   data() {
     return {
       tableHeaders: [
@@ -123,7 +134,6 @@ export default {
   },
   computed: {
     ...mapState(["loggedUser"]),
-    ...mapGetters(["loading"]),
     defaultItem() {
       return {
         id: null,
@@ -138,7 +148,7 @@ export default {
   },
   methods: {
     async getUserBreakfast() {
-      this.loadingUserBreakfast = true;
+      this.addTask("fetch-user-breakfast");
       try {
         const response = await this.service.list({
           user_id: this.loggedUser.id,
@@ -147,7 +157,7 @@ export default {
         });
         return response.data.results.length ? response.data.results[0] : this.defaultItem;
       } finally {
-        this.loadingUserBreakfast = false;
+        this.removeTask("fetch-user-breakfast");
       }
     },
     async openFormDialog() {

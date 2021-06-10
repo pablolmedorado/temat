@@ -57,14 +57,14 @@ export default {
     };
   },
   computed: {
-    ...mapState(["konamiCodeActive", "snackbar"]),
+    ...mapState(["isKonamiCodeActive", "snackbar"]),
     ...mapGetters(["appLabel"]),
   },
   watch: {
     "$vuetify.theme.dark": function (newValue) {
       localStorage.darkMode = JSON.stringify(newValue);
     },
-    konamiCodeActive(newValue) {
+    isKonamiCodeActive(newValue) {
       this.onKonamiCodeChange(newValue);
     },
   },

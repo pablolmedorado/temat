@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="showDialog" v-bind="$attrs" :max-width="maxWidth" persistent scrollable>
-    <v-card>
+    <v-card :loading="isFormLoading">
       <v-toolbar flat>
         <v-toolbar-title class="text-h6">
           <slot name="header">Creación múltiple</slot>
@@ -31,6 +31,7 @@
                 v-if="Boolean(itemsToCreate.length)"
                 ref="itemsForm"
                 :source-items="itemsToCreate"
+                @change:loading="isFormLoading = $event"
               />
             </v-stepper-content>
           </v-stepper-items>
@@ -38,10 +39,10 @@
       </v-card-text>
       <v-divider />
       <v-card-actions>
-        <v-btn color="warning" text @click="reset">Restablecer</v-btn>
+        <v-btn color="warning" text :disabled="isFormLoading" @click="reset">Restablecer</v-btn>
         <v-spacer />
-        <v-btn text @click="close">Cancelar</v-btn>
-        <v-btn text :disabled="!datesToCreate.length" @click="next">
+        <v-btn text :disabled="isFormLoading" @click="close">Cancelar</v-btn>
+        <v-btn text :disabled="!datesToCreate.length" :loading="isFormLoading" @click="next">
           {{ nextText }}
         </v-btn>
       </v-card-actions>
@@ -68,6 +69,7 @@ export default {
       step: 1,
       datesToCreate: [],
       itemsToCreate: [],
+      isFormLoading: false,
     };
   },
   computed: {

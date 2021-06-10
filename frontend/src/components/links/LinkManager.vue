@@ -4,7 +4,6 @@
     content-class="v-dialog--scrollable"
     :min-width="400"
     :max-width="400"
-    :close-on-content-click="false"
     :nudge-width="200"
     bottom
     left
@@ -13,7 +12,7 @@
     <template #activator="{ on: menu }">
       <v-tooltip bottom>
         <template #activator="{ on: tooltip }">
-          <v-btn v-show="$vuetify.breakpoint.smAndUp" :disabled="loading" icon v-on="{ ...tooltip, ...menu }">
+          <v-btn :disabled="isLoading" icon v-on="{ ...tooltip, ...menu }">
             <v-icon>mdi-apps</v-icon>
           </v-btn>
         </template>
@@ -52,12 +51,21 @@ import { groupBy } from "lodash";
 
 import LinkService from "@/services/common/link-service";
 
+import useLoading from "@/composables/useLoading";
+
 export default {
   name: "LinkManager",
+  setup() {
+    const { isLoading, addTask, removeTask } = useLoading();
+    return {
+      isLoading,
+      addTask,
+      removeTask,
+    };
+  },
   data() {
     return {
       showMenu: false,
-      loading: false,
       items: [],
     };
   },
@@ -71,12 +79,12 @@ export default {
   },
   methods: {
     async fetchItems() {
+      this.addTask("fetch-items");
       try {
-        this.loading = true;
         const response = await LinkService.list({ expand: "type" });
         this.items = response.data;
       } finally {
-        this.loading = false;
+        this.removeTask("fetch-items");
       }
     },
   },

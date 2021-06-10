@@ -21,13 +21,13 @@
           :can-delete="canModifyEffort"
           custom-headers
         >
-          <template #toolbar="{ filters }">
+          <template #toolbar="{ filters, isIndexLoading }">
             <v-tooltip bottom>
               <template #activator="{ attrs, on }">
                 <v-btn
                   icon
                   v-bind="attrs"
-                  :disabled="loading || !filters || !filters.date__gte || !filters.date__lte"
+                  :disabled="isIndexLoading || !filters || !filters.date__gte || !filters.date__lte"
                   v-on="on"
                   @click.stop="openReportDialog(filters)"
                 >
@@ -107,7 +107,6 @@ export default {
   },
   computed: {
     ...mapState(["loggedUser"]),
-    ...mapGetters(["loading"]),
     ...mapGetters("scrum", ["effortRolesMap"]),
     tableHeaders() {
       return [
