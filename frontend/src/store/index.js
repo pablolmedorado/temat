@@ -31,15 +31,14 @@ export default new Vuex.Store({
     pendingRequests: 0,
     snackbar: defaultSnackbarConfig,
     isKonamiCodeActive: false,
-    currentTasks: {},
   },
   getters: {
-    loading: (state) => Boolean(state.pendingRequests),
     appLabel: (state) => ({
       name: state.isKonamiCodeActive ? "MiBeti" : state.appName,
       version: state.isKonamiCodeActive ? "1992" : version,
     }),
     yearOptions: (state) => [state.currentYear - 1, state.currentYear, state.currentYear + 1],
+    loadingRequests: (state) => Boolean(state.pendingRequests),
   },
   mutations: {
     setLoggedUser(state, user) {
@@ -59,34 +58,6 @@ export default new Vuex.Store({
     },
     toggleKonamiCode(state) {
       state.isKonamiCodeActive = !state.isKonamiCodeActive;
-    },
-    addComponentTask(state, { componentUid, taskName }) {
-      if (!state.currentTasks[componentUid] || !state.currentTasks[componentUid].includes(taskName)) {
-        const tasks = { ...state.currentTasks };
-        tasks[componentUid] = tasks[componentUid] ? [...tasks[componentUid], taskName] : [taskName];
-        state.currentTasks = tasks;
-      }
-    },
-    removeComponentTask(state, { componentUid, taskName }) {
-      if (state.currentTasks[componentUid]) {
-        const index = state.currentTasks[componentUid].findIndex((task) => task === taskName);
-        if (index !== -1) {
-          const tasks = { ...state.currentTasks };
-          if (tasks[componentUid].length > 1) {
-            tasks[componentUid].splice(index, 1);
-          } else {
-            delete tasks[componentUid];
-          }
-          state.currentTasks = tasks;
-        }
-      }
-    },
-    destroyComponentTasks(state, { componentUid }) {
-      if (state.currentTasks[componentUid]) {
-        const tasks = { ...state.currentTasks };
-        delete tasks[componentUid];
-        state.currentTasks = tasks;
-      }
     },
   },
   actions: {

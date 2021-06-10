@@ -89,7 +89,7 @@
                   <v-btn
                     icon
                     v-bind="attrs"
-                    :disabled="isLoading"
+                    :disabled="isLoading || disableRowEdition"
                     :loading="isTaskLoading('fetch-item', slotProps.item.id)"
                     @click.stop="openFormDialog(slotProps.item)"
                     v-on="on"
@@ -104,7 +104,7 @@
                   <v-btn
                     icon
                     v-bind="attrs"
-                    :disabled="isLoading"
+                    :disabled="isLoading || disableRowEdition"
                     :loading="isTaskLoading('delete-item', slotProps.item.id)"
                     @click.stop="$refs.deleteDialog.open(slotProps.item)"
                     v-on="on"
@@ -224,6 +224,10 @@ export default {
       default: (item, user) => user.is_superuser,
     },
     readOnly: {
+      type: Boolean,
+      default: false,
+    },
+    disableRowEdition: {
       type: Boolean,
       default: false,
     },

@@ -1,21 +1,14 @@
-import { computed, getCurrentInstance, onUnmounted, watch } from "@vue/composition-api";
-import { useMutations, useState } from "vuex-composition-helpers";
+import { computed, getCurrentInstance, onUnmounted, ref, watch } from "@vue/composition-api";
 import { get } from "lodash";
+
+const currentTasks = ref({});
 
 export default function ({ includedChildren } = {}) {
   // Vue instance
   const { emit, refs, uid } = getCurrentInstance();
 
-  // Vuex
-  const { storeTasks } = useState({ storeTasks: "currentTasks" });
-  const { addComponentTask, removeComponentTask, destroyComponentTasks } = useMutations([
-    "addComponentTask",
-    "removeComponentTask",
-    "destroyComponentTasks",
-  ]);
-
   // Computed
-  const tasks = computed(() => get(storeTasks.value, [uid], []));
+  const tasks = computed(() => get(currentTasks.value, [uid], []));
   const isLoading = computed(() => {
     if (tasks.value.length) {
       return true;
@@ -37,7 +30,7 @@ export default function ({ includedChildren } = {}) {
     if (!child) {
       return false;
     }
-    return Boolean(get(child, "isLoading", false) || get(storeTasks.value[child._uid], "length"));
+    return Boolean(get(child, "isLoading", false) || get(currentTasks.value[child._uid], "length"));
   }
   function getTaskIdentifier(taskName, itemId) {
     return itemId ? `${taskName}-${itemId}` : taskName;
@@ -46,12 +39,29 @@ export default function ({ includedChildren } = {}) {
     return tasks.value.includes(getTaskIdentifier(taskName, itemId));
   }
   function addTask(taskName, itemId) {
-    addComponentTask({ componentUid: uid, taskName: getTaskIdentifier(taskName, itemId) });
-    emit(`change:loading-${taskName}`, true, itemId);
+    const taskIdentifier = getTaskIdentifier(taskName, itemId);
+    if (!currentTasks.value[uid] || !currentTasks.value[uid].includes(taskIdentifier)) {
+      const tasks = { ...currentTasks.value };
+      tasks[uid] = tasks[uid] ? [...tasks[uid], taskIdentifier] : [taskIdentifier];
+      currentTasks.value = tasks;
+      emit(`change:loading-${taskName}`, true, itemId);
+    }
   }
   function removeTask(taskName, itemId) {
-    removeComponentTask({ componentUid: uid, taskName: getTaskIdentifier(taskName, itemId) });
-    emit(`change:loading-${taskName}`, false, itemId);
+    const taskIdentifier = getTaskIdentifier(taskName, itemId);
+    if (currentTasks.value[uid]) {
+      const index = currentTasks.value[uid].findIndex((task) => task === taskIdentifier);
+      if (index !== -1) {
+        const tasks = { ...currentTasks.value };
+        if (tasks[uid].length > 1) {
+          tasks[uid].splice(index, 1);
+        } else {
+          delete tasks[uid];
+        }
+        currentTasks.value = tasks;
+        emit(`change:loading-${taskName}`, false, itemId);
+      }
+    }
   }
 
   // HOF (Decorator)
@@ -67,7 +77,13 @@ export default function ({ includedChildren } = {}) {
   }
 
   // Lifecycle hooks
-  onUnmounted(() => destroyComponentTasks({ uid }));
+  onUnmounted(() => {
+    if (currentTasks.value[uid]) {
+      const tasks = { ...currentTasks.value };
+      delete tasks[uid];
+      currentTasks.value = tasks;
+    }
+  });
 
   return {
     isLoading,

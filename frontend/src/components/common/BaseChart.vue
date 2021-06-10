@@ -113,8 +113,8 @@ export default {
       return [this.filter];
     },
     async fetchChartData() {
-      this.chartData = null;
       this.addTask("fetch-data");
+      this.chartData = null;
       try {
         const response = await this.service[this.fetchFunctionName].apply(this.service, this.buildFetchFunctionArgs());
         this.chartData = response.data;

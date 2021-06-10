@@ -35,11 +35,11 @@
                 <v-icon small>{{ getHolidayStatusInfo(value).icon }}</v-icon>
               </v-chip>
             </template>
-            <template #item.table_actions="{ item, isTableLoading }">
+            <template #item.table_actions="{ item }">
               <span class="d-inline-flex">
                 <v-btn
                   v-show="[null, false].includes(item.approved)"
-                  :disabled="isTableLoading"
+                  :disabled="isLoading"
                   :loading="isTaskLoading('edit-holiday-true', item.id)"
                   icon
                   @click="editHoliday(item, true)"
@@ -48,7 +48,7 @@
                 </v-btn>
                 <v-btn
                   v-show="[null, true].includes(item.approved)"
-                  :disabled="isTableLoading"
+                  :disabled="isLoading"
                   :loading="isTaskLoading('edit-holiday-false', item.id)"
                   icon
                   @click="editHoliday(item, false)"
@@ -56,7 +56,7 @@
                   <v-icon>mdi-cancel</v-icon>
                 </v-btn>
                 <v-btn
-                  :disabled="isTableLoading"
+                  :disabled="isLoading"
                   :loading="isTaskLoading('cancel-holiday', item.id)"
                   icon
                   @click="cancelHoliday(item)"

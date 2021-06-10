@@ -7,7 +7,7 @@
       <img v-if="isXmas" id="santaHat" src="@/assets/santa_hat.svg" alt="Santa's hat" />
     </span>
     <v-spacer />
-    <v-progress-circular v-show="loading" class="mr-5" :size="32" color="white" indeterminate />
+    <v-progress-circular v-show="loadingRequests" class="mr-5" :size="32" color="white" indeterminate />
     <LinkManager />
     <NotificationManager class="mr-5" />
     <UserAvatar size="36" :font-size="14" :user="loggedUser" />
@@ -50,7 +50,7 @@ export default {
   components: { LinkManager, NotificationManager },
   computed: {
     ...mapState(["loggedUser"]),
-    ...mapGetters(["appLabel", "loading"]),
+    ...mapGetters(["appLabel", "loadingRequests"]),
     isXmas,
   },
   methods: {

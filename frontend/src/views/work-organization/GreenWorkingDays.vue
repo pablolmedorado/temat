@@ -14,6 +14,7 @@
           default-quick-filter="current-year"
           :service="service"
           :form-component="formComponent"
+          :disable-row-edition="isLoading"
           custom-headers
           reactive-filters
         >

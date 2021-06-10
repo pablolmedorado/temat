@@ -9,10 +9,7 @@
   >
     <v-card>
       <v-toolbar flat>
-        <v-toolbar-title class="text-h6">
-          Gestión rápida de tareas.
-          <template v-if="userStory">Historia: "{{ userStory.name | truncate(20) }}"</template>
-        </v-toolbar-title>
+        <v-toolbar-title class="text-h6"> Gestión rápida de tareas </v-toolbar-title>
       </v-toolbar>
       <v-card-text class="pa-0">
         <ItemTable
@@ -55,11 +52,9 @@ import DialogMixin from "@/mixins/dialog-mixin";
 import TaskService from "@/services/scrum/task-service";
 
 import useLoading from "@/composables/useLoading";
-import { truncate } from "@/filters";
 
 export default {
   name: "TaskQuickManagementDialog",
-  filters: { truncate },
   mixins: [DialogMixin],
   setup() {
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading({

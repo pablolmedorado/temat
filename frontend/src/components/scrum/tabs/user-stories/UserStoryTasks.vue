@@ -14,6 +14,7 @@
         :form-component="formComponent"
         :default-item="defaultItem"
         :read-only="readOnly"
+        :disable-row-edition="isLoading"
         form-dialog-multi-add
         @submit:form="$emit('change:progress')"
         @delete:item="$emit('change:progress')"

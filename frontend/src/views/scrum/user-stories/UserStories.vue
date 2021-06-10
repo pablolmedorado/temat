@@ -16,6 +16,7 @@
           :default-quick-filter="defaultQuickFilter"
           :service="service"
           :can-edit="() => false"
+          :disable-row-edition="isLoading"
           custom-headers
           advanced-filters
           delete-child-items-warning
