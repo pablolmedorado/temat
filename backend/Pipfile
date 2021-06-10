@@ -19,10 +19,10 @@ ipdb = "*"
 ipython = "*"
 mypy = "*"
 safety = "*"
-werkzeug = "==2.0.0"
+werkzeug = "==2.0.1"
 
 [packages]
-django = "==3.2.3"
+django = "==3.2.4"
 django-colorfield = "==0.4.1"
 django-crispy-forms = "==1.11.2"
 django-db-prefix = "==1.0.5"
