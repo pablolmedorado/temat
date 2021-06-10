@@ -1,4 +1,3 @@
-import { baseApiClient as SilentApi } from "../api";
 import Api from "../api";
 import BaseService from "../base-service";
 
@@ -7,26 +6,26 @@ class NotificationService extends BaseService {
 
   unreadCount() {
     const url = Urls[`${this.baseUrlName}-unread-count`]();
-    return SilentApi.get(url);
+    return Api.get(url);
   }
 
   unreadSummary() {
-    return SilentApi.get(this.listUrl, { params: { unread: true, page_size: 25, page: 1 } });
+    return Api.get(this.listUrl, { params: { unread: true, page_size: 25, page: 1 } });
   }
 
   markSummaryAsRead(queryParams) {
     const url = Urls[`${this.baseUrlName}-mark-all-as-read`]();
-    return SilentApi.patch(url, {}, { params: queryParams });
+    return Api.patch(url, {}, { params: queryParams });
   }
 
   markAsUnread(pk) {
     const url = Urls[`${this.baseUrlName}-mark-as-unread`]({ pk });
-    return SilentApi.patch(url);
+    return Api.patch(url);
   }
 
   markAsRead(pk) {
     const url = Urls[`${this.baseUrlName}-mark-as-read`]({ pk });
-    return SilentApi.patch(url);
+    return Api.patch(url);
   }
 
   markAllAsUnread(queryParams) {

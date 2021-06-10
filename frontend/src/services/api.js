@@ -7,14 +7,13 @@ const axiosConfig = {
   xsrfHeaderName: "X-CSRFTOKEN",
 };
 
-export const baseApiClient = axios.create(axiosConfig);
+const baseApiClient = axios.create(axiosConfig);
 
-const interceptedApiClient = axios.create(axiosConfig);
-interceptedApiClient.interceptors.request.use((config) => {
+baseApiClient.interceptors.request.use((config) => {
   store.commit("addPendingRequest");
   return config;
 });
-interceptedApiClient.interceptors.response.use(
+baseApiClient.interceptors.response.use(
   (response) => {
     store.commit("removePendingRequest");
     return response;
@@ -25,4 +24,4 @@ interceptedApiClient.interceptors.response.use(
   }
 );
 
-export default interceptedApiClient;
+export default baseApiClient;
