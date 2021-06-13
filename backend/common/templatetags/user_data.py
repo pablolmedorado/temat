@@ -17,5 +17,6 @@ def user_data(user):
         "acronym": user.acronym,
         "is_staff": user.is_staff,
         "is_superuser": user.is_superuser,
+        "permissions": [] if user.is_superuser else sorted(list(user.get_all_permissions())),
     }
     return mark_safe(f"<script>var djangoUserData = {json.dumps(user_data)};</script>")

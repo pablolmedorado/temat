@@ -9,10 +9,10 @@
           :headers="headers"
           :items="holidaysSummary"
           :options="options"
-          :disable-pagination="true"
-          :hide-default-footer="true"
           no-data-text="No hay días de vacaciones con estas características"
           item-key="allowance_date"
+          disable-pagination
+          hide-default-footer
           multi-sort
           must-sort
         />

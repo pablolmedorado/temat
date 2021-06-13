@@ -6,6 +6,8 @@ import EventService from "@/services/calendar/event-service";
 import EventForm from "@/components/calendar/forms/EventForm";
 import EventRepresentation from "@/components/calendar/EventRepresentation";
 
+import { userHasPermission } from "@/utils/permissions";
+
 export default {
   components: { EventRepresentation },
   data() {
@@ -17,8 +19,14 @@ export default {
   computed: {
     ...mapState(["loggedUser", "tz"]),
     ...mapGetters("calendar", ["eventTypesMap"]),
-    isEditable() {
-      return this.loggedUser.is_superuser || this.loggedUser.id === this.item.creation_user;
+    canEdit() {
+      return this.loggedUser.id === this.item.creation_user || userHasPermission("events.change_event");
+    },
+    canCopy() {
+      return userHasPermission("events.add_event");
+    },
+    canDelete() {
+      return this.loggedUser.id === this.item.creation_user || userHasPermission("events.delete_event");
     },
     itemForCopy() {
       const copy = cloneDeep(this.item);

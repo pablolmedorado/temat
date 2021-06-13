@@ -12,7 +12,7 @@
                   label="Título*"
                   prepend-icon="mdi-format-title"
                   counter="500"
-                  :readonly="!loggedUser.is_superuser"
+                  :readonly="!canEdit"
                   :error-messages="buildValidationErrorMessages($v.item.name)"
                   @input="$v.item.name.$touch()"
                   @blur="$v.item.name.$touch()"
@@ -27,7 +27,7 @@
                   label="Tipo*"
                   prepend-icon="mdi-shape"
                   :loading="!userStoryTypesOptions.length"
-                  :readonly="!loggedUser.is_superuser"
+                  :readonly="!canEdit"
                   :error-messages="buildValidationErrorMessages($v.item.type)"
                   @change="$v.item.type.$touch()"
                   @blur="$v.item.type.$touch()"
@@ -39,7 +39,7 @@
                   :service="epicService"
                   search-field="name"
                   search-lookup="icontains"
-                  :readonly="!loggedUser.is_superuser"
+                  :readonly="!canEdit"
                   label="Épica"
                   prepend-icon="mdi-sword-cross"
                 />
@@ -51,7 +51,7 @@
                   v-model="item.tags"
                   label="Tags"
                   prepend-icon="mdi-label"
-                  :readonly="!loggedUser.is_superuser"
+                  :readonly="!canEdit"
                   multiple
                   chips
                   small-chips
@@ -76,7 +76,7 @@
                   prepend-icon="mdi-text"
                   rows="10"
                   counter="2000"
-                  :readonly="!loggedUser.is_superuser"
+                  :readonly="!canEdit"
                   :error-messages="buildValidationErrorMessages($v.item.functional_description)"
                   @input="$v.item.functional_description.$touch()"
                   @blur="$v.item.functional_description.$touch()"
@@ -89,7 +89,7 @@
                   rows="10"
                   counter="2000"
                   prepend-icon="mdi-text"
-                  :readonly="!loggedUser.is_superuser"
+                  :readonly="!canEdit"
                   :error-messages="buildValidationErrorMessages($v.item.technical_description)"
                   @input="$v.item.technical_description.$touch()"
                   @blur="$v.item.technical_description.$touch()"
@@ -112,8 +112,8 @@
                   :service="sprintService"
                   search-field="name"
                   search-lookup="icontains"
-                  :readonly="!loggedUser.is_superuser"
-                  :clearable="loggedUser.is_superuser"
+                  :readonly="!canEdit"
+                  :clearable="canEdit"
                   :hint="item.sprint ? `Del ${item.sprint.start_date} al ${item.sprint.end_date}` : ''"
                   :persistent-hint="Boolean(item.sprint)"
                   label="Sprint"
@@ -137,7 +137,7 @@
                       label="Fecha de inicio planificada"
                       prepend-icon="mdi-calendar-start"
                       readonly
-                      :clearable="loggedUser.is_superuser"
+                      :clearable="canEdit"
                       :error-messages="buildValidationErrorMessages($v.item.start_date)"
                       v-bind="attrs"
                       @click:clear="item.start_date = null"
@@ -149,7 +149,7 @@
                           <template #activator="{ on: onTooltip, attrs: attrTooltip }">
                             <v-icon
                               v-bind="attrTooltip"
-                              :disabled="!loggedUser.is_superuser"
+                              :disabled="!canEdit"
                               v-on="onTooltip"
                               @click="setStartDateFromSprint"
                             >
@@ -163,7 +163,7 @@
                   </template>
                   <v-date-picker
                     v-model="item.start_date"
-                    :disabled="!loggedUser.is_superuser"
+                    :disabled="!canEdit"
                     :locale="locale"
                     :locale-first-day-of-year="4"
                     first-day-of-week="1"
@@ -190,7 +190,7 @@
                       label="Fecha límite"
                       prepend-icon="mdi-calendar-end"
                       readonly
-                      :clearable="loggedUser.is_superuser"
+                      :clearable="canEdit"
                       :error-messages="buildValidationErrorMessages($v.item.end_date)"
                       v-bind="attrs"
                       @click:clear="item.end_date = null"
@@ -202,7 +202,7 @@
                           <template #activator="{ on: onTooltip, attrs: attrTooltip }">
                             <v-icon
                               v-bind="attrTooltip"
-                              :disabled="!loggedUser.is_superuser"
+                              :disabled="!canEdit"
                               v-on="onTooltip"
                               @click="setEndDateFromSprint"
                             >
@@ -216,7 +216,7 @@
                   </template>
                   <v-date-picker
                     v-model="item.end_date"
-                    :disabled="!loggedUser.is_superuser"
+                    :disabled="!canEdit"
                     :locale="locale"
                     :locale-first-day-of-year="4"
                     first-day-of-week="1"
@@ -240,7 +240,7 @@
                   suffix="UT"
                   hint="1UT = 1/2h"
                   persistent-hint
-                  :readonly="!loggedUser.is_superuser"
+                  :readonly="!canEdit"
                   :error-messages="buildValidationErrorMessages($v.item.planned_effort)"
                   @input="$v.item.planned_effort.$touch()"
                   @blur="$v.item.planned_effort.$touch()"
@@ -256,7 +256,7 @@
                   prepend-icon="mdi-priority-high"
                   hint="Menor número, mayor importancia"
                   persistent-hint
-                  :readonly="!loggedUser.is_superuser"
+                  :readonly="!canEdit"
                   :error-messages="buildValidationErrorMessages($v.item.priority)"
                   @input="$v.item.priority.$touch()"
                   @blur="$v.item.priority.$touch()"
@@ -283,8 +283,8 @@
                           v-model.number="item.development_user"
                           label="Desarrollador"
                           prepend-icon="mdi-account"
-                          :readonly="!loggedUser.is_superuser"
-                          :clearable="loggedUser.is_superuser"
+                          :readonly="!canEdit"
+                          :clearable="canEdit"
                           show-random-btn
                           :error-messages="buildValidationErrorMessages($v.item.development_user)"
                           @change="$v.item.development_user.$touch()"
@@ -299,7 +299,7 @@
                           label="Comentarios del desarrollador"
                           counter="2000"
                           prepend-icon="mdi-comment-quote"
-                          :readonly="!loggedUser.is_superuser && loggedUser.id !== item.development_user"
+                          :readonly="!canEdit && loggedUser.id !== item.development_user"
                           :error-messages="buildValidationErrorMessages($v.item.development_comments)"
                           @input="$v.item.development_comments.$touch()"
                           @blur="$v.item.development_comments.$touch()"
@@ -313,7 +313,7 @@
                           label="Referencia SCV"
                           counter="255"
                           prepend-icon="mdi-git"
-                          :readonly="!loggedUser.is_superuser && loggedUser.id !== item.development_user"
+                          :readonly="!canEdit && loggedUser.id !== item.development_user"
                           :error-messages="buildValidationErrorMessages($v.item.cvs_reference)"
                           @input="$v.item.cvs_reference.$touch()"
                           @blur="$v.item.cvs_reference.$touch()"
@@ -333,8 +333,8 @@
                           v-model.number="item.validation_user"
                           label="Validador"
                           prepend-icon="mdi-account-check"
-                          :readonly="!loggedUser.is_superuser"
-                          :clearable="loggedUser.is_superuser"
+                          :readonly="!canEdit"
+                          :clearable="canEdit"
                           show-random-btn
                         />
                       </v-col>
@@ -346,7 +346,7 @@
                           label="Comentarios del validador"
                           counter="2000"
                           prepend-icon="mdi-comment-quote"
-                          :readonly="!loggedUser.is_superuser && loggedUser.id !== item.validation_user"
+                          :readonly="!canEdit && loggedUser.id !== item.validation_user"
                           :error-messages="buildValidationErrorMessages($v.item.validation_comments)"
                           @input="$v.item.validation_comments.$touch()"
                           @blur="$v.item.validation_comments.$touch()"
@@ -359,7 +359,7 @@
                           v-model="item.validated"
                           :items="validatedOptions"
                           :disabled="item.status < 3"
-                          :readonly="!loggedUser.is_superuser && loggedUser.id !== item.validation_user"
+                          :readonly="!canEdit && loggedUser.id !== item.validation_user"
                           :hint="validatedHintText"
                           persistent-hint
                           label="Estado"
@@ -380,8 +380,8 @@
                           v-model.number="item.support_user"
                           label="Soporte"
                           prepend-icon="mdi-account-question"
-                          :readonly="!loggedUser.is_superuser"
-                          :clearable="loggedUser.is_superuser"
+                          :readonly="!canEdit"
+                          :clearable="canEdit"
                           show-random-btn
                         />
                       </v-col>
@@ -393,7 +393,7 @@
                           label="Comentarios de soporte"
                           counter="2000"
                           prepend-icon="mdi-comment-quote"
-                          :readonly="!loggedUser.is_superuser && loggedUser.id !== item.support_user"
+                          :readonly="!canEdit && loggedUser.id !== item.support_user"
                           :error-messages="buildValidationErrorMessages($v.item.support_comments)"
                           @input="$v.item.support_comments.$touch()"
                           @blur="$v.item.support_comments.$touch()"
@@ -422,7 +422,7 @@
                   item-value="value"
                   label="Nivel de riesgo*"
                   prepend-icon="mdi-alert-decagram"
-                  :readonly="read_only"
+                  :readonly="canEditOrHasARole"
                   :error-messages="buildValidationErrorMessages($v.item.risk_level)"
                   @change="$v.item.risk_level.$touch()"
                   @blur="$v.item.risk_level.$touch()"
@@ -436,7 +436,7 @@
                   label="Comentarios de riesgo"
                   counter="2000"
                   prepend-icon="mdi-comment-quote"
-                  :readonly="read_only"
+                  :readonly="canEditOrHasARole"
                   :error-messages="buildValidationErrorMessages($v.item.risk_comments)"
                   @input="$v.item.risk_comments.$touch()"
                   @blur="$v.item.risk_comments.$touch()"
@@ -457,7 +457,7 @@
                   :items="useMigrationsOptions"
                   label="Usa migraciones*"
                   prepend-icon="mdi-database-arrow-right"
-                  :readonly="!loggedUser.is_superuser && loggedUser.id !== item.development_user"
+                  :readonly="!canEdit && loggedUser.id !== item.development_user"
                   :error-messages="buildValidationErrorMessages($v.item.use_migrations)"
                   @change="$v.item.use_migrations.$touch()"
                   @blur="$v.item.use_migrations.$touch()"
@@ -471,7 +471,7 @@
                   label="Notas de despliegue"
                   counter="2000"
                   prepend-icon="mdi-note-text"
-                  :readonly="!loggedUser.is_superuser && loggedUser.id !== item.development_user"
+                  :readonly="!canEdit && loggedUser.id !== item.development_user"
                   :error-messages="buildValidationErrorMessages($v.item.deployment_notes)"
                   @input="$v.item.deployment_notes.$touch()"
                   @blur="$v.item.deployment_notes.$touch()"
@@ -498,6 +498,7 @@ import SprintService from "@/services/scrum/sprint-service";
 import UserStoryService from "@/services/scrum/user-story-service";
 
 import { isoDateTimeToLocaleString, isoDateToLocaleString } from "@/utils/dates";
+import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "UserStoryForm",
@@ -583,9 +584,13 @@ export default {
       riskLevelOptions: "riskLevels",
       userStoryTypesOptions: "userStoryTypes",
     }),
-    read_only() {
+    canEdit() {
+      const action = this.item.id ? "change" : "add";
+      return userHasPermission(`scrum.${action}_userstory`);
+    },
+    canEditOrHasARole() {
       return (
-        !this.loggedUser.is_superuser &&
+        !this.canEdit &&
         ![this.item.development_user, this.item.validation_user, this.item.support_user].includes(this.loggedUser.id)
       );
     },

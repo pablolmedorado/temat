@@ -13,7 +13,9 @@
         :service="service"
         :form-component="formComponent"
         :default-item="defaultItem"
-        :read-only="readOnly"
+        :can-create="() => userHasPermission('scrum.add_task')"
+        :can-edit="() => userHasPermission('scrum.change_task')"
+        :can-delete="() => userHasPermission('scrum.delete_task')"
         :disable-row-edition="isLoading"
         form-dialog-multi-add
         @submit:form="$emit('change:progress')"
@@ -26,7 +28,7 @@
         <template #item.done="{ item }">
           <v-btn
             icon
-            :disabled="readOnly || isLoading"
+            :disabled="isLoading || !canToggle"
             :loading="isTaskLoading('toggle-item', item.id)"
             @click="toggleItem(item)"
           >
@@ -84,6 +86,7 @@ import TaskForm from "@/components/scrum/forms/TaskForm";
 import UserStoryProgressBar from "@/components/scrum/UserStoryProgressBar";
 
 import useLoading from "@/composables/useLoading";
+import { userHasPermission, userHasAnyPermission } from "@/utils/permissions";
 
 export default {
   name: "UserStoryTasks",
@@ -127,9 +130,6 @@ export default {
     defaultItem() {
       return { id: null, user_story: this.userStory.id, name: "", weight: 1, done: false };
     },
-    readOnly() {
-      return !this.loggedUser.is_superuser && this.loggedUser.id !== this.userStory.development_user;
-    },
     tableHeaders() {
       const defaultOptions = [
         {
@@ -160,7 +160,10 @@ export default {
           fixed: true,
         },
       ];
-      return this.loggedUser.is_superuser ? adminOptions : defaultOptions;
+      return userHasAnyPermission(["scrum.change_task", "scrum.delete_task"]) ? adminOptions : defaultOptions;
+    },
+    canToggle() {
+      return this.loggedUser.id === this.userStory.development_user || userHasPermission("scrum.change_task");
     },
   },
   mounted() {
@@ -169,6 +172,7 @@ export default {
     }
   },
   methods: {
+    userHasPermission,
     onFormSubmit() {
       this.$emit("change:progress");
     },

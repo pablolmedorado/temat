@@ -2,8 +2,8 @@
   <v-menu
     :disabled="!isTruncated"
     :close-on-content-click="false"
-    :open-on-hover="true"
     :nudge-width="200"
+    open-on-hover
     max-width="400px"
     offset-x
   >

@@ -4,7 +4,7 @@ from django.db.models import Q
 
 class EventQuerySet(models.QuerySet):
     def by_user(self, user):
-        if user.is_superuser:
+        if user.is_superuser or "events.view_event" in user.get_all_permissions():
             return self
         return self.filter(Q(visibility="PU") | Q(attendees=user) | Q(groups__user=user) | Q(creation_user=user))
 

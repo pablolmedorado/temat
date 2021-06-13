@@ -38,13 +38,13 @@
     </v-card>
 
     <v-speed-dial
-      v-if="isEditable"
+      v-if="canEdit"
       v-model="showSpeedDial"
       fixed
       bottom
       right
       direction="top"
-      :open-on-hover="true"
+      open-on-hover
       transition="slide-y-reverse-transition"
     >
       <template #activator>
@@ -52,10 +52,10 @@
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
       </template>
-      <v-btn fab dark small color="secondary" @click="onEdit(itemForCopy)">
+      <v-btn v-if="canCopy" fab dark small color="secondary" @click="onEdit(itemForCopy)">
         <v-icon>mdi-content-copy</v-icon>
       </v-btn>
-      <v-btn fab dark small color="red" @click.stop="onDelete(item)">
+      <v-btn v-if="canDelete" fab dark small color="red" @click.stop="onDelete(item)">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </v-speed-dial>

@@ -15,6 +15,9 @@
           :service="service"
           :form-component="formComponent"
           :default-item="defaultItem"
+          :can-create="() => userHasPermission('scrum.add_sprint')"
+          :can-edit="() => userHasPermission('scrum.change_sprint')"
+          :can-delete="() => userHasPermission('scrum.delete_sprint')"
           custom-headers
           advanced-filters
           delete-child-items-warning
@@ -73,6 +76,8 @@ import SprintService from "@/services/scrum/sprint-service";
 import SprintFilters from "@/components/scrum/filters/SprintFilters";
 import SprintForm from "@/components/scrum/forms/SprintForm";
 import SprintViewSelector from "@/components/scrum/SprintViewSelector";
+
+import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "Sprints",
@@ -143,6 +148,7 @@ export default {
     },
   },
   methods: {
+    userHasPermission,
     setTagFilter(tag) {
       this.$refs.itemIndex.addFilter({ tags__name__in: tag });
       this.$nextTick(() => {

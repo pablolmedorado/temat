@@ -14,6 +14,9 @@
           default-quick-filter="current-year"
           :service="service"
           :form-component="formComponent"
+          :can-create="() => userHasPermission('work_organization.add_greenworkingday')"
+          :can-edit="() => userHasPermission('work_organization.change_greenworkingday')"
+          :can-delete="() => userHasPermission('work_organization.delete_greenworkingday')"
           :disable-row-edition="isLoading"
           custom-headers
           reactive-filters
@@ -70,9 +73,9 @@
             </v-btn>
           </template>
 
-          <template #fab="{ canCreate }">
+          <template #fab>
             <v-btn
-              v-if="canCreate(loggedUser)"
+              v-if="userHasPermission('work_organization.add_greenworkingday')"
               fab
               fixed
               bottom
@@ -90,7 +93,7 @@
     <VoluteersDialog ref="volunteersDialog" />
 
     <StepperBulkFormDialog
-      v-if="loggedUser.is_superuser"
+      v-if="userHasPermission('work_organization.add_greenworkingday')"
       ref="greenWorkingDayBulkForm"
       :max-width="1000"
       :form-component="bulkFormComponent"
@@ -113,6 +116,7 @@ import GreenWorkingDayForm from "@/components/work-organization/green-working-da
 import VoluteersDialog from "@/components/work-organization/green-working-days/VoluteersDialog";
 
 import useLoading from "@/composables/useLoading";
+import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "GreenWorkingDays",
@@ -172,6 +176,7 @@ export default {
     ...mapGetters(["yearOptions"]),
   },
   methods: {
+    userHasPermission,
     ...mapActions(["showSnackbar"]),
     fetchTableItems() {
       this.$refs.itemIndex.fetchTableItems();

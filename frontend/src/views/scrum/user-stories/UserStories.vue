@@ -15,7 +15,9 @@
           :quick-filters="quickFilters"
           :default-quick-filter="defaultQuickFilter"
           :service="service"
+          :can-create="() => userHasPermission('scrum.add_userstory')"
           :can-edit="() => false"
+          :can-delete="() => userHasPermission('scrum.delete_userstory')"
           :disable-row-edition="isLoading"
           custom-headers
           advanced-filters
@@ -52,7 +54,7 @@
               </template>
               <span> Ver detalle </span>
             </v-tooltip>
-            <v-tooltip v-if="item.status < 3 && canDevelop(item, loggedUser)" bottom>
+            <v-tooltip v-if="item.status < 3 && canDevelop(item)" bottom>
               <template #activator="{ on, attrs }">
                 <v-btn icon v-bind="attrs" :disabled="isLoading" @click.stop="$refs.taskDialog.open(item)" v-on="on">
                   <v-icon>mdi-format-list-checks</v-icon>
@@ -68,7 +70,7 @@
               </template>
               <span> Añadir esfuerzo </span>
             </v-tooltip>
-            <v-tooltip v-if="item.status === 3 && canValidate(item, loggedUser)" bottom>
+            <v-tooltip v-if="item.status === 3 && canValidate(item)" bottom>
               <template #activator="{ on, attrs }">
                 <v-btn
                   icon
@@ -85,8 +87,16 @@
             </v-tooltip>
           </template>
 
-          <template #fab="{ canCreate }">
-            <v-btn v-if="canCreate(loggedUser)" fab fixed bottom right color="secondary" :to="newUserStoryRouteConfig">
+          <template #fab>
+            <v-btn
+              v-if="userHasPermission('scrum.add_userstory')"
+              fab
+              fixed
+              bottom
+              right
+              color="secondary"
+              :to="newUserStoryRouteConfig"
+            >
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </template>
@@ -115,6 +125,7 @@ import UserStoryIndexStatus from "@/components/scrum/UserStoryIndexStatus";
 
 import useLoading from "@/composables/useLoading";
 import useScrumContext, { scrumContextProps } from "@/composables/useScrumContext";
+import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "UserStories",
@@ -286,7 +297,7 @@ export default {
       if (this.hasContext) {
         return null;
       } else {
-        return this.loggedUser.is_superuser ? "ongoing" : "my-stories";
+        return userHasPermission("scrum.view_userstory") ? "ongoing" : "my-stories";
       }
     },
   },
@@ -303,6 +314,7 @@ export default {
     },
   },
   methods: {
+    userHasPermission,
     fetchTableItems() {
       this.$refs.itemIndex.fetchTableItems();
     },
@@ -318,11 +330,11 @@ export default {
       }
       return linkConfig;
     },
-    canDevelop(item, user) {
-      return user.is_superuser || user.id === item.development_user;
+    canDevelop(item) {
+      return this.loggedUser.id === item.development_user || userHasPermission("scrum.change_userstory");
     },
-    canValidate(item, user) {
-      return user.is_superuser || user.id === item.validation_user;
+    canValidate(item) {
+      return this.loggedUser.id === item.validation_user || userHasPermission("scrum.change_userstory");
     },
     async validateItem(item) {
       if (confirm(`Estás seguro de que deseas validar la historia "${item.name}"`)) {
