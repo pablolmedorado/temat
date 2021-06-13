@@ -13,7 +13,7 @@
   "dependencies": {
     "@mdi/font": "^5.9.55",
     "@vue/composition-api": "^1.0.0-rc.11",
-    "@vueuse/core": "^5.0.2",
+    "@vueuse/core": "^5.0.3",
     "axios": "^0.21.1",
     "core-js": "^3.14.0",
     "highcharts": "^9.1.1",
@@ -31,7 +31,7 @@
     "vuex-composition-helpers": "^1.0.23"
   },
   "devDependencies": {
-    "@babel/preset-react": "^7.13.13",
+    "@babel/preset-react": "^7.14.5",
     "@storybook/addon-a11y": "^5.2",
     "@storybook/addon-actions": "^5.2",
     "@storybook/addon-knobs": "^5.2",
@@ -50,7 +50,7 @@
     "babel-preset-vue": "^2.0.2",
     "eslint": "6.8.0",
     "eslint-plugin-prettier": "^3.4.0",
-    "eslint-plugin-vue": "^7.10.0",
+    "eslint-plugin-vue": "^7.11.1",
     "eslint-plugin-vuetify": "^1.0.1",
     "js-beautify": "^1.13.13",
     "node-sass": "4.14.1",
