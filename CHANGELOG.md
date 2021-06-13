@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.11.0](https://github.com/pablolmedorado/temat/compare/v1.10.1...v1.11.0) (2021-06-13)
+
+
+### Features
+
+* use django permissions to allow/deny actions ([460d028](https://github.com/pablolmedorado/temat/commit/460d0288429d5c4cb04523a38552580f70b641ef))
+
 ### [1.10.1](https://github.com/pablolmedorado/temat/compare/v1.10.0...v1.10.1) (2021-06-10)
 
 
