@@ -15,7 +15,7 @@ export default function () {
       await HolidayService.request(datesToRequest.value);
       showSnackbar({
         color: "success",
-        message: `Días de vacaciones solicitados correctamente ${datesToRequest.value.length}`,
+        message: `Días de vacaciones solicitados correctamente: ${datesToRequest.value.length}`,
       });
       datesToRequest.value = [];
     }

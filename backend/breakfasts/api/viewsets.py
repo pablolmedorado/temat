@@ -2,12 +2,13 @@ from rest_framework import permissions
 
 from .serializers import BaseSerializer, BreadSerializer, BreakfastSerializer, DrinkSerializer, IngredientSerializer
 from ..models import Base, Bread, Breakfast, Drink, Ingredient
-from common.api.permissions import IsAdminUserOrReadOnly, IsOwnerOrReadOnly
+from common.api.permissions import HasDjangoPermissionOrReadOnly, IsOwnerOrReadOnly
 from common.api.viewsets import AtomicFlexFieldsModelViewSet
+from common.api.utils import check_api_user_permissions
 
 
 class BreadViewSet(AtomicFlexFieldsModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
+    permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = Bread.objects.all()
     serializer_class = BreadSerializer
     search_fields = ("name",)
@@ -16,7 +17,7 @@ class BreadViewSet(AtomicFlexFieldsModelViewSet):
 
 
 class BaseViewSet(AtomicFlexFieldsModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
+    permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = Base.objects.all()
     serializer_class = BaseSerializer
     search_fields = ("name",)
@@ -25,7 +26,7 @@ class BaseViewSet(AtomicFlexFieldsModelViewSet):
 
 
 class IngredientViewSet(AtomicFlexFieldsModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
+    permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     search_fields = ("name",)
@@ -34,7 +35,7 @@ class IngredientViewSet(AtomicFlexFieldsModelViewSet):
 
 
 class DrinkViewSet(AtomicFlexFieldsModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
+    permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = Drink.objects.all()
     serializer_class = DrinkSerializer
     search_fields = ("name",)
@@ -60,11 +61,11 @@ class BreakfastViewSet(AtomicFlexFieldsModelViewSet):
     ordering = ("user__acronym",)
 
     def perform_create(self, serializer):
-        if not self.request.user.is_superuser:
+        if not check_api_user_permissions(self):
             serializer.validated_data["user"] = self.request.user
         return super().perform_create(serializer)
 
     def perform_update(self, serializer):
-        if not self.request.user.is_superuser:
+        if not check_api_user_permissions(self):
             serializer.validated_data["user"] = serializer.instance.user
         return super().perform_update(serializer)

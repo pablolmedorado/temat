@@ -40,12 +40,13 @@ from ..utils import (
     user_story_user_chart_data,
 )
 from common.api.mixins import AuthorshipMixin, OrderedMixin
-from common.api.permissions import IsAdminUserOrReadOnly
+from common.api.permissions import HasDjangoPermissionOrReadOnly
+from common.api.utils import check_api_user_permissions
 from common.api.viewsets import AtomicFlexFieldsModelViewSet
 
 
 class SprintViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
+    permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     serializer_class = SprintSerializer
     filterset_class = SprintFilterSet
     search_fields = ("name",)
@@ -95,7 +96,7 @@ class SprintViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
 
 
 class EpicViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
+    permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = Epic.objects.with_current_progress().all().prefetch_related("tags").distinct()
     serializer_class = EpicSerializer
     filterset_class = EpicFilterSet
@@ -105,7 +106,7 @@ class EpicViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
 
 
 class UserStoryTypeViewSet(AtomicFlexFieldsModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
+    permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = UserStoryType.objects.all()
     serializer_class = UserStoryTypeSerializer
     search_fields = ("name",)
@@ -167,7 +168,7 @@ class UserStoryViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
 
     def get_serializer_class(self):
         serializer_class = super().get_serializer_class()
-        if self.request.user.is_superuser:
+        if check_api_user_permissions(self):
             return serializer_class
         if self.request.method not in permissions.SAFE_METHODS and self.detail:
             instance = self.get_object()

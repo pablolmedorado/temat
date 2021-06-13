@@ -27,7 +27,7 @@ import Analytics from "@/views/Analytics";
 import Notifications from "@/views/Notifications";
 import NotFound from "@/views/NotFound";
 
-import { adminUsersOnly } from "@/utils/router-guards";
+import { usersWithPermissionOnly } from "@/utils/router-guards";
 
 Vue.use(Router);
 Vue.use(VueMeta);
@@ -162,7 +162,7 @@ const router = new Router({
       path: "/scrum/user-stories/new",
       name: "user-story-new",
       component: UserStoryDetail,
-      beforeEnter: adminUsersOnly,
+      beforeEnter: usersWithPermissionOnly("scrum.add_userstory"),
       props: (route) => ({ sprintId: route.query.sprint, epicId: route.query.epic }),
       meta: {
         keepAlive: false,

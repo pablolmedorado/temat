@@ -24,7 +24,7 @@ from .serializers import (
 from ..models import GreenWorkingDay, Holiday, HolidayType, SupportWorkingDay
 from ..utils import green_working_day_user_chart_data, support_working_day_user_chart_data, user_availability_chart_data
 from common.api.mixins import AtomicBulkCreateModelMixin, AuthorshipMixin
-from common.api.permissions import IsAdminUserOrReadOnly
+from common.api.permissions import HasDjangoPermissionOrReadOnly
 from common.api.viewsets import AtomicFlexFieldsModelViewSet
 
 
@@ -56,7 +56,7 @@ class GreenWorkingDayViewSet(AuthorshipMixin, FlatDatesMixin, AtomicBulkCreateMo
 
 
 class SupportWorkingDayViewSet(AuthorshipMixin, FlatDatesMixin, BulkCreateModelMixin, AtomicFlexFieldsModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
+    permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = SupportWorkingDay.objects.all()
     serializer_class = SupportWorkingDaySerializer
     permit_list_expands = ["user"]
@@ -72,7 +72,7 @@ class SupportWorkingDayViewSet(AuthorshipMixin, FlatDatesMixin, BulkCreateModelM
 
 
 class HolidayTypeViewSet(AtomicFlexFieldsModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, IsAdminUserOrReadOnly)
+    permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = HolidayType.objects.all()
     serializer_class = HolidayTypeSerializer
     filter_fields = ("system",)

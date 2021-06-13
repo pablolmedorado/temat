@@ -15,6 +15,9 @@
           :service="service"
           :form-component="formComponent"
           :default-item="defaultItem"
+          :can-create="() => userHasPermission('scrum.add_epic')"
+          :can-edit="() => userHasPermission('scrum.change_epic')"
+          :can-delete="() => userHasPermission('scrum.delete_epic')"
           custom-headers
           delete-child-items-warning
         >
@@ -64,6 +67,8 @@ import EpicService from "@/services/scrum/epic-service";
 
 import EpicFilters from "@/components/scrum/filters/EpicFilters";
 import EpicForm from "@/components/scrum/forms/EpicForm";
+
+import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "Epics",
@@ -118,6 +123,7 @@ export default {
   },
   methods: {
     isWebUri,
+    userHasPermission,
     setTagFilter(tag) {
       this.$refs.itemIndex.addFilter({ tags__name__in: tag });
       this.$nextTick(() => {

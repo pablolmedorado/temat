@@ -28,13 +28,13 @@
       </v-menu>
       <template v-if="!eventTypesMap[item.type].system">
         <v-divider vertical inset />
-        <v-btn v-if="isEditable" icon @click="onEdit(item)">
+        <v-btn v-if="canEdit" icon @click="onEdit(item)">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
         <v-btn icon @click="onEdit(itemForCopy)">
           <v-icon>mdi-content-copy</v-icon>
         </v-btn>
-        <v-btn v-if="isEditable" icon @click.stop="onDelete(item)">
+        <v-btn v-if="canDelete" icon @click.stop="onDelete(item)">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
       </template>

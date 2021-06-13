@@ -74,7 +74,6 @@
 
 <script>
 import { computed, ref } from "@vue/composition-api";
-import { useState } from "vuex-composition-helpers";
 import { DateTime } from "luxon";
 
 import HolidayService from "@/services/work-organization/holiday-service";
@@ -84,6 +83,7 @@ import TeamHolidayFilters from "@/components/work-organization/holidays/filters/
 import useHolidays from "@/composables/useHolidays";
 import useLoading from "@/composables/useLoading";
 import { defaultTableOptions } from "@/utils/constants";
+import { userHasPermission } from "@/utils/permissions";
 
 const currentDate = DateTime.local();
 
@@ -94,9 +94,6 @@ export default {
   },
   components: { TeamHolidayFilters },
   setup(props, { refs }) {
-    // Vuex
-    const { loggedUser } = useState(["loggedUser"]);
-
     // General
     const { isLoading, isChildLoading, isTaskLoading, addTask, removeTask } = useLoading({
       includedChildren: ["itemTable"],
@@ -130,7 +127,7 @@ export default {
         ...defaultOptions,
         { text: "Acciones", align: "left", sortable: false, value: "table_actions" },
       ];
-      return loggedUser.value.is_superuser ? adminOptions : defaultOptions;
+      return userHasPermission("work_organization.change_holiday") ? adminOptions : defaultOptions;
     });
     const filters = ref({
       allowance_date__year: currentDate.year,

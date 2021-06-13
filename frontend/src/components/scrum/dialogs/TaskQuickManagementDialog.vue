@@ -25,7 +25,7 @@
           <template #item.done="{ item }">
             <v-btn
               icon
-              :disabled="isLoading || (!loggedUser.is_superuser && loggedUser.id !== item.user_story.development_user)"
+              :disabled="isLoading || !canEdit(item)"
               :loading="isTaskLoading('toggle-item', item.id)"
               @click="toggleItem(item)"
             >
@@ -52,6 +52,7 @@ import DialogMixin from "@/mixins/dialog-mixin";
 import TaskService from "@/services/scrum/task-service";
 
 import useLoading from "@/composables/useLoading";
+import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "TaskQuickManagementDialog",
@@ -109,6 +110,9 @@ export default {
     },
   },
   methods: {
+    canEdit(item) {
+      return this.loggedUser.id === item.user_story.development_user || userHasPermission("scrum.change_task");
+    },
     async toggleItem(item) {
       this.addTask("toggle-item", item.id);
       try {

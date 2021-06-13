@@ -15,6 +15,9 @@
           default-quick-filter="next-days"
           :service="service"
           :form-component="formComponent"
+          :can-create="() => userHasPermission('work_organization.add_supportworkingday')"
+          :can-edit="() => userHasPermission('work_organization.change_supportworkingday')"
+          :can-delete="() => userHasPermission('work_organization.delete_supportworkingday')"
         >
           <template #item.date="{ value }">
             <DateRouterLink :date="value" />
@@ -23,9 +26,9 @@
             <UserPill :user="value" />
           </template>
 
-          <template #fab="{ canCreate }">
+          <template #fab>
             <v-btn
-              v-if="canCreate(loggedUser)"
+              v-if="userHasPermission('work_organization.add_supportworkingday')"
               fab
               fixed
               bottom
@@ -41,7 +44,7 @@
     </v-row>
 
     <StepperBulkFormDialog
-      v-if="loggedUser.is_superuser"
+      v-if="userHasPermission('work_organization.add_supportworkingday')"
       ref="supportDayBulkForm"
       :form-component="bulkFormComponent"
       @submit="fetchTableItems"
@@ -61,6 +64,8 @@ import StepperBulkFormDialog from "@/components/work-organization/dialogs/Steppe
 import SupportDayBulkForm from "@/components/work-organization/support/forms/SupportDayBulkForm";
 import SupportDayForm from "@/components/work-organization/support/forms/SupportDayForm";
 import SupportFilters from "@/components/work-organization/support/SupportFilters";
+
+import { userHasPermission, userHasAnyPermission } from "@/utils/permissions";
 
 export default {
   name: "Support",
@@ -99,7 +104,12 @@ export default {
         ...defaultOptions,
         { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
       ];
-      return this.loggedUser.is_superuser ? adminOptions : defaultOptions;
+      return userHasAnyPermission([
+        "work_organization.change_supportworkingday",
+        "work_organization.delete_supportworkingday",
+      ])
+        ? adminOptions
+        : defaultOptions;
     },
     quickFilters() {
       return [
@@ -113,6 +123,7 @@ export default {
     },
   },
   methods: {
+    userHasPermission,
     fetchTableItems() {
       this.$refs.itemIndex.fetchTableItems();
     },

@@ -17,8 +17,8 @@
           :service="service"
           :form-component="formComponent"
           :can-create="() => false"
-          :can-edit="canModifyEffort"
-          :can-delete="canModifyEffort"
+          :can-edit="(item) => canPerformAction(item, 'change')"
+          :can-delete="(item) => canPerformAction(item, 'delete')"
           custom-headers
         >
           <template #toolbar="{ filters, isIndexLoading }">
@@ -86,6 +86,8 @@ import EffortFilters from "@/components/scrum/filters/EffortFilters";
 import EffortForm from "@/components/scrum/forms/EffortForm";
 import EffortReportDialog from "@/components/scrum/dialogs/EffortReportDialog";
 
+import { userHasPermission } from "@/utils/permissions";
+
 export default {
   name: "Effort",
   metaInfo: {
@@ -126,7 +128,7 @@ export default {
           sortable: true,
           value: "user",
           sortingField: "user__acronym",
-          default: this.loggedUser.is_superuser,
+          default: userHasPermission("scrum.view_effort"),
         },
         { text: "Rol", align: "start", sortable: false, value: "role", fixed: true },
         { text: "Esfuerzo", align: "start", sortable: true, value: "effort", fixed: true },
@@ -143,7 +145,7 @@ export default {
     },
     systemFilters() {
       const filters = {};
-      if (!this.loggedUser.is_superuser) {
+      if (!userHasPermission("scrum.view_effort")) {
         filters.user_id = this.loggedUser.id;
       }
       return filters;
@@ -162,8 +164,8 @@ export default {
     },
   },
   methods: {
-    canModifyEffort(item) {
-      if (this.loggedUser.is_superuser) {
+    canPerformAction(item, action) {
+      if (userHasPermission(`scrum.${action}_effort`)) {
         return true;
       }
       if (item.user !== this.loggedUser.id) {

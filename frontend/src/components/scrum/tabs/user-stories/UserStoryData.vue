@@ -34,13 +34,13 @@
     <UserStoryForm ref="userStoryForm" :source-item="item" @changed:item="$emit('changed:item', $event)" />
 
     <v-speed-dial
-      v-if="!readOnly"
+      v-if="canEdit"
       v-model="showSpeedDial"
       fixed
       bottom
       right
       direction="top"
-      :open-on-hover="true"
+      open-on-hover
       transition="slide-y-reverse-transition"
     >
       <template #activator>
@@ -49,7 +49,7 @@
         </v-btn>
       </template>
       <v-btn
-        v-if="item.id && item.status === 3 && (loggedUser.is_superuser || item.validation_user === loggedUser.id)"
+        v-if="item.id && item.status === 3 && canValidate"
         fab
         dark
         small
@@ -61,10 +61,10 @@
       <v-btn fab dark small color="orange" @click="resetForm">
         <v-icon>mdi-restore</v-icon>
       </v-btn>
-      <v-btn v-if="item.id && loggedUser.is_superuser" fab dark small color="secondary" @click="copyUserStory">
+      <v-btn v-if="item.id && canCopy" fab dark small color="secondary" @click="copyUserStory">
         <v-icon>mdi-content-copy</v-icon>
       </v-btn>
-      <v-btn v-if="item.id && loggedUser.is_superuser" fab dark small color="red" @click.stop="openDeleteDialog(item)">
+      <v-btn v-if="item.id && canDelete" fab dark small color="red" @click.stop="openDeleteDialog(item)">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </v-speed-dial>
@@ -83,6 +83,7 @@ import UserStoryProgressBar from "@/components/scrum/UserStoryProgressBar";
 import UserStoryStatus from "@/components/scrum/UserStoryStatus";
 
 import { isoDateTimeToLocaleString } from "@/utils/dates";
+import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "UserStoryData",
@@ -105,11 +106,21 @@ export default {
   computed: {
     ...mapState(["loggedUser"]),
     ...mapGetters("scrum", ["riskLevelsMap"]),
-    readOnly() {
+    canEdit() {
+      const action = this.item.id ? "change" : "add";
       return (
-        !this.loggedUser.is_superuser &&
-        ![this.item.development_user, this.item.validation_user, this.item.support_user].includes(this.loggedUser.id)
+        [this.item.development_user, this.item.validation_user, this.item.support_user].includes(this.loggedUser.id) ||
+        userHasPermission(`scrum.${action}_userstory`)
       );
+    },
+    canValidate() {
+      return this.loggedUser.id === this.item.validation_user || userHasPermission("scrum.change_userstory");
+    },
+    canCopy() {
+      return userHasPermission("scrum.add_userstory");
+    },
+    canDelete() {
+      return userHasPermission("scrum.delete_userstory");
     },
   },
   methods: {

@@ -36,7 +36,7 @@
             </v-chip>
           </v-col>
         </v-row>
-        <v-row v-if="loggedUser.is_superuser">
+        <v-row v-if="showUserChart">
           <v-col>
             <v-card outlined>
               <EffortUserTimelineChart
@@ -76,6 +76,7 @@ import EffortRoleTimelineChart from "@/components/scrum/charts/EffortRoleTimelin
 import EffortUserTimelineChart from "@/components/scrum/charts/EffortUserTimelineChart";
 
 import useLoading from "@/composables/useLoading";
+import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "EffortReportDialog",
@@ -97,6 +98,9 @@ export default {
   computed: {
     ...mapState(["loggedUser"]),
     ...mapGetters("users", ["usersMap"]),
+    showUserChart() {
+      return userHasPermission("scrum.view_effort");
+    },
     filteredUsers() {
       if (!this.filters.user_id__in) {
         return undefined;
@@ -119,7 +123,7 @@ export default {
       this.showDialog = false;
     },
     refresh() {
-      if (this.loggedUser.is_superuser) {
+      if (this.showUserChart) {
         this.$refs.userChart.fetchChartData();
       }
       this.$refs.roleChart.fetchChartData();

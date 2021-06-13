@@ -15,8 +15,8 @@
         :form-component="formComponent"
         :default-item="defaultItem"
         :can-create="() => true"
-        :can-edit="canModify"
-        :can-delete="canModify"
+        :can-edit="(item) => canPerformAction(item, 'change')"
+        :can-delete="(item) => canPerformAction(item, 'delete')"
         custom-headers
         @submit:form="onFormSubmit"
         @delete:item="onDeleteItem"
@@ -66,6 +66,8 @@ import { DateTime } from "luxon";
 import EffortService from "@/services/scrum/effort-service";
 
 import EffortForm from "@/components/scrum/forms/EffortForm";
+
+import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "UserStoryEffort",
@@ -146,11 +148,11 @@ export default {
     }
   },
   methods: {
-    canModify(item, user) {
-      if (user.is_superuser) {
+    canPerformAction(item, action) {
+      if (userHasPermission(`scrum.${action}_effort`)) {
         return true;
       }
-      if (item.user !== user.id) {
+      if (item.user !== this.loggedUser.id) {
         return false;
       }
       const limitDatetime = DateTime.local().minus({ minutes: 30 });
