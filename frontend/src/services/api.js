@@ -1,4 +1,5 @@
 import axios from "axios";
+import { get } from "lodash";
 
 import store from "@/store/index";
 
@@ -20,6 +21,23 @@ baseApiClient.interceptors.response.use(
   },
   (error) => {
     store.commit("removePendingRequest");
+    const code = get(error.response, "status");
+    if (code) {
+      // eslint-disable-next-line no-console
+      console.error(error.response);
+      const message = get(error.response, "data.detail", `${error.response.statusText}.`);
+      store.dispatch("showSnackbar", {
+        color: "error",
+        multiLine: true,
+        message: `Error ${code}: ${message} Presiona F12 para obtener más detalles.`,
+      });
+    } else {
+      store.dispatch("showSnackbar", {
+        color: "error",
+        multiLine: true,
+        message: "Error de red. Probablemente no tienes conexión a internet o la app está fuera de servicio.",
+      });
+    }
     return Promise.reject(error);
   }
 );

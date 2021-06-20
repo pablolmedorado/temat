@@ -1,6 +1,7 @@
 from datetime import date
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
 from django.db import transaction
 from django.db.models import Count, F, Min
 from django.utils import timezone
@@ -147,9 +148,15 @@ class HolidayViewSet(AuthorshipMixin, FlatDatesMixin, AtomicFlexFieldsModelViewS
             if holiday:
                 base_queryset.filter(pk=holiday.pk).update(planned_date=requested_date)
                 holiday_pks.append(holiday.pk)
+
+        global_admin_users = get_user_model().objects.admins().exclude(pk=request.user.pk)
+        change_holidays_permission = Permission.objects.get_by_natural_key(
+            "change_holiday", "work_organization", "holiday"
+        )
+        holiday_admin_users = change_holidays_permission.user_set.exclude(pk=request.user.pk)
         notify.send(
             sender=request.user,
-            recipient=get_user_model().objects.admins().exclude(pk=request.user.pk),
+            recipient=global_admin_users.union(holiday_admin_users),
             verb=f"ha solicitado {len(requested_dates)} días de vacaciones",
         )
 

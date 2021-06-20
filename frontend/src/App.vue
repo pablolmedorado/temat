@@ -4,8 +4,8 @@
     <AppNavbar @toggle:drawer="drawer = !drawer" />
 
     <v-main :class="$vuetify.theme.isDark ? [] : ['grey', 'lighten-4']">
-      <keep-alive>
-        <router-view v-if="$route.meta.keepAlive" :key="$route.name" />
+      <keep-alive :max="25">
+        <router-view v-if="$route.meta.keepAlive" :key="$route.path" />
       </keep-alive>
       <router-view v-if="!$route.meta.keepAlive" />
     </v-main>
