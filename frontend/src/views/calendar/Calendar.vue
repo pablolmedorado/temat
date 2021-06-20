@@ -116,6 +116,7 @@
       v-model="showEventCard"
       :close-on-content-click="false"
       :activator="selectedEvent.htmlElement"
+      :max-width="600"
       offset-x
     >
       <EventCard
