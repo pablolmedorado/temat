@@ -1,7 +1,7 @@
 from datetime import date
 
 from django.conf import settings
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, URLValidator
 from django.db import models, transaction
 from django.db.models import Sum, Value
 from django.db.models.functions import Coalesce
@@ -112,6 +112,13 @@ class UserStory(Taggable, Notifiable, models.Model):
     )
     functional_description = models.CharField(_("descripción técnica"), max_length=2000, blank=True)
     technical_description = models.CharField(_("descripción funcional"), max_length=2000, blank=True)
+    external_resource = models.CharField(
+        _("recurso externo"),
+        help_text="Ruta a un fichero o directorio con recursos externos",
+        max_length=2000,
+        blank=True,
+        validators=[URLValidator(schemes=["http", "https", "file", "ftp", "ftps"])],
+    )
     start_date = models.DateField(_("fecha de inicio"), blank=True, null=True)
     end_date = models.DateField(_("fecha límite"), blank=True, null=True)
     current_progress = models.PositiveSmallIntegerField(

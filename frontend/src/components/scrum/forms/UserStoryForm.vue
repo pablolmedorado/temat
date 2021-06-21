@@ -96,6 +96,47 @@
                 />
               </v-col>
             </v-row>
+            <v-row>
+              <v-col>
+                <v-text-field
+                  v-model="item.external_resource"
+                  label="Recurso externo"
+                  prepend-icon="mdi-folder-network"
+                  counter="2000"
+                  hint="URL de fichero o directorio"
+                  persistent-hint
+                  :readonly="!canEdit && loggedUser.id !== item.development_user"
+                  :error-messages="buildValidationErrorMessages($v.item.external_resource)"
+                  @input="$v.item.external_resource.$touch()"
+                  @blur="$v.item.external_resource.$touch()"
+                >
+                  <template v-if="isWebUri(item.external_resource) || isClipboardSupported" #append-outer>
+                    <v-tooltip v-if="isWebUri(item.external_resource)" bottom>
+                      <template #activator="{ on: onTooltip, attrs: attrTooltip }">
+                        <v-btn
+                          v-bind="attrTooltip"
+                          :href="item.external_resource"
+                          target="_blank"
+                          icon
+                          v-on="onTooltip"
+                        >
+                          <v-icon> mdi-open-in-new </v-icon>
+                        </v-btn>
+                      </template>
+                      <span> Abrir </span>
+                    </v-tooltip>
+                    <v-tooltip v-else bottom>
+                      <template #activator="{ on: onTooltip, attrs: attrTooltip }">
+                        <v-btn v-bind="attrTooltip" icon v-on="onTooltip" @click="copyExternalResourceToClipboard">
+                          <v-icon> mdi-content-copy </v-icon>
+                        </v-btn>
+                      </template>
+                      <span> Copiar al portapapeles </span>
+                    </v-tooltip>
+                  </template>
+                </v-text-field>
+              </v-col>
+            </v-row>
           </v-card-text>
         </v-card>
       </v-col>
@@ -147,14 +188,15 @@
                       <template #append-outer>
                         <v-tooltip bottom>
                           <template #activator="{ on: onTooltip, attrs: attrTooltip }">
-                            <v-icon
+                            <v-btn
                               v-bind="attrTooltip"
                               :disabled="!canEdit"
+                              icon
                               v-on="onTooltip"
                               @click="setStartDateFromSprint"
                             >
-                              mdi-run-fast
-                            </v-icon>
+                              <v-icon> mdi-run-fast </v-icon>
+                            </v-btn>
                           </template>
                           <span> Usar fecha del sprint </span>
                         </v-tooltip>
@@ -200,14 +242,15 @@
                       <template #append-outer>
                         <v-tooltip bottom>
                           <template #activator="{ on: onTooltip, attrs: attrTooltip }">
-                            <v-icon
+                            <v-btn
                               v-bind="attrTooltip"
                               :disabled="!canEdit"
+                              icon
                               v-on="onTooltip"
                               @click="setEndDateFromSprint"
                             >
-                              mdi-run-fast
-                            </v-icon>
+                              <v-icon> mdi-run-fast </v-icon>
+                            </v-btn>
                           </template>
                           <span> Usar fecha del sprint </span>
                         </v-tooltip>
@@ -490,6 +533,8 @@
 import { mapState, mapActions } from "vuex";
 import { DateTime } from "luxon";
 import { between, helpers, maxLength, minValue, numeric, required, requiredIf } from "vuelidate/lib/validators";
+import { isWebUri } from "valid-url";
+import { useClipboard } from "@vueuse/core";
 
 import FormMixin from "@/mixins/form-mixin";
 
@@ -499,6 +544,7 @@ import UserStoryService from "@/services/scrum/user-story-service";
 
 import { isoDateTimeToLocaleString, isoDateToLocaleString } from "@/utils/dates";
 import { userHasPermission } from "@/utils/permissions";
+import { urlValidator } from "@/utils/validation";
 
 export default {
   name: "UserStoryForm",
@@ -512,6 +558,7 @@ export default {
       type: { required },
       functional_description: { maxLength: maxLength(2000) },
       technical_description: { maxLength: maxLength(2000) },
+      external_resource: { url: urlValidator, maxLength: maxLength(2000) },
       sprint: {},
       start_date: {
         requiredIfSprint: requiredIf("sprint"),
@@ -554,6 +601,13 @@ export default {
       use_migrations: { required },
       deployment_notes: { maxLength: maxLength(2000) },
     },
+  },
+  setup() {
+    const { copy: copyToClipboard, isSupported: isClipboardSupported } = useClipboard({ read: false });
+    return {
+      isClipboardSupported,
+      copyToClipboard,
+    };
   },
   data() {
     return {
@@ -607,6 +661,7 @@ export default {
     }
   },
   methods: {
+    isWebUri,
     ...mapActions("scrum", ["getUserStoryTypes"]),
     isoDateTimeToLocaleString,
     buildSaveFunctionArgs() {
@@ -627,6 +682,20 @@ export default {
     onSprintClear() {
       this.item.start_date = null;
       this.item.end_date = null;
+    },
+    copyExternalResourceToClipboard() {
+      try {
+        this.copyToClipboard(this.item.external_resource);
+        this.showSnackbar({
+          color: "info",
+          message: "URI del recurso externo copiada al portapapeles",
+        });
+      } catch {
+        this.showSnackbar({
+          color: "error",
+          message: "Error copiando la URI del recurso externo al portapapeles",
+        });
+      }
     },
   },
 };

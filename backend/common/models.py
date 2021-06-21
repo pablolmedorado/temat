@@ -23,7 +23,7 @@ class Link(Orderable, models.Model):
         max_length=50,
         blank=False,
     )
-    url = models.CharField(_("url"), max_length=2000, blank=False, unique=True)
+    url = models.URLField(_("url"), max_length=2000, blank=False, unique=True)
     type = models.ForeignKey(
         LinkType, verbose_name=_("tipo"), related_name="links", blank=False, null=False, on_delete=models.PROTECT,
     )

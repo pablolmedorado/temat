@@ -98,6 +98,7 @@ class UserStoryFilterSet(FilterSet):
             "sprint__end_date": ["exact", "gte", "lte", "year"],
             "functional_description": ["icontains"],
             "technical_description": ["icontains"],
+            "external_resource": ["icontains"],
             "start_date": ["exact", "gte", "lte", "year"],
             "end_date": ["exact", "gte", "lte", "year"],
             "current_progress": ["exact", "gte", "lte"],

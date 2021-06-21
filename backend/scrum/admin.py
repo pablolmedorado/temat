@@ -131,7 +131,7 @@ class UserStoryAdmin(ImportExportActionModelAdmin):
             },
         ),
         (_("Despliegue"), {"fields": ("use_migrations", "deployment_notes")}),
-        (_("Miscelánea"), {"fields": ("cvs_reference",)}),
+        (_("Miscelánea"), {"fields": ("cvs_reference", "external_resource")}),
         (
             _("Autoría"),
             {"fields": ("creation_user", "creation_datetime", "modification_user", "modification_datetime")},

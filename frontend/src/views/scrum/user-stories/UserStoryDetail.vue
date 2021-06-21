@@ -61,6 +61,7 @@ const defaultItem = {
   sprint: null,
   functional_description: "",
   technical_description: "",
+  external_resource: "",
   start_date: null,
   end_date: null,
   current_progress: 0,

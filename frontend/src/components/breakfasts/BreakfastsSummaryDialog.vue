@@ -51,7 +51,7 @@ export default {
   name: "BreakfastsSummaryDialog",
   mixins: [DialogMixin],
   setup() {
-    const { copy: copyToClipboard, isSupported: isClipboardSupported } = useClipboard();
+    const { copy: copyToClipboard, isSupported: isClipboardSupported } = useClipboard({ read: false });
     return {
       isClipboardSupported,
       copyToClipboard,
