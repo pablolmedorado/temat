@@ -124,6 +124,7 @@ class UserStoryViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
         "name",
         "functional_description",
         "technical_description",
+        "external_resource",
         "development_comments",
         "validation_comments",
         "support_comments",

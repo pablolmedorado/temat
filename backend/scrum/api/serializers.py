@@ -151,6 +151,7 @@ class UserStorySerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "sprint",
             "functional_description",
             "technical_description",
+            "external_resource",
             "start_date",
             "end_date",
             "current_progress",
@@ -209,6 +210,7 @@ class UserStoryDeveloperSerializer(UserStorySerializer):
             for field in UserStorySerializer.Meta.fields
             if field
             not in [
+                "external_resource",
                 "development_comments",
                 "cvs_reference",
                 "risk_level",

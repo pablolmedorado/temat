@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.12.0](https://github.com/pablolmedorado/temat/compare/v1.11.0...v1.12.0) (2021-06-21)
+
+
+### Features
+
+* **scrum:** add external resource field to user stories ([6840adb](https://github.com/pablolmedorado/temat/commit/6840adbc2c31dd5e86150630bc65af07b0080ee3))
+
+
+### Bug Fixes
+
+* **calendar:** fix event card v-menu width ([a00f502](https://github.com/pablolmedorado/temat/commit/a00f5024e40bf1a3521f7dc7558ae943541fdc19))
+* **frontend:** show snackbar on network error ([bfc022a](https://github.com/pablolmedorado/temat/commit/bfc022ad75a90ad37d85227d0eb3674a354e78a3))
+* **frontend:** use route path instead of route name as keep-alive key ([44356b6](https://github.com/pablolmedorado/temat/commit/44356b6805675760deea2b9f185da1ba5f4ca390))
+* **holidays:** add holiday admins to holidays request notifications ([f9ee27a](https://github.com/pablolmedorado/temat/commit/f9ee27a0cab3198cb84bfaf08d4efc7fab472491))
+
 ## [1.11.0](https://github.com/pablolmedorado/temat/compare/v1.10.1...v1.11.0) (2021-06-13)
 
 

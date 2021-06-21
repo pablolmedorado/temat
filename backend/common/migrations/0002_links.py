@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
                         verbose_name="icono en la aplicación",
                     ),
                 ),
-                ("url", models.CharField(max_length=2000, unique=True, verbose_name="url")),
+                ("url", models.URLField(max_length=2000, unique=True, verbose_name="url")),
                 (
                     "type",
                     models.ForeignKey(
