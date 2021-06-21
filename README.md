@@ -152,7 +152,7 @@ The app needs to be configured before running it and it can be done in 2 ways:
 
           ```bash
           cd frontend
-          npm run build-modern
+          npm run build
           ```
 
       2. Serve
