@@ -9,7 +9,7 @@ import UserStoryTypeService from "./user-story-type-service";
 
 const services = keyBy(
   [EffortService, EpicService, SprintService, TaskService, UserStoryService, UserStoryTypeService],
-  "baseUrlName"
+  "basename"
 );
 
 export default services;

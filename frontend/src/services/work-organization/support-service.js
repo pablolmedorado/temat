@@ -2,15 +2,15 @@ import Api from "../api";
 import BaseService from "../base-service";
 
 class SupportService extends BaseService {
-  baseUrlName = "work-organization:support";
+  basename = "work-organization:support";
 
   flatDates(queryParams) {
-    const url = Urls[`${this.baseUrlName}-flat-dates`]();
+    const url = Urls[`${this.basename}-flat-dates`]();
     return Api.get(url, { params: queryParams });
   }
 
   userChartData(queryParams) {
-    const url = Urls[`${this.baseUrlName}-user-chart`]();
+    const url = Urls[`${this.basename}-user-chart`]();
     return Api.get(url, { params: queryParams });
   }
 }

@@ -2,15 +2,15 @@ import Api from "../api";
 import BaseService from "../base-service";
 
 class UserStoryService extends BaseService {
-  baseUrlName = "scrum:user-story";
+  basename = "scrum:user-story";
 
   validate(pk, queryParams) {
-    const url = Urls[`${this.baseUrlName}-validate`]({ pk });
+    const url = Urls[`${this.basename}-validate`]({ pk });
     return Api.patch(url, undefined, { params: queryParams });
   }
 
   copy(pk) {
-    const url = Urls[`${this.baseUrlName}-copy`]({ pk });
+    const url = Urls[`${this.basename}-copy`]({ pk });
     return Api.post(url);
   }
 

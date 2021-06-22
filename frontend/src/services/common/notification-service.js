@@ -2,10 +2,10 @@ import Api from "../api";
 import BaseService from "../base-service";
 
 class NotificationService extends BaseService {
-  baseUrlName = "common:notification";
+  basename = "common:notification";
 
   unreadCount() {
-    const url = Urls[`${this.baseUrlName}-unread-count`]();
+    const url = Urls[`${this.basename}-unread-count`]();
     return Api.get(url);
   }
 
@@ -14,27 +14,27 @@ class NotificationService extends BaseService {
   }
 
   markSummaryAsRead(queryParams) {
-    const url = Urls[`${this.baseUrlName}-mark-all-as-read`]();
+    const url = Urls[`${this.basename}-mark-all-as-read`]();
     return Api.patch(url, {}, { params: queryParams });
   }
 
   markAsUnread(pk) {
-    const url = Urls[`${this.baseUrlName}-mark-as-unread`]({ pk });
+    const url = Urls[`${this.basename}-mark-as-unread`]({ pk });
     return Api.patch(url);
   }
 
   markAsRead(pk) {
-    const url = Urls[`${this.baseUrlName}-mark-as-read`]({ pk });
+    const url = Urls[`${this.basename}-mark-as-read`]({ pk });
     return Api.patch(url);
   }
 
   markAllAsUnread(queryParams) {
-    const url = Urls[`${this.baseUrlName}-mark-all-as-unread`]();
+    const url = Urls[`${this.basename}-mark-all-as-unread`]();
     return Api.patch(url, {}, { params: queryParams });
   }
 
   markAllAsRead(queryParams) {
-    const url = Urls[`${this.baseUrlName}-mark-all-as-read`]();
+    const url = Urls[`${this.basename}-mark-all-as-read`]();
     return Api.patch(url, {}, { params: queryParams });
   }
 

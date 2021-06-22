@@ -2,25 +2,25 @@ import Api from "../api";
 import BaseService from "../base-service";
 
 class HolidayService extends BaseService {
-  baseUrlName = "work-organization:holiday";
+  basename = "work-organization:holiday";
 
   flatDates(queryParams) {
-    const url = Urls[`${this.baseUrlName}-flat-dates`]();
+    const url = Urls[`${this.basename}-flat-dates`]();
     return Api.get(url, { params: queryParams });
   }
 
   summary(queryParams) {
-    const url = Urls[`${this.baseUrlName}-summary`]();
+    const url = Urls[`${this.basename}-summary`]();
     return Api.get(url, { params: queryParams });
   }
 
   request(dateArray) {
-    const url = Urls[`${this.baseUrlName}-request`]();
+    const url = Urls[`${this.basename}-request`]();
     return Api.post(url, { dates: dateArray });
   }
 
   cancel(pk) {
-    const url = Urls[`${this.baseUrlName}-cancel`]({ pk });
+    const url = Urls[`${this.basename}-cancel`]({ pk });
     return Api.patch(url);
   }
 
@@ -29,7 +29,7 @@ class HolidayService extends BaseService {
   }
 
   userAvailabilityChartData(queryParams) {
-    const url = Urls[`${this.baseUrlName}-user-availability-chart`]();
+    const url = Urls[`${this.basename}-user-availability-chart`]();
     return Api.get(url, { params: queryParams });
   }
 }

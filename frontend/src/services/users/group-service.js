@@ -1,7 +1,7 @@
 import BaseService from "../base-service";
 
 class GroupService extends BaseService {
-  baseUrlName = "users:group";
+  basename = "users:group";
   defaultListParams = { ordering: "name" };
 }
 
