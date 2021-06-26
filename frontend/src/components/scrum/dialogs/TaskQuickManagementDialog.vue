@@ -25,7 +25,7 @@
           <template #item.done="{ item }">
             <v-btn
               icon
-              :disabled="isLoading || !canEdit(item)"
+              :disabled="isLoading || !canChange(item)"
               :loading="isTaskLoading('toggle-item', item.id)"
               @click="toggleItem(item)"
             >
@@ -46,6 +46,8 @@
 <script>
 import { mapState } from "vuex";
 import { get } from "lodash";
+
+import Task from "@/models/scrum/task";
 
 import DialogMixin from "@/mixins/dialog-mixin";
 
@@ -110,8 +112,8 @@ export default {
     },
   },
   methods: {
-    canEdit(item) {
-      return this.loggedUser.id === item.user_story.development_user || userHasPermission("scrum.change_task");
+    canChange(item) {
+      return this.loggedUser.id === item.user_story.development_user || userHasPermission(Task.CHANGE_PERMISSION);
     },
     async toggleItem(item) {
       this.addTask("toggle-item", item.id);

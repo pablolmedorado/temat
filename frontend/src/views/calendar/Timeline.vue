@@ -69,7 +69,7 @@ import { mapActions, mapGetters, mapState } from "vuex";
 import { DateTime } from "luxon";
 import { groupBy } from "lodash";
 
-import CalendarEvent from "@/models/event";
+import CalendarEvent from "@/models/calendar/event";
 
 import EventService from "@/services/calendar/event-service";
 

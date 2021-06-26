@@ -4,14 +4,10 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-namespace="breakfast"
-          verbose-name="Desayuno"
-          verbose-name-plural="Desayunos"
+          :model-class="modelClass"
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :table-footer-props="tableFooterProps"
-          :service="service"
-          read-only
           custom-headers
           selectable-rows
         >
@@ -65,6 +61,8 @@
 <script>
 import { mapState } from "vuex";
 
+import Breakfast from "@/models/breakfasts/breakfast";
+
 import BreakfastService from "@/services/breakfasts/breakfast-service";
 
 import BreakfastForm from "@/components/breakfasts/BreakfastForm";
@@ -89,6 +87,7 @@ export default {
   },
   data() {
     return {
+      modelClass: Breakfast,
       tableHeaders: [
         {
           text: "Usuario",
@@ -134,17 +133,6 @@ export default {
   },
   computed: {
     ...mapState(["loggedUser"]),
-    defaultItem() {
-      return {
-        id: null,
-        user: this.loggedUser.id,
-        bread: null,
-        base: null,
-        ingredient1: null,
-        ingredient2: null,
-        drink: null,
-      };
-    },
   },
   methods: {
     async getUserBreakfast() {
@@ -155,7 +143,7 @@ export default {
           page_size: 1,
           page: 1,
         });
-        return response.data.results.length ? response.data.results[0] : this.defaultItem;
+        return response.data.results.length ? response.data.results[0] : this.modelClass.defaults;
       } finally {
         this.removeTask("fetch-user-breakfast");
       }

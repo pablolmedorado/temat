@@ -4,21 +4,16 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-namespace="effort"
-          verbose-name="Esfuerzo"
-          verbose-name-plural="Esfuerzo"
-          :item-text="(item) => `${item.date} / ${item.user_story.name} / ${item.effort}UT`"
+          :model-class="modelClass"
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
           :system-filters="systemFilters"
           :quick-filters="quickFilters"
           default-quick-filter="last-week"
-          :service="service"
           :form-component="formComponent"
-          :can-create="() => false"
-          :can-edit="(item) => canPerformAction(item, 'change')"
-          :can-delete="(item) => canPerformAction(item, 'delete')"
+          :allow-change="(item) => canPerformAction(item, 'change')"
+          :allow-delete="(item) => canPerformAction(item, 'delete')"
           custom-headers
         >
           <template #toolbar="{ filters, isIndexLoading }">
@@ -80,7 +75,7 @@
 import { mapGetters, mapState } from "vuex";
 import { DateTime } from "luxon";
 
-import EffortService from "@/services/scrum/effort-service";
+import Effort from "@/models/scrum/effort";
 
 import EffortFilters from "@/components/scrum/filters/EffortFilters";
 import EffortForm from "@/components/scrum/forms/EffortForm";
@@ -96,13 +91,13 @@ export default {
   components: { EffortReportDialog },
   data() {
     return {
+      modelClass: Effort,
       tableOptions: {
         sortBy: ["date", "user_story"],
         sortDesc: [true, false],
         mustSort: false,
         multiSort: true,
       },
-      service: EffortService,
       filterComponent: EffortFilters,
       formComponent: EffortForm,
     };
@@ -145,7 +140,7 @@ export default {
     },
     systemFilters() {
       const filters = {};
-      if (!userHasPermission("scrum.view_effort")) {
+      if (!userHasPermission(this.modelClass.VIEW_PERMISSION)) {
         filters.user_id = this.loggedUser.id;
       }
       return filters;

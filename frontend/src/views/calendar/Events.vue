@@ -5,19 +5,14 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-namespace="event"
-          verbose-name="Evento"
-          verbose-name-plural="Eventos"
+          :model-class="modelClass"
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
           :system-filters="systemFilters"
           :quick-filters="quickFilters"
           default-quick-filter="next-events"
-          :service="service"
           custom-headers
-          advanced-filters
-          read-only
         >
           <template #item.type="{ value }">
             <v-tooltip v-if="value" bottom>
@@ -87,7 +82,7 @@
 import { mapActions, mapGetters } from "vuex";
 import { DateTime } from "luxon";
 
-import EventService from "@/services/calendar/event-service";
+import CalendarEvent from "@/models/calendar/event";
 
 import EventFilters from "@/components/calendar/filters/EventFilters";
 
@@ -104,6 +99,7 @@ export default {
   },
   data() {
     return {
+      modelClass: CalendarEvent,
       tableHeaders: [
         { text: "Nombre", align: "start", sortable: true, value: "name", fixed: true },
         { text: "Tipo", align: "start", sortable: true, sortingField: "type__name", value: "type", default: true },
@@ -132,7 +128,6 @@ export default {
         sortDesc: [true],
         mustSort: true,
       },
-      service: EventService,
       filterComponent: EventFilters,
       systemFilters: { type__system: false },
       datetimeFormat: DateTime.DATETIME_MED_WITH_WEEKDAY,

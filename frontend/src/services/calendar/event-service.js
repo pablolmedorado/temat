@@ -3,7 +3,7 @@ import { DateTime } from "luxon";
 import Api from "../api";
 import BaseService from "../base-service";
 
-import CalendarEvent from "@/models/event";
+import CalendarEvent from "@/models/calendar/event";
 
 class EventService extends BaseService {
   basename = "calendar:event";

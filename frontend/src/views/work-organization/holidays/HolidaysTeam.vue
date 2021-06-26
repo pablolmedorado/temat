@@ -76,6 +76,8 @@
 import { computed, ref } from "@vue/composition-api";
 import { DateTime } from "luxon";
 
+import Holiday from "@/models/work-organization/holiday";
+
 import HolidayService from "@/services/work-organization/holiday-service";
 
 import TeamHolidayFilters from "@/components/work-organization/holidays/filters/TeamHolidayFilters";
@@ -127,7 +129,7 @@ export default {
         ...defaultOptions,
         { text: "Acciones", align: "left", sortable: false, value: "table_actions" },
       ];
-      return userHasPermission("work_organization.change_holiday") ? adminOptions : defaultOptions;
+      return userHasPermission(Holiday.CHANGE_PERMISSION) ? adminOptions : defaultOptions;
     });
     const filters = ref({
       allowance_date__year: currentDate.year,

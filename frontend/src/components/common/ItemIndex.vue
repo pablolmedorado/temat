@@ -3,8 +3,15 @@
     <v-card>
       <v-toolbar flat>
         <v-toolbar-title class="text-h6">
-          <slot name="title" v-bind="{ verboseName, verboseNamePlural, filters: { ...filters, ...systemFilters } }">
-            {{ verboseNamePlural }}
+          <slot
+            name="title"
+            v-bind="{
+              verboseName: modelClass.verboseName,
+              verboseNamePlural: modelClass.verboseNamePlural,
+              filters: { ...filters, ...systemFilters },
+            }"
+          >
+            {{ modelClass.verboseNamePlural }}
           </slot>
         </v-toolbar-title>
         <v-spacer />
@@ -19,7 +26,7 @@
         ></slot>
         <FilterManager
           v-if="filterComponent"
-          :local-storage-namespace="localStorageNamespace"
+          :local-storage-namespace="lsNamespace"
           :filters="filters"
           :advanced-filters="advancedFilters"
           :advanced-filters-count="dialogFilterCount"
@@ -53,6 +60,7 @@
           ref="filterComponent"
           :filters.sync="filters"
           :disabled="isChildLoading('itemTable')"
+          @hook:mounted="advancedFilters = $refs.filterComponent.hasAdvancedFilters"
           @apply:filters="fetchTableItems(true)"
           @change:advanced-filters-count="dialogFilterCount = $event"
         />
@@ -83,46 +91,44 @@
         <template #item.table_actions="slotProps">
           <span class="d-inline-flex">
             <slot name="item.table_actions" v-bind="{ ...slotProps, isIndexLoading: isLoading }"></slot>
-            <template v-if="!readOnly">
-              <v-tooltip v-if="canEdit(slotProps.item, loggedUser)" bottom>
-                <template #activator="{ on, attrs }">
-                  <v-btn
-                    icon
-                    v-bind="attrs"
-                    :disabled="isLoading || disableRowEdition"
-                    :loading="isTaskLoading('fetch-item', slotProps.item.id)"
-                    @click.stop="openFormDialog(slotProps.item)"
-                    v-on="on"
-                  >
-                    <v-icon>mdi-pencil</v-icon>
-                  </v-btn>
-                </template>
-                <span> Editar </span>
-              </v-tooltip>
-              <v-tooltip v-if="canDelete(slotProps.item, loggedUser)" bottom>
-                <template #activator="{ on, attrs }">
-                  <v-btn
-                    icon
-                    v-bind="attrs"
-                    :disabled="isLoading || disableRowEdition"
-                    :loading="isTaskLoading('delete-item', slotProps.item.id)"
-                    @click.stop="$refs.deleteDialog.open(slotProps.item)"
-                    v-on="on"
-                  >
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                </template>
-                <span> Eliminar </span>
-              </v-tooltip>
-            </template>
+            <v-tooltip v-if="canChangeItem(slotProps.item) && formComponent" bottom>
+              <template #activator="{ on, attrs }">
+                <v-btn
+                  icon
+                  v-bind="attrs"
+                  :disabled="isLoading || disableRowEdition"
+                  :loading="isTaskLoading('fetch-item', slotProps.item.id)"
+                  @click.stop="openFormDialog(slotProps.item)"
+                  v-on="on"
+                >
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+              </template>
+              <span> Editar </span>
+            </v-tooltip>
+            <v-tooltip v-if="canDeleteItem(slotProps.item)" bottom>
+              <template #activator="{ on, attrs }">
+                <v-btn
+                  icon
+                  v-bind="attrs"
+                  :disabled="isLoading || disableRowEdition"
+                  :loading="isTaskLoading('delete-item', slotProps.item.id)"
+                  @click.stop="$refs.deleteDialog.open(slotProps.item)"
+                  v-on="on"
+                >
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </template>
+              <span> Eliminar </span>
+            </v-tooltip>
           </span>
         </template>
       </ItemTable>
     </v-card>
 
-    <slot name="fab" v-bind="{ canCreate, canEdit, canDelete, selectedItems }">
+    <slot name="fab" v-bind="{ canAddItems, selectedItems }">
       <v-btn
-        v-if="!readOnly && canCreate(loggedUser)"
+        v-if="formComponent && canAddItems()"
         fab
         fixed
         bottom
@@ -134,56 +140,49 @@
       </v-btn>
     </slot>
 
-    <template v-if="!readOnly">
-      <FormDialog
-        v-if="formComponent"
-        ref="formDialog"
-        :verbose-name="verboseName"
-        :form-component="formComponent"
-        :multi-add="formDialogMultiAdd"
-        @submit="onFormSubmit"
-      />
+    <FormDialog
+      v-if="formComponent"
+      ref="formDialog"
+      :verbose-name="modelClass.verboseName"
+      :form-component="formComponent"
+      :multi-add="formDialogMultiAdd"
+      @submit="onFormSubmit"
+    />
 
-      <DeletionConfirmationDialog
-        ref="deleteDialog"
-        :item-text="itemText"
-        :delete-child-items-warning="deleteChildItemsWarning"
-        @confirm="deleteItem"
-      />
-    </template>
+    <DeletionConfirmationDialog
+      ref="deleteDialog"
+      :item-text="modelClass.itemText"
+      :delete-child-items-warning="deleteChildItemsWarning"
+      @confirm="deleteItem"
+    />
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
-import { get, invoke, omit } from "lodash";
+import { defaultTo, get, invoke, isBoolean, isFunction, omit } from "lodash";
 
+import getServiceByBasename from "@/services";
 import useLoading from "@/composables/useLoading";
 import useLocalStorage from "@/composables/useLocalStorage";
 import { defaultTableOptions } from "@/utils/constants";
+import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "ItemIndex",
+  provide() {
+    return {
+      indexModelClass: this.modelClass,
+    };
+  },
   props: {
+    modelClass: {
+      type: Function,
+      required: true,
+    },
     localStorageNamespace: {
       type: String,
-      required: true,
-    },
-    verboseName: {
-      type: String,
-      required: true,
-    },
-    verboseNamePlural: {
-      type: String,
-      required: true,
-    },
-    itemText: {
-      type: [String, Function],
-      default: "name",
-    },
-    service: {
-      type: Object,
-      required: true,
+      default: undefined,
     },
     tableAvailableHeaders: {
       type: Array,
@@ -201,30 +200,26 @@ export default {
     },
     formComponent: {
       type: Object,
-      default: () => ({}),
+      default: undefined,
     },
     defaultItem: {
       type: Object,
-      default: () => ({}),
+      default: undefined,
     },
     deleteChildItemsWarning: {
       type: Boolean,
       default: false,
     },
-    canCreate: {
-      type: Function,
-      default: (user) => user.is_superuser,
+    allowAdd: {
+      type: [Boolean, String, Function],
+      default: false,
     },
-    canEdit: {
-      type: Function,
-      default: (item, user) => user.is_superuser,
+    allowChange: {
+      type: [Boolean, String, Function],
+      default: false,
     },
-    canDelete: {
-      type: Function,
-      default: (item, user) => user.is_superuser,
-    },
-    readOnly: {
-      type: Boolean,
+    allowDelete: {
+      type: [Boolean, String, Function],
       default: false,
     },
     disableRowEdition: {
@@ -251,10 +246,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    advancedFilters: {
-      type: Boolean,
-      default: false,
-    },
     customHeaders: {
       type: Boolean,
       default: false,
@@ -273,22 +264,21 @@ export default {
       includedChildren: ["itemTable"],
     });
 
+    const lsNamespace = defaultTo(props.localStorageNamespace, props.modelClass.localStorageNamespace);
+
     const localTableOptions = { ...defaultTableOptions, ...props.tableInitialOptions };
-    const tableOptions = useLocalStorage(`${props.localStorageNamespace}TableOptions`, localTableOptions, {
+    const tableOptions = useLocalStorage(`${lsNamespace}TableOptions`, localTableOptions, {
       getter: (lsOptions) => ({ ...localTableOptions, ...lsOptions }),
       setter: (options) => omit(options, ["page"]),
     });
 
     const defaultTableHeaders = props.tableAvailableHeaders.filter((header) => header.default || header.fixed);
-    const tableHeaders = useLocalStorage(`${props.localStorageNamespace}TableHeaders`, defaultTableHeaders, {
+    const tableHeaders = useLocalStorage(`${lsNamespace}TableHeaders`, defaultTableHeaders, {
       getter: (lsHeaders) => props.tableAvailableHeaders.filter((header) => lsHeaders.includes(header.value)),
       setter: (headers) => headers.map((header) => header.value),
     });
 
-    const pinnedQuickFilter = useLocalStorage(
-      `${props.localStorageNamespace}PinnedQuickFilter`,
-      props.defaultQuickFilter
-    );
+    const pinnedQuickFilter = useLocalStorage(`${lsNamespace}PinnedQuickFilter`, props.defaultQuickFilter);
 
     return {
       isLoading,
@@ -296,6 +286,7 @@ export default {
       isTaskLoading,
       addTask,
       removeTask,
+      lsNamespace,
       tableHeaders,
       tableOptions,
       pinnedQuickFilter,
@@ -303,7 +294,9 @@ export default {
   },
   data() {
     return {
+      service: getServiceByBasename(this.modelClass.serviceBasename),
       filters: {},
+      advancedFilters: false,
       dialogFilterCount: 0,
       selectedItems: [],
     };
@@ -356,9 +349,25 @@ export default {
     applyQuickFilter(filter) {
       this.setFiltersAndFetch(filter.filters);
     },
+    canAddItems() {
+      return this.checkPermission(this.allowAdd);
+    },
+    canChangeItem(item) {
+      return this.checkPermission(this.allowChange, item);
+    },
+    canDeleteItem(item) {
+      return this.checkPermission(this.allowDelete, item);
+    },
+    checkPermission(permission, item) {
+      if (isBoolean(permission)) {
+        return permission;
+      }
+      return isFunction(permission) ? permission(this.loggedUser, item) : userHasPermission(permission);
+    },
     async openFormDialog(item) {
       if (!item) {
-        this.$refs.formDialog.open(this.defaultItem);
+        const newItem = defaultTo(this.defaultItem, this.modelClass.defaults);
+        this.$refs.formDialog.open(newItem);
       } else {
         this.addTask("fetch-item", item.id);
         try {

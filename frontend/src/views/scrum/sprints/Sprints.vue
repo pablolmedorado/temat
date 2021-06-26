@@ -4,22 +4,17 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-namespace="sprint"
-          verbose-name="Sprint"
-          verbose-name-plural="Sprints"
+          :model-class="modelClass"
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
           :quick-filters="quickFilters"
           default-quick-filter="ongoing"
-          :service="service"
           :form-component="formComponent"
-          :default-item="defaultItem"
-          :can-create="() => userHasPermission('scrum.add_sprint')"
-          :can-edit="() => userHasPermission('scrum.change_sprint')"
-          :can-delete="() => userHasPermission('scrum.delete_sprint')"
+          :allow-add="modelClass.ADD_PERMISSION"
+          :allow-change="modelClass.CHANGE_PERMISSION"
+          :allow-delete="modelClass.DELETE_PERMISSION"
           custom-headers
-          advanced-filters
           delete-child-items-warning
         >
           <template #item.name="{ value }">
@@ -69,15 +64,12 @@
 
 <script>
 import { mapState } from "vuex";
-import { DateTime } from "luxon";
 
-import SprintService from "@/services/scrum/sprint-service";
+import Sprint from "@/models/scrum/sprint";
 
 import SprintFilters from "@/components/scrum/filters/SprintFilters";
 import SprintForm from "@/components/scrum/forms/SprintForm";
 import SprintViewSelector from "@/components/scrum/SprintViewSelector";
-
-import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "Sprints",
@@ -87,6 +79,7 @@ export default {
   components: { SprintViewSelector },
   data() {
     return {
+      modelClass: Sprint,
       tableHeaders: [
         { text: "Nombre", align: "start", sortable: true, value: "name", fixed: true },
         { text: "Fecha inicio", align: "start", sortable: true, value: "start_date", default: true },
@@ -129,7 +122,6 @@ export default {
         sortDesc: [true, true],
         multiSort: true,
       },
-      service: SprintService,
       filterComponent: SprintFilters,
       quickFilters: [{ key: "ongoing", label: "En curso", filters: { ongoing: true } }],
       formComponent: SprintForm,
@@ -137,18 +129,8 @@ export default {
   },
   computed: {
     ...mapState(["loggedUser"]),
-    defaultItem() {
-      return {
-        id: null,
-        start_date: DateTime.local().toISODate(),
-        end_date: null,
-        accountable_user: null,
-        tags: [],
-      };
-    },
   },
   methods: {
-    userHasPermission,
     setTagFilter(tag) {
       this.$refs.itemIndex.addFilter({ tags__name__in: tag });
       this.$nextTick(() => {

@@ -1,6 +1,20 @@
 import { DateTime, Interval } from "luxon";
 
-export default class CalendarEvent {
+import BaseModel from "@/models/base-model";
+
+export default class CalendarEvent extends BaseModel {
+  static contentType = {
+    app: "events",
+    model: "event",
+  };
+
+  static verboseName = "Evento";
+  static verboseNamePlural = "Eventos";
+
+  static serviceBasename = "calendar:event";
+
+  static localStorageNamespace = "event";
+
   static get defaults() {
     const now = DateTime.local().toISO();
     return {
@@ -17,10 +31,6 @@ export default class CalendarEvent {
       groups: [],
       tags: [],
     };
-  }
-
-  constructor(data) {
-    Object.assign(this, this.constructor.defaults, data);
   }
 
   get luxonStart() {

@@ -4,18 +4,16 @@
       <ItemIndex
         v-if="userStory.id"
         ref="itemIndex"
+        :model-class="modelClass"
         local-storage-namespace="userStoryTask"
-        verbose-name="Tarea"
-        verbose-name-plural="Tareas"
         :table-available-headers="tableHeaders"
         :table-initial-options="tableOptions"
         :system-filters="systemFilters"
-        :service="service"
         :form-component="formComponent"
         :default-item="defaultItem"
-        :can-create="() => userHasPermission('scrum.add_task')"
-        :can-edit="() => userHasPermission('scrum.change_task')"
-        :can-delete="() => userHasPermission('scrum.delete_task')"
+        :allow-add="modelClass.ADD_PERMISSION"
+        :allow-change="modelClass.CHANGE_PERMISSION"
+        :allow-delete="modelClass.DELETE_PERMISSION"
         :disable-row-edition="isLoading"
         form-dialog-multi-add
         @submit:form="$emit('change:progress')"
@@ -80,7 +78,7 @@
 <script>
 import { mapState } from "vuex";
 
-import TaskService from "@/services/scrum/task-service";
+import Task from "@/models/scrum/task";
 
 import TaskForm from "@/components/scrum/forms/TaskForm";
 import UserStoryProgressBar from "@/components/scrum/UserStoryProgressBar";
@@ -110,13 +108,13 @@ export default {
   },
   data() {
     return {
+      modelClass: Task,
       tableOptions: {
         itemsPerPage: -1,
         sortBy: ["order"],
         sortDesc: [false],
         mustSort: true,
       },
-      service: TaskService,
       formComponent: TaskForm,
     };
   },
@@ -128,7 +126,10 @@ export default {
       };
     },
     defaultItem() {
-      return { id: null, user_story: this.userStory.id, name: "", weight: 1, done: false };
+      return {
+        ...this.modelClass.defaults,
+        user_story: this.userStory.id,
+      };
     },
     tableHeaders() {
       const defaultOptions = [
@@ -160,10 +161,14 @@ export default {
           fixed: true,
         },
       ];
-      return userHasAnyPermission(["scrum.change_task", "scrum.delete_task"]) ? adminOptions : defaultOptions;
+      return userHasAnyPermission([this.modelClass.CHANGE_PERMISSION, this.modelClass.DELETE_PERMISSION])
+        ? adminOptions
+        : defaultOptions;
     },
     canToggle() {
-      return this.loggedUser.id === this.userStory.development_user || userHasPermission("scrum.change_task");
+      return (
+        this.loggedUser.id === this.userStory.development_user || userHasPermission(this.modelClass.CHANGE_PERMISSION)
+      );
     },
   },
   mounted() {
@@ -172,7 +177,6 @@ export default {
     }
   },
   methods: {
-    userHasPermission,
     onFormSubmit() {
       this.$emit("change:progress");
     },

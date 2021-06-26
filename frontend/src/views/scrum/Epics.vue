@@ -4,20 +4,16 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-namespace="epic"
-          verbose-name="Épica"
-          verbose-name-plural="Épicas"
+          :model-class="modelClass"
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
           :quick-filters="quickFilters"
           default-quick-filter="ongoing"
-          :service="service"
           :form-component="formComponent"
-          :default-item="defaultItem"
-          :can-create="() => userHasPermission('scrum.add_epic')"
-          :can-edit="() => userHasPermission('scrum.change_epic')"
-          :can-delete="() => userHasPermission('scrum.delete_epic')"
+          :allow-add="modelClass.ADD_PERMISSION"
+          :allow-change="modelClass.CHANGE_PERMISSION"
+          :allow-delete="modelClass.DELETE_PERMISSION"
           custom-headers
           delete-child-items-warning
         >
@@ -63,12 +59,10 @@
 import { mapState } from "vuex";
 import { isWebUri } from "valid-url";
 
-import EpicService from "@/services/scrum/epic-service";
+import Epic from "@/models/scrum/epic";
 
 import EpicFilters from "@/components/scrum/filters/EpicFilters";
 import EpicForm from "@/components/scrum/forms/EpicForm";
-
-import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "Epics",
@@ -77,6 +71,7 @@ export default {
   },
   data() {
     return {
+      modelClass: Epic,
       tableHeaders: [
         { text: "Nombre", align: "start", sortable: true, value: "name", fixed: true },
         { text: "Descripción", align: "start", sortable: false, value: "description", default: true },
@@ -105,17 +100,9 @@ export default {
         sortDesc: [false],
         mustSort: true,
       },
-      service: EpicService,
       filterComponent: EpicFilters,
       quickFilters: [{ key: "ongoing", label: "En curso", filters: { finished: false } }],
       formComponent: EpicForm,
-      defaultItem: {
-        id: null,
-        name: "",
-        description: "",
-        external_reference: "",
-        tags: [],
-      },
     };
   },
   computed: {
@@ -123,7 +110,6 @@ export default {
   },
   methods: {
     isWebUri,
-    userHasPermission,
     setTagFilter(tag) {
       this.$refs.itemIndex.addFilter({ tags__name__in: tag });
       this.$nextTick(() => {

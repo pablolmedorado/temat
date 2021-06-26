@@ -42,6 +42,8 @@
 <script>
 import { defaultTo } from "lodash";
 
+import UserStory from "@/models/scrum/user-story";
+
 import UserStoryService from "@/services/scrum/user-story-service";
 
 import ContextBreadcrumbs from "@/components/scrum/ContextBreadcrumbs";
@@ -52,38 +54,6 @@ import UserStoryTasks from "@/components/scrum/tabs/user-stories/UserStoryTasks"
 
 import useScrumContext, { scrumContextProps } from "@/composables/useScrumContext";
 import { handleError } from "@/utils/error-handlers";
-
-const defaultItem = {
-  id: null,
-  name: "",
-  type: null,
-  epic: null,
-  sprint: null,
-  functional_description: "",
-  technical_description: "",
-  external_resource: "",
-  start_date: null,
-  end_date: null,
-  current_progress: 0,
-  current_progress_changed: null,
-  validated: null,
-  validated_changed: null,
-  status: 0,
-  planned_effort: 1,
-  priority: 10,
-  development_user: null,
-  development_comments: "",
-  validation_user: null,
-  validation_comments: "",
-  support_user: null,
-  support_comments: "",
-  cvs_reference: "",
-  risk_level: 0,
-  risk_comments: "",
-  use_migrations: false,
-  deployment_notes: "",
-  tags: [],
-};
 
 export default {
   name: "UserStoryDetail",
@@ -107,7 +77,7 @@ export default {
         item = response.data;
       } else {
         item = {
-          ...defaultItem,
+          ...UserStory.defaults,
           epic: defaultTo(to.query.epic, null),
           sprint: defaultTo(to.query.sprint, null),
         };
@@ -130,7 +100,7 @@ export default {
         await this.fetchItem(to.params.id);
       } else {
         this.item = {
-          ...defaultItem,
+          ...UserStory.defaults,
           epic: defaultTo(to.query.epic, null),
           sprint: defaultTo(to.query.sprint, null),
         };

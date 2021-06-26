@@ -4,19 +4,15 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-namespace="greenWorkingDay"
-          verbose-name="Jornada especial"
-          verbose-name-plural="Jornadas especiales"
-          item-text="date"
+          :model-class="modelClass"
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :quick-filters="quickFilters"
           default-quick-filter="current-year"
-          :service="service"
           :form-component="formComponent"
-          :can-create="() => userHasPermission('work_organization.add_greenworkingday')"
-          :can-edit="() => userHasPermission('work_organization.change_greenworkingday')"
-          :can-delete="() => userHasPermission('work_organization.delete_greenworkingday')"
+          :allow-add="modelClass.ADD_PERMISSION"
+          :allow-change="modelClass.CHANGE_PERMISSION"
+          :allow-delete="modelClass.DELETE_PERMISSION"
           :disable-row-edition="isLoading"
           custom-headers
           reactive-filters
@@ -75,7 +71,7 @@
 
           <template #fab>
             <v-btn
-              v-if="userHasPermission('work_organization.add_greenworkingday')"
+              v-if="canAdd"
               fab
               fixed
               bottom
@@ -93,7 +89,7 @@
     <VoluteersDialog ref="volunteersDialog" />
 
     <StepperBulkFormDialog
-      v-if="userHasPermission('work_organization.add_greenworkingday')"
+      v-if="canAdd"
       ref="greenWorkingDayBulkForm"
       :max-width="1000"
       :form-component="bulkFormComponent"
@@ -108,7 +104,7 @@
 import { mapActions, mapGetters, mapState } from "vuex";
 import { DateTime } from "luxon";
 
-import GreenService from "@/services/work-organization/green-service";
+import GreenWorkingDay from "@/models/work-organization/green-working-day";
 
 import StepperBulkFormDialog from "@/components/work-organization/dialogs/StepperBulkFormDialog";
 import GreenWorkingDayBulkForm from "@/components/work-organization/green-working-days/forms/GreenWorkingDayBulkForm";
@@ -132,6 +128,7 @@ export default {
   },
   data() {
     return {
+      modelClass: GreenWorkingDay,
       tableHeaders: [
         { text: "Fecha", align: "start", sortable: true, value: "date", fixed: true },
         { text: "Etiqueta", align: "start", sortable: true, value: "label", default: true },
@@ -165,7 +162,6 @@ export default {
         sortDesc: [false],
         mustSort: true,
       },
-      service: GreenService,
       quickFilters: [{ key: "current-year", label: "Año en curso", filters: { date__year: DateTime.local().year } }],
       formComponent: GreenWorkingDayForm,
       bulkFormComponent: GreenWorkingDayBulkForm,
@@ -174,6 +170,9 @@ export default {
   computed: {
     ...mapState(["loggedUser"]),
     ...mapGetters(["yearOptions"]),
+    canAdd() {
+      return userHasPermission(this.modelClass.ADD_PERMISSION);
+    },
   },
   methods: {
     userHasPermission,

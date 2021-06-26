@@ -4,22 +4,19 @@
       <ItemIndex
         v-if="userStory.id"
         ref="itemIndex"
+        :model-class="modelClass"
         local-storage-namespace="userStoryEffort"
-        verbose-name="Esfuerzo"
-        verbose-name-plural="Esfuerzo"
-        item-text="date"
         :table-available-headers="tableHeaders"
         :table-initial-options="tableOptions"
         :system-filters="systemFilters"
-        :service="service"
         :form-component="formComponent"
         :default-item="defaultItem"
-        :can-create="() => true"
-        :can-edit="(item) => canPerformAction(item, 'change')"
-        :can-delete="(item) => canPerformAction(item, 'delete')"
+        allow-add
+        :allow-change="(item) => canPerformAction(item, 'change')"
+        :allow-delete="(item) => canPerformAction(item, 'delete')"
         custom-headers
-        @submit:form="onFormSubmit"
-        @delete:item="onDeleteItem"
+        @submit:form="$emit('change:effort')"
+        @delete:item="$emit('change:effort')"
       >
         <template #top>
           <div class="px-4 pb-4 text-center">
@@ -63,7 +60,7 @@
 import { mapGetters, mapState } from "vuex";
 import { DateTime } from "luxon";
 
-import EffortService from "@/services/scrum/effort-service";
+import Effort from "@/models/scrum/effort";
 
 import EffortForm from "@/components/scrum/forms/EffortForm";
 
@@ -79,6 +76,7 @@ export default {
   },
   data() {
     return {
+      modelClass: Effort,
       tableHeaders: [
         { text: "Fecha", align: "start", sortable: true, value: "date", fixed: true },
         {
@@ -106,7 +104,6 @@ export default {
         sortDesc: [true],
         multiSort: true,
       },
-      service: EffortService,
       formComponent: EffortForm,
     };
   },
@@ -132,13 +129,9 @@ export default {
     },
     defaultItem() {
       return {
-        id: null,
-        date: DateTime.local().toISODate(),
-        user: this.loggedUser.id,
+        ...this.modelClass.defaults,
         role: this.loggedUserRole,
         user_story: this.userStory.id,
-        effort: 1,
-        comments: "",
       };
     },
   },
@@ -157,12 +150,6 @@ export default {
       }
       const limitDatetime = DateTime.local().minus({ minutes: 30 });
       return DateTime.fromISO(item.creation_datetime) > limitDatetime;
-    },
-    onFormSubmit() {
-      this.$emit("change:effort");
-    },
-    onDeleteItem() {
-      this.$emit("change:effort");
     },
   },
 };

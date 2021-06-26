@@ -2,6 +2,8 @@ import Vue from "vue";
 import Router from "vue-router";
 import VueMeta from "vue-meta";
 
+import UserStory from "@/models/scrum/user-story";
+
 import Timeline from "@/views/calendar/Timeline";
 import Calendar from "@/views/calendar/Calendar";
 import Events from "@/views/calendar/Events";
@@ -162,7 +164,7 @@ const router = new Router({
       path: "/scrum/user-stories/new",
       name: "user-story-new",
       component: UserStoryDetail,
-      beforeEnter: usersWithPermissionOnly("scrum.add_userstory"),
+      beforeEnter: usersWithPermissionOnly(UserStory.ADD_PERMISSION),
       props: (route) => ({ sprintId: route.query.sprint, epicId: route.query.epic }),
       meta: {
         keepAlive: false,
