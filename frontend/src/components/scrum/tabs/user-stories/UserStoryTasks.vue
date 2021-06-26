@@ -171,6 +171,13 @@ export default {
       );
     },
   },
+  watch: {
+    "userStory.id": {
+      handler() {
+        this.$refs.itemIndex.fetchTableItems();
+      },
+    },
+  },
   mounted() {
     if (this.$refs.itemIndex) {
       this.$refs.itemIndex.fetchTableItems();
