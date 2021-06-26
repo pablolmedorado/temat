@@ -110,7 +110,10 @@
                   @input="$v.item.external_resource.$touch()"
                   @blur="$v.item.external_resource.$touch()"
                 >
-                  <template v-if="isWebUri(item.external_resource) || isClipboardSupported" #append-outer>
+                  <template
+                    v-if="item.external_resource && (isWebUri(item.external_resource) || isClipboardSupported)"
+                    #append-outer
+                  >
                     <v-tooltip v-if="isWebUri(item.external_resource)" bottom>
                       <template #activator="{ on: onTooltip, attrs: attrTooltip }">
                         <v-btn
