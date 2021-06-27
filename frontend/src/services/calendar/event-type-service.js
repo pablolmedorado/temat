@@ -1,7 +1,7 @@
 import BaseService from "../base-service";
 
 class EventTypeService extends BaseService {
-  baseUrlName = "calendar:event-type";
+  basename = "calendar:event-type";
   defaultListParams = { ordering: "name" };
 }
 

@@ -16,10 +16,10 @@ export const serviceCatalog = {
   ...WorkOrganizationServices,
 };
 
-export default (serviceNamespace) => {
-  const service = get(serviceCatalog, serviceNamespace);
+export default (serviceBasename) => {
+  const service = get(serviceCatalog, serviceBasename);
   if (!service) {
-    throw new Error(`Service '${serviceNamespace}' not found. Available services: ${Object.keys(serviceCatalog)}.`);
+    throw new Error(`Service '${serviceBasename}' not found. Available services: ${Object.keys(serviceCatalog)}.`);
   }
   return service;
 };

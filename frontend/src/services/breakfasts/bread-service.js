@@ -1,7 +1,7 @@
 import BaseService from "../base-service";
 
 class BreadService extends BaseService {
-  baseUrlName = "breakfasts:bread";
+  basename = "breakfasts:bread";
   defaultListParams = { ordering: "name" };
 }
 

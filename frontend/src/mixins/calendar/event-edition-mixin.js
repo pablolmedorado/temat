@@ -1,6 +1,8 @@
 import { mapActions, mapGetters, mapState } from "vuex";
 import { cloneDeep } from "lodash";
 
+import CalendarEvent from "@/models/calendar/event";
+
 import EventService from "@/services/calendar/event-service";
 
 import EventForm from "@/components/calendar/forms/EventForm";
@@ -19,14 +21,14 @@ export default {
   computed: {
     ...mapState(["loggedUser", "tz"]),
     ...mapGetters("calendar", ["eventTypesMap"]),
-    canEdit() {
-      return this.loggedUser.id === this.item.creation_user || userHasPermission("events.change_event");
+    canChange() {
+      return this.loggedUser.id === this.item.creation_user || userHasPermission(CalendarEvent.CHANGE_PERMISSION);
     },
     canCopy() {
-      return userHasPermission("events.add_event");
+      return this.loggedUser.id === this.item.creation_user || userHasPermission(CalendarEvent.ADD_PERMISSION);
     },
     canDelete() {
-      return this.loggedUser.id === this.item.creation_user || userHasPermission("events.delete_event");
+      return this.loggedUser.id === this.item.creation_user || userHasPermission(CalendarEvent.DELETE_PERMISSION);
     },
     itemForCopy() {
       const copy = cloneDeep(this.item);

@@ -70,6 +70,8 @@
 <script>
 import { mapGetters, mapState } from "vuex";
 
+import Effort from "@/models/scrum/effort";
+
 import DialogMixin from "@/mixins/dialog-mixin";
 
 import EffortRoleTimelineChart from "@/components/scrum/charts/EffortRoleTimelineChart";
@@ -99,7 +101,7 @@ export default {
     ...mapState(["loggedUser"]),
     ...mapGetters("users", ["usersMap"]),
     showUserChart() {
-      return userHasPermission("scrum.view_effort");
+      return userHasPermission(Effort.VIEW_PERMISSION);
     },
     filteredUsers() {
       if (!this.filters.user_id__in) {

@@ -30,6 +30,7 @@
     </v-row>
 
     <v-dialog
+      ref="advancedFiltersDialog"
       v-model="showFiltersDialog"
       max-width="700"
       scrollable

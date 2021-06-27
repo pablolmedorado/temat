@@ -38,7 +38,7 @@
     </v-card>
 
     <v-speed-dial
-      v-if="canEdit"
+      v-if="canChange"
       v-model="showSpeedDial"
       fixed
       bottom
@@ -70,7 +70,7 @@
 import { mapActions } from "vuex";
 import { get } from "lodash";
 
-import CalendarEvent from "@/models/event";
+import CalendarEvent from "@/models/calendar/event";
 
 import EventEditionMixin from "@/mixins/calendar/event-edition-mixin";
 

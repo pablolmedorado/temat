@@ -110,7 +110,10 @@
                   @input="$v.item.external_resource.$touch()"
                   @blur="$v.item.external_resource.$touch()"
                 >
-                  <template v-if="isWebUri(item.external_resource) || isClipboardSupported" #append-outer>
+                  <template
+                    v-if="item.external_resource && (isWebUri(item.external_resource) || isClipboardSupported)"
+                    #append-outer
+                  >
                     <v-tooltip v-if="isWebUri(item.external_resource)" bottom>
                       <template #activator="{ on: onTooltip, attrs: attrTooltip }">
                         <v-btn
@@ -465,7 +468,7 @@
                   item-value="value"
                   label="Nivel de riesgo*"
                   prepend-icon="mdi-alert-decagram"
-                  :readonly="canEditOrHasARole"
+                  :readonly="!canEdit && !hasARole"
                   :error-messages="buildValidationErrorMessages($v.item.risk_level)"
                   @change="$v.item.risk_level.$touch()"
                   @blur="$v.item.risk_level.$touch()"
@@ -479,7 +482,7 @@
                   label="Comentarios de riesgo"
                   counter="2000"
                   prepend-icon="mdi-comment-quote"
-                  :readonly="canEditOrHasARole"
+                  :readonly="!canEdit && !hasARole"
                   :error-messages="buildValidationErrorMessages($v.item.risk_comments)"
                   @input="$v.item.risk_comments.$touch()"
                   @blur="$v.item.risk_comments.$touch()"
@@ -642,10 +645,9 @@ export default {
       const action = this.item.id ? "change" : "add";
       return userHasPermission(`scrum.${action}_userstory`);
     },
-    canEditOrHasARole() {
-      return (
-        !this.canEdit &&
-        ![this.item.development_user, this.item.validation_user, this.item.support_user].includes(this.loggedUser.id)
+    hasARole() {
+      return [this.item.development_user, this.item.validation_user, this.item.support_user].includes(
+        this.loggedUser.id
       );
     },
     validatedHintText() {

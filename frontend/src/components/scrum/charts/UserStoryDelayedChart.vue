@@ -19,7 +19,7 @@ export default {
           type: "pie",
         },
         title: {
-          text: "Historias de usuario por planificación de fechas",
+          text: "Historias de usuario por planificación",
         },
         plotOptions: {
           pie: {

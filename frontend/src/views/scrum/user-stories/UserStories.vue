@@ -5,22 +5,17 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-namespace="userStory"
-          verbose-name="Historia de usuario"
-          verbose-name-plural="Historias de usuario"
+          :model-class="modelClass"
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
           :system-filters="systemFilters"
           :quick-filters="quickFilters"
           :default-quick-filter="defaultQuickFilter"
-          :service="service"
-          :can-create="() => userHasPermission('scrum.add_userstory')"
-          :can-edit="() => false"
-          :can-delete="() => userHasPermission('scrum.delete_userstory')"
+          :allow-add="modelClass.ADD_PERMISSION"
+          :allow-delete="modelClass.DELETE_PERMISSION"
           :disable-row-edition="isLoading"
           custom-headers
-          advanced-filters
           delete-child-items-warning
         >
           <template #item.name="{ value }">
@@ -87,16 +82,8 @@
             </v-tooltip>
           </template>
 
-          <template #fab>
-            <v-btn
-              v-if="userHasPermission('scrum.add_userstory')"
-              fab
-              fixed
-              bottom
-              right
-              color="secondary"
-              :to="newUserStoryRouteConfig"
-            >
+          <template #fab="{ canAddItems }">
+            <v-btn v-if="canAddItems()" fab fixed bottom right color="secondary" :to="newUserStoryRouteConfig">
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </template>
@@ -112,9 +99,9 @@
 
 <script>
 import { mapState } from "vuex";
-import { DateTime } from "luxon";
 
-import UserStoryService from "@/services/scrum/user-story-service";
+import Effort from "@/models/scrum/effort";
+import UserStory from "@/models/scrum/user-story";
 
 import ContextBreadcrumbs from "@/components/scrum/ContextBreadcrumbs";
 import EffortForm from "@/components/scrum/forms/EffortForm";
@@ -162,6 +149,7 @@ export default {
   },
   data() {
     return {
+      modelClass: UserStory,
       tableHeaders: [
         { text: "Id", align: "start", sortable: false, value: "id" },
         { text: "Título", align: "start", sortable: true, value: "name", fixed: true },
@@ -205,7 +193,6 @@ export default {
         sortDesc: [false, false],
         multiSort: true,
       },
-      service: UserStoryService,
       filterComponent: UserStoryFilters,
       effortFormComponent: EffortForm,
       showTaskDialog: false,
@@ -297,7 +284,7 @@ export default {
       if (this.hasContext) {
         return null;
       } else {
-        return userHasPermission("scrum.view_userstory") ? "ongoing" : "my-stories";
+        return userHasPermission(this.modelClass.VIEW_PERMISSION) ? "ongoing" : "my-stories";
       }
     },
   },
@@ -314,7 +301,6 @@ export default {
     },
   },
   methods: {
-    userHasPermission,
     fetchTableItems() {
       this.$refs.itemIndex.fetchTableItems();
     },
@@ -331,10 +317,10 @@ export default {
       return linkConfig;
     },
     canDevelop(item) {
-      return this.loggedUser.id === item.development_user || userHasPermission("scrum.change_userstory");
+      return this.loggedUser.id === item.development_user || userHasPermission(this.modelClass.CHANGE_PERMISSION);
     },
     canValidate(item) {
-      return this.loggedUser.id === item.validation_user || userHasPermission("scrum.change_userstory");
+      return this.loggedUser.id === item.validation_user || userHasPermission(this.modelClass.CHANGE_PERMISSION);
     },
     async validateItem(item) {
       if (confirm(`Estás seguro de que deseas validar la historia "${item.name}"`)) {
@@ -361,13 +347,9 @@ export default {
     },
     openNewEffortDialog(userStory) {
       this.$refs.effortFormDialog.open({
-        id: null,
-        date: DateTime.local().toISODate(),
-        user: this.loggedUser.id,
+        ...Effort.defaults,
         role: this.calculateLoggedUserRole(userStory),
         user_story: userStory.id,
-        effort: 1,
-        comments: "",
       });
     },
     setTagFilter(tag) {

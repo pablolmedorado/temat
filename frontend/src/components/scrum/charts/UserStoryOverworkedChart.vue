@@ -19,7 +19,7 @@ export default {
           type: "pie",
         },
         title: {
-          text: "Historias de usuario por planificación de esfuerzo",
+          text: "Historias de usuario por estimación de esfuerzo",
         },
         plotOptions: {
           pie: {

@@ -142,7 +142,7 @@ import { DateTime, Interval } from "luxon";
 import { debounce, defaultTo, sortBy } from "lodash";
 import { escapeHTML } from "vuetify/es5/util/helpers";
 
-import CalendarEvent from "@/models/event";
+import CalendarEvent from "@/models/calendar/event";
 
 import EventService from "@/services/calendar/event-service";
 

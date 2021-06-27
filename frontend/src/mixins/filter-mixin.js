@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import { get, has } from "lodash";
 
 export default {
   props: {
@@ -14,6 +14,7 @@ export default {
   data() {
     return {
       showFiltersDialog: false,
+      hasAdvancedFilters: false,
       basicFilters: [],
     };
   },
@@ -30,6 +31,9 @@ export default {
       deep: true,
       immediate: true,
     },
+  },
+  mounted() {
+    this.hasAdvancedFilters = has(this.$refs, "advancedFiltersDialog");
   },
   methods: {
     updateFilters(filter) {

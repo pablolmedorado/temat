@@ -4,20 +4,16 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-namespace="support"
-          verbose-name="Jornada de soporte"
-          verbose-name-plural="Jornadas de soporte"
-          item-text="date"
+          :model-class="modelClass"
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
           :quick-filters="quickFilters"
           default-quick-filter="next-days"
-          :service="service"
           :form-component="formComponent"
-          :can-create="() => userHasPermission('work_organization.add_supportworkingday')"
-          :can-edit="() => userHasPermission('work_organization.change_supportworkingday')"
-          :can-delete="() => userHasPermission('work_organization.delete_supportworkingday')"
+          :allow-add="modelClass.ADD_PERMISSION"
+          :allow-change="modelClass.CHANGE_PERMISSION"
+          :allow-delete="modelClass.DELETE_PERMISSION"
         >
           <template #item.date="{ value }">
             <DateRouterLink :date="value" />
@@ -27,15 +23,7 @@
           </template>
 
           <template #fab>
-            <v-btn
-              v-if="userHasPermission('work_organization.add_supportworkingday')"
-              fab
-              fixed
-              bottom
-              right
-              color="secondary"
-              @click.stop="$refs.supportDayBulkForm.open()"
-            >
+            <v-btn v-if="canAdd" fab fixed bottom right color="secondary" @click.stop="$refs.supportDayBulkForm.open()">
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </template>
@@ -44,7 +32,7 @@
     </v-row>
 
     <StepperBulkFormDialog
-      v-if="userHasPermission('work_organization.add_supportworkingday')"
+      v-if="canAdd"
       ref="supportDayBulkForm"
       :form-component="bulkFormComponent"
       @submit="fetchTableItems"
@@ -58,7 +46,7 @@
 import { mapState } from "vuex";
 import { DateTime } from "luxon";
 
-import SupportService from "@/services/work-organization/support-service";
+import SupportWorkingDay from "@/models/work-organization/support-working-day";
 
 import StepperBulkFormDialog from "@/components/work-organization/dialogs/StepperBulkFormDialog";
 import SupportDayBulkForm from "@/components/work-organization/support/forms/SupportDayBulkForm";
@@ -75,12 +63,12 @@ export default {
   components: { StepperBulkFormDialog },
   data() {
     return {
+      modelClass: SupportWorkingDay,
       tableOptions: {
         sortBy: ["date"],
         sortDesc: [false],
         mustSort: true,
       },
-      service: SupportService,
       filterComponent: SupportFilters,
       formComponent: SupportDayForm,
       bulkFormComponent: SupportDayBulkForm,
@@ -88,6 +76,9 @@ export default {
   },
   computed: {
     ...mapState(["loggedUser"]),
+    canAdd() {
+      return userHasPermission(this.modelClass.ADD_PERMISSION);
+    },
     tableHeaders() {
       const defaultOptions = [
         { text: "Fecha", align: "start", sortable: true, value: "date", fixed: true },
@@ -104,10 +95,7 @@ export default {
         ...defaultOptions,
         { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
       ];
-      return userHasAnyPermission([
-        "work_organization.change_supportworkingday",
-        "work_organization.delete_supportworkingday",
-      ])
+      return userHasAnyPermission([this.modelClass.CHANGE_PERMISSION, this.modelClass.DELETE_PERMISSION])
         ? adminOptions
         : defaultOptions;
     },

@@ -28,7 +28,7 @@
       </v-menu>
       <template v-if="!eventTypesMap[item.type].system">
         <v-divider vertical inset />
-        <v-btn v-if="canEdit" icon @click="onEdit(item)">
+        <v-btn v-if="canChange" icon @click="onEdit(item)">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
         <v-btn icon @click="onEdit(itemForCopy)">

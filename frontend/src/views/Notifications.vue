@@ -12,7 +12,6 @@
           :filter-component="filterComponent"
           :service="service"
           custom-headers
-          read-only
           selectable-rows
         >
           <template #toolbar="{ selectedItems }">

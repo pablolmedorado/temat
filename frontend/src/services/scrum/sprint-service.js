@@ -2,20 +2,20 @@ import Api from "../api";
 import BaseService from "../base-service";
 
 class SprintService extends BaseService {
-  baseUrlName = "scrum:sprint";
+  basename = "scrum:sprint";
 
   burnChartData(pk) {
-    const url = Urls[`${this.baseUrlName}-burn-chart`]({ pk });
+    const url = Urls[`${this.basename}-burn-chart`]({ pk });
     return Api.get(url);
   }
 
   ganttChartData(pk) {
-    const url = Urls[`${this.baseUrlName}-gantt-chart`]({ pk });
+    const url = Urls[`${this.basename}-gantt-chart`]({ pk });
     return Api.get(url);
   }
 
   deploymentReportData(pk) {
-    const url = Urls[`${this.baseUrlName}-deployment-report`]({ pk });
+    const url = Urls[`${this.basename}-deployment-report`]({ pk });
     return Api.get(url);
   }
 }

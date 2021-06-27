@@ -10,7 +10,7 @@ export function adminUsersOnly(to, from, next) {
       color: "error",
       message: "Ruta disponible sólo para usuarios administradores.",
     });
-    next(false);
+    next(from.name === null ? { name: "home" } : false);
   }
 }
 
@@ -23,7 +23,7 @@ export function usersWithPermissionOnly(permission) {
         color: "error",
         message: "Ruta disponible sólo para usuarios con permisos.",
       });
-      next(false);
+      next(from.name === null ? { name: "home" } : false);
     }
   };
 }

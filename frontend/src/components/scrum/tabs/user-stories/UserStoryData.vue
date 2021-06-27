@@ -76,6 +76,8 @@
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
 
+import UserStory from "@/models/scrum/user-story";
+
 import UserStoryService from "@/services/scrum/user-story-service";
 
 import UserStoryForm from "@/components/scrum/forms/UserStoryForm";
@@ -114,13 +116,13 @@ export default {
       );
     },
     canValidate() {
-      return this.loggedUser.id === this.item.validation_user || userHasPermission("scrum.change_userstory");
+      return this.loggedUser.id === this.item.validation_user || userHasPermission(UserStory.CHANGE_PERMISSION);
     },
     canCopy() {
-      return userHasPermission("scrum.add_userstory");
+      return userHasPermission(UserStory.ADD_PERMISSION);
     },
     canDelete() {
-      return userHasPermission("scrum.delete_userstory");
+      return userHasPermission(UserStory.DELETE_PERMISSION);
     },
   },
   methods: {

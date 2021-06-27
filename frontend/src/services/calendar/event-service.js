@@ -3,10 +3,10 @@ import { DateTime } from "luxon";
 import Api from "../api";
 import BaseService from "../base-service";
 
-import CalendarEvent from "@/models/event";
+import CalendarEvent from "@/models/calendar/event";
 
 class EventService extends BaseService {
-  baseUrlName = "calendar:event";
+  basename = "calendar:event";
 
   async listCalendar(luxonInterval, excludeSystemEvents) {
     const params = {
@@ -22,12 +22,12 @@ class EventService extends BaseService {
   }
 
   myImportantDatesByYear(year) {
-    const url = Urls[`${this.baseUrlName}-my-important-dates`]();
+    const url = Urls[`${this.basename}-my-important-dates`]();
     return Api.get(url, { params: { start_datetime__year: year } });
   }
 
   myTimeline() {
-    const url = Urls[`${this.baseUrlName}-my-events`]();
+    const url = Urls[`${this.basename}-my-events`]();
     return Api.get(url, {
       params: {
         end_datetime__date__gte: DateTime.local().toISODate(),
@@ -38,21 +38,21 @@ class EventService extends BaseService {
   }
 
   typeChartData(queryParams) {
-    const url = Urls[`${this.baseUrlName}-type-pie-chart`]();
+    const url = Urls[`${this.basename}-type-pie-chart`]();
     return Api.get(url, {
       params: queryParams,
     });
   }
 
   attendeesChartData(queryParams) {
-    const url = Urls[`${this.baseUrlName}-attendee-packedbubble-chart`]();
+    const url = Urls[`${this.basename}-attendee-packedbubble-chart`]();
     return Api.get(url, {
       params: queryParams,
     });
   }
 
   monthlyChartData(queryParams) {
-    const url = Urls[`${this.baseUrlName}-monthly-chart`]();
+    const url = Urls[`${this.basename}-monthly-chart`]();
     return Api.get(url, {
       params: queryParams,
     });

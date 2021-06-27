@@ -4,11 +4,11 @@ import Api from "./api";
 
 export default class BaseService {
   get listUrl() {
-    return Urls[`${this.baseUrlName}-list`]();
+    return Urls[`${this.basename}-list`]();
   }
 
   detailUrl(pk) {
-    return Urls[`${this.baseUrlName}-detail`]({ pk });
+    return Urls[`${this.basename}-detail`]({ pk });
   }
 
   list(queryParams) {

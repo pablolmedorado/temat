@@ -6,6 +6,6 @@ import BreakfastService from "./breakfast-service";
 import DrinkService from "./drink-service";
 import IngredientService from "./ingredient-service";
 
-const services = keyBy([BaseService, BreadService, BreakfastService, DrinkService, IngredientService], "baseUrlName");
+const services = keyBy([BaseService, BreadService, BreakfastService, DrinkService, IngredientService], "basename");
 
 export default services;
