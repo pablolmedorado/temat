@@ -1,13 +1,13 @@
 from datetime import date, timedelta
-from typing import Dict
+from typing import Dict, List
 
 import pydash
 
 from django.contrib.auth import get_user_model
-from django.db.models import Count, Q, QuerySet, Sum
+from django.db.models import Count, F, Q, QuerySet, Sum
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Effort, Progress, Sprint
+from .models import Effort, Progress, Sprint, UserStory
 
 
 def burn_chart_data(instance: Sprint) -> Dict:
@@ -139,6 +139,33 @@ def user_story_user_chart_data(queryset: QuerySet) -> Dict:
             {"name": _("Soporte"), "data": [support_data.get(item, 0) for item in user_list]},
         ],
     }
+
+
+def user_story_delayed_pie_chart_data(queryset: QuerySet) -> List:
+    queryset = queryset.exclude(status=UserStory.Status.BACKLOG)
+    condition = Q(status__lte=UserStory.Status.IN_VALIDATION, end_date__lt=date.today()) | Q(
+        status=UserStory.Status.COMPLETED, end_date__lte=F("validated_changed")
+    )
+    delayed_count = queryset.filter(condition).count()
+    not_delayed_count = queryset.exclude(condition).count()
+    return [
+        {"name": _("En fecha"), "color": "#4CAF50", "y": not_delayed_count},
+        {"name": _("Retrasadas"), "color": "#FF9800", "y": delayed_count},
+    ]
+
+
+def user_story_overworked_pie_chart_data(queryset: QuerySet) -> List:
+    queryset = queryset.exclude(status=UserStory.Status.BACKLOG)
+    acceptable_estimation_count = queryset.filter(
+        annotated_actual_effort__gte=F("planned_effort") * 0.9, annotated_actual_effort__lte=F("planned_effort") * 1.1,
+    ).count()
+    underestimated_count = queryset.filter(annotated_actual_effort__gt=F("planned_effort") * 1.1).count()
+    overestimated_count = queryset.filter(annotated_actual_effort__lt=F("planned_effort") * 0.9).count()
+    return [
+        {"name": _("Estimación aceptable (+-10%)"), "color": "#4CAF50", "y": acceptable_estimation_count},
+        {"name": _("Sobreestimación (>10%)"), "color": "#FF9800", "y": overestimated_count},
+        {"name": _("Subestimación (<10%)"), "color": "#F44336", "y": underestimated_count},
+    ]
 
 
 def effort_role_timeline_chart_data(queryset: QuerySet) -> Dict:

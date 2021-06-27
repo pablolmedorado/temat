@@ -1,8 +1,7 @@
 from datetime import date
 
 from django.db import transaction
-from django.db.models import Count, F, Q, Sum
-from django.utils.translation import ugettext_lazy as _
+from django.db.models import Count, F, Sum
 
 from rest_flex_fields import is_expanded
 from rest_flex_fields.views import FlexFieldsMixin
@@ -37,6 +36,8 @@ from ..utils import (
     effort_role_timeline_chart_data,
     effort_user_timeline_chart_data,
     gantt_chart_data,
+    user_story_delayed_pie_chart_data,
+    user_story_overworked_pie_chart_data,
     user_story_user_chart_data,
 )
 from common.api.mixins import AuthorshipMixin, OrderedMixin
@@ -245,29 +246,14 @@ class UserStoryViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
 
     @action(detail=False, methods=["GET"])
     def delayed_pie_chart(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset()).exclude(status=UserStory.Status.BACKLOG)
-        condition = Q(status__lte=UserStory.Status.IN_VALIDATION, end_date__lt=date.today()) | Q(
-            status=UserStory.Status.COMPLETED, end_date__lte=F("validated_changed")
-        )
-        delayed_count = queryset.filter(condition).count()
-        not_delayed_count = queryset.exclude(condition).count()
-        chart_data = [
-            {"name": _("En fecha"), "color": "#4CAF50", "y": not_delayed_count},
-            {"name": _("Retrasadas"), "color": "#FF9800", "y": delayed_count},
-        ]
+        queryset = self.filter_queryset(self.get_queryset())
+        chart_data = user_story_delayed_pie_chart_data(queryset)
         return Response(chart_data)
 
     @action(detail=False, methods=["GET"])
     def overworked_pie_chart(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset()).exclude(status=UserStory.Status.BACKLOG)
-        perfect_estimation_count = queryset.filter(planned_effort=F("annotated_actual_effort")).count()
-        underestimated_count = queryset.filter(planned_effort__lt=F("annotated_actual_effort")).count()
-        overestimated_count = queryset.filter(planned_effort__gt=F("annotated_actual_effort")).count()
-        chart_data = [
-            {"name": _("Estimación perfecta"), "color": "#4CAF50", "y": perfect_estimation_count},
-            {"name": _("Sobreestimación"), "color": "#FF9800", "y": overestimated_count},
-            {"name": _("Subestimación"), "color": "#F44336", "y": underestimated_count},
-        ]
+        queryset = self.filter_queryset(self.get_queryset())
+        chart_data = user_story_overworked_pie_chart_data(queryset)
         return Response(chart_data)
 
 
