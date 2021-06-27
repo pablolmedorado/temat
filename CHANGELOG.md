@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.12.1](https://github.com/pablolmedorado/temat/compare/v1.12.0...v1.12.1) (2021-06-27)
+
+
+### Bug Fixes
+
+* **routes:** provide fallback route to router guards ([f49f567](https://github.com/pablolmedorado/temat/commit/f49f567a8780393b7c7444fab340b842c6838c17))
+* **user-stories:** hide action button when external resource is empty ([d6bda21](https://github.com/pablolmedorado/temat/commit/d6bda21605d1fca47fd26b65e7db3828f83b1fbc))
+* **user-stories:** improve effort pie chart by adding a 10% error margin ([10c3cd3](https://github.com/pablolmedorado/temat/commit/10c3cd32144744eb10cb00489be7be40d0cff4bf))
+* **user-stories:** update tab tables (task & effort) after changing the route ([c00943f](https://github.com/pablolmedorado/temat/commit/c00943f57c84a64e2b8a8a8e9249b05271db3f27))
+
 ## [1.12.0](https://github.com/pablolmedorado/temat/compare/v1.11.0...v1.12.0) (2021-06-21)
 
 
