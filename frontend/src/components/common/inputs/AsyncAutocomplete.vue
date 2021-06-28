@@ -16,6 +16,10 @@
         <span> Realiza búsqueda en BD </span>
       </v-tooltip>
     </template>
+
+    <template #append-outer>
+      <slot name="append-outer"></slot>
+    </template>
   </v-autocomplete>
 </template>
 
