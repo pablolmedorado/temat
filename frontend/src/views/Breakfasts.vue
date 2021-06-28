@@ -63,12 +63,11 @@ import { mapState } from "vuex";
 
 import Breakfast from "@/models/breakfasts/breakfast";
 
-import BreakfastService from "@/services/breakfasts/breakfast-service";
-
 import BreakfastForm from "@/components/breakfasts/BreakfastForm";
 import BreakfastsSummaryDialog from "@/components/breakfasts/BreakfastsSummaryDialog";
 
 import useLoading from "@/composables/useLoading";
+import { getServiceByBasename } from "@/services";
 
 export default {
   name: "Breakfasts",
@@ -88,6 +87,7 @@ export default {
   data() {
     return {
       modelClass: Breakfast,
+      service: getServiceByBasename(Breakfast.serviceBasename),
       tableHeaders: [
         {
           text: "Usuario",
@@ -126,7 +126,6 @@ export default {
       tableFooterProps: {
         itemsPerPageOptions: [10, 25, 50, -1],
       },
-      service: BreakfastService,
       formComponent: BreakfastForm,
       loadingUserBreakfast: false,
     };

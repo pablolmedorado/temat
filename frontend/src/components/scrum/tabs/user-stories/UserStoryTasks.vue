@@ -84,6 +84,7 @@ import TaskForm from "@/components/scrum/forms/TaskForm";
 import UserStoryProgressBar from "@/components/scrum/UserStoryProgressBar";
 
 import useLoading from "@/composables/useLoading";
+import { getServiceByBasename } from "@/services";
 import { userHasPermission, userHasAnyPermission } from "@/utils/permissions";
 
 export default {
@@ -109,6 +110,7 @@ export default {
   data() {
     return {
       modelClass: Task,
+      service: getServiceByBasename(Task.serviceBasename),
       tableOptions: {
         itemsPerPage: -1,
         sortBy: ["order"],

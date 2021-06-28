@@ -112,6 +112,7 @@ import UserStoryIndexStatus from "@/components/scrum/UserStoryIndexStatus";
 
 import useLoading from "@/composables/useLoading";
 import useScrumContext, { scrumContextProps } from "@/composables/useScrumContext";
+import { getServiceByBasename } from "@/services";
 import { userHasPermission } from "@/utils/permissions";
 
 export default {
@@ -150,6 +151,7 @@ export default {
   data() {
     return {
       modelClass: UserStory,
+      service: getServiceByBasename(UserStory.serviceBasename),
       tableHeaders: [
         { text: "Id", align: "start", sortable: false, value: "id" },
         { text: "Título", align: "start", sortable: true, value: "name", fixed: true },

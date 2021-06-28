@@ -112,6 +112,7 @@ import GreenWorkingDayForm from "@/components/work-organization/green-working-da
 import VoluteersDialog from "@/components/work-organization/green-working-days/VoluteersDialog";
 
 import useLoading from "@/composables/useLoading";
+import { getServiceByBasename } from "@/services";
 import { userHasPermission } from "@/utils/permissions";
 
 export default {
@@ -129,6 +130,7 @@ export default {
   data() {
     return {
       modelClass: GreenWorkingDay,
+      service: getServiceByBasename(GreenWorkingDay.serviceBasename),
       tableHeaders: [
         { text: "Fecha", align: "start", sortable: true, value: "date", fixed: true },
         { text: "Etiqueta", align: "start", sortable: true, value: "label", default: true },
@@ -175,7 +177,6 @@ export default {
     },
   },
   methods: {
-    userHasPermission,
     ...mapActions(["showSnackbar"]),
     fetchTableItems() {
       this.$refs.itemIndex.fetchTableItems();
