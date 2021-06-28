@@ -16,10 +16,10 @@ export const serviceCatalog = {
   ...WorkOrganizationServices,
 };
 
-export default (serviceBasename) => {
+export function getServiceByBasename(serviceBasename) {
   const service = get(serviceCatalog, serviceBasename);
   if (!service) {
     throw new Error(`Service '${serviceBasename}' not found. Available services: ${Object.keys(serviceCatalog)}.`);
   }
   return service;
-};
+}

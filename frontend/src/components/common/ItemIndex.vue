@@ -162,10 +162,10 @@
 import { mapActions, mapState } from "vuex";
 import { defaultTo, get, invoke, isBoolean, isFunction, omit } from "lodash";
 
-import getServiceByBasename from "@/services";
 import useLoading from "@/composables/useLoading";
 import useLocalStorage from "@/composables/useLocalStorage";
 import { defaultTableOptions } from "@/utils/constants";
+import { getServiceByBasename } from "@/services";
 import { userHasPermission } from "@/utils/permissions";
 
 export default {

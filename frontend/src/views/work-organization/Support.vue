@@ -111,7 +111,6 @@ export default {
     },
   },
   methods: {
-    userHasPermission,
     fetchTableItems() {
       this.$refs.itemIndex.fetchTableItems();
     },

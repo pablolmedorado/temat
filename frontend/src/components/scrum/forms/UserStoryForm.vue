@@ -6,7 +6,7 @@
           <v-card-title class="text-h6"> Información básica y clasificación </v-card-title>
           <v-card-text>
             <v-row>
-              <v-col cols="12" md="6">
+              <v-col cols="12" lg="8">
                 <v-text-field
                   v-model="item.name"
                   label="Título*"
@@ -18,7 +18,7 @@
                   @blur="$v.item.name.$touch()"
                 />
               </v-col>
-              <v-col cols="12" sm="6" lg="3">
+              <v-col cols="12" md="6" lg="4">
                 <v-select
                   v-model.number="item.type"
                   :items="userStoryTypesOptions"
@@ -33,7 +33,7 @@
                   @blur="$v.item.type.$touch()"
                 />
               </v-col>
-              <v-col cols="12" sm="6" lg="3">
+              <v-col cols="12" md="6" lg="4">
                 <AsyncAutocomplete
                   v-model="item.epic"
                   :service="epicService"
@@ -42,11 +42,25 @@
                   :readonly="!canEdit"
                   label="Épica"
                   prepend-icon="mdi-sword-cross"
-                />
+                >
+                  <template v-if="item.epic" #append-outer>
+                    <v-tooltip bottom>
+                      <template #activator="{ on: onTooltip, attrs: attrTooltip }">
+                        <v-btn
+                          v-bind="attrTooltip"
+                          :to="{ name: 'epic-user-stories', params: { epicId: item.epic } }"
+                          icon
+                          v-on="onTooltip"
+                        >
+                          <v-icon> mdi-open-in-app </v-icon>
+                        </v-btn>
+                      </template>
+                      <span> Ir a la épica </span>
+                    </v-tooltip>
+                  </template>
+                </AsyncAutocomplete>
               </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" xl="6">
+              <v-col cols="12" lg="8">
                 <TagAutocomplete
                   v-model="item.tags"
                   label="Tags"
@@ -164,7 +178,26 @@
                   prepend-icon="mdi-run-fast"
                   return-object
                   @click:clear="onSprintClear"
-                />
+                >
+                  <template v-if="item.sprint" #append-outer>
+                    <v-tooltip bottom>
+                      <template #activator="{ on: onTooltip, attrs: attrTooltip }">
+                        <v-btn
+                          v-bind="attrTooltip"
+                          :to="{
+                            name: 'sprint-user-stories',
+                            params: { sprintId: item.sprint.id },
+                          }"
+                          icon
+                          v-on="onTooltip"
+                        >
+                          <v-icon> mdi-open-in-app </v-icon>
+                        </v-btn>
+                      </template>
+                      <span> Ir al sprint </span>
+                    </v-tooltip>
+                  </template>
+                </AsyncAutocomplete>
               </v-col>
               <v-col cols="12" sm="6" lg="4">
                 <v-menu
@@ -664,8 +697,8 @@ export default {
   },
   methods: {
     isWebUri,
-    ...mapActions("scrum", ["getUserStoryTypes"]),
     isoDateTimeToLocaleString,
+    ...mapActions("scrum", ["getUserStoryTypes"]),
     buildSaveFunctionArgs() {
       return [
         this.replaceUndefined({
