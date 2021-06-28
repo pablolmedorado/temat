@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.13.0](https://github.com/pablolmedorado/temat/compare/v1.12.1...v1.13.0) (2021-06-28)
+
+
+### Features
+
+* **user-stories:** add links to epics and sprints ([6f0d8c1](https://github.com/pablolmedorado/temat/commit/6f0d8c1853203922457918640bd1946f18b9eb84))
+
+
+### Bug Fixes
+
+* **frontend:** add missing services after models refactor ([d4f4d32](https://github.com/pablolmedorado/temat/commit/d4f4d32cc66b3dfdb5f8a044dab94e7d98d8eb01))
+
 ### [1.12.1](https://github.com/pablolmedorado/temat/compare/v1.12.0...v1.12.1) (2021-06-27)
 
 
