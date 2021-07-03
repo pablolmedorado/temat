@@ -21,7 +21,8 @@
         <v-row>
           <v-col>
             <v-alert type="warning" border="left" text outlined>
-              Los filtros rápidos se almacenan en el navegador y se pierden al cerrar sesión.
+              Los filtros rápidos se almacenan en el local storage del navegador y se pierden al limpiar los datos de
+              navegación.
             </v-alert>
           </v-col>
         </v-row>
