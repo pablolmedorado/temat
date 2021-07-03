@@ -12,8 +12,8 @@
         :form-component="formComponent"
         :default-item="defaultItem"
         allow-add
-        :allow-change="(item) => canPerformAction(item, 'change')"
-        :allow-delete="(item) => canPerformAction(item, 'delete')"
+        :allow-change="(user, item) => canPerformAction(item, 'change')"
+        :allow-delete="(user, item) => canPerformAction(item, 'delete')"
         custom-headers
         @submit:form="$emit('change:effort')"
         @delete:item="$emit('change:effort')"
