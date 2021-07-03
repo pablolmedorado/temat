@@ -26,7 +26,13 @@
   ],
   "settings": {
     // Workspace & Editor
-    "terminal.integrated.shell.linux": "/usr/bin/zsh",
+    "terminal.integrated.profiles.linux": {
+      "zsh": {
+        "path": "/usr/bin/zsh",
+        "args": ["-l"]
+      }
+    },
+    "terminal.integrated.defaultProfile.linux": "zsh",
     // Python
     "python.pythonPath": "/usr/src/app/backend/.venv/bin/python",
     "python.terminal.activateEnvironment": true,
