@@ -6,6 +6,7 @@
         <ItemIndex
           ref="itemIndex"
           :model-class="modelClass"
+          :local-storage-namespace="localStorageNamespace"
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
@@ -227,6 +228,16 @@ export default {
         return [];
       }
     },
+    localStorageNamespace() {
+      let namespace = UserStory.localStorageNamespace;
+      if (this.sprintId) {
+        namespace += "Sprint";
+      }
+      if (this.epicId) {
+        namespace += "Epic";
+      }
+      return namespace;
+    },
     newUserStoryRouteConfig() {
       const queryParams = {};
       if (this.sprintId) {
@@ -249,6 +260,11 @@ export default {
     },
     quickFilters() {
       return [
+        {
+          key: "all",
+          label: "Todas las historias",
+          filters: {},
+        },
         {
           key: "ongoing",
           label: "Historias en curso",
@@ -284,7 +300,7 @@ export default {
     },
     defaultQuickFilter() {
       if (this.hasContext) {
-        return null;
+        return "all";
       } else {
         return userHasPermission(this.modelClass.VIEW_PERMISSION) ? "ongoing" : "my-stories";
       }
