@@ -93,43 +93,30 @@ def gantt_chart_data(instance: Sprint) -> Dict:
 
 
 def user_story_user_chart_data(queryset: QuerySet) -> Dict:
-    user_list = (
-        get_user_model()
-        .objects.active()
-        .filter(
-            Q(developed_user_stories__in=queryset)
-            | Q(validated_user_stories__in=queryset)
-            | Q(supported_user_stories__in=queryset)
-        )
-        .order_by("acronym")
-        .distinct()
-        .values_list("acronym", flat=True)
-    )
+    user_base_queryset = get_user_model().objects.active().order_by().distinct()
 
-    development_queryset = (
-        get_user_model()
-        .objects.active()
-        .filter(developed_user_stories__in=queryset)
-        .annotate(development=Count("developed_user_stories"))
-        .values("acronym", "development")
+    developers_queryset = user_base_queryset.filter(developed_user_stories__in=queryset)
+    development_queryset = developers_queryset.annotate(development=Count("developed_user_stories")).values(
+        "acronym", "development"
     )
     development_data = {item["acronym"]: item["development"] for item in development_queryset}
-    validation_queryset = (
-        get_user_model()
-        .objects.active()
-        .filter(validated_user_stories__in=queryset)
-        .annotate(validation=Count("validated_user_stories"))
-        .values("acronym", "validation")
+
+    validators_queryset = user_base_queryset.filter(validated_user_stories__in=queryset)
+    validation_queryset = validators_queryset.annotate(validation=Count("validated_user_stories")).values(
+        "acronym", "validation"
     )
     validation_data = {item["acronym"]: item["validation"] for item in validation_queryset}
-    support_queryset = (
-        get_user_model()
-        .objects.active()
-        .filter(supported_user_stories__in=queryset)
-        .annotate(support=Count("supported_user_stories"))
-        .values("acronym", "support")
+
+    supporters_queryset = user_base_queryset.filter(supported_user_stories__in=queryset)
+    support_queryset = supporters_queryset.annotate(support=Count("supported_user_stories")).values(
+        "acronym", "support"
     )
     support_data = {item["acronym"]: item["support"] for item in support_queryset}
+
+    user_list = list(
+        developers_queryset.union(validators_queryset, supporters_queryset).values_list("acronym", flat=True)
+    )
+    user_list.sort()
 
     return {
         "categories": user_list,
