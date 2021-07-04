@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.14.0](https://github.com/pablolmedorado/temat/compare/v1.13.0...v1.14.0) (2021-07-04)
+
+
+### Features
+
+* **user-stories:** add "all" filter to user-story index and apply it in indexes with context ([2391891](https://github.com/pablolmedorado/temat/commit/239189136a065c08ca3389698e5a8bd201af0f3d))
+
+
+### Bug Fixes
+
+* **effort:** user arg missing in canPerformAction function ([55d3bdf](https://github.com/pablolmedorado/temat/commit/55d3bdfbc7530d8098a37867c56734d9b09b6a3d))
+* **frontend:** fix quick filter save warning ([73d80cd](https://github.com/pablolmedorado/temat/commit/73d80cda1fabfa38820341156c832a69a894d540))
+
 ## [1.13.0](https://github.com/pablolmedorado/temat/compare/v1.12.1...v1.13.0) (2021-06-28)
 
 
