@@ -12,8 +12,8 @@
           :quick-filters="quickFilters"
           default-quick-filter="last-week"
           :form-component="formComponent"
-          :allow-change="(item) => canPerformAction(item, 'change')"
-          :allow-delete="(item) => canPerformAction(item, 'delete')"
+          :allow-change="(user, item) => canPerformAction(item, 'change')"
+          :allow-delete="(user, item) => canPerformAction(item, 'delete')"
           custom-headers
         >
           <template #toolbar="{ filters, isIndexLoading }">

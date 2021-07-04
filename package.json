@@ -1,6 +1,6 @@
 {
   "name": "temat",
-  "version": "1.13.0",
+  "version": "1.14.0",
   "scripts": {
     "release": "standard-version"
   },
@@ -20,7 +20,7 @@
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
-    "husky": "^6.0.0",
+    "husky": "^7.0.0",
     "standard-version": "^9.3.0"
   }
 }
