@@ -4,13 +4,10 @@
       <v-col>
         <ItemIndex
           ref="itemIndex"
-          local-storage-namespace="notification"
-          verbose-name="Notificación"
-          verbose-name-plural="Notificaciones"
+          :model-class="modelClass"
           :table-available-headers="tableHeaders"
           :table-initial-options="tableOptions"
           :filter-component="filterComponent"
-          :service="service"
           custom-headers
           selectable-rows
         >
@@ -111,11 +108,12 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 
-import NotificationService from "@/services/common/notification-service";
+import Notification from "@/models/common/notification";
 
 import NotificationFilters from "@/components/notifications/NotificationFilters";
 
 import useLoading from "@/composables/useLoading";
+import { getServiceByBasename } from "@/services";
 import { isoDateTimeToLocaleString } from "@/utils/dates";
 
 export default {
@@ -139,6 +137,8 @@ export default {
   },
   data() {
     return {
+      modelClass: Notification,
+      service: getServiceByBasename(Notification.serviceBasename),
       tableHeaders: [
         { text: "Fecha", align: "start", sortable: true, value: "timestamp", fixed: true },
         {
@@ -167,7 +167,6 @@ export default {
         sortDesc: [true, true],
         multiSort: true,
       },
-      service: NotificationService,
       filterComponent: NotificationFilters,
       levelIcons: {
         success: "mdi-check",
