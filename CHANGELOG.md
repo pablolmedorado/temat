@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.14.1](https://github.com/pablolmedorado/temat/compare/v1.14.0...v1.14.1) (2021-07-08)
+
+
+### Bug Fixes
+
+* **holidays:** fix queryset.union Oracle issue ([62553ef](https://github.com/pablolmedorado/temat/commit/62553ef35f462ea33ddcd1766afc42b3d04371bf))
+* **notifications:** add missing notification model ([7a12408](https://github.com/pablolmedorado/temat/commit/7a124085f76b413190c835b21f67a5460b6827ba))
+
 ## [1.14.0](https://github.com/pablolmedorado/temat/compare/v1.13.0...v1.14.0) (2021-07-04)
 
 
