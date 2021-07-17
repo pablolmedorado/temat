@@ -3,7 +3,7 @@
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/usr/src/app",
-  "postCreateCommand": "npm ci && cd backend && pipenv sync --dev && cd ../frontend && npm ci",
+  "postCreateCommand": "npm install && cd backend && pipenv sync --dev && cd ../frontend && npm install",
   "shutdownAction": "stopCompose",
   "extensions": [
     "batisteo.vscode-django",
@@ -16,14 +16,15 @@
     "formulahendry.auto-close-tag",
     "formulahendry.auto-rename-tag",
     "mikestead.dotenv",
+    "ms-azuretools.vscode-docker",
     "ms-python.python",
     "ms-python.vscode-pylance",
     "octref.vetur",
     "redhat.vscode-yaml",
     "sdras.vue-vscode-snippets",
     "vincaslt.highlight-matching-tag",
-    "yzhang.markdown-all-in-one",
-  ],
+    "yzhang.markdown-all-in-one"
+],
   "settings": {
     // Workspace & Editor
     "terminal.integrated.profiles.linux": {
