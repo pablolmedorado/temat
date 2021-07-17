@@ -3,6 +3,7 @@
 ![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/pablolmedorado/temat?include_prereleases&sort=semver)
 ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/pablolmedorado/temat)
 ![GitHub](https://img.shields.io/github/license/pablolmedorado/temat)
+[![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/pablolmedorado/temat)
 
 ![Docker version](https://img.shields.io/badge/Docker-20-2496ed)
 ![PostgreSQL version](https://img.shields.io/badge/PostgreSQL-13-336791)
