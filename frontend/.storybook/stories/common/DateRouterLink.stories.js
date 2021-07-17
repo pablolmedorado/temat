@@ -3,7 +3,7 @@ import { storyFactory } from "../../util/helpers";
 import { text } from "@storybook/addon-knobs";
 
 // Components
-import DateRouterLink from "@/components/common/DateRouterLink";
+import DateRouterLink from "@/components/DateRouterLink";
 
 export default { title: "Components/Common/DateRouterLink" };
 

@@ -4,7 +4,7 @@ import { action } from "@storybook/addon-actions";
 import { object } from "@storybook/addon-knobs";
 
 // Components
-import TableHeadersConfigDialog from "@/components/common/dialogs/TableHeadersConfigDialog";
+import TableHeadersConfigDialog from "@/components/dialogs/TableHeadersConfigDialog";
 
 export default { title: "Components/Common/Dialogs/TableHeadersConfigDialog" };
 

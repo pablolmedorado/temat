@@ -4,7 +4,7 @@ import { action } from "@storybook/addon-actions";
 import { boolean, object, text } from "@storybook/addon-knobs";
 
 // Components
-import DeletionConfirmationDialog from "@/components/common/dialogs/DeletionConfirmationDialog";
+import DeletionConfirmationDialog from "@/components/dialogs/DeletionConfirmationDialog";
 
 export default { title: "Components/Common/Dialogs/DeletionConfirmationDialog" };
 

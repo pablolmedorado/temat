@@ -4,7 +4,7 @@ import { action } from "@storybook/addon-actions";
 import { object } from "@storybook/addon-knobs";
 
 // Components
-import QuickFilterDialog from "@/components/common/dialogs/QuickFilterDialog";
+import QuickFilterDialog from "@/components/dialogs/QuickFilterDialog";
 
 export default { title: "Components/Common/Dialogs/QuickFilterDialog" };
 

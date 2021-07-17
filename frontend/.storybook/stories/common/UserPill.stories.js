@@ -6,7 +6,7 @@ import { object } from "@storybook/addon-knobs";
 import store from "@/store/index";
 
 // Components
-import UserPill from "@/components/common/UserPill";
+import UserPill from "@/components/UserPill";
 
 export default { title: "Components/Common/UserPill" };
 

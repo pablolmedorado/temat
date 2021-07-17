@@ -7,7 +7,7 @@ import { boolean, object } from "@storybook/addon-knobs";
 import store from "@/store/index";
 
 // Components
-import UserAutocomplete from "@/components/common/inputs/UserAutocomplete";
+import UserAutocomplete from "@/components/inputs/UserAutocomplete";
 
 export default { title: "Components/Common/Inputs/UserAutocomplete" };
 

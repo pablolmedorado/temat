@@ -3,7 +3,7 @@ import Vue from "vue";
 import "./plugins/composition";
 
 import router from "./router";
-import store from "./store/index";
+import store from "./store";
 
 import "roboto-fontface/css/roboto/roboto-fontface.css";
 import "@mdi/font/css/materialdesignicons.css";

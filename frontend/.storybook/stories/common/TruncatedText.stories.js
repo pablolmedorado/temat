@@ -3,7 +3,7 @@ import { storyFactory } from "../../util/helpers";
 import { text, number } from "@storybook/addon-knobs";
 
 // Components
-import TruncatedText from "@/components/common/TruncatedText";
+import TruncatedText from "@/components/TruncatedText";
 
 export default { title: "Components/Common/TruncatedText" };
 

@@ -3,7 +3,7 @@ import { storyFactory } from "../../../util/helpers";
 import { boolean, number } from "@storybook/addon-knobs";
 
 // Components
-import BaseDialog from "@/components/common/dialogs/BaseDialog";
+import BaseDialog from "@/components/dialogs/BaseDialog";
 
 export default { title: "Components/Common/Dialogs/BaseDialog" };
 

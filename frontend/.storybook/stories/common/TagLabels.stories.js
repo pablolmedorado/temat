@@ -3,7 +3,7 @@ import { storyFactory } from "../../util/helpers";
 import { object } from "@storybook/addon-knobs";
 
 // Components
-import TagLabels from "@/components/common/TagLabels";
+import TagLabels from "@/components/TagLabels";
 
 export default { title: "Components/Common/TagLabels" };
 

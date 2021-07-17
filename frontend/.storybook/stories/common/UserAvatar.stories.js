@@ -6,7 +6,7 @@ import { boolean, number, object, text } from "@storybook/addon-knobs";
 import store from "@/store/index";
 
 // Components
-import UserAvatar from "@/components/common/UserAvatar";
+import UserAvatar from "@/components/UserAvatar";
 
 export default { title: "Components/Common/UserAvatar" };
 

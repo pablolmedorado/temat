@@ -3,7 +3,7 @@ import { storyFactory } from "../../util/helpers";
 import { object } from "@storybook/addon-knobs";
 
 // Components
-import GroupPill from "@/components/common/GroupPill";
+import GroupPill from "@/components/GroupPill";
 
 export default { title: "Components/Common/GroupPill" };
 

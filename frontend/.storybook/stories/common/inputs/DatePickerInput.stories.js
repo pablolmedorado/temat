@@ -6,7 +6,7 @@ import { boolean, text } from "@storybook/addon-knobs";
 import store from "@/store/index";
 
 // Components
-import DatePickerInput from "@/components/common/inputs/DatePickerInput";
+import DatePickerInput from "@/components/inputs/DatePickerInput";
 
 export default { title: "Components/Common/Inputs/DatePickerInput" };
 

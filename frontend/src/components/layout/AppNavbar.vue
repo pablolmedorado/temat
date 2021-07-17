@@ -40,8 +40,8 @@
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
 
-import LinkManager from "@/components/links/LinkManager";
-import NotificationManager from "@/components/notifications/NotificationManager";
+import LinkManager from "@/modules/links/components/LinkManager";
+import NotificationManager from "@/modules/notifications/components/NotificationManager";
 
 import { isXmas } from "@/utils/dates";
 
