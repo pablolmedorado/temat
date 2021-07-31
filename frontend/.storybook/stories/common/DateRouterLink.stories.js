@@ -1,22 +1,19 @@
-// Utilities
-import { storyFactory } from "../../util/helpers";
-import { text } from "@storybook/addon-knobs";
-
-// Components
 import DateRouterLink from "@/components/DateRouterLink";
 
-export default { title: "Components/Common/DateRouterLink" };
+export default {
+  title: "Components/Common/DateRouterLink",
+  component: DateRouterLink,
+  args: {
+    date: new Date().toISOString().split("T")[0],
+  },
+};
 
-const story = storyFactory({ DateRouterLink });
+const Template = (args, { argTypes }) => ({
+  components: { DateRouterLink },
+  props: Object.keys(argTypes),
+  template: `
+    <DateRouterLink v-bind="$props" />
+  `,
+});
 
-export const Today = () =>
-  story({
-    props: {
-      date: {
-        default: text("Date", new Date().toISOString().split("T")[0]),
-      },
-    },
-    template: `
-      <DateRouterLink :date="date"></DateRouterLink>
-    `,
-  });
+export const Default = Template.bind({});

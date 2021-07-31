@@ -1,44 +1,37 @@
-// Utilities
-import { storyFactory } from "../../../util/helpers";
-import { boolean, text } from "@storybook/addon-knobs";
-
-// Store
 import store from "@/store/index";
 
-// Components
 import DatePickerInput from "@/components/inputs/DatePickerInput";
 
-export default { title: "Components/Common/Inputs/DatePickerInput" };
+export default {
+  title: "Components/Common/Inputs/DatePickerInput",
+  component: DatePickerInput,
+  args: {
+    value: new Date().toISOString().split("T")[0],
+    label: "Date",
+    prependIcon: "mdi-calendar",
+    appendIcon: "",
+    min: "",
+    max: "",
+    readonly: false,
+    clearable: true,
+  },
+  argTypes: {
+    errorMessages: { table: { disable: true } },
+  },
+};
 
-const story = storyFactory({ DatePickerInput });
+const Template = (args, { argTypes }) => ({
+  store,
+  components: { DatePickerInput },
+  props: Object.keys(argTypes),
+  data() {
+    return {
+      date: this.value,
+    };
+  },
+  template: `
+    <DatePickerInput v-model="date" v-bind="$props" />
+  `,
+});
 
-export const Default = () =>
-  story({
-    store,
-    props: {
-      min: {
-        default: text("Min date", ""),
-      },
-      max: {
-        default: text("Max date", ""),
-      },
-      readonly: {
-        default: boolean("Read only", false),
-      },
-    },
-    data() {
-      return {
-        date: new Date().toISOString().split("T")[0],
-      };
-    },
-    template: `
-      <DatePickerInput
-        v-model="date"
-        prepend-icon="mdi-calendar"
-        :min="min"
-        :max="max"
-        :readonly="readonly"
-        clearable
-      />
-    `,
-  });
+export const Default = Template.bind({});

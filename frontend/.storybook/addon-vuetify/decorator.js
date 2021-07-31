@@ -7,11 +7,8 @@ import { makeDecorator } from "@storybook/addons";
 import deepmerge from "deepmerge";
 
 // Vuetify
-import "roboto-fontface/css/roboto/roboto-fontface.css";
-import "@mdi/font/css/materialdesignicons.min.css";
 import "vuetify/dist/vuetify.min.css";
-
-import "../../src/plugins/global-components";
+import "@mdi/font/css/materialdesignicons.min.css";
 
 Vue.use(Vuetify);
 

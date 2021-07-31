@@ -1,45 +1,31 @@
-// Utilities
-import { storyFactory } from "../../util/helpers";
-import { object } from "@storybook/addon-knobs";
-
-// Store
 import store from "@/store/index";
 
-// Components
 import UserPill from "@/components/UserPill";
 
-export default { title: "Components/Common/UserPill" };
-
-const story = storyFactory({ UserPill });
-
-const buildProps = () => ({
-  user: {
-    default: object("User", {
+export default {
+  title: "Components/Common/UserPill",
+  component: UserPill,
+  args: {
+    user: {
       acronym: "TUS",
       first_name: "Test",
       last_name: "User",
-    }),
+    },
+    activeKonamiCode: false,
   },
-});
-
-export const Default = () => {
-  store.commit("setKonamiCodeActive", false);
-  return story({
-    props: buildProps(),
-    store,
-    template: `
-      <UserPill :user="user"></UserPill>
-    `,
-  });
 };
 
-export const KonamiCodeEnabled = () => {
-  store.commit("setKonamiCodeActive", true);
-  return story({
-    props: buildProps(),
+const Template = (args, { argTypes }) => {
+  const { activeKonamiCode } = args;
+  store.commit("setKonamiCodeActive", Boolean(activeKonamiCode));
+  return {
     store,
+    components: { UserPill },
+    props: Object.keys(argTypes),
     template: `
-      <UserPill :user="user"></UserPill>
+      <UserPill v-bind="$props" />
     `,
-  });
+  };
 };
+
+export const Default = Template.bind({});
