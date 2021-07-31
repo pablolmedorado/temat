@@ -7,7 +7,7 @@ module.exports = {
   globals: {
     Urls: "readonly",
   },
-  extends: ["plugin:vue/recommended", "eslint:recommended", "@vue/prettier"],
+  extends: ["plugin:vue/recommended", "plugin:testing-library/vue", "eslint:recommended", "@vue/prettier"],
   parserOptions: {
     parser: "babel-eslint",
   },
@@ -16,6 +16,7 @@ module.exports = {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
     "prettier/prettier": "error",
+    "testing-library/prefer-screen-queries": "off",
     "vue/component-definition-name-casing": ["error", "PascalCase"],
     "vue/component-name-in-template-casing": ["error", "PascalCase"],
     "vue/component-tags-order": ["error", { order: ["template", "script", "style"] }],
@@ -36,4 +37,15 @@ module.exports = {
     "vuetify/no-deprecated-components": "error",
     "vuetify/no-legacy-grid": "error",
   },
+  overrides: [
+    {
+      files: [
+        '**/__tests__/*.{j,t}s?(x)',
+        '**/tests/unit/**/*.spec.{j,t}s?(x)'
+      ],
+      env: {
+        jest: true
+      }
+    }
+  ]
 };
