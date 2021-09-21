@@ -25,7 +25,6 @@ import { truncate } from "@/filters";
 
 export default {
   name: "TruncatedText",
-  filters: { truncate },
   props: {
     value: {
       type: String,
