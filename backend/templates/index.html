@@ -2,7 +2,6 @@
 {% load render_bundle from webpack_loader %}
 {% load webpack_static from webpack_loader %}
 {% load pwa %}
-{% load hijack_tags %}
 {% load user_data %}
 <!DOCTYPE html>
 <html lang="en">
@@ -15,15 +14,13 @@
     {% progressive_web_app_meta %}
     <!-- user data -->
     {% user_data user %}
-    <!-- hijack -->
-    <link rel="prefetch stylesheet" href="{% static 'hijack/hijack-styles.css' %}" />
     <!-- built files will be auto injected -->
     {% render_bundle "app" "css" %}
   </head>
   <body>
     <noscript>
       <strong>
-        We're sorry but frontend doesn't work properly without JavaScript enabled. Please enable it to
+        We're sorry but TeMaT doesn't work properly without JavaScript enabled. Please enable it to
         continue.
       </strong>
     </noscript>
@@ -33,5 +30,4 @@
     <!-- built files will be auto injected -->
     {% render_bundle "app" "js" %}
   </body>
-  {% hijack_notification %}
 </html>
