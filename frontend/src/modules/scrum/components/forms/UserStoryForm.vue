@@ -596,25 +596,14 @@ export default {
       technical_description: { maxLength: maxLength(2000) },
       external_resource: { url: urlValidator, maxLength: maxLength(2000) },
       sprint: {},
-      start_date: {
-        requiredIfSprint: requiredIf("sprint"),
-        outOfSprint: (value, vm) => {
-          return (
-            !helpers.req(vm.start_date) ||
-            !helpers.req(vm.sprint) ||
-            (DateTime.fromISO(vm.start_date) >= DateTime.fromISO(vm.sprint.start_date) &&
-              DateTime.fromISO(vm.start_date) <= DateTime.fromISO(vm.sprint.end_date))
-          );
-        },
-      },
+      start_date: { requiredIfSprint: requiredIf("sprint") },
       end_date: {
         requiredIfSprint: requiredIf("sprint"),
         outOfSprint: (value, vm) => {
           return (
             !helpers.req(vm.end_date) ||
             !helpers.req(vm.sprint) ||
-            (DateTime.fromISO(vm.end_date) >= DateTime.fromISO(vm.sprint.start_date) &&
-              DateTime.fromISO(vm.end_date) <= DateTime.fromISO(vm.sprint.end_date))
+            DateTime.fromISO(vm.end_date) <= DateTime.fromISO(vm.sprint.end_date)
           );
         },
         endDateBeforeStartDate: (value, vm) => {

@@ -17,12 +17,17 @@ class SprintSerializer(TaggitSerializer, FlexFieldsModelSerializer):
     )
     tags = TagListSerializerField()
 
+    def validate_end_date(self, value):
+        if self.instance and self.instance.user_stories.filter(end_date__gt=value).exists():
+            raise serializers.ValidationError(
+                _("El sprint contiene historias de usuario con una fecha de fin posterior a la del sprint")
+            )
+        return value
+
     def validate(self, data):
         data = super().validate(data)
         if data.get("end_date") < data.get("start_date"):
-            raise serializers.ValidationError(
-                _("No es posible crear un sprint con fecha de fin anterior a la de inicio")
-            )
+            raise serializers.ValidationError(_("Fecha de fin anterior a la de inicio"))
         return data
 
     class Meta:
@@ -131,10 +136,8 @@ class UserStorySerializer(TaggitSerializer, FlexFieldsModelSerializer):
                 raise serializers.ValidationError(
                     _("Es necesario asignar fechas a las historias de usuario asignadas a un sprint")
                 )
-            if data["start_date"] < data["sprint"].start_date or data["start_date"] > data["sprint"].end_date:
-                raise serializers.ValidationError(_("Fecha de inicio fuera del sprint"))
-            if data["end_date"] < data["sprint"].start_date or data["end_date"] > data["sprint"].end_date:
-                raise serializers.ValidationError(_("Fecha de fin fuera del sprint"))
+            if data["end_date"] > data["sprint"].end_date:
+                raise serializers.ValidationError(_("La fecha de fin debe ser anterior a la del sprint"))
             if not data.get("development_user"):
                 raise serializers.ValidationError(
                     _("No es posible incluir una historia de usuario en un sprint sin un responsable asignado.")
