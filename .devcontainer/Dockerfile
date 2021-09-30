@@ -28,7 +28,6 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
     -p command-not-found \
     -p python \
     -p pip \
-    -p django \
     -p node \
     -p npm
 

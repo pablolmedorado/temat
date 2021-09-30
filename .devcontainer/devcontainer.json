@@ -36,7 +36,6 @@
     "terminal.integrated.defaultProfile.linux": "zsh",
     // Python
     "python.pythonPath": "/usr/src/app/backend/.venv/bin/python",
-    "python.terminal.activateEnvironment": true,
     "python.languageServer": "Pylance",
     "python.analysis.typeCheckingMode": "off",
     "python.analysis.diagnosticMode": "workspace",
