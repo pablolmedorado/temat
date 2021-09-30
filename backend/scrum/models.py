@@ -206,7 +206,7 @@ class UserStory(Taggable, Notifiable, models.Model):
                 "creation_user": owner if owner else instance.creation_user,
             }
         )
-        # Tasks
+        new_instance.tags.add(*instance.tags.all())
         for task in instance.tasks.all().iterator():
             new_instance.tasks.create(**{"name": task.name, "weight": task.weight})
         return new_instance
