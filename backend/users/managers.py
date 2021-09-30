@@ -9,4 +9,4 @@ class UserManager(DjangoUserManager):
         return self.filter(is_superuser=True)
 
     def get_random_admin(self):
-        return self.admins().first()
+        return self.admins().order_by("?").first()
