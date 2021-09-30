@@ -6,7 +6,7 @@
           <v-card-title class="text-h6">
             Estado
             <v-spacer />
-            <v-tooltip left>
+            <v-tooltip bottom>
               <template #activator="{ on, attrs }">
                 <v-icon v-if="item.validated === false" class="mr-2" color="error" v-bind="attrs" v-on="on">
                   mdi-alert-circle-check-outline
@@ -16,12 +16,13 @@
             </v-tooltip>
             <v-tooltip bottom>
               <template #activator="{ on, attrs }">
-                <v-icon :color="riskLevelsMap[item.risk_level].colour" v-bind="attrs" v-on="on">
+                <v-icon :color="riskLevelsMap[item.risk_level].colour" v-bind="attrs" class="mr-2" v-on="on">
                   {{ riskLevelsMap[item.risk_level].icon }}
                 </v-icon>
               </template>
               <span> Nivel de riesgo ({{ riskLevelsMap[item.risk_level].label }}) </span>
             </v-tooltip>
+            <UserStoryAuthorshipIcon :user-story="item" />
           </v-card-title>
           <v-card-text>
             <UserStoryStatus :user-story="item" />
@@ -80,6 +81,7 @@ import UserStory from "@/modules/scrum/models/user-story";
 
 import UserStoryService from "@/modules/scrum/services/user-story-service";
 
+import UserStoryAuthorshipIcon from "@/modules/scrum/components/UserStoryAuthorshipIcon";
 import UserStoryForm from "@/modules/scrum/components/forms/UserStoryForm";
 import UserStoryProgressBar from "@/modules/scrum/components/UserStoryProgressBar";
 import UserStoryStatus from "@/modules/scrum/components/UserStoryStatus";
@@ -89,7 +91,7 @@ import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "UserStoryData",
-  components: { UserStoryForm, UserStoryProgressBar, UserStoryStatus },
+  components: { UserStoryAuthorshipIcon, UserStoryForm, UserStoryProgressBar, UserStoryStatus },
   filters: {
     datetime: isoDateTimeToLocaleString,
   },

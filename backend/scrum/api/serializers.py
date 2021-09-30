@@ -174,6 +174,10 @@ class UserStorySerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "use_migrations",
             "deployment_notes",
             "tags",
+            "creation_datetime",
+            "creation_user",
+            "modification_datetime",
+            "modification_user",
         )
         read_only_fields = (
             "id",
@@ -186,6 +190,10 @@ class UserStorySerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "validated_changed",
             "status",
             "actual_effort",
+            "creation_datetime",
+            "creation_user",
+            "modification_datetime",
+            "modification_user",
         )
         expandable_fields = {
             "type": UserStoryTypeSerializer,
@@ -196,6 +204,8 @@ class UserStorySerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "support_user": UserSerializer,
             "progress_log": (ProgressSerializer, {"many": True}),
             "effort_allocation": (EffortSerializer, {"many": True}),
+            "creation_user": UserSerializer,
+            "modification_user": UserSerializer,
         }
         validators = [
             UniqueTogetherValidator(queryset=UserStory.objects.all(), fields=["name", "sprint"]),

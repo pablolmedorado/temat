@@ -168,6 +168,7 @@ def update_user_story_current_progress(sender, instance, created, *args, **kwarg
                     "current_progress",
                     "current_progress_changed",
                     "modification_user",
+                    "modification_datetime",
                 ]
             )
 
