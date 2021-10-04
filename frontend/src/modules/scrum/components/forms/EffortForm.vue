@@ -1,5 +1,5 @@
 <template>
-  <form v-if="item" ref="itemForm">
+  <v-form v-if="item" ref="itemForm" :disabled="isTaskLoading('submit')">
     <v-row>
       <v-col>
         <DatePickerInput
@@ -58,7 +58,7 @@
       </v-col>
     </v-row>
     <small>* indica campo obligatorio</small>
-  </form>
+  </v-form>
 </template>
 
 <script>

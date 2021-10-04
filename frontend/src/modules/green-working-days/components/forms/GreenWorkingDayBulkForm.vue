@@ -1,5 +1,5 @@
 <template>
-  <form ref="itemsForm">
+  <v-form ref="itemsForm" :disabled="isTaskLoading('submit')">
     <v-row v-for="(item, index) in items" :key="item.date">
       <v-col>
         <v-text-field
@@ -44,7 +44,7 @@
       </v-col>
     </v-row>
     <small>* indica campo obligatorio</small>
-  </form>
+  </v-form>
 </template>
 
 <script>

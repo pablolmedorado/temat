@@ -1,5 +1,5 @@
 <template>
-  <form v-if="item" ref="itemForm">
+  <v-form v-if="item" ref="itemForm" :disabled="isTaskLoading('submit')">
     <v-row>
       <v-col>
         <v-text-field
@@ -49,7 +49,8 @@
         />
       </v-col>
     </v-row>
-  </form>
+    <small>* indica campo obligatorio</small>
+  </v-form>
 </template>
 
 <script>

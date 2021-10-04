@@ -19,11 +19,12 @@ export default function FormMixin({ service }) {
       },
     },
     setup() {
-      const { isLoading, addTask, removeTask } = useLoading();
+      const { isLoading, addTask, removeTask, isTaskLoading } = useLoading();
       return {
         isLoading,
         addTask,
         removeTask,
+        isTaskLoading,
       };
     },
     data() {
