@@ -57,20 +57,20 @@ class SupportWorkingDayAdmin(ImportExportActionModelAdmin):
 
 @admin.register(HolidayType)
 class HolidayTypeAdmin(ImportExportActionModelAdmin):
-    list_display = ("id", "name", "validity", "system")
+    list_display = ("id", "name", "validity", "system_slug")
     list_display_links = ("name",)
     search_fields = ("name",)
     ordering = ("name",)
     fieldsets = (
         (_("Información básica"), {"fields": ("name",)}),
         (_("Validez"), {"fields": ("validity",)}),
-        (_("Gestión interna"), {"fields": ("system",)}),
+        (_("Gestión interna"), {"fields": ("system_slug",)}),
     )
-    readonly_fields = ("system",)
+    readonly_fields = ("system_slug",)
     resource_class = HolidayTypeResource
 
     def get_readonly_fields(self, request, obj=None):
-        if obj and obj.system:
+        if obj and obj.system_slug:
             return self.readonly_fields + ("name",)
         return self.readonly_fields
 

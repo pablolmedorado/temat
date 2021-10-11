@@ -76,9 +76,9 @@ class HolidayTypeViewSet(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = HolidayType.objects.all()
     serializer_class = HolidayTypeSerializer
-    filter_fields = ("system",)
+    filterset_fields = ("system_slug",)
     search_fields = ("name",)
-    ordering_fields = ("id", "name", "system")
+    ordering_fields = ("id", "name", "system_slug")
     ordering = ("name",)
 
 

@@ -12,7 +12,9 @@ class GreenWorkingDayResource(resources.ModelResource):
         attribute="main_user", widget=ForeignKeyWidget(model=get_user_model(), field="username"), readonly=False
     )
     support_user = Field(
-        attribute="support_user", widget=ForeignKeyWidget(model=get_user_model(), field="username"), readonly=False,
+        attribute="support_user",
+        widget=ForeignKeyWidget(model=get_user_model(), field="username"),
+        readonly=False,
     )
 
     class Meta:
@@ -33,7 +35,7 @@ class SupportWorkingDayResource(resources.ModelResource):
 class HolidayTypeResource(resources.ModelResource):
     class Meta:
         model = HolidayType
-        fields = ("id", "name", "validity", "system")
+        fields = ("id", "name", "validity", "system_slug")
         export_order = fields
 
 

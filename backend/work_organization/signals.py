@@ -124,7 +124,7 @@ def create_or_update_green_calendar_event(sender, instance, created, *args, **kw
         event_obj.attendees.set(attendees)
 
         # Holiday management
-        holiday_type = HolidayType.objects.get(pk=HolidayType.SystemType.GREEN)
+        holiday_type = HolidayType.objects.get(system_slug=HolidayType.SystemSlug.GREEN)
         if instance.main_user.company and instance.main_user.company.extra_holiday_with_green_working_days:
             holiday_obj, holiday_created = Holiday.objects.update_or_create(
                 green_working_day_id=instance.id,
