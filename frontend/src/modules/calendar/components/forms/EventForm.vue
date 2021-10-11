@@ -116,7 +116,7 @@
       <v-col cols="12" sm="6">
         <v-select
           v-model.number="item.type"
-          :items="eventTypesOptions.filter((ev) => !ev.system)"
+          :items="eventTypesOptions.filter((ev) => !ev.system_slug)"
           item-text="name"
           item-value="id"
           label="Tipo de evento*"

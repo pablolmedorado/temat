@@ -18,6 +18,6 @@ class EventFilterSet(FilterSet):
             "groups__id": ["exact", "in"],
             "type_id": ["exact", "in"],
             "type__important": ["exact"],
-            "type__system": ["exact"],
+            "type__system_slug": ["exact", "isnull"],
             "tags__name": ["in", "iexact", "icontains", "istartswith"],
         }

@@ -129,7 +129,7 @@ export default {
         mustSort: true,
       },
       filterComponent: EventFilters,
-      systemFilters: { type__system: false },
+      systemFilters: { type__system_slug__isnull: true },
       datetimeFormat: DateTime.DATETIME_MED_WITH_WEEKDAY,
       breadcrumbs: [
         { text: "Calendario", to: { name: "calendar" }, exact: true },

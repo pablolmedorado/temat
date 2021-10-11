@@ -23,9 +23,9 @@ class EventTypeViewSet(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = EventType.objects.all()
     serializer_class = EventTypeSerializer
-    filter_fields = ("important", "system")
+    filterset_fields = ("important", "system_slug")
     search_fields = ("name",)
-    ordering_fields = ("id", "name", "important", "system")
+    ordering_fields = ("id", "name", "important", "system_slug")
     ordering = ("name",)
 
 
@@ -43,7 +43,7 @@ class EventViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
         if self.action == "my_important_dates":
             return queryset.important_by_attendee(self.request.user)
         if self.action.endswith("_chart"):
-            return queryset.exclude(type__system=True)
+            return queryset.exclude(type__system_slug__isnull=False)
         if self.action == "my_events":
             return queryset.by_attendee(self.request.user).prefetch_related("attendees", "groups", "tags")
         return queryset.by_user(self.request.user).prefetch_related("attendees", "groups", "tags")

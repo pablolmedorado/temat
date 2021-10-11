@@ -12,15 +12,15 @@ from ..models import Event, EventType
 class EventTypeSerializer(FlexFieldsModelSerializer):
     class Meta:
         model = EventType
-        fields = ("id", "name", "colour", "icon", "important", "system")
-        read_only_fields = ("id", "system")
+        fields = ("id", "name", "colour", "icon", "important", "system_slug")
+        read_only_fields = ("id", "system_slug")
 
 
 class EventSerializer(TaggitSerializer, FlexFieldsModelSerializer):
     tags = TagListSerializerField()
 
     def validate_type(self, value):
-        if value.system:
+        if value.system_slug:
             raise serializers.ValidationError(_("No es posible crear un evento con un tipo reservado al sistema"))
         return value
 

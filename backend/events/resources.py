@@ -38,5 +38,5 @@ class EventResource(resources.ModelResource):
 class EventTypeResource(resources.ModelResource):
     class Meta:
         model = EventType
-        fields = ("id", "name", "colour", "icon", "important", "system")
+        fields = ("id", "name", "colour", "icon", "important", "system_slug")
         export_order = fields

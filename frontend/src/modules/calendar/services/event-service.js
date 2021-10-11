@@ -15,7 +15,7 @@ class EventService extends BaseService {
       start_datetime__date__lte: luxonInterval.end.toISODate(),
     };
     if (excludeSystemEvents) {
-      params["type__system"] = false;
+      params["type__system_slug__isnull"] = true;
     }
     const response = await this.list(params);
     return response.data.map((event) => new CalendarEvent(event));

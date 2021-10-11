@@ -15,7 +15,7 @@
       <v-col cols="6" md="4" lg="3">
         <v-select
           :value="typeFilter"
-          :items="eventTypesOptions.filter((type) => !type.system)"
+          :items="eventTypesOptions.filter((type) => !type.system_slug)"
           :loading="!eventTypesOptions.length"
           item-text="name"
           item-value="id"
@@ -80,7 +80,7 @@
             <v-col>
               <v-select
                 :value="typeFilter"
-                :items="eventTypesOptions.filter((type) => !type.system)"
+                :items="eventTypesOptions.filter((type) => !type.system_slug)"
                 :loading="!eventTypesOptions.length"
                 item-text="name"
                 item-value="id"
