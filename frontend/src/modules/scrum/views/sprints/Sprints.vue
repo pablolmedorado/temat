@@ -38,7 +38,7 @@
             </v-progress-circular>
           </template>
           <template #item.tags="{ value }">
-            <TagLabels v-if="value" :tags="value" @click:tag="setTagFilter" />
+            <TagLabels v-if="value" :tags="value" small @click:tag="setTagFilter" />
           </template>
           <template #item.table_actions="{ item }">
             <v-tooltip bottom>
@@ -114,7 +114,13 @@ export default {
           sortingField: "annotated_current_progress",
           value: "current_progress",
         },
-        { text: "Tags", align: "start", sortable: false, value: "tags" },
+        {
+          text: "Tags",
+          align: "start",
+          sortable: false,
+          value: "tags",
+          fields: ["tags.name", "tags.colour", "tags.icon"],
+        },
         { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
       ],
       tableOptions: {

@@ -126,9 +126,16 @@
             dark
             label
           />
-          <v-chip v-for="tag in item.tags" :key="tag" class="elevation-1" color="info" label>
-            <v-icon left>mdi-label</v-icon>
-            {{ tag }}
+          <v-chip
+            v-for="tag in item.tags"
+            :key="camelCase(tag.name)"
+            class="elevation-1"
+            :color="tag.colour"
+            :dark="applyDarkVariant(tag.colour)"
+            label
+          >
+            <v-icon left>{{ tag.icon }}</v-icon>
+            {{ tag.name }}
           </v-chip>
         </div>
       </v-col>
@@ -139,6 +146,7 @@
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
 import { DateTime } from "luxon";
+import { camelCase } from "lodash";
 
 import EventAuthorshipTag from "@/modules/calendar/components/EventAuthorshipTag";
 
@@ -180,6 +188,7 @@ export default {
   },
   methods: {
     ...mapActions("calendar", ["fetchEventTypes"]),
+    camelCase,
     applyDarkVariant,
     dateLocaleString(dateTime) {
       return dateTime.setLocale(this.locale).toLocaleString(DateTime.DATE_HUGE);

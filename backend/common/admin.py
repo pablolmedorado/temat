@@ -3,10 +3,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from import_export.admin import ImportExportActionModelAdmin
 from ordered_model.admin import OrderedModelAdmin
-from taggit.models import Tag
+from taggit.models import Tag as TaggitTag
 
-from .behaviors import UUIDTaggedItem
-from .models import Link, LinkType
+from .models import Link, LinkType, Tag
 from .resources import LinkResource, LinkTypeResource, TagResource
 
 
@@ -35,13 +34,22 @@ class LinkAdmin(ImportExportActionModelAdmin, OrderedModelAdmin):
     resource_class = LinkResource
 
 
+@admin.register(Tag)
 class TagAdmin(ImportExportActionModelAdmin):
-    list_display = ("name", "slug")
-    ordering = ("name", "slug")
+    list_display = (
+        "name",
+        "slug",
+        "icon",
+        "colored_colour",
+    )
     search_fields = ("name",)
+    ordering = ("name", "slug")
     prepopulated_fields = {"slug": ("name",)}
+    fieldsets = (
+        (_("Información básica"), {"fields": ("name", "slug")}),
+        (_("Apariencia"), {"fields": ("colour", "icon")}),
+    )
     resource_class = TagResource
 
 
-admin.site.unregister(Tag)
-admin.site.register(Tag, TagAdmin)
+admin.site.unregister(TaggitTag)

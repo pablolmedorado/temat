@@ -206,7 +206,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 import { DateTime } from "luxon";
 import { cloneDeep, defaultTo } from "lodash";
 import { maxLength, required, requiredUnless } from "vuelidate/lib/validators";
@@ -282,13 +282,15 @@ export default {
     },
   },
   methods: {
-    ...mapActions("calendar", ["saveEvent"]),
     initializeItem(newItem) {
       this.startDate = DateTime.fromISO(newItem.start_datetime).toISODate();
       this.endDate = DateTime.fromISO(newItem.end_datetime).toISODate();
       this.startTime = DateTime.fromISO(newItem.start_datetime).toFormat("HH:mm");
       this.endTime = DateTime.fromISO(newItem.end_datetime).toFormat("HH:mm");
-      return cloneDeep(newItem);
+
+      const item = cloneDeep(newItem);
+      item.tags = newItem.tags.map((tag) => tag.name);
+      return item;
     },
     openLocation(location) {
       window.open(`https://www.google.com/maps/search/${location}/`, "_blank");
@@ -299,7 +301,7 @@ export default {
         start_datetime: this.startDateTime.toISO(),
         end_datetime: this.endDateTime.toISO(),
       };
-      return [this.replaceUndefined(payload)];
+      return [this.replaceUndefined(payload), { expand: "tags" }];
     },
   },
 };

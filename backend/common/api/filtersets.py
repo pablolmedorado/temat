@@ -1,7 +1,8 @@
 from django_filters.rest_framework import FilterSet
 
 from notifications.models import Notification
-from taggit.models import Tag
+
+from ..models import Tag
 
 
 class NotificationFilterSet(FilterSet):

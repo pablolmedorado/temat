@@ -32,7 +32,7 @@ class EventTypeViewSet(AtomicFlexFieldsModelViewSet):
 class EventViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly)
     serializer_class = EventSerializer
-    permit_list_expands = ["attendees", "type", "groups"]
+    permit_list_expands = ["attendees", "type", "groups", "tags"]
     filterset_class = EventFilterSet
     search_fields = ("name", "details")
     ordering_fields = ("name", "type", "start_datetime", "visibility")

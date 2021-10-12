@@ -87,7 +87,7 @@ export default {
   mixins: [EventEditionMixin],
   async beforeRouteEnter(to, from, next) {
     try {
-      const response = await EventService.retrieve(to.params.id);
+      const response = await EventService.retrieve(to.params.id, { expand: "tags" });
       next((vm) => {
         vm.item = new CalendarEvent(response.data);
       });
@@ -133,7 +133,7 @@ export default {
   methods: {
     ...mapActions(["showSnackbar"]),
     async fetchItem(id) {
-      const response = await this.service.retrieve(id);
+      const response = await this.service.retrieve(id, { expand: "tags" });
       this.item = new CalendarEvent(response.data);
     },
     onFormSubmit(newItem) {

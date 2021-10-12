@@ -49,6 +49,7 @@ from common.api.viewsets import AtomicFlexFieldsModelViewSet
 class SprintViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     serializer_class = SprintSerializer
+    permit_list_expands = ["tags"]
     filterset_class = SprintFilterSet
     search_fields = ("name",)
     ordering_fields = (
@@ -100,6 +101,7 @@ class EpicViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = Epic.objects.with_current_progress().all().prefetch_related("tags").distinct()
     serializer_class = EpicSerializer
+    permit_list_expands = ["tags"]
     filterset_class = EpicFilterSet
     search_fields = ("name", "description", "external_reference")
     ordering_fields = ("id", "name", "user_stories__count", "annotated_current_progress")
@@ -150,7 +152,7 @@ class UserStoryViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
         "use_migrations",
     )
     ordering = ("-start_date",)
-    permit_list_expands = ["type", "epic", "sprint", "development_user", "validation_user", "support_user"]
+    permit_list_expands = ["type", "epic", "sprint", "development_user", "validation_user", "support_user", "tags"]
 
     def get_queryset(self, *args, **kwargs):
         queryset = self.queryset

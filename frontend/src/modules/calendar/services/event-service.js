@@ -10,6 +10,7 @@ class EventService extends BaseService {
 
   async listCalendar(luxonInterval, excludeSystemEvents) {
     const params = {
+      expand: "tags",
       ordering: "start_datetime,name",
       end_datetime__date__gte: luxonInterval.start.toISODate(),
       start_datetime__date__lte: luxonInterval.end.toISODate(),

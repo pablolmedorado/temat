@@ -7,7 +7,6 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from taggit.managers import TaggableManager
-from taggit.models import GenericUUIDTaggedItemBase, TaggedItemBase
 
 
 class Uuidable(models.Model):
@@ -84,14 +83,8 @@ class Notifiable(Authorable):
         abstract = True
 
 
-class UUIDTaggedItem(GenericUUIDTaggedItemBase, TaggedItemBase):
-    class Meta:
-        verbose_name = _("Tag")
-        verbose_name_plural = _("Tags")
-
-
 class Taggable(Uuidable):
-    tags = TaggableManager(through=UUIDTaggedItem, blank=True)
+    tags = TaggableManager(through="common.TaggedItem", blank=True)
 
     class Meta:
         abstract = True

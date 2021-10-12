@@ -64,7 +64,6 @@ INSTALLED_APPS = [
     "ordered_model",
     "colorfield",
     "taggit",
-    "taggit_serializer",
     "notifications",
     "common.apps.CommonConfig",
     "users.apps.UsersConfig",

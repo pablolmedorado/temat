@@ -5,9 +5,10 @@ from django.utils.translation import ugettext_lazy as _
 from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
-from taggit_serializer.serializers import TagListSerializerField, TaggitSerializer
+from taggit.serializers import TagListSerializerField, TaggitSerializer
 
 from ..models import Effort, Epic, Progress, Sprint, Task, UserStory, UserStoryType
+from common.api.serializers import TagSerializer
 from users.api.serializers import UserSerializer
 
 
@@ -53,7 +54,10 @@ class SprintSerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "modification_datetime",
             "modification_user",
         )
-        expandable_fields = {"accountable_user": UserSerializer}
+        expandable_fields = {
+            "accountable_user": UserSerializer,
+            "tags": (TagSerializer, {"many": True, "fields": ["name", "colour", "icon"]}),
+        }
 
 
 class EpicSerializer(TaggitSerializer, FlexFieldsModelSerializer):
@@ -74,6 +78,9 @@ class EpicSerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "modification_datetime",
             "modification_user",
         )
+        expandable_fields = {
+            "tags": (TagSerializer, {"many": True, "fields": ["name", "colour", "icon"]}),
+        }
 
 
 class UserStoryTypeSerializer(FlexFieldsModelSerializer):
@@ -209,6 +216,7 @@ class UserStorySerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "effort_allocation": (EffortSerializer, {"many": True}),
             "creation_user": UserSerializer,
             "modification_user": UserSerializer,
+            "tags": (TagSerializer, {"many": True, "fields": ["name", "colour", "icon"]}),
         }
         validators = [
             UniqueTogetherValidator(queryset=UserStory.objects.all(), fields=["name", "sprint"]),
