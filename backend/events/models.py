@@ -64,7 +64,7 @@ class EventType(models.Model):
         ordering = ("name",)
         constraints = [
             models.UniqueConstraint(
-                fields=["system_slug"], condition=Q(system_slug__isnull=False), name="unique_system_slug"
+                fields=["system_slug"], condition=Q(system_slug__isnull=False), name="unique_event_type_slug"
             )
         ]
 

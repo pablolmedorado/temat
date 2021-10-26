@@ -49,7 +49,9 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="eventtype",
             constraint=models.UniqueConstraint(
-                condition=models.Q(("system_slug__isnull", False)), fields=("system_slug",), name="unique_system_slug"
+                condition=models.Q(("system_slug__isnull", False)),
+                fields=("system_slug",),
+                name="unique_event_type_slug",
             ),
         ),
         migrations.RunPython(populate_event_type_slugs, reverse_code=revert_event_type_slugs),

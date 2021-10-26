@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     "crispy_forms",
     "hijack",
     "hijack.contrib.admin",
-    "compat",
     "django_js_reverse",
     "import_export",
     "ordered_model",

@@ -57,7 +57,7 @@ export default {
   data() {
     return {
       views: [
-        { label: "Kanban", routeName: "sprint-kanban", icon: "mdi-teach" },
+        { label: "Kanban", routeName: "sprint-kanban", icon: "mdi-human-male-board" },
         { label: "Diagrama de quemado (Burn-down/up)", routeName: "sprint-chart", icon: "mdi-fire" },
         { label: "Diagrama de Gantt", routeName: "sprint-gantt", icon: "mdi-chart-timeline" },
         { label: "Informe de despliegue", routeName: "sprint-deployment-report", icon: "mdi-rocket-launch" },
