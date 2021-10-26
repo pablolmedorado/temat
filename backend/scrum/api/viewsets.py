@@ -85,6 +85,7 @@ class SprintViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
     def deployment_report(self, request, *args, **kwargs):
         instance = self.get_object()
         report_data = {
+            "progress": instance.current_progress,
             "user_story_count": instance.user_stories.count(),
             "user_stories_with_migrations": instance.user_stories.filter(use_migrations=True).values("id", "name"),
             "development_users": instance.user_stories.order_by("development_user")
