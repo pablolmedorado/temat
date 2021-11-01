@@ -79,13 +79,14 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 import { DateTime } from "luxon";
 
 import CalendarEvent from "@/modules/calendar/models/event";
 
 import EventFilters from "@/modules/calendar/components/filters/EventFilters";
 
+import useEventTypes from "@/modules/calendar/composables/useEventTypes";
 import { getReadableDuration, isoDateToLocaleString, isoDateTimeToLocaleString } from "@/utils/dates";
 
 export default {
@@ -96,6 +97,10 @@ export default {
   filters: {
     date: isoDateToLocaleString,
     datetime: isoDateTimeToLocaleString,
+  },
+  setup() {
+    const { eventTypesMap } = useEventTypes();
+    return { eventTypesMap };
   },
   data() {
     return {
@@ -144,7 +149,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("calendar", ["eventTypesMap", "eventVisibilityTypesMap"]),
+    ...mapGetters("calendar", ["eventVisibilityTypesMap"]),
     quickFilters() {
       return [
         {
@@ -155,13 +160,7 @@ export default {
       ];
     },
   },
-  created() {
-    if (!Object.keys(this.eventTypesMap).length) {
-      this.fetchEventTypes();
-    }
-  },
   methods: {
-    ...mapActions("calendar", ["fetchEventTypes"]),
     calculateDuration(item) {
       const start = DateTime.fromISO(item.start_datetime);
       const end = DateTime.fromISO(item.end_datetime);

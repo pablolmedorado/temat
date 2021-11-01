@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import { DateTime } from "luxon";
 import { groupBy } from "lodash";
 
@@ -75,6 +75,7 @@ import EventService from "@/modules/calendar/services/event-service";
 
 import EventRepresentation from "@/modules/calendar/components/EventRepresentation";
 
+import useEventTypes from "@/modules/calendar/composables/useEventTypes";
 import useLoading from "@/composables/useLoading";
 import { applyDarkVariant, getFontColourFromBackground } from "@/utils/colours";
 
@@ -88,10 +89,12 @@ export default {
   },
   setup() {
     const { isLoading, addTask, removeTask } = useLoading();
+    const { eventTypesMap } = useEventTypes();
     return {
       isLoading,
       addTask,
       removeTask,
+      eventTypesMap,
     };
   },
   data() {
@@ -101,23 +104,17 @@ export default {
   },
   computed: {
     ...mapState(["locale"]),
-    ...mapGetters("calendar", ["eventTypesMap", "eventVisibilityTypesMap"]),
+    ...mapGetters("calendar", ["eventVisibilityTypesMap"]),
     eventsMap() {
       return groupBy(this.events, (event) => {
         return event.luxonStart.setLocale(this.locale).toLocaleString(DateTime.DATE_HUGE);
       });
     },
   },
-  created() {
-    if (!Object.keys(this.eventTypesMap).length) {
-      this.fetchEventTypes();
-    }
-  },
   activated() {
     this.fetchTimeLine();
   },
   methods: {
-    ...mapActions("calendar", ["fetchEventTypes"]),
     applyDarkVariant,
     getFontColourFromBackground,
     async fetchTimeLine() {

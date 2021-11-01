@@ -433,7 +433,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 import { range } from "lodash";
 
 import FilterMixin from "@/mixins/filter-mixin";
@@ -441,11 +441,19 @@ import FilterMixin from "@/mixins/filter-mixin";
 import EpicService from "@/modules/scrum/services/epic-service";
 import SprintService from "@/modules/scrum/services/sprint-service";
 
+import useUserStoryTypes from "@/modules/scrum/composables/useUserStoryTypes";
+
 export default {
   name: "UserStoryFilters",
   mixins: [FilterMixin],
   inject: {
     context: { default: {} },
+  },
+  setup() {
+    const { userStoryTypes: userStoryTypesOptions } = useUserStoryTypes();
+    return {
+      userStoryTypesOptions,
+    };
   },
   data() {
     return {
@@ -460,7 +468,6 @@ export default {
     ...mapState("scrum", {
       riskLevelOptions: "riskLevels",
       userStoryStatusOptions: "userStoryStatus",
-      userStoryTypesOptions: "userStoryTypes",
     }),
     statusFilter() {
       return this.splitFilterValue("status__in", true);
@@ -483,14 +490,6 @@ export default {
     supportUserFilter() {
       return this.splitFilterValue("support_user_id__in", true);
     },
-  },
-  created() {
-    if (!Object.keys(this.userStoryTypesOptions).length) {
-      this.getUserStoryTypes();
-    }
-  },
-  methods: {
-    ...mapActions("scrum", ["getUserStoryTypes"]),
   },
 };
 </script>

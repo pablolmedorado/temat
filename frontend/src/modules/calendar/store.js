@@ -21,7 +21,7 @@ export default {
     },
   },
   actions: {
-    async fetchEventTypes({ commit }) {
+    async getEventTypes({ commit }) {
       const response = await EventTypeService.list();
       commit("setEventTypes", response.data);
       return response.data;

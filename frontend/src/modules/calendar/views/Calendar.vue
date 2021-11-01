@@ -137,7 +137,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 import { DateTime, Interval } from "luxon";
 import { debounce, defaultTo, sortBy } from "lodash";
 import { escapeHTML } from "vuetify/es5/util/helpers";
@@ -149,6 +149,7 @@ import EventService from "@/modules/calendar/services/event-service";
 import EventCard from "@/modules/calendar/components/EventCard";
 import EventForm from "@/modules/calendar/components/forms/EventForm";
 
+import useEventTypes from "@/modules/calendar/composables/useEventTypes";
 import useLoading from "@/composables/useLoading";
 import useLocalStorage from "@/composables/useLocalStorage";
 import { getFontColourFromBackground, hex2rgba } from "@/utils/colours";
@@ -171,6 +172,8 @@ export default {
   setup() {
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
 
+    const { eventTypesMap } = useEventTypes();
+
     const calendarType = useLocalStorage("calendarType", "month");
     const excludeSystemEvents = useLocalStorage("calendarExcludeSystemEvents", false);
 
@@ -179,6 +182,7 @@ export default {
       isTaskLoading,
       addTask,
       removeTask,
+      eventTypesMap,
       calendarType,
       excludeSystemEvents,
     };
@@ -206,7 +210,6 @@ export default {
   },
   computed: {
     ...mapState(["locale", "loggedUser"]),
-    ...mapGetters("calendar", ["eventTypesMap"]),
     pickerDate: {
       get() {
         if (this.calendarType === "month") {
@@ -240,17 +243,11 @@ export default {
       this.fetchEvents();
     },
   },
-  created() {
-    if (!Object.keys(this.eventTypesMap).length) {
-      this.fetchEventTypes();
-    }
-  },
   activated() {
     this.fetchEvents();
   },
   methods: {
     ...mapActions(["showSnackbar"]),
-    ...mapActions("calendar", ["fetchEventTypes"]),
     onCalendarChange: debounce(function () {
       this.events = [];
       this.fetchEvents();

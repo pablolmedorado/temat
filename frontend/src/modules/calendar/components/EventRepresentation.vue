@@ -144,12 +144,13 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import { DateTime } from "luxon";
 import { camelCase } from "lodash";
 
 import EventAuthorshipTag from "@/modules/calendar/components/EventAuthorshipTag";
 
+import useEventTypes from "@/modules/calendar/composables/useEventTypes";
 import { applyDarkVariant } from "@/utils/colours";
 import { getReadableDuration } from "@/utils/dates";
 
@@ -162,9 +163,13 @@ export default {
       required: true,
     },
   },
+  setup() {
+    const { eventTypesMap } = useEventTypes();
+    return { eventTypesMap };
+  },
   computed: {
     ...mapState(["locale"]),
-    ...mapGetters("calendar", ["eventTypesMap", "eventVisibilityTypesMap"]),
+    ...mapGetters("calendar", ["eventVisibilityTypesMap"]),
     startDate() {
       return this.item.luxonStart.toISODate();
     },
@@ -181,13 +186,7 @@ export default {
       return getReadableDuration(this.item.luxonEnd.diff(this.item.luxonStart).toObject());
     },
   },
-  created() {
-    if (!Object.keys(this.eventTypesMap).length) {
-      this.fetchEventTypes();
-    }
-  },
   methods: {
-    ...mapActions("calendar", ["fetchEventTypes"]),
     camelCase,
     applyDarkVariant,
     dateLocaleString(dateTime) {

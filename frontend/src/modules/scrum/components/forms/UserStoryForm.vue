@@ -566,7 +566,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 import { DateTime } from "luxon";
 import { between, helpers, maxLength, minValue, numeric, required, requiredIf } from "vuelidate/lib/validators";
 import { isWebUri } from "valid-url";
@@ -578,6 +578,7 @@ import EpicService from "@/modules/scrum/services/epic-service";
 import SprintService from "@/modules/scrum/services/sprint-service";
 import UserStoryService from "@/modules/scrum/services/user-story-service";
 
+import useUserStoryTypes from "@/modules/scrum/composables/useUserStoryTypes";
 import { isoDateTimeToLocaleString, isoDateToLocaleString } from "@/utils/dates";
 import { userHasPermission } from "@/utils/permissions";
 import { urlValidator } from "@/utils/validation";
@@ -629,9 +630,11 @@ export default {
   },
   setup() {
     const { copy: copyToClipboard, isSupported: isClipboardSupported } = useClipboard({ read: false });
+    const { userStoryTypes: userStoryTypesOptions } = useUserStoryTypes();
     return {
       isClipboardSupported,
       copyToClipboard,
+      userStoryTypesOptions,
     };
   },
   data() {
@@ -661,7 +664,6 @@ export default {
     ...mapState(["locale", "loggedUser"]),
     ...mapState("scrum", {
       riskLevelOptions: "riskLevels",
-      userStoryTypesOptions: "userStoryTypes",
     }),
     canEdit() {
       const action = this.item.id ? "change" : "add";
@@ -679,15 +681,9 @@ export default {
       return undefined;
     },
   },
-  created() {
-    if (!Object.keys(this.userStoryTypesOptions).length) {
-      this.getUserStoryTypes();
-    }
-  },
   methods: {
     isWebUri,
     isoDateTimeToLocaleString,
-    ...mapActions("scrum", ["getUserStoryTypes"]),
     buildSaveFunctionArgs() {
       return [
         this.replaceUndefined({

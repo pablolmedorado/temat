@@ -213,7 +213,6 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
 import { get, intersection, uniq } from "lodash";
 
 import SprintService from "@/modules/scrum/services/sprint-service";
@@ -225,6 +224,7 @@ import UserStoryIndexStatus from "@/modules/scrum/components/UserStoryIndexStatu
 
 import useLoading from "@/composables/useLoading";
 import useScrumContext from "@/modules/scrum/composables/useScrumContext";
+import useUserStoryTypes from "@/modules/scrum/composables/useUserStoryTypes";
 import { defaultTableOptions } from "@/utils/constants";
 
 export default {
@@ -242,12 +242,15 @@ export default {
   setup(props) {
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
     const { contextItem } = useScrumContext(props);
+    const { userStoryTypes: userStoryTypesOptions, userStoryTypesMap } = useUserStoryTypes();
     return {
       isLoading,
       isTaskLoading,
       addTask,
       removeTask,
       contextItem,
+      userStoryTypesOptions,
+      userStoryTypesMap,
     };
   },
   data() {
@@ -291,10 +294,6 @@ export default {
     };
   },
   computed: {
-    ...mapState("scrum", {
-      userStoryTypesOptions: "userStoryTypes",
-    }),
-    ...mapGetters("scrum", ["userStoryTypesMap"]),
     breadcrumbs() {
       if (this.contextItem) {
         return [
@@ -327,13 +326,9 @@ export default {
   },
   created() {
     this.fetchData();
-    if (!Object.keys(this.userStoryTypesOptions).length) {
-      this.getUserStoryTypes();
-    }
     this.fetchUserStories(true);
   },
   methods: {
-    ...mapActions("scrum", ["getUserStoryTypes"]),
     get,
     uniq,
     async fetchData() {

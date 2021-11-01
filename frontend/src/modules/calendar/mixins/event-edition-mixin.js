@@ -1,4 +1,4 @@
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapState } from "vuex";
 import { cloneDeep } from "lodash";
 
 import CalendarEvent from "@/modules/calendar/models/event";
@@ -8,19 +8,21 @@ import EventService from "@/modules/calendar/services/event-service";
 import EventForm from "@/modules/calendar/components/forms/EventForm";
 import EventRepresentation from "@/modules/calendar/components/EventRepresentation";
 
+import useEventTypes from "@/modules/calendar/composables/useEventTypes";
 import { userHasPermission } from "@/utils/permissions";
 
 export default {
   components: { EventRepresentation },
-  data() {
+  setup() {
+    const { eventTypesMap } = useEventTypes();
     return {
       service: EventService,
       formComponent: EventForm,
+      eventTypesMap,
     };
   },
   computed: {
     ...mapState(["loggedUser", "tz"]),
-    ...mapGetters("calendar", ["eventTypesMap"]),
     canChange() {
       return this.loggedUser.id === this.item.creation_user || userHasPermission(CalendarEvent.CHANGE_PERMISSION);
     },
@@ -53,13 +55,7 @@ export default {
       return `${baseUrl}&text=${eventType}${this.item.name}&dates=${dates}&details=${this.item.details}&location=${this.item.location}`;
     },
   },
-  created() {
-    if (!Object.keys(this.eventTypesMap).length) {
-      this.fetchEventTypes();
-    }
-  },
   methods: {
-    ...mapActions("calendar", ["fetchEventTypes"]),
     onEdit(item) {
       this.$refs.formDialog.open(item);
     },
