@@ -40,6 +40,7 @@
                   search-field="name"
                   search-lookup="icontains"
                   :readonly="!canEdit"
+                  :clearable="canEdit"
                   label="Épica"
                   prepend-icon="mdi-sword-cross"
                 >
@@ -124,6 +125,20 @@
                   @input="$v.item.external_resource.$touch()"
                   @blur="$v.item.external_resource.$touch()"
                 >
+                  <template #append>
+                    <v-tooltip bottom>
+                      <template #activator="{ on: onTooltip, attrs: attrTooltip }">
+                        <v-icon
+                          v-bind="attrTooltip"
+                          v-on="onTooltip"
+                          @click="item.external_resource = encodeURI(item.external_resource)"
+                        >
+                          mdi-exit-run
+                        </v-icon>
+                      </template>
+                      <span> Escapar url </span>
+                    </v-tooltip>
+                  </template>
                   <template
                     v-if="item.external_resource && (isWebUri(item.external_resource) || isClipboardSupported)"
                     #append-outer

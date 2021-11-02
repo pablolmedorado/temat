@@ -1,10 +1,10 @@
-import Notifications from "@/modules/notifications/views/Notifications";
+import NotificationListView from "@/modules/notifications/views/NotificationListView";
 
 export default [
   {
     path: "/notifications",
     name: "notifications",
-    component: Notifications,
+    component: NotificationListView,
     meta: {
       keepAlive: true,
     },
