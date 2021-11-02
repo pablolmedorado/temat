@@ -56,7 +56,7 @@ import useScrumContext, { scrumContextProps } from "@/modules/scrum/composables/
 import { handleError } from "@/utils/error-handlers";
 
 export default {
-  name: "UserStoryDetail",
+  name: "UserStoryDetailView",
   metaInfo() {
     return {
       title: this.id ? "Historia de usuario" : "Nueva historia de usuario",

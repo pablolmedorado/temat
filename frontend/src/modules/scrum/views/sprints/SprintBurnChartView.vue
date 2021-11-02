@@ -38,7 +38,7 @@ import useLoading from "@/composables/useLoading";
 import useScrumContext from "@/modules/scrum/composables/useScrumContext";
 
 export default {
-  name: "SprintChart",
+  name: "SprintBurnChartView",
   metaInfo: {
     title: "Sprint - Gráfica",
   },

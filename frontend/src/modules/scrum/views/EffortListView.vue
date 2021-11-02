@@ -84,7 +84,7 @@ import EffortReportDialog from "@/modules/scrum/components/dialogs/EffortReportD
 import { userHasPermission } from "@/utils/permissions";
 
 export default {
-  name: "Effort",
+  name: "EffortListView",
   metaInfo: {
     title: "Esfuerzo",
   },

@@ -80,7 +80,7 @@ import useLoading from "@/composables/useLoading";
 import { applyDarkVariant, getFontColourFromBackground } from "@/utils/colours";
 
 export default {
-  name: "Timeline",
+  name: "TimelineView",
   metaInfo: {
     title: "Timeline",
   },

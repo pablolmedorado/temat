@@ -142,7 +142,7 @@ import useLoading from "@/composables/useLoading";
 const currentDate = DateTime.local();
 
 export default {
-  name: "HolidaysUser",
+  name: "HolidayListUserView",
   metaInfo: {
     title: "Vacaciones usuario",
   },

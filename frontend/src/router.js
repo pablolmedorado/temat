@@ -11,7 +11,7 @@ import breakfastsRoutes from "@/modules/breakfasts/routes";
 import notificationsRoutes from "@/modules/notifications/routes";
 import analyticsRoutes from "@/modules/analytics/routes";
 
-import NotFound from "@/views/NotFound";
+import NotFoundView from "@/views/NotFoundView";
 
 Vue.use(Router);
 Vue.use(VueMeta);
@@ -50,7 +50,7 @@ const router = new Router({
     {
       path: "*",
       name: "not-found",
-      component: NotFound,
+      component: NotFoundView,
       meta: {
         keepAlive: true,
       },

@@ -155,7 +155,7 @@ import useLocalStorage from "@/composables/useLocalStorage";
 import { getFontColourFromBackground, hex2rgba } from "@/utils/colours";
 
 export default {
-  name: "Calendar",
+  name: "CalendarView",
   metaInfo: {
     title: "Calendario",
   },

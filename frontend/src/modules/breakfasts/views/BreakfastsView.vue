@@ -70,7 +70,7 @@ import useLoading from "@/composables/useLoading";
 import { getServiceByBasename } from "@/services";
 
 export default {
-  name: "Breakfasts",
+  name: "BreakfastsView",
   metaInfo: {
     title: "Desayunos",
   },

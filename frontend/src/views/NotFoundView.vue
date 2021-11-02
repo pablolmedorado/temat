@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  name: "NotFound",
+  name: "NotFoundView",
   metaInfo: {
     title: "404",
   },

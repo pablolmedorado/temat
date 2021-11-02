@@ -117,7 +117,7 @@ import { getServiceByBasename } from "@/services";
 import { isoDateTimeToLocaleString } from "@/utils/dates";
 
 export default {
-  name: "Notifications",
+  name: "NotificationListView",
   metaInfo: {
     title: "Notificaciones",
   },

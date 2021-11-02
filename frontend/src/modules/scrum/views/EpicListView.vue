@@ -65,7 +65,7 @@ import EpicFilters from "@/modules/scrum/components/filters/EpicFilters";
 import EpicForm from "@/modules/scrum/components/forms/EpicForm";
 
 export default {
-  name: "Epics",
+  name: "EpicListView",
   metaInfo: {
     title: "Épicas",
   },

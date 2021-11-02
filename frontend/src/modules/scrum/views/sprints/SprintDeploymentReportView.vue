@@ -228,7 +228,7 @@ import useUserStoryTypes from "@/modules/scrum/composables/useUserStoryTypes";
 import { defaultTableOptions } from "@/utils/constants";
 
 export default {
-  name: "SprintDeploymentReport",
+  name: "SprintDeploymentReportView",
   metaInfo: {
     title: "Sprint - Informe de despliegue",
   },

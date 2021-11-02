@@ -90,7 +90,7 @@ import useEventTypes from "@/modules/calendar/composables/useEventTypes";
 import { getReadableDuration, isoDateToLocaleString, isoDateTimeToLocaleString } from "@/utils/dates";
 
 export default {
-  name: "Events",
+  name: "EventListView",
   metaInfo: {
     title: "Eventos",
   },

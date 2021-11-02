@@ -1,13 +1,13 @@
-import Timeline from "@/modules/calendar/views/Timeline";
-import Calendar from "@/modules/calendar/views/Calendar";
-import Events from "@/modules/calendar/views/events/Events";
-import EventDetail from "@/modules/calendar/views/events/EventDetail";
+import TimelineView from "@/modules/calendar/views/TimelineView";
+import CalendarView from "@/modules/calendar/views/CalendarView";
+import EventListView from "@/modules/calendar/views/events/EventListView";
+import EventDetailView from "@/modules/calendar/views/events/EventDetailView";
 
 export default [
   {
     path: "/timeline",
     name: "timeline",
-    component: Timeline,
+    component: TimelineView,
     meta: {
       keepAlive: true,
     },
@@ -15,7 +15,7 @@ export default [
   {
     path: "/calendar",
     name: "calendar",
-    component: Calendar,
+    component: CalendarView,
     props: true,
     meta: {
       keepAlive: true,
@@ -24,7 +24,7 @@ export default [
   {
     path: "/calendar/events",
     name: "events",
-    component: Events,
+    component: EventListView,
     meta: {
       keepAlive: true,
     },
@@ -32,7 +32,7 @@ export default [
   {
     path: "/calendar/events/:id",
     name: "event",
-    component: EventDetail,
+    component: EventDetailView,
     props: true,
     meta: {
       keepAlive: false,

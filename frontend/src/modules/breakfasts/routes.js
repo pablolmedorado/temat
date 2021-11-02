@@ -1,10 +1,10 @@
-import Breakfasts from "@/modules/breakfasts/views/Breakfasts";
+import BreakfastsView from "@/modules/breakfasts/views/BreakfastsView";
 
 export default [
   {
     path: "/breakfasts",
     name: "breakfasts",
-    component: Breakfasts,
+    component: BreakfastsView,
     meta: {
       keepAlive: true,
     },

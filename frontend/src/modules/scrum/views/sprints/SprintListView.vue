@@ -72,7 +72,7 @@ import SprintForm from "@/modules/scrum/components/forms/SprintForm";
 import SprintViewSelector from "@/modules/scrum/components/SprintViewSelector";
 
 export default {
-  name: "Sprints",
+  name: "SprintListView",
   metaInfo: {
     title: "Sprints",
   },

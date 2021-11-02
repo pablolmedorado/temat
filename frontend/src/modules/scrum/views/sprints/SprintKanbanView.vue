@@ -77,7 +77,7 @@ import useLoading from "@/composables/useLoading";
 import useScrumContext from "@/modules/scrum/composables/useScrumContext";
 
 export default {
-  name: "SprintKanban",
+  name: "SprintKanbanView",
   metaInfo: {
     title: "Sprint - Kanban",
   },

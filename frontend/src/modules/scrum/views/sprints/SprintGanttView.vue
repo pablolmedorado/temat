@@ -27,7 +27,7 @@ import useLoading from "@/composables/useLoading";
 import useScrumContext from "@/modules/scrum/composables/useScrumContext";
 
 export default {
-  name: "SprintGantt",
+  name: "SprintGanttView",
   metaInfo: {
     title: "Sprint - Gantt",
   },

@@ -117,7 +117,7 @@ import { getServiceByBasename } from "@/services";
 import { userHasPermission } from "@/utils/permissions";
 
 export default {
-  name: "UserStories",
+  name: "UserStoryListView",
   metaInfo() {
     let title = "Historias de usuario";
     if (this.hasContext) {

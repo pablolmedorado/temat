@@ -116,7 +116,7 @@ import { getServiceByBasename } from "@/services";
 import { userHasPermission } from "@/utils/permissions";
 
 export default {
-  name: "GreenWorkingDays",
+  name: "GreenWorkingDayListView",
   metaInfo: {
     title: "Jornadas especiales",
   },

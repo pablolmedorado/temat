@@ -80,7 +80,7 @@ import { handleError } from "@/utils/error-handlers";
 import { truncate } from "@/filters";
 
 export default {
-  name: "EventDetail",
+  name: "EventDetailView",
   metaInfo: {
     title: "Evento",
   },

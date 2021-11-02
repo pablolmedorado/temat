@@ -90,7 +90,7 @@ import { userHasPermission } from "@/utils/permissions";
 const currentDate = DateTime.local();
 
 export default {
-  name: "HolidaysTeam",
+  name: "HolidayListTeamView",
   metaInfo: {
     title: "Vacaciones equipo",
   },

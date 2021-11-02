@@ -56,7 +56,7 @@ import SupportFilters from "@/modules/support-working-days/components/filters/Su
 import { userHasPermission, userHasAnyPermission } from "@/utils/permissions";
 
 export default {
-  name: "Support",
+  name: "SupportListView",
   metaInfo: {
     title: "Soporte",
   },
