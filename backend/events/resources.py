@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 
+from django_currentuser.middleware import get_current_authenticated_user
 from import_export import resources
 from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
@@ -14,6 +15,12 @@ class EventResource(resources.ModelResource):
         attribute="attendees", widget=ManyToManyWidget(model=get_user_model(), field="username"), readonly=False
     )
     groups = Field(attribute="groups", widget=ManyToManyWidget(model=Group, field="name"), readonly=False)
+    creation_user = Field(
+        attribute="creation_user",
+        widget=ForeignKeyWidget(model=get_user_model(), field="username"),
+        readonly=False,
+        default=get_current_authenticated_user,
+    )
 
     class Meta:
         model = Event
@@ -31,6 +38,7 @@ class EventResource(resources.ModelResource):
             "groups",
             "link_content_type",
             "link_object_id",
+            "creation_user",
         )
         export_order = fields
 

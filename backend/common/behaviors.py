@@ -3,9 +3,9 @@ import uuid
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
-from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
+from django_currentuser.db.models import CurrentUserField
 from taggit.managers import TaggableManager
 
 
@@ -30,17 +30,14 @@ class Authorable(models.Model):
         _("fecha de modificación"), auto_now=True, blank=False, null=False, editable=False
     )
 
-    creation_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        null=True,
+    creation_user = CurrentUserField(
         blank=True,
         verbose_name=_("usuario de creación"),
         on_delete=models.PROTECT,
         related_name="%(app_label)s_%(class)s_creations",
     )
-    modification_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        null=True,
+    modification_user = CurrentUserField(
+        on_update=True,
         blank=True,
         verbose_name=_("usuario de modificación"),
         on_delete=models.PROTECT,

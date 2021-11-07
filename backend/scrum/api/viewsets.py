@@ -40,13 +40,13 @@ from ..utils import (
     user_story_overworked_pie_chart_data,
     user_story_user_chart_data,
 )
-from common.api.mixins import AuthorshipMixin, OrderedMixin
+from common.api.mixins import OrderedMixin
 from common.api.permissions import HasDjangoPermissionOrReadOnly
 from common.api.utils import check_api_user_permissions
 from common.api.viewsets import AtomicFlexFieldsModelViewSet
 
 
-class SprintViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
+class SprintViewSet(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     serializer_class = SprintSerializer
     permit_list_expands = ["tags"]
@@ -98,7 +98,7 @@ class SprintViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
         return Response(report_data)
 
 
-class EpicViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
+class EpicViewSet(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = Epic.objects.with_current_progress().all().prefetch_related("tags").distinct()
     serializer_class = EpicSerializer
@@ -118,7 +118,7 @@ class UserStoryTypeViewSet(AtomicFlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class UserStoryViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
+class UserStoryViewSet(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, UserStoryPermission)
     queryset = UserStory.objects.with_actual_effort().prefetch_related("tags").distinct()
     serializer_class = UserStorySerializer
@@ -273,7 +273,7 @@ class ProgressViewSet(FlexFieldsMixin, viewsets.ReadOnlyModelViewSet):
         return self.queryset
 
 
-class EffortViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
+class EffortViewSet(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, EffortPermission)
     queryset = Effort.objects.all()
     serializer_class = EffortSerializer
@@ -301,7 +301,7 @@ class EffortViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
         return Response(chart_data)
 
 
-class TaskViewSet(AuthorshipMixin, OrderedMixin, AtomicFlexFieldsModelViewSet):
+class TaskViewSet(OrderedMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, TaskPermission)
     queryset = Task.objects.all()
     serializer_class = TaskSerializer

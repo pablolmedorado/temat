@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 
+from django_currentuser.middleware import get_current_authenticated_user
 from import_export import resources
 from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget
@@ -43,6 +44,12 @@ class UserStoryResource(resources.ModelResource):
     support_user = Field(
         attribute="support_user", widget=ForeignKeyWidget(model=get_user_model(), field="username"), readonly=False
     )
+    creation_user = Field(
+        attribute="creation_user",
+        widget=ForeignKeyWidget(model=get_user_model(), field="username"),
+        readonly=False,
+        default=get_current_authenticated_user,
+    )
 
     class Meta:
         model = UserStory
@@ -70,6 +77,7 @@ class UserStoryResource(resources.ModelResource):
             "risk_comments",
             "use_migrations",
             "deployment_notes",
+            "creation_user",
         )
         export_order = fields
 

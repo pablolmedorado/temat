@@ -46,26 +46,6 @@ class AtomicModelViewSetMixin(AtomicUpdateModelMixin, AtomicCreateModelMixin, At
     pass
 
 
-class AuthorshipMixin(object):
-    def perform_create(self, serializer):
-        if type(serializer.validated_data) in [list, tuple]:
-            for element in serializer.validated_data:
-                element["creation_user"] = self.request.user
-        else:
-            serializer.validated_data["creation_user"] = self.request.user
-        return super().perform_create(serializer)
-
-    def perform_update(self, serializer):
-        if type(serializer.validated_data) in [list, tuple]:
-            for index, element in enumerate(serializer.validated_data):
-                element["creation_user"] = serializer.instance[index].creation_user
-                element["modification_user"] = self.request.user
-        else:
-            serializer.validated_data["creation_user"] = serializer.instance.creation_user
-            serializer.validated_data["modification_user"] = self.request.user
-        return super().perform_update(serializer)
-
-
 class OrderedMixin(object):
     def perform_create(self, serializer):
         super().perform_create(serializer)

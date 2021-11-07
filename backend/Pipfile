@@ -25,6 +25,7 @@ werkzeug = "==2.0.2"
 [packages]
 django = "==3.2.9"
 django-colorfield = "==0.4.5"
+django-currentuser = "==0.5.3"
 django-db-prefix = "==1.0.5"
 django-environ = "==0.8.1"
 django-filter = "==21.1"

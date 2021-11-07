@@ -14,7 +14,6 @@ from .filtersets import EventFilterSet
 from .serializers import EventSerializer, EventTypeSerializer
 from ..models import Event, EventType
 from ..utils import monthly_chart_data
-from common.api.mixins import AuthorshipMixin
 from common.api.permissions import HasDjangoPermissionOrReadOnly, IsOwnerOrReadOnly
 from common.api.viewsets import AtomicFlexFieldsModelViewSet
 
@@ -29,7 +28,7 @@ class EventTypeViewSet(AtomicFlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class EventViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
+class EventViewSet(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly)
     serializer_class = EventSerializer
     permit_list_expands = ["attendees", "type", "groups", "tags"]
