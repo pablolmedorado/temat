@@ -7,6 +7,7 @@ from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 
 from .models import Event, EventType
+from common.widgets import UUIDWidget
 
 
 class EventResource(resources.ModelResource):
@@ -21,6 +22,7 @@ class EventResource(resources.ModelResource):
         readonly=False,
         default=get_current_authenticated_user,
     )
+    link_object_id = Field(attribute="link_object_id", widget=UUIDWidget(), readonly=False)
 
     class Meta:
         model = Event
