@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.15.0](https://github.com/pablolmedorado/temat/compare/v1.14.1...v1.15.0) (2021-11-07)
+
+
+### Features
+
+* add colour and icon to Tags ([17a9291](https://github.com/pablolmedorado/temat/commit/17a9291ce4564135238eaabed2b54543bd380d7e))
+* **scrum:** relax date field validations on sprint and user-story ([dd61002](https://github.com/pablolmedorado/temat/commit/dd61002b1c3e748d7be352e14e139ad0ef02977d))
+* **sprints:** add filters and progress to deployment report ([b9db1a2](https://github.com/pablolmedorado/temat/commit/b9db1a2497f4a082fdd8c9e272176c0b674564c7))
+* **user-stories:** add escape button to external resource field ([b950607](https://github.com/pablolmedorado/temat/commit/b95060722abab754656d4048fefbb4b9984b8c89))
+* **user-stories:** show authorship info on user-story detail ([a0722b6](https://github.com/pablolmedorado/temat/commit/a0722b6e047ad82b9cd7d1efbe98ae01c5fc81cd))
+
+
+### Bug Fixes
+
+* **admin:** add UUIDWidget to avoid errors in imports/exports ([497a1fb](https://github.com/pablolmedorado/temat/commit/497a1fb54e4a441b5968236750a2a611f49638d4))
+* **docker:** remove temat user ([c81bc3b](https://github.com/pablolmedorado/temat/commit/c81bc3bd5c82ebb488c0ecc67ee13cf530593379))
+* **user-stories:** include tags in user story copies ([4be0a71](https://github.com/pablolmedorado/temat/commit/4be0a71479b985d7bc55a4636043278b058a38bd))
+* **users:** make get_random_admin method truly random ([415eb51](https://github.com/pablolmedorado/temat/commit/415eb51003450b60444d164943c2bf41f3b1e8c9))
+
 ### [1.14.1](https://github.com/pablolmedorado/temat/compare/v1.14.0...v1.14.1) (2021-07-08)
 
 
