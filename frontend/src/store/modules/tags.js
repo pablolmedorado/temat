@@ -1,4 +1,4 @@
-import TagService from "@/services/common/tag-service";
+import TagService from "@/services/tag-service";
 
 export default {
   namespaced: true,

@@ -28,7 +28,7 @@ def notify_attendees_of_invitation(sender, instance, action, reverse, model, pk_
     """
     Notifies attendees that they have been invited to a new event
     """
-    if action == "post_add" and isinstance(instance, Event) and not instance.type.system:
+    if action == "post_add" and isinstance(instance, Event) and not instance.type.system_slug:
         notification_sender = instance.notification_sender
 
         recipient_qs = None
@@ -45,7 +45,10 @@ def notify_attendees_of_invitation(sender, instance, action, reverse, model, pk_
 
         if recipient_qs and recipient_qs.exists():
             notify.send(
-                sender=notification_sender, recipient=recipient_qs, verb="te ha invitado al evento", target=instance,
+                sender=notification_sender,
+                recipient=recipient_qs,
+                verb="te ha invitado al evento",
+                target=instance,
             )
 
 
@@ -54,7 +57,7 @@ def notify_attendees_of_changes(sender, instance, created, *args, **kwargs):
     """
     Notifies attendees of changes made in an existent event
     """
-    if not created and not instance.type.system:
+    if not created and not instance.type.system_slug:
         notification_sender = instance.notification_sender
 
         recipient_qs = (
@@ -67,5 +70,8 @@ def notify_attendees_of_changes(sender, instance, created, *args, **kwargs):
 
         if recipient_qs.exists():
             notify.send(
-                sender=notification_sender, recipient=recipient_qs, verb="ha modificado el evento", target=instance,
+                sender=notification_sender,
+                recipient=recipient_qs,
+                verb="ha modificado el evento",
+                target=instance,
             )

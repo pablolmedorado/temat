@@ -5,9 +5,10 @@ from django.utils.translation import ugettext_lazy as _
 from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
-from taggit_serializer.serializers import TagListSerializerField, TaggitSerializer
+from taggit.serializers import TagListSerializerField, TaggitSerializer
 
 from ..models import Effort, Epic, Progress, Sprint, Task, UserStory, UserStoryType
+from common.api.serializers import TagSerializer
 from users.api.serializers import UserSerializer
 
 
@@ -17,12 +18,17 @@ class SprintSerializer(TaggitSerializer, FlexFieldsModelSerializer):
     )
     tags = TagListSerializerField()
 
+    def validate_end_date(self, value):
+        if self.instance and self.instance.user_stories.filter(end_date__gt=value).exists():
+            raise serializers.ValidationError(
+                _("El sprint contiene historias de usuario con una fecha de fin posterior a la del sprint")
+            )
+        return value
+
     def validate(self, data):
         data = super().validate(data)
         if data.get("end_date") < data.get("start_date"):
-            raise serializers.ValidationError(
-                _("No es posible crear un sprint con fecha de fin anterior a la de inicio")
-            )
+            raise serializers.ValidationError(_("Fecha de fin anterior a la de inicio"))
         return data
 
     class Meta:
@@ -48,7 +54,10 @@ class SprintSerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "modification_datetime",
             "modification_user",
         )
-        expandable_fields = {"accountable_user": UserSerializer}
+        expandable_fields = {
+            "accountable_user": UserSerializer,
+            "tags": (TagSerializer, {"many": True, "fields": ["name", "colour", "icon"]}),
+        }
 
 
 class EpicSerializer(TaggitSerializer, FlexFieldsModelSerializer):
@@ -69,6 +78,9 @@ class EpicSerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "modification_datetime",
             "modification_user",
         )
+        expandable_fields = {
+            "tags": (TagSerializer, {"many": True, "fields": ["name", "colour", "icon"]}),
+        }
 
 
 class UserStoryTypeSerializer(FlexFieldsModelSerializer):
@@ -131,10 +143,8 @@ class UserStorySerializer(TaggitSerializer, FlexFieldsModelSerializer):
                 raise serializers.ValidationError(
                     _("Es necesario asignar fechas a las historias de usuario asignadas a un sprint")
                 )
-            if data["start_date"] < data["sprint"].start_date or data["start_date"] > data["sprint"].end_date:
-                raise serializers.ValidationError(_("Fecha de inicio fuera del sprint"))
-            if data["end_date"] < data["sprint"].start_date or data["end_date"] > data["sprint"].end_date:
-                raise serializers.ValidationError(_("Fecha de fin fuera del sprint"))
+            if data["end_date"] > data["sprint"].end_date:
+                raise serializers.ValidationError(_("La fecha de fin debe ser anterior a la del sprint"))
             if not data.get("development_user"):
                 raise serializers.ValidationError(
                     _("No es posible incluir una historia de usuario en un sprint sin un responsable asignado.")
@@ -174,6 +184,10 @@ class UserStorySerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "use_migrations",
             "deployment_notes",
             "tags",
+            "creation_datetime",
+            "creation_user",
+            "modification_datetime",
+            "modification_user",
         )
         read_only_fields = (
             "id",
@@ -186,6 +200,10 @@ class UserStorySerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "validated_changed",
             "status",
             "actual_effort",
+            "creation_datetime",
+            "creation_user",
+            "modification_datetime",
+            "modification_user",
         )
         expandable_fields = {
             "type": UserStoryTypeSerializer,
@@ -196,6 +214,9 @@ class UserStorySerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "support_user": UserSerializer,
             "progress_log": (ProgressSerializer, {"many": True}),
             "effort_allocation": (EffortSerializer, {"many": True}),
+            "creation_user": UserSerializer,
+            "modification_user": UserSerializer,
+            "tags": (TagSerializer, {"many": True, "fields": ["name", "colour", "icon"]}),
         }
         validators = [
             UniqueTogetherValidator(queryset=UserStory.objects.all(), fields=["name", "sprint"]),

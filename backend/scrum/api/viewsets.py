@@ -40,15 +40,16 @@ from ..utils import (
     user_story_overworked_pie_chart_data,
     user_story_user_chart_data,
 )
-from common.api.mixins import AuthorshipMixin, OrderedMixin
+from common.api.mixins import OrderedMixin
 from common.api.permissions import HasDjangoPermissionOrReadOnly
 from common.api.utils import check_api_user_permissions
 from common.api.viewsets import AtomicFlexFieldsModelViewSet
 
 
-class SprintViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
+class SprintViewSet(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     serializer_class = SprintSerializer
+    permit_list_expands = ["tags"]
     filterset_class = SprintFilterSet
     search_fields = ("name",)
     ordering_fields = (
@@ -84,6 +85,7 @@ class SprintViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
     def deployment_report(self, request, *args, **kwargs):
         instance = self.get_object()
         report_data = {
+            "progress": instance.current_progress,
             "user_story_count": instance.user_stories.count(),
             "user_stories_with_migrations": instance.user_stories.filter(use_migrations=True).values("id", "name"),
             "development_users": instance.user_stories.order_by("development_user")
@@ -96,10 +98,11 @@ class SprintViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
         return Response(report_data)
 
 
-class EpicViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
+class EpicViewSet(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = Epic.objects.with_current_progress().all().prefetch_related("tags").distinct()
     serializer_class = EpicSerializer
+    permit_list_expands = ["tags"]
     filterset_class = EpicFilterSet
     search_fields = ("name", "description", "external_reference")
     ordering_fields = ("id", "name", "user_stories__count", "annotated_current_progress")
@@ -115,7 +118,7 @@ class UserStoryTypeViewSet(AtomicFlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class UserStoryViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
+class UserStoryViewSet(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, UserStoryPermission)
     queryset = UserStory.objects.with_actual_effort().prefetch_related("tags").distinct()
     serializer_class = UserStorySerializer
@@ -150,7 +153,7 @@ class UserStoryViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
         "use_migrations",
     )
     ordering = ("-start_date",)
-    permit_list_expands = ["type", "epic", "sprint", "development_user", "validation_user", "support_user"]
+    permit_list_expands = ["type", "epic", "sprint", "development_user", "validation_user", "support_user", "tags"]
 
     def get_queryset(self, *args, **kwargs):
         queryset = self.queryset
@@ -270,7 +273,7 @@ class ProgressViewSet(FlexFieldsMixin, viewsets.ReadOnlyModelViewSet):
         return self.queryset
 
 
-class EffortViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
+class EffortViewSet(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, EffortPermission)
     queryset = Effort.objects.all()
     serializer_class = EffortSerializer
@@ -298,7 +301,7 @@ class EffortViewSet(AuthorshipMixin, AtomicFlexFieldsModelViewSet):
         return Response(chart_data)
 
 
-class TaskViewSet(AuthorshipMixin, OrderedMixin, AtomicFlexFieldsModelViewSet):
+class TaskViewSet(OrderedMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, TaskPermission)
     queryset = Task.objects.all()
     serializer_class = TaskSerializer

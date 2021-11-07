@@ -5,7 +5,7 @@ import { camelCase, upperFirst } from "lodash";
 
 const requireComponent = require.context(
   // The relative path of the components folder
-  "../components/common",
+  "../components",
   // Whether or not to look in subfolders
   true,
   // The regular expression used to match base component filenames

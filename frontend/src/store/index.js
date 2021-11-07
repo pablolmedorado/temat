@@ -3,12 +3,13 @@ import Vuex from "vuex";
 
 import { DateTime } from "luxon";
 
-import notificationsModule from "./modules/notifications";
+import breakfastsModule from "@/modules/breakfasts/store";
+import calendarModule from "@/modules/calendar/store";
+import notificationsModule from "@/modules/notifications/store";
+import scrumModule from "@/modules/scrum/store";
+
 import tagsModule from "./modules/tags";
-import calendarModule from "./modules/calendar";
-import scrumModule from "./modules/scrum";
 import usersModule from "./modules/users";
-import breakfastsModule from "./modules/breakfasts";
 
 import { version } from "@/../package.json";
 
@@ -27,7 +28,7 @@ export default new Vuex.Store({
     locale: "es",
     tz: "Europe/Madrid",
     currentYear: DateTime.local().year,
-    loggedUser: window.djangoUserData || {},
+    loggedUser: { ...window.djangoUserData },
     pendingRequests: 0,
     snackbar: defaultSnackbarConfig,
     isKonamiCodeActive: false,
@@ -41,9 +42,6 @@ export default new Vuex.Store({
     loadingRequests: (state) => Boolean(state.pendingRequests),
   },
   mutations: {
-    setLoggedUser(state, user) {
-      state.loggedUser = user;
-    },
     addPendingRequest(state) {
       state.pendingRequests += 1;
     },
@@ -76,11 +74,11 @@ export default new Vuex.Store({
     },
   },
   modules: {
-    notifications: notificationsModule,
-    tags: tagsModule,
-    calendar: calendarModule,
-    scrum: scrumModule,
-    users: usersModule,
     breakfasts: breakfastsModule,
+    calendar: calendarModule,
+    notifications: notificationsModule,
+    scrum: scrumModule,
+    tags: tagsModule,
+    users: usersModule,
   },
 });

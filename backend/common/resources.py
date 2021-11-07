@@ -1,9 +1,8 @@
 from import_export import resources
 from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget
-from taggit.models import Tag
 
-from .models import Link, LinkType
+from .models import Link, LinkType, Tag
 
 
 class LinkResource(resources.ModelResource):
@@ -25,5 +24,5 @@ class LinkTypeResource(resources.ModelResource):
 class TagResource(resources.ModelResource):
     class Meta:
         model = Tag
-        fields = ("id", "name", "slug")
+        fields = ("id", "name", "slug", "colour", "icon")
         export_order = fields

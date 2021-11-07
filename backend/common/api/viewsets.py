@@ -5,7 +5,6 @@ from rest_framework import mixins, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
-from taggit.models import Tag
 
 from .filtersets import NotificationFilterSet, TagFilterSet
 from .mixins import (
@@ -16,7 +15,7 @@ from .mixins import (
 )
 from .permissions import NotificationPermission
 from .serializers import LinkSerializer, NotificationSerializer, TagSerializer
-from ..models import Link
+from ..models import Link, Tag
 
 
 class AtomicModelViewSet(

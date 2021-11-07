@@ -1,25 +1,19 @@
-// Utilities
-import { storyFactory } from "../../util/helpers";
-import { object } from "@storybook/addon-knobs";
+import GroupPill from "@/components/GroupPill";
 
-// Components
-import GroupPill from "@/components/common/GroupPill";
-
-export default { title: "Components/Common/GroupPill" };
-
-const story = storyFactory({ GroupPill });
-
-export const Default = () => {
-  return story({
-    props: {
-      group: {
-        default: object("Group", {
-          name: "Test Group",
-        }),
-      },
-    },
-    template: `
-      <GroupPill :group="group"></GroupPill>
-    `,
-  });
+export default {
+  title: "Components/Common/GroupPill",
+  component: GroupPill,
+  args: {
+    group: { name: "Test Group" },
+  },
 };
+
+const Template = (args, { argTypes }) => ({
+  components: { GroupPill },
+  props: Object.keys(argTypes),
+  template: `
+    <GroupPill v-bind="$props" />
+  `,
+});
+
+export const Default = Template.bind({});

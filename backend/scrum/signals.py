@@ -22,7 +22,7 @@ def create_or_update_sprint_calendar_event(sender, instance, created, *args, **k
     """
     sprint_ct = ContentType.objects.get_for_model(Sprint)
     if instance.end_date:
-        event_type = EventType.objects.get(pk=EventType.SystemType.SPRINT)
+        event_type = EventType.objects.get(system_slug=EventType.SystemSlug.SPRINT)
         obj, obj_created = Event.objects.update_or_create(
             link_content_type=sprint_ct,
             link_object_id=instance.id,
@@ -142,7 +142,10 @@ def notify_users_of_user_story_changes(sender, instance, created, raw, using, up
                 unread=False
             )
             notify.send(
-                sender=notification_sender, recipient=recipient_qs, verb=notification_verb, target=instance,
+                sender=notification_sender,
+                recipient=recipient_qs,
+                verb=notification_verb,
+                target=instance,
             )
 
 
@@ -168,6 +171,7 @@ def update_user_story_current_progress(sender, instance, created, *args, **kwarg
                     "current_progress",
                     "current_progress_changed",
                     "modification_user",
+                    "modification_datetime",
                 ]
             )
 

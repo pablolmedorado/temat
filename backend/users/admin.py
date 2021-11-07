@@ -4,7 +4,6 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import ugettext as _
 
-from hijack_admin.admin import HijackUserAdminMixin
 from import_export.admin import ImportExportActionModelAdmin
 
 from .models import User, Company
@@ -12,7 +11,7 @@ from .resources import UserResource, CompanyResource
 
 
 @admin.register(User)
-class UserAdmin(ImportExportActionModelAdmin, HijackUserAdminMixin, DjangoUserAdmin):
+class UserAdmin(ImportExportActionModelAdmin, DjangoUserAdmin):
     list_display = (
         "id",
         "username",
@@ -22,7 +21,6 @@ class UserAdmin(ImportExportActionModelAdmin, HijackUserAdminMixin, DjangoUserAd
         "acronym",
         "is_staff",
         "company",
-        "hijack_field",
     )
     list_display_links = ("username",)
     list_select_related = ("company",)

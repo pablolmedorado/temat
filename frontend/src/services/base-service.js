@@ -1,6 +1,6 @@
 import { defaultTo } from "lodash";
 
-import Api from "./api";
+import Api from "@/utils/api";
 
 export default class BaseService {
   get listUrl() {

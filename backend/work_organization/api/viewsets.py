@@ -24,12 +24,12 @@ from .serializers import (
 )
 from ..models import GreenWorkingDay, Holiday, HolidayType, SupportWorkingDay
 from ..utils import green_working_day_user_chart_data, support_working_day_user_chart_data, user_availability_chart_data
-from common.api.mixins import AtomicBulkCreateModelMixin, AuthorshipMixin
+from common.api.mixins import AtomicBulkCreateModelMixin
 from common.api.permissions import HasDjangoPermissionOrReadOnly
 from common.api.viewsets import AtomicFlexFieldsModelViewSet
 
 
-class GreenWorkingDayViewSet(AuthorshipMixin, FlatDatesMixin, AtomicBulkCreateModelMixin, AtomicFlexFieldsModelViewSet):
+class GreenWorkingDayViewSet(FlatDatesMixin, AtomicBulkCreateModelMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, GreenWorkingDayPermission)
     queryset = GreenWorkingDay.objects.all()
     serializer_class = GreenWorkingDaySerializer
@@ -56,7 +56,7 @@ class GreenWorkingDayViewSet(AuthorshipMixin, FlatDatesMixin, AtomicBulkCreateMo
         return Response(chart_data)
 
 
-class SupportWorkingDayViewSet(AuthorshipMixin, FlatDatesMixin, BulkCreateModelMixin, AtomicFlexFieldsModelViewSet):
+class SupportWorkingDayViewSet(FlatDatesMixin, BulkCreateModelMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = SupportWorkingDay.objects.all()
     serializer_class = SupportWorkingDaySerializer
@@ -76,13 +76,13 @@ class HolidayTypeViewSet(AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = HolidayType.objects.all()
     serializer_class = HolidayTypeSerializer
-    filter_fields = ("system",)
+    filterset_fields = ("system_slug",)
     search_fields = ("name",)
-    ordering_fields = ("id", "name", "system")
+    ordering_fields = ("id", "name", "system_slug")
     ordering = ("name",)
 
 
-class HolidayViewSet(AuthorshipMixin, FlatDatesMixin, AtomicFlexFieldsModelViewSet):
+class HolidayViewSet(FlatDatesMixin, AtomicFlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HolidayPermission)
     queryset = Holiday.objects.with_expiration_date()
     serializer_class = HolidaySerializer

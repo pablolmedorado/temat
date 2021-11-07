@@ -19,7 +19,7 @@ def create_or_update_holiday_calendar_event(sender, instance, created, *args, **
     """
     holiday_ct = ContentType.objects.get_for_model(Holiday)
     if instance.approved and instance.planned_date:
-        event_type = EventType.objects.get(pk=EventType.SystemType.HOLIDAY)
+        event_type = EventType.objects.get(system_slug=EventType.SystemSlug.HOLIDAY)
         obj, obj_created = Event.objects.update_or_create(
             link_content_type=holiday_ct,
             link_object_id=instance.id,
@@ -64,7 +64,7 @@ def create_or_update_support_calendar_event(sender, instance, created, *args, **
     """
     Creates or updates a new system event based on the support working day
     """
-    event_type = EventType.objects.get(pk=EventType.SystemType.SUPPORT)
+    event_type = EventType.objects.get(system_slug=EventType.SystemSlug.SUPPORT)
     obj, obj_created = Event.objects.update_or_create(
         link_content_type=ContentType.objects.get_for_model(SupportWorkingDay),
         link_object_id=instance.id,
@@ -106,7 +106,7 @@ def create_or_update_green_calendar_event(sender, instance, created, *args, **kw
     greenworkingday_ct = ContentType.objects.get_for_model(GreenWorkingDay)
     if instance.main_user:
         # Event management
-        event_type = EventType.objects.get(pk=EventType.SystemType.GREEN)
+        event_type = EventType.objects.get(system_slug=EventType.SystemSlug.GREEN)
         event_obj, event_created = Event.objects.update_or_create(
             link_content_type=greenworkingday_ct,
             link_object_id=instance.id,
@@ -124,7 +124,7 @@ def create_or_update_green_calendar_event(sender, instance, created, *args, **kw
         event_obj.attendees.set(attendees)
 
         # Holiday management
-        holiday_type = HolidayType.objects.get(pk=HolidayType.SystemType.GREEN)
+        holiday_type = HolidayType.objects.get(system_slug=HolidayType.SystemSlug.GREEN)
         if instance.main_user.company and instance.main_user.company.extra_holiday_with_green_working_days:
             holiday_obj, holiday_created = Holiday.objects.update_or_create(
                 green_working_day_id=instance.id,

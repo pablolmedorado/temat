@@ -9,21 +9,21 @@ from .resources import EventTypeResource, EventResource
 
 @admin.register(EventType)
 class EventTypeAdmin(ImportExportActionModelAdmin):
-    list_display = ("id", "name", "icon", "colored_colour", "important", "system")
+    list_display = ("id", "name", "icon", "colored_colour", "important", "system_slug")
     list_display_links = ("name",)
     search_fields = ("name",)
-    list_filter = ("important", "system")
+    list_filter = ("important",)
     ordering = ("name",)
     fieldsets = (
         (_("Información básica"), {"fields": ("name", "important")}),
         (_("Apariencia"), {"fields": ("colour", "icon")}),
-        (_("Gestión interna"), {"fields": ("system",)}),
+        (_("Gestión interna"), {"fields": ("system_slug",)}),
     )
-    readonly_fields = ("system",)
+    readonly_fields = ("system_slug",)
     resource_class = EventTypeResource
 
     def get_readonly_fields(self, request, obj=None):
-        if obj and obj.system:
+        if obj and obj.system_slug:
             return self.readonly_fields + ("name",)
         return self.readonly_fields
 

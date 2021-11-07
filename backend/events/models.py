@@ -21,13 +21,23 @@ from common.behaviors import Notifiable, Taggable
 
 
 class EventType(models.Model):
-    class SystemType(models.IntegerChoices):
-        HOLIDAY = 1, _("Vacaciones")
-        SUPPORT = 2, _("Soporte")
-        GREEN = 3, _("Jornada especial")
-        SPRINT = 4, _("Sprint")
+    class SystemSlug(models.TextChoices):
+        HOLIDAY = "HOLIDAY", _("Vacaciones")
+        SUPPORT = "SUPPORT", _("Soporte")
+        GREEN = "GREEN", _("Jornada especial")
+        SPRINT = "SPRINT", _("Sprint")
 
     name = models.CharField(_("nombre"), max_length=50, blank=False, unique=True)
+    system_slug = models.CharField(
+        _("slug de sistema"),
+        choices=SystemSlug.choices,
+        max_length=20,
+        blank=True,
+        null=True,
+        default=None,
+        editable=False,
+        db_index=True,
+    )
     colour = ColorField(_("color en la aplicación"), blank=True, default="#737373")
     icon = models.CharField(
         _("icono en la aplicación"),
@@ -37,12 +47,6 @@ class EventType(models.Model):
     )
     important = models.BooleanField(
         _("importante"), help_text=_("Mostrar fechas de eventos de este tipo en selectores de fecha"), default=False
-    )
-    system = models.BooleanField(
-        _("de sistema"),
-        help_text=_("Los eventos de sistema no pueden/deben ser modificados ni eliminados"),
-        default=False,
-        editable=False,
     )
 
     def __str__(self):
@@ -58,6 +62,11 @@ class EventType(models.Model):
         verbose_name = _("tipo de evento")
         verbose_name_plural = _("tipos de evento")
         ordering = ("name",)
+        constraints = [
+            models.UniqueConstraint(
+                fields=["system_slug"], condition=Q(system_slug__isnull=False), name="unique_event_type_slug"
+            )
+        ]
 
 
 class Event(Taggable, Notifiable, models.Model):
@@ -124,7 +133,7 @@ class Event(Taggable, Notifiable, models.Model):
         ical_event = ICalendarEvent()
 
         ical_event["uid"] = self.id
-        ical_event.add("summary", self.name if not self.type.system else f"[{self.type.name}] {self.name}")
+        ical_event.add("summary", self.name if not self.type.system_slug else f"[{self.type.name}] {self.name}")
         ical_event.add("description", self.details)
         ical_event.add("location", self.location)
         ical_event.add("dtstart", self.start_datetime)

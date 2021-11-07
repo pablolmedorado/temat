@@ -48,7 +48,7 @@ class BreakfastViewSet(AtomicFlexFieldsModelViewSet):
     queryset = Breakfast.objects.exclude(user__is_active=False)
     serializer_class = BreakfastSerializer
     permit_list_expands = ["user", "bread", "base", "ingredient1", "ingredient2", "drink"]
-    filter_fields = ("user_id", "bread_id", "base_id", "ingredient1_id", "ingredient2_id", "drink_id")
+    filterset_fields = ("user_id", "bread_id", "base_id", "ingredient1_id", "ingredient2_id", "drink_id")
     ordering_fields = (
         "id",
         "user__acronym",

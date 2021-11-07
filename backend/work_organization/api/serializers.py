@@ -61,7 +61,7 @@ class SupportWorkingDaySerializer(BulkSerializerMixin, FlexFieldsModelSerializer
 class HolidayTypeSerializer(FlexFieldsModelSerializer):
     class Meta:
         model = HolidayType
-        fields = ("id", "name", "validity", "system")
+        fields = ("id", "name", "validity", "system_slug")
         read_only_fields = ("id",)
 
 

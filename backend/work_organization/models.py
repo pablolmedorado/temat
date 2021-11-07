@@ -2,6 +2,7 @@ from datetime import date
 
 from django.conf import settings
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 from .querysets import HolidayQuerySet
@@ -64,9 +65,9 @@ class SupportWorkingDay(Uuidable, Notifiable, Eventable, models.Model):
 
 
 class HolidayType(models.Model):
-    class SystemType(models.IntegerChoices):
-        GENERAL = 1, _("General")
-        GREEN = 2, _("Jornada especial")
+    class SystemSlug(models.TextChoices):
+        GENERAL = "GENERAL", _("General")
+        GREEN = "GREEN", _("Jornada especial")
 
     name = models.CharField(_("nombre"), max_length=50, blank=False, unique=True)
     validity = models.DurationField(
@@ -75,11 +76,15 @@ class HolidayType(models.Model):
         blank=False,
         null=False,
     )
-    system = models.BooleanField(
-        _("de sistema"),
-        help_text=_("Los tipos de sistema no pueden/deben ser modificados ni eliminados"),
-        default=False,
+    system_slug = models.CharField(
+        _("slug de sistema"),
+        choices=SystemSlug.choices,
+        max_length=20,
+        blank=True,
+        null=True,
+        default=None,
         editable=False,
+        db_index=True,
     )
 
     def __str__(self):
@@ -89,6 +94,19 @@ class HolidayType(models.Model):
         verbose_name = _("tipo de vacaciones")
         verbose_name_plural = _("tipos de vacaciones")
         ordering = ["name"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["system_slug"], condition=Q(system_slug__isnull=False), name="unique_holiday_type_slug"
+            )
+        ]
+
+
+def holiday_type_default():
+    try:
+        general_type = HolidayType.objects.get(system_slug=HolidayType.SystemSlug.GENERAL)
+        return general_type.pk
+    except HolidayType.DoesNotExist:
+        return None
 
 
 class Holiday(Uuidable, Notifiable, Eventable, models.Model):
@@ -106,7 +124,7 @@ class Holiday(Uuidable, Notifiable, Eventable, models.Model):
         related_name="holidays",
         blank=False,
         null=False,
-        default=HolidayType.SystemType.GENERAL,
+        default=holiday_type_default,
         on_delete=models.PROTECT,
     )
     allowance_date = models.DateField(_("fecha de concesión"), blank=False, null=False, default=date.today)

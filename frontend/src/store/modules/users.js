@@ -1,7 +1,7 @@
 import { keyBy } from "lodash";
 
-import UserService from "@/services/users/user-service";
-import GroupService from "@/services/users/group-service";
+import UserService from "@/services/user-service";
+import GroupService from "@/services/group-service";
 
 export default {
   namespaced: true,

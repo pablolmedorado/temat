@@ -57,14 +57,12 @@ INSTALLED_APPS = [
     "django_filters",
     "crispy_forms",
     "hijack",
-    "hijack_admin",
-    "compat",
+    "hijack.contrib.admin",
     "django_js_reverse",
     "import_export",
     "ordered_model",
     "colorfield",
     "taggit",
-    "taggit_serializer",
     "notifications",
     "common.apps.CommonConfig",
     "users.apps.UsersConfig",
@@ -83,6 +81,8 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "hijack.middleware.HijackUserMiddleware",
+    "django_currentuser.middleware.ThreadLocalUserMiddleware",
 ]
 
 ROOT_URLCONF = "temat.urls"
@@ -132,7 +132,7 @@ if env("ENV") == "production":
 
 AUTH_USER_MODEL = "users.User"
 
-LOGIN_REDIRECT_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = LOGIN_REDIRECT_URL
 
 
@@ -187,19 +187,6 @@ JS_REVERSE_EXCLUDE_NAMESPACES = ["admin", "djdt", "rest_framework", "hijack"]
 JS_REVERSE_OUTPUT_PATH = FRONTEND_DIR("src", "plugins")
 
 JS_REVERSE_JS_GLOBAL_OBJECT_NAME = "window"
-
-
-# Hijack
-
-HIJACK_REGISTER_ADMIN = False
-
-HIJACK_USE_BOOTSTRAP = False
-
-HIJACK_ALLOW_GET_REQUESTS = True
-
-HIJACK_LOGIN_REDIRECT_URL = reverse_lazy("app")
-
-HIJACK_LOGOUT_REDIRECT_URL = reverse_lazy("admin:login")
 
 
 # Webpack Loader

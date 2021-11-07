@@ -1,9 +1,8 @@
 from notifications.models import Notification
 from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
-from taggit.models import Tag
 
-from ..models import Link, LinkType
+from ..models import Link, LinkType, Tag
 from users.api.serializers import UserSerializer
 
 
@@ -42,6 +41,8 @@ class TagSerializer(FlexFieldsModelSerializer):
             "id",
             "name",
             "slug",
+            "colour",
+            "icon",
         )
         read_only_fields = fields
 
