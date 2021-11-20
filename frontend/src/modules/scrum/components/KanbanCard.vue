@@ -78,10 +78,13 @@
         <v-spacer />
         <v-col class="d-flex justify-end">
           <v-chip :color="endDatePillColour" :text-color="endDatePillColour" outlined>
-            <v-avatar left>
-              <v-icon>mdi-bullseye-arrow</v-icon>
+            <v-avatar left :class="[endDatePillColour, 'darken-4', 'white--text']">
+              {{ endDatePillNumber }}
             </v-avatar>
             {{ userStory.end_date }}
+            <v-avatar right>
+              <v-icon>mdi-bullseye-arrow</v-icon>
+            </v-avatar>
           </v-chip>
         </v-col>
       </v-row>
@@ -137,6 +140,11 @@ export default {
     },
     effortPillColour() {
       return this.userStory.actual_effort <= this.userStory.planned_effort ? "green" : "orange";
+    },
+    endDatePillNumber() {
+      const startDate = DateTime.fromISO(this.userStory.start_date);
+      const end = this.userStory.status < 4 ? DateTime.local() : DateTime.fromISO(this.userStory.validated_changed);
+      return Math.floor(end.diff(startDate).as("days"));
     },
     endDatePillColour() {
       const endDate = DateTime.fromISO(this.userStory.end_date).plus({ days: 1 });
