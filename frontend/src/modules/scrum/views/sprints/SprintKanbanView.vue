@@ -140,18 +140,18 @@ export default {
         const availableStatus = Object.keys(this.itemsByStatus).length;
         switch (availableStatus) {
           case 1:
-            return "355px";
+            return "360px";
           case 2:
-            return "655px";
+            return "711px";
           case 3:
-            return "955px";
+            return "1062px";
           case 4:
-            return "1255px";
+            return "1413px";
           default:
             return undefined;
         }
       } else {
-        return "1255px";
+        return "1413px";
       }
     },
     statusColumnClasses() {

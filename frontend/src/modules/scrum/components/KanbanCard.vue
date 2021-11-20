@@ -154,7 +154,7 @@ export default {
 
 <style lang="scss" scoped>
 .v-card {
-  min-width: 285px;
+  min-width: 325px;
   border-left-style: solid;
   border-left-width: 8px;
 }
