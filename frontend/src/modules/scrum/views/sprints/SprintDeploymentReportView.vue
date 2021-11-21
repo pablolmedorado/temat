@@ -159,29 +159,29 @@
                 />
               </template>
               <template #item.misc="{ item }">
-                <v-menu
-                  v-if="item.risk_comments"
-                  :close-on-content-click="false"
-                  :nudge-width="200"
-                  open-on-hover
-                  max-width="400px"
-                  offset-x
-                  left
-                >
-                  <template #activator="{ on, attrs }">
-                    <v-icon v-bind="attrs" class="misc-icon" v-on="on">mdi-alert-decagram</v-icon>
-                  </template>
-                  <v-card>
-                    <v-card-title class="text-subtitle-1">Comentarios de riesgo</v-card-title>
-                    <v-card-text class="text-pre-wrap">{{ item.risk_comments }}</v-card-text>
-                  </v-card>
-                </v-menu>
                 <span class="d-inline-flex">
+                  <v-menu
+                    v-if="item.risk_comments"
+                    :close-on-content-click="false"
+                    :nudge-width="200"
+                    open-on-hover
+                    max-width="400px"
+                    offset-x
+                    left
+                  >
+                    <template #activator="{ on, attrs }">
+                      <v-icon v-bind="attrs" class="mr-2 misc-icon" v-on="on">mdi-alert-decagram</v-icon>
+                    </template>
+                    <v-card>
+                      <v-card-title class="text-subtitle-1">Comentarios de riesgo</v-card-title>
+                      <v-card-text class="text-pre-wrap">{{ item.risk_comments }}</v-card-text>
+                    </v-card>
+                  </v-menu>
                   <v-tooltip left>
                     <template #activator="{ on, attrs }">
-                      <v-icon v-if="item.use_migrations" v-bind="attrs" class="mr-2 misc-icon" v-on="on"
-                        >mdi-database-arrow-right</v-icon
-                      >
+                      <v-icon v-if="item.use_migrations" v-bind="attrs" class="mr-2 misc-icon" v-on="on">
+                        mdi-database-arrow-right
+                      </v-icon>
                     </template>
                     <span> Tiene migraciones </span>
                   </v-tooltip>

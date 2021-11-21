@@ -1,5 +1,12 @@
 <template>
-  <v-dialog v-model="showDialog" v-bind="$attrs" persistent :scrollable="scrollable" :max-width="maxWidth">
+  <v-dialog
+    v-model="showDialog"
+    v-bind="$attrs"
+    persistent
+    :scrollable="scrollable"
+    :width="width"
+    :max-width="maxWidth"
+  >
     <v-card :loading="isFormLoading">
       <v-toolbar flat>
         <v-toolbar-title class="text-h6">

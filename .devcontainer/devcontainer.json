@@ -42,6 +42,7 @@
     "python.analysis.extraPaths": [
       "backend"
     ],
+    "python.terminal.activateEnvironment": false,
     // npm extension
     "npm.runInTerminal": true,
     "npm.useRootDirectory": false,

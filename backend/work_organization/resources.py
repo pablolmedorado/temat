@@ -8,13 +8,10 @@ from .models import GreenWorkingDay, Holiday, HolidayType, SupportWorkingDay
 
 
 class GreenWorkingDayResource(resources.ModelResource):
-    main_user = Field(
-        attribute="main_user", widget=ForeignKeyWidget(model=get_user_model(), field="username"), readonly=False
-    )
+    main_user = Field(attribute="main_user", widget=ForeignKeyWidget(model=get_user_model(), field="username"))
     support_user = Field(
         attribute="support_user",
         widget=ForeignKeyWidget(model=get_user_model(), field="username"),
-        readonly=False,
     )
 
     class Meta:
@@ -24,7 +21,7 @@ class GreenWorkingDayResource(resources.ModelResource):
 
 
 class SupportWorkingDayResource(resources.ModelResource):
-    user = Field(attribute="user", widget=ForeignKeyWidget(model=get_user_model(), field="username"), readonly=False)
+    user = Field(attribute="user", widget=ForeignKeyWidget(model=get_user_model(), field="username"))
 
     class Meta:
         model = SupportWorkingDay
@@ -40,8 +37,8 @@ class HolidayTypeResource(resources.ModelResource):
 
 
 class HolidayResource(resources.ModelResource):
-    user = Field(attribute="user", widget=ForeignKeyWidget(model=get_user_model(), field="username"), readonly=False)
-    type = Field(attribute="type", widget=ForeignKeyWidget(model=HolidayType, field="name"), readonly=False)
+    user = Field(attribute="user", widget=ForeignKeyWidget(model=get_user_model(), field="username"))
+    type = Field(attribute="type", widget=ForeignKeyWidget(model=HolidayType, field="name"))
 
     class Meta:
         model = Holiday

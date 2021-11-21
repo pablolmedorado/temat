@@ -44,6 +44,7 @@
   ],
   "python.linting.pylintEnabled": false,
   "python.linting.mypyEnabled": true,
+  "python.terminal.activateEnvironment": false,
   // Javascript
   "javascript.format.enable": false,
   "[json]": {

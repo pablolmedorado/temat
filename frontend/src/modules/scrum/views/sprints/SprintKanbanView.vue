@@ -37,7 +37,7 @@
               <v-col v-show="hideEmptyColumns ? itemsByStatus[status.value] : true" :key="status.value" class="px-1">
                 <v-card outlined :class="statusColumnClasses">
                   <v-card-title>
-                    <v-badge inline color="secondary" :content="get(itemsByStatus, [status.value, 'length'], '0')">
+                    <v-badge inline v-bind="buildColumnBadgeProps(status)">
                       {{ status.label }}
                     </v-badge>
                   </v-card-title>
@@ -63,7 +63,7 @@
 
 <script>
 import { ref } from "@vue/composition-api";
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import { useFullscreen } from "@vueuse/core";
 import { get, groupBy } from "lodash";
 
@@ -114,6 +114,7 @@ export default {
   },
   computed: {
     ...mapState("scrum", ["userStoryStatus"]),
+    ...mapGetters("users", ["workerUsers"]),
     kanbanStatus() {
       return this.userStoryStatus.filter((status) => status.value);
     },
@@ -140,18 +141,18 @@ export default {
         const availableStatus = Object.keys(this.itemsByStatus).length;
         switch (availableStatus) {
           case 1:
-            return "355px";
+            return "360px";
           case 2:
-            return "655px";
+            return "711px";
           case 3:
-            return "955px";
+            return "1062px";
           case 4:
-            return "1255px";
+            return "1413px";
           default:
             return undefined;
         }
       } else {
-        return "1255px";
+        return "1413px";
       }
     },
     statusColumnClasses() {
@@ -162,21 +163,37 @@ export default {
     this.fetchItems();
   },
   methods: {
-    get,
     async fetchItems() {
       this.addTask("fetch-items");
       try {
         const response = await UserStoryService.list({
           sprint_id: this.sprintId,
           status__gte: 1,
-          ordering: "status,priority,-risk_level",
+          ordering: "status,priority,-risk_level,start_date",
           fields:
-            "id,name,status,priority,current_progress,current_progress_changed,validated,validated_changed,actual_effort,planned_effort,end_date,development_user,validation_user,support_user,risk_level",
+            "id,name,status,priority,current_progress,current_progress_changed,validated,validated_changed," +
+            "actual_effort,planned_effort,start_date,end_date,development_user,validation_user,support_user," +
+            "risk_level",
         });
         this.items = response.data;
       } finally {
         this.removeTask("fetch-items");
       }
+    },
+    buildColumnBadgeProps(status) {
+      const itemNumber = get(this.itemsByStatus, [status.value, "length"], 0);
+      const props = {
+        color: "secondary",
+        content: `${itemNumber}`,
+      };
+      if ([2, 3].includes(status.value)) {
+        const maxItems = Math.ceil(this.workerUsers.length * 1.5);
+        props.content = `${itemNumber}/${maxItems}`;
+        if (itemNumber > maxItems) {
+          props.color = "orange";
+        }
+      }
+      return props;
     },
   },
 };

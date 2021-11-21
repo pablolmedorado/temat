@@ -6,7 +6,7 @@ from .models import Link, LinkType, Tag
 
 
 class LinkResource(resources.ModelResource):
-    type = Field(attribute="type", widget=ForeignKeyWidget(model=LinkType, field="name"), readonly=False)
+    type = Field(attribute="type", widget=ForeignKeyWidget(model=LinkType, field="name"))
 
     class Meta:
         model = Link

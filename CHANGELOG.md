@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.16.0](https://github.com/pablolmedorado/temat/compare/v1.15.0...v1.16.0) (2021-11-21)
+
+
+### Features
+
+* **backend:** add 'tags' column to django import-export resources after upgrading django-taggit ([91cb5e2](https://github.com/pablolmedorado/temat/commit/91cb5e22175512f2ef3aaeb97a1538ff04f7f08f))
+* **sprints:** improve kanban adding number of days from planned start date and max cards by column indicators ([36c1ef2](https://github.com/pablolmedorado/temat/commit/36c1ef2b4720d0649bf23b6eddd13737008000e7))
+
+
+### Bug Fixes
+
+* **sprints:** fix kanban card width ([e919b52](https://github.com/pablolmedorado/temat/commit/e919b528bba29eb2f2214e3b4a0da90e39424061))
+* **sprints:** fix risk comments icon on sprint deployment report ([3c328be](https://github.com/pablolmedorado/temat/commit/3c328be4c8669e8d713a4abd8c25be01b7822f1b))
+
 ## [1.15.0](https://github.com/pablolmedorado/temat/compare/v1.14.1...v1.15.0) (2021-11-07)
 
 

@@ -8,8 +8,8 @@ from .models import Company, User
 
 
 class UserResource(resources.ModelResource):
-    company = Field(attribute="company", widget=ForeignKeyWidget(model=Company, field="name"), readonly=False)
-    groups = Field(attribute="groups", widget=ManyToManyWidget(model=Group, field="name"), readonly=False)
+    company = Field(attribute="company", widget=ForeignKeyWidget(model=Company, field="name"))
+    groups = Field(attribute="groups", widget=ManyToManyWidget(model=Group, field="name"))
 
     class Meta:
         model = User

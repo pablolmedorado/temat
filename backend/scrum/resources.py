@@ -6,23 +6,27 @@ from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget
 
 from .models import Effort, Epic, Progress, Sprint, Task, UserStory, UserStoryType
+from common.widgets import TagsWidget
 
 
 class SprintResource(resources.ModelResource):
     accountable_user = Field(
-        attribute="accountable_user", widget=ForeignKeyWidget(model=get_user_model(), field="username"), readonly=False
+        attribute="accountable_user", widget=ForeignKeyWidget(model=get_user_model(), field="username")
     )
+    tags = Field(attribute="tags", widget=TagsWidget())
 
     class Meta:
         model = Sprint
-        fields = ("id", "name", "start_date", "end_date", "accountable_user")
+        fields = ("id", "name", "start_date", "end_date", "accountable_user", "tags")
         export_order = fields
 
 
 class EpicResource(resources.ModelResource):
+    tags = Field(attribute="tags", widget=TagsWidget())
+
     class Meta:
         model = Epic
-        fields = ("id", "name", "description", "external_reference")
+        fields = ("id", "name", "description", "external_reference", "tags")
         export_order = fields
 
 
@@ -34,20 +38,18 @@ class UserStoryTypeResource(resources.ModelResource):
 
 
 class UserStoryResource(resources.ModelResource):
-    type = Field(attribute="type", widget=ForeignKeyWidget(model=UserStoryType, field="name"), readonly=False)
+    type = Field(attribute="type", widget=ForeignKeyWidget(model=UserStoryType, field="name"))
     development_user = Field(
-        attribute="development_user", widget=ForeignKeyWidget(model=get_user_model(), field="username"), readonly=False
+        attribute="development_user", widget=ForeignKeyWidget(model=get_user_model(), field="username")
     )
     validation_user = Field(
-        attribute="validation_user", widget=ForeignKeyWidget(model=get_user_model(), field="username"), readonly=False
+        attribute="validation_user", widget=ForeignKeyWidget(model=get_user_model(), field="username")
     )
-    support_user = Field(
-        attribute="support_user", widget=ForeignKeyWidget(model=get_user_model(), field="username"), readonly=False
-    )
+    support_user = Field(attribute="support_user", widget=ForeignKeyWidget(model=get_user_model(), field="username"))
+    tags = Field(attribute="tags", widget=TagsWidget())
     creation_user = Field(
         attribute="creation_user",
         widget=ForeignKeyWidget(model=get_user_model(), field="username"),
-        readonly=False,
         default=get_current_authenticated_user,
     )
 
@@ -77,6 +79,7 @@ class UserStoryResource(resources.ModelResource):
             "risk_comments",
             "use_migrations",
             "deployment_notes",
+            "tags",
             "creation_user",
         )
         export_order = fields
@@ -90,7 +93,7 @@ class ProgressResource(resources.ModelResource):
 
 
 class EffortResource(resources.ModelResource):
-    user = Field(attribute="user", widget=ForeignKeyWidget(model=get_user_model(), field="username"), readonly=False)
+    user = Field(attribute="user", widget=ForeignKeyWidget(model=get_user_model(), field="username"))
 
     class Meta:
         model = Effort
