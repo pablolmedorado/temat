@@ -1,5 +1,12 @@
 <template>
-  <v-dialog v-model="showDialog" v-bind="$attrs" max-width="500" @click:outside="close" @keydown.esc="close">
+  <v-dialog
+    v-model="showDialog"
+    v-bind="$attrs"
+    :width="width"
+    max-width="500"
+    @click:outside="close"
+    @keydown.esc="close"
+  >
     <v-card v-if="item">
       <v-toolbar flat>
         <v-toolbar-title class="text-h6"> Voluntarios ({{ item.date }}) </v-toolbar-title>

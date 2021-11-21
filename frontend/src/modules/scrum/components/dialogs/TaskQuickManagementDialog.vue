@@ -2,7 +2,8 @@
   <v-dialog
     v-model="showDialog"
     v-bind="$attrs"
-    :max-width="700"
+    :width="width"
+    :max-width="900"
     scrollable
     @click:outside="close"
     @keydown.esc="close"
