@@ -36,16 +36,12 @@ class DrinkResource(resources.ModelResource):
 
 
 class BreakfastResource(resources.ModelResource):
-    user = Field(attribute="user", widget=ForeignKeyWidget(model=get_user_model(), field="name"), readonly=False)
-    bread = Field(attribute="bread", widget=ForeignKeyWidget(model=Bread, field="name"), readonly=False)
-    base = Field(attribute="base", widget=ForeignKeyWidget(model=Base, field="name"), readonly=False)
-    ingredient1 = Field(
-        attribute="ingredient1", widget=ForeignKeyWidget(model=Ingredient, field="name"), readonly=False
-    )
-    ingredient2 = Field(
-        attribute="ingredient2", widget=ForeignKeyWidget(model=Ingredient, field="name"), readonly=False
-    )
-    drink = Field(attribute="drink", widget=ForeignKeyWidget(model=Drink, field="name"), readonly=False)
+    user = Field(attribute="user", widget=ForeignKeyWidget(model=get_user_model(), field="name"))
+    bread = Field(attribute="bread", widget=ForeignKeyWidget(model=Bread, field="name"))
+    base = Field(attribute="base", widget=ForeignKeyWidget(model=Base, field="name"))
+    ingredient1 = Field(attribute="ingredient1", widget=ForeignKeyWidget(model=Ingredient, field="name"))
+    ingredient2 = Field(attribute="ingredient2", widget=ForeignKeyWidget(model=Ingredient, field="name"))
+    drink = Field(attribute="drink", widget=ForeignKeyWidget(model=Drink, field="name"))
 
     class Meta:
         model = Breakfast

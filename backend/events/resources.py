@@ -7,22 +7,20 @@ from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 
 from .models import Event, EventType
-from common.widgets import UUIDWidget
+from common.widgets import TagsWidget, UUIDWidget
 
 
 class EventResource(resources.ModelResource):
-    type = Field(attribute="type", widget=ForeignKeyWidget(model=EventType, field="name"), readonly=False)
-    attendees = Field(
-        attribute="attendees", widget=ManyToManyWidget(model=get_user_model(), field="username"), readonly=False
-    )
-    groups = Field(attribute="groups", widget=ManyToManyWidget(model=Group, field="name"), readonly=False)
+    type = Field(attribute="type", widget=ForeignKeyWidget(model=EventType, field="name"))
+    attendees = Field(attribute="attendees", widget=ManyToManyWidget(model=get_user_model(), field="username"))
+    groups = Field(attribute="groups", widget=ManyToManyWidget(model=Group, field="name"))
+    link_object_id = Field(attribute="link_object_id", widget=UUIDWidget())
+    tags = Field(attribute="tags", widget=TagsWidget())
     creation_user = Field(
         attribute="creation_user",
         widget=ForeignKeyWidget(model=get_user_model(), field="username"),
-        readonly=False,
         default=get_current_authenticated_user,
     )
-    link_object_id = Field(attribute="link_object_id", widget=UUIDWidget(), readonly=False)
 
     class Meta:
         model = Event
@@ -40,6 +38,7 @@ class EventResource(resources.ModelResource):
             "groups",
             "link_content_type",
             "link_object_id",
+            "tags",
             "creation_user",
         )
         export_order = fields
