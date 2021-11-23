@@ -6,6 +6,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from django_currentuser.db.models import CurrentUserField
+from django_currentuser.middleware import get_current_authenticated_user
 from taggit.managers import TaggableManager
 
 
@@ -74,7 +75,7 @@ class Notifiable(Authorable):
 
     @property
     def notification_sender(self):
-        return self.modification_user or self.creation_user or get_user_model().objects.get_random_admin()
+        return get_current_authenticated_user() or get_user_model().objects.get_random_admin()
 
     class Meta:
         abstract = True
