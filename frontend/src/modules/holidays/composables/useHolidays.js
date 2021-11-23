@@ -12,13 +12,15 @@ export default function () {
       datesToRequest.value.length &&
       confirm(`¿Confirmas que deseas solicitar estos ${datesToRequest.value.length} días?`)
     ) {
-      await HolidayService.request(datesToRequest.value);
+      const response = await HolidayService.request(datesToRequest.value);
       showSnackbar({
         color: "success",
         message: `Días de vacaciones solicitados correctamente: ${datesToRequest.value.length}`,
       });
       datesToRequest.value = [];
+      return response;
     }
+    return false;
   }
 
   async function edit(item, approved) {

@@ -221,10 +221,12 @@ export default {
     async function requestHolidays() {
       addTask("request-holidays");
       try {
-        await request();
-        fetchItems();
-        refs.holidaysDatePicker.getUsedDates();
-        refs.holidaysDatePicker.getSummary();
+        const holidays = await request();
+        if (holidays) {
+          fetchItems();
+          refs.holidaysDatePicker.getUsedDates();
+          refs.holidaysDatePicker.getSummary();
+        }
       } finally {
         removeTask("request-holidays");
       }
