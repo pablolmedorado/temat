@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.17.0](https://github.com/pablolmedorado/temat/compare/v1.16.0...v1.17.0) (2021-12-01)
+
+
+### Features
+
+* **frontend:** use dynamic titles in views ([1630750](https://github.com/pablolmedorado/temat/commit/16307500212639ef348b5b786b3a17c82b044c6f))
+* **holidays:** new team holidays view in table format ([2467572](https://github.com/pablolmedorado/temat/commit/246757275ea9d07d5a8a8290ec4d0db1dc992dbe))
+
+
+### Bug Fixes
+
+* **backend:** use current user in notification_sender property ([d1ad770](https://github.com/pablolmedorado/temat/commit/d1ad7706e09b74ab1ed3c1c5671b442b687a9957))
+* **docker:** change node image and move crispy_forms installed app to development zone ([fc293bc](https://github.com/pablolmedorado/temat/commit/fc293bc28049d2742ba1f55cb79074473a8ee936))
+* **effort:** add constructorType to EffortUserTimelineChart ([d782601](https://github.com/pablolmedorado/temat/commit/d782601e82bf17543782a5fe34d10e382c61d62a))
+* **frontend:** add card styles to ItemIndex and use permissions to avoid unnecessary components ([63f2439](https://github.com/pablolmedorado/temat/commit/63f24397250f9d45cd6c6bf0e5e0339038a25096))
+* **frontend:** fix TableHeaderConfigDialog width ([a3b9fab](https://github.com/pablolmedorado/temat/commit/a3b9faba731f6be8e1c05d56df4ef6e8a2c9ef6c))
+* **frontend:** use acronym instead of full name in UserAutocomplete ([a3fd063](https://github.com/pablolmedorado/temat/commit/a3fd063d14301deca5020d39598c005dd3a4a89d))
+* **holidays:** avoid fetching holidays on cancelled request ([1051f99](https://github.com/pablolmedorado/temat/commit/1051f998415775ffda59a282be85a2a62753aaea))
+* **sprints:** kanban minor visual improvements ([b4cc54b](https://github.com/pablolmedorado/temat/commit/b4cc54b3200e95023ae9837b52ec4808b9542940))
+
 ## [1.16.0](https://github.com/pablolmedorado/temat/compare/v1.15.0...v1.16.0) (2021-11-21)
 
 
