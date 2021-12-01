@@ -12,7 +12,7 @@
   >
     <template v-if="multiple && truncateResults" #selection="{ item, index }">
       <v-chip v-if="index === 0" small>
-        <span>{{ item.first_name }} {{ item.last_name }}</span>
+        <span>{{ item.acronym }}</span>
       </v-chip>
       <span v-if="index === 1" class="grey--text text-caption">(+{{ value.length - 1 }} más)</span>
     </template>
