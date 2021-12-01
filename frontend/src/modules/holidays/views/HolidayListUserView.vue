@@ -234,10 +234,12 @@ export default {
     async function cancelHoliday(item) {
       addTask("cancel-holiday", item.id);
       try {
-        await cancel(item);
+        const cancelled = await cancel(item);
+        if (cancelled) {
         fetchItems();
         refs.holidaysDatePicker.getUsedDates();
         refs.holidaysDatePicker.getSummary();
+        }
       } finally {
         removeTask("cancel-holiday", item.id);
       }

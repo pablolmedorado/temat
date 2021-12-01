@@ -24,21 +24,24 @@ export default function () {
   }
 
   async function edit(item, approved) {
-    await HolidayService.changeApprovalStatus(item.id, approved);
+    const response = await HolidayService.changeApprovalStatus(item.id, approved);
     showSnackbar({
       color: "success",
       message: "Día de vacaciones modificado correctamente",
     });
+    return response;
   }
 
   async function cancel(item) {
     if (confirm(`¿Confirmas que deseas cancelar el día de vacaciones con fecha ${item.planned_date}?`)) {
-      await HolidayService.cancel(item.id);
+      const response = await HolidayService.cancel(item.id);
       showSnackbar({
         color: "success",
         message: "Día de vacaciones cancelado correctamente",
       });
+      return response;
     }
+    return false;
   }
 
   function getStatusInfo(status) {
