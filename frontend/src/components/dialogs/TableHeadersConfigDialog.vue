@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="showDialog" v-bind="$attrs" persistent scrollable max-width="500">
+  <v-dialog v-model="showDialog" v-bind="$attrs" :width="width" max-width="500" persistent scrollable>
     <v-card>
       <v-toolbar flat>
         <v-toolbar-title class="text-h6"> Selección de columnas </v-toolbar-title>
