@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card>
+    <v-card :flat="flat" :outlined="outlined">
       <v-toolbar flat>
         <v-toolbar-title class="text-h6">
           <slot
@@ -141,7 +141,7 @@
     </slot>
 
     <FormDialog
-      v-if="formComponent"
+      v-if="formComponent && (allowAdd || allowChange)"
       ref="formDialog"
       :verbose-name="modelClass.verboseName"
       :form-component="formComponent"
@@ -150,6 +150,7 @@
     />
 
     <DeletionConfirmationDialog
+      v-if="allowDelete"
       ref="deleteDialog"
       :item-text="modelClass.itemText"
       :delete-child-items-warning="deleteChildItemsWarning"
@@ -255,6 +256,14 @@ export default {
       default: false,
     },
     formDialogMultiAdd: {
+      type: Boolean,
+      default: false,
+    },
+    flat: {
+      type: Boolean,
+      default: false,
+    },
+    outlined: {
       type: Boolean,
       default: false,
     },
