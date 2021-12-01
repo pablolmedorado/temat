@@ -156,7 +156,9 @@ export default {
       }
     },
     statusColumnClasses() {
-      return this.$vuetify.theme.isDark ? ["grey", "darken-3"] : ["grey", "lighten-3"];
+      const classes = ["kanban-column", "grey"];
+      classes.push(this.$vuetify.theme.isDark ? "darken-3" : "lighten-3");
+      return classes;
     },
   },
   created() {
@@ -205,5 +207,8 @@ export default {
 }
 #fs-wrapper:fullscreen {
   overflow: auto;
+}
+.kanban-column {
+  height: 100%;
 }
 </style>
