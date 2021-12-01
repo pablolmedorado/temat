@@ -1,4 +1,4 @@
-import { createNamespacedHelpers } from "vuex-composition-helpers";
+import { createNamespacedHelpers } from "vuex-composition-helpers/dist";
 
 const { useActions, useGetters, useState } = createNamespacedHelpers("calendar");
 

@@ -1,5 +1,5 @@
 import { ref } from "@vue/composition-api";
-import { useActions } from "vuex-composition-helpers";
+import { useActions } from "vuex-composition-helpers/dist";
 
 import HolidayService from "@/modules/holidays/services/holiday-service";
 

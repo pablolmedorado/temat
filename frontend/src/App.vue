@@ -23,7 +23,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
-import { useMutations } from "vuex-composition-helpers";
+import { useMutations } from "vuex-composition-helpers/dist";
 import { pick } from "lodash";
 
 import AppDrawer from "@/components/layout/AppDrawer";
