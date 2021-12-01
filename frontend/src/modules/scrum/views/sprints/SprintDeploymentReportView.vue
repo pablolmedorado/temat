@@ -229,8 +229,10 @@ import { defaultTableOptions } from "@/utils/constants";
 
 export default {
   name: "SprintDeploymentReportView",
-  metaInfo: {
-    title: "Sprint - Informe de despliegue",
+  metaInfo() {
+    return {
+      title: `${get(this.contextItem, "name", "Sprint")} - Informe de despliegue`,
+    };
   },
   components: { ContextBreadcrumbs, SprintViewSelector, UserStoryIndexStatus },
   props: {

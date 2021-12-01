@@ -3,7 +3,7 @@
     <v-card-text class="py-0">
       <v-row>
         <v-col class="d-inline-flex">
-          <v-tooltip bottom>
+          <v-tooltip v-if="userStory.status === 2" bottom>
             <template #activator="{ on, attrs }">
               <v-progress-circular
                 class="mr-2"
@@ -144,7 +144,7 @@ export default {
     endDatePillNumber() {
       const startDate = DateTime.fromISO(this.userStory.start_date);
       const end = this.userStory.status < 4 ? DateTime.local() : DateTime.fromISO(this.userStory.validated_changed);
-      return Math.floor(end.diff(startDate).as("days"));
+      return Math.max(0, Math.floor(end.diff(startDate).as("days")));
     },
     endDatePillColour() {
       const endDate = DateTime.fromISO(this.userStory.end_date).plus({ days: 1 });
@@ -171,7 +171,7 @@ export default {
   text-decoration: none;
 
   :hover {
-    cursor: alias !important;
+    cursor: pointer !important;
   }
 }
 .progress {

@@ -55,7 +55,6 @@ INSTALLED_APPS = [
     "pwa",
     "rest_framework",
     "django_filters",
-    "crispy_forms",
     "hijack",
     "hijack.contrib.admin",
     "django_js_reverse",
@@ -235,7 +234,7 @@ TAGGIT_CASE_INSENSITIVE = True
 if env("ENV") == "development":
     DEBUG = True
 
-    INSTALLED_APPS += ["debug_toolbar", "django_extensions"]
+    INSTALLED_APPS += ["crispy_forms", "debug_toolbar", "django_extensions"]
 
     MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware", "common.middleware.QueryPrintingMiddleware"]
 

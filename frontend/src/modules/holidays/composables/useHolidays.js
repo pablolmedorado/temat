@@ -1,5 +1,5 @@
 import { ref } from "@vue/composition-api";
-import { useActions } from "vuex-composition-helpers";
+import { useActions } from "vuex-composition-helpers/dist";
 
 import HolidayService from "@/modules/holidays/services/holiday-service";
 
@@ -12,31 +12,36 @@ export default function () {
       datesToRequest.value.length &&
       confirm(`¿Confirmas que deseas solicitar estos ${datesToRequest.value.length} días?`)
     ) {
-      await HolidayService.request(datesToRequest.value);
+      const response = await HolidayService.request(datesToRequest.value);
       showSnackbar({
         color: "success",
         message: `Días de vacaciones solicitados correctamente: ${datesToRequest.value.length}`,
       });
       datesToRequest.value = [];
+      return response;
     }
+    return false;
   }
 
   async function edit(item, approved) {
-    await HolidayService.changeApprovalStatus(item.id, approved);
+    const response = await HolidayService.changeApprovalStatus(item.id, approved);
     showSnackbar({
       color: "success",
       message: "Día de vacaciones modificado correctamente",
     });
+    return response;
   }
 
   async function cancel(item) {
     if (confirm(`¿Confirmas que deseas cancelar el día de vacaciones con fecha ${item.planned_date}?`)) {
-      await HolidayService.cancel(item.id);
+      const response = await HolidayService.cancel(item.id);
       showSnackbar({
         color: "success",
         message: "Día de vacaciones cancelado correctamente",
       });
+      return response;
     }
+    return false;
   }
 
   function getStatusInfo(status) {

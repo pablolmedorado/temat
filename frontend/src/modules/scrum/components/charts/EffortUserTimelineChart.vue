@@ -11,6 +11,7 @@ export default {
   extends: BaseChart,
   data() {
     return {
+      constructorType: "stockChart",
       service: EffortService,
       fetchFunctionName: "userTimelineChartData",
     };

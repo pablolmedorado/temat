@@ -127,7 +127,7 @@
 
 <script>
 import { computed, ref, onActivated, watch } from "@vue/composition-api";
-import { useGetters, useState } from "vuex-composition-helpers";
+import { useGetters, useState } from "vuex-composition-helpers/dist";
 import { DateTime } from "luxon";
 
 import HolidaysDatePicker from "@/modules/holidays/components/inputs/HolidaysDatePicker";
@@ -221,10 +221,12 @@ export default {
     async function requestHolidays() {
       addTask("request-holidays");
       try {
-        await request();
-        fetchItems();
-        refs.holidaysDatePicker.getUsedDates();
-        refs.holidaysDatePicker.getSummary();
+        const holidays = await request();
+        if (holidays) {
+          fetchItems();
+          refs.holidaysDatePicker.getUsedDates();
+          refs.holidaysDatePicker.getSummary();
+        }
       } finally {
         removeTask("request-holidays");
       }
@@ -232,10 +234,12 @@ export default {
     async function cancelHoliday(item) {
       addTask("cancel-holiday", item.id);
       try {
-        await cancel(item);
-        fetchItems();
-        refs.holidaysDatePicker.getUsedDates();
-        refs.holidaysDatePicker.getSummary();
+        const cancelled = await cancel(item);
+        if (cancelled) {
+          fetchItems();
+          refs.holidaysDatePicker.getUsedDates();
+          refs.holidaysDatePicker.getSummary();
+        }
       } finally {
         removeTask("cancel-holiday", item.id);
       }

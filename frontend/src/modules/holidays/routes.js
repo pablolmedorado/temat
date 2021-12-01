@@ -1,5 +1,5 @@
 import HolidayListUserView from "@/modules/holidays/views/HolidayListUserView";
-import HolidayListTeamView from "@/modules/holidays/views/HolidayListTeamView";
+import HolidayTableTeamView from "@/modules/holidays/views/HolidayTableTeamView";
 
 export default [
   {
@@ -18,7 +18,7 @@ export default [
   {
     path: "/holidays/team",
     name: "team-holidays",
-    component: HolidayListTeamView,
+    component: HolidayTableTeamView,
     meta: {
       keepAlive: true,
     },

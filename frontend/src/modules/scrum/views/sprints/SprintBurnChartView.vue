@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import { get } from "lodash";
+
 import ContextBreadcrumbs from "@/modules/scrum/components/ContextBreadcrumbs";
 import SprintBurnChart from "@/modules/scrum/components/charts/SprintBurnChart";
 import SprintViewSelector from "@/modules/scrum/components/SprintViewSelector";
@@ -39,8 +41,10 @@ import useScrumContext from "@/modules/scrum/composables/useScrumContext";
 
 export default {
   name: "SprintBurnChartView",
-  metaInfo: {
-    title: "Sprint - Gráfica",
+  metaInfo() {
+    return {
+      title: `${get(this.contextItem, "name", "Sprint")} - Gráfica`,
+    };
   },
   components: { ContextBreadcrumbs, SprintBurnChart, SprintViewSelector },
   props: {

@@ -111,7 +111,7 @@
 
 <script>
 import { mapGetters, mapMutations, mapState } from "vuex";
-import { createNamespacedHelpers } from "vuex-composition-helpers";
+import { createNamespacedHelpers } from "vuex-composition-helpers/dist";
 import { useIntervalFn } from "@vueuse/core";
 import { isNil, partition } from "lodash";
 

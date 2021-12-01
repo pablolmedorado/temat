@@ -1,10 +1,9 @@
-FROM node:lts-alpine as build
-RUN apk update && apk add --no-cache make gcc g++ python
+FROM node:14-buster as build
 WORKDIR /usr/src/app/frontend
 COPY ./frontend/package*.json ./
 RUN npm ci
 COPY ./frontend ./
-RUN npm run build-modern
+RUN npm run build
 
 FROM python:3.7-alpine
 ENV PYTHONDONTWRITEBYTECODE 1

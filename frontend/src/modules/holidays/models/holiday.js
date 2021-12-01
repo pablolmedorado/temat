@@ -5,5 +5,11 @@ export default class Holiday extends BaseModel {
     app: "work_organization",
     model: "holiday",
   };
+
+  static verboseName = "Día de vacaciones";
+  static verboseNamePlural = "Vacaciones";
+
   static serviceBasename = "work-organization:holiday";
+
+  static localStorageNamespace = "holiday";
 }
