@@ -78,8 +78,10 @@ import useScrumContext from "@/modules/scrum/composables/useScrumContext";
 
 export default {
   name: "SprintKanbanView",
-  metaInfo: {
-    title: "Sprint - Kanban",
+  metaInfo() {
+    return {
+      title: `${get(this.contextItem, "name", "Sprint")} - Kanban`,
+    };
   },
   components: { ContextBreadcrumbs, KanbanCard, SprintViewSelector },
   props: {

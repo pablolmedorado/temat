@@ -156,8 +156,10 @@ import { getFontColourFromBackground, hex2rgba } from "@/utils/colours";
 
 export default {
   name: "CalendarView",
-  metaInfo: {
-    title: "Calendario",
+  metaInfo() {
+    return {
+      title: `${this.calendarIntervalRepresentation} - Calendario`,
+    };
   },
   components: { EventCard },
   props: {

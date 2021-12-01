@@ -100,6 +100,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { get } from "lodash";
 
 import Effort from "@/modules/scrum/models/effort";
 import UserStory from "@/modules/scrum/models/user-story";
@@ -122,7 +123,7 @@ export default {
     let title = "Historias de usuario";
     if (this.hasContext) {
       const model = this.sprintId ? "Sprint" : "Épica";
-      title = `${model} - historias de usuario`;
+      title = `${get(this.contextItem, "name", model)} - Historias de usuario`;
     }
     return { title };
   },
