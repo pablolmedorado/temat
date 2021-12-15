@@ -76,12 +76,14 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 
 import Task from "@/modules/scrum/models/task";
 
 import TaskForm from "@/modules/scrum/components/forms/TaskForm";
 import UserStoryProgressBar from "@/modules/scrum/components/UserStoryProgressBar";
+
+import { useMainStore } from "@/stores/main";
 
 import useLoading from "@/composables/useLoading";
 import { getServiceByBasename } from "@/services";
@@ -121,7 +123,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser"]),
+    ...mapState(useMainStore, ["loggedUser"]),
     systemFilters() {
       return {
         user_story_id: this.userStory.id,

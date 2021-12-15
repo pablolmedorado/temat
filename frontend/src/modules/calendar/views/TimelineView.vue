@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "pinia";
 import { DateTime } from "luxon";
 import { groupBy } from "lodash";
 
@@ -74,6 +74,9 @@ import CalendarEvent from "@/modules/calendar/models/event";
 import EventService from "@/modules/calendar/services/event-service";
 
 import EventRepresentation from "@/modules/calendar/components/EventRepresentation";
+
+import { useMainStore } from "@/stores/main";
+import { useEventStore } from "@/modules/calendar/stores/events";
 
 import useEventTypes from "@/modules/calendar/composables/useEventTypes";
 import useLoading from "@/composables/useLoading";
@@ -103,8 +106,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["locale"]),
-    ...mapGetters("calendar", ["eventVisibilityTypesMap"]),
+    ...mapState(useMainStore, ["locale"]),
+    ...mapState(useEventStore, ["eventVisibilityTypesMap"]),
     eventsMap() {
       return groupBy(this.events, (event) => {
         return event.luxonStart.setLocale(this.locale).toLocaleString(DateTime.DATE_HUGE);

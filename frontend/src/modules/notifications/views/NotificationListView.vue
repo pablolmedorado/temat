@@ -106,11 +106,13 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapState } from "pinia";
 
 import Notification from "@/modules/notifications/models/notification";
 
 import NotificationFilters from "@/modules/notifications/components/filters/NotificationFilters";
+
+import { useNotificationStore } from "@/modules/notifications/stores/notifications";
 
 import useLoading from "@/composables/useLoading";
 import { getServiceByBasename } from "@/services";
@@ -177,10 +179,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("notifications", ["notificationTargetMap"]),
+    ...mapState(useNotificationStore, ["notificationTargetMap"]),
   },
   methods: {
-    ...mapActions("notifications", ["getUnreadCount"]),
+    ...mapActions(useNotificationStore, ["getUnreadCount"]),
     async performBulkAction(actionFunctionName, selectedItems) {
       this.addTask("bulk-action", actionFunctionName);
       try {

@@ -41,11 +41,13 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from "pinia";
 import { useClipboard } from "@vueuse/core";
 import { chain, property, uniqueId } from "lodash";
 
 import DialogMixin from "@/mixins/dialog-mixin";
+
+import { useMainStore } from "@/stores/main";
 
 export default {
   name: "BreakfastSummaryDialog",
@@ -111,7 +113,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["showSnackbar"]),
+    ...mapActions(useMainStore, ["showSnackbar"]),
     open(items) {
       this.items = items;
       this.showDialog = true;

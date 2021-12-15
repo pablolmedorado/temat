@@ -38,8 +38,10 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 import { intersectionBy } from "lodash";
+
+import { useUserStore } from "@/stores/users";
 
 export default {
   name: "UserAutocomplete",
@@ -83,7 +85,7 @@ export default {
     },
   },
   computed: {
-    ...mapState("users", {
+    ...mapState(useUserStore, {
       defaultUserList: "users",
     }),
     userOptions() {

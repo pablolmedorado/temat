@@ -56,13 +56,15 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 import { isWebUri } from "valid-url";
 
 import Epic from "@/modules/scrum/models/epic";
 
 import EpicFilters from "@/modules/scrum/components/filters/EpicFilters";
 import EpicForm from "@/modules/scrum/components/forms/EpicForm";
+
+import { useMainStore } from "@/stores/main";
 
 export default {
   name: "EpicListView",
@@ -112,7 +114,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser"]),
+    ...mapState(useMainStore, ["loggedUser"]),
   },
   methods: {
     isWebUri,

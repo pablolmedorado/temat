@@ -1,6 +1,6 @@
 import BaseModel from "@/models/base-model";
 
-import store from "@/store/index";
+import { useMainStore } from "@/stores/main";
 
 export default class Breakfast extends BaseModel {
   static contentType = {
@@ -16,9 +16,10 @@ export default class Breakfast extends BaseModel {
   static localStorageNamespace = "breakfast";
 
   static get defaults() {
+    const mainStore = useMainStore();
     return {
       id: null,
-      user: store.state.loggedUser.id,
+      user: mainStore.loggedUser.id,
       bread: null,
       base: null,
       ingredient1: null,

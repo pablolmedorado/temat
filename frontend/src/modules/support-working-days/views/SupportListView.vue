@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 import { DateTime } from "luxon";
 
 import SupportWorkingDay from "@/modules/support-working-days/models/support-working-day";
@@ -52,6 +52,8 @@ import StepperBulkFormDialog from "@/components/dialogs/StepperBulkFormDialog";
 import SupportDayBulkForm from "@/modules/support-working-days/components/forms/SupportDayBulkForm";
 import SupportDayForm from "@/modules/support-working-days/components/forms/SupportDayForm";
 import SupportFilters from "@/modules/support-working-days/components/filters/SupportFilters";
+
+import { useMainStore } from "@/stores/main";
 
 import { userHasPermission, userHasAnyPermission } from "@/utils/permissions";
 
@@ -75,7 +77,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser"]),
+    ...mapState(useMainStore, ["loggedUser"]),
     canAdd() {
       return userHasPermission(this.modelClass.ADD_PERMISSION);
     },

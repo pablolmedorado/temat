@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "pinia";
 import { DateTime } from "luxon";
 
 import Effort from "@/modules/scrum/models/effort";
@@ -80,6 +80,9 @@ import Effort from "@/modules/scrum/models/effort";
 import EffortFilters from "@/modules/scrum/components/filters/EffortFilters";
 import EffortForm from "@/modules/scrum/components/forms/EffortForm";
 import EffortReportDialog from "@/modules/scrum/components/dialogs/EffortReportDialog";
+
+import { useMainStore } from "@/stores/main";
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 import { userHasPermission } from "@/utils/permissions";
 
@@ -103,8 +106,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser"]),
-    ...mapGetters("scrum", ["effortRolesMap"]),
+    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useUserStoryStore, ["effortRolesMap"]),
     tableHeaders() {
       return [
         { text: "Fecha", align: "start", sortable: true, value: "date", fixed: true },

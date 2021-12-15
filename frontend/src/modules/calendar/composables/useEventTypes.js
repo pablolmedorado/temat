@@ -1,19 +1,18 @@
-import { createNamespacedHelpers } from "vuex-composition-helpers/dist";
+import { toRefs } from "@vue/composition-api";
 
-const { useActions, useGetters, useState } = createNamespacedHelpers("calendar");
+import { useEventStore } from "@/modules/calendar/stores/events";
 
 export default function () {
-  const { eventTypes } = useState(["eventTypes"]);
-  const { eventTypesMap } = useGetters(["eventTypesMap"]);
-  const { getEventTypes } = useActions(["getEventTypes"]);
+  const eventStore = useEventStore();
+  const { eventTypes, eventTypesMap } = toRefs(eventStore);
 
   if (!eventTypes.value.length) {
-    getEventTypes();
+    eventStore.getEventTypes();
   }
 
   return {
     eventTypes,
     eventTypesMap,
-    getEventTypes,
+    getEventTypes: eventStore.getEventTypes,
   };
 }

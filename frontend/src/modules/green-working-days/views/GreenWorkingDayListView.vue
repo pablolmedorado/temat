@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapState } from "pinia";
 import { DateTime } from "luxon";
 
 import GreenWorkingDay from "@/modules/green-working-days/models/green-working-day";
@@ -110,6 +110,8 @@ import StepperBulkFormDialog from "@/components/dialogs/StepperBulkFormDialog";
 import GreenWorkingDayBulkForm from "@/modules/green-working-days/components/forms/GreenWorkingDayBulkForm";
 import GreenWorkingDayForm from "@/modules/green-working-days/components/forms/GreenWorkingDayForm";
 import VoluteersDialog from "@/modules/green-working-days/components/dialogs/VoluteersDialog";
+
+import { useMainStore } from "@/stores/main";
 
 import useLoading from "@/composables/useLoading";
 import { getServiceByBasename } from "@/services";
@@ -170,14 +172,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser"]),
-    ...mapGetters(["yearOptions"]),
+    ...mapState(useMainStore, ["loggedUser", "yearOptions"]),
     canAdd() {
       return userHasPermission(this.modelClass.ADD_PERMISSION);
     },
   },
   methods: {
-    ...mapActions(["showSnackbar"]),
+    ...mapActions(useMainStore, ["showSnackbar"]),
     fetchTableItems() {
       this.$refs.itemIndex.fetchTableItems();
     },

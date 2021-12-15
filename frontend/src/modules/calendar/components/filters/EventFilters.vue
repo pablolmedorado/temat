@@ -160,9 +160,11 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 
 import FilterMixin from "@/mixins/filter-mixin";
+
+import { useEventStore } from "@/modules/calendar/stores/events";
 
 export default {
   name: "EventFilters",
@@ -173,7 +175,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("calendar", {
+    ...mapState(useEventStore, {
       eventTypesOptions: "eventTypes",
       visibilityOptions: "eventVisibilityTypes",
     }),

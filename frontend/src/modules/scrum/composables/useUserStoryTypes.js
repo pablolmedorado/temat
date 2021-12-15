@@ -1,19 +1,18 @@
-import { createNamespacedHelpers } from "vuex-composition-helpers/dist";
+import { toRefs } from "@vue/composition-api";
 
-const { useActions, useGetters, useState } = createNamespacedHelpers("scrum");
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 export default function () {
-  const { userStoryTypes } = useState(["userStoryTypes"]);
-  const { userStoryTypesMap } = useGetters(["userStoryTypesMap"]);
-  const { getUserStoryTypes } = useActions(["getUserStoryTypes"]);
+  const userStoryStore = useUserStoryStore();
+  const { userStoryTypes, userStoryTypesMap } = toRefs(userStoryStore);
 
   if (!userStoryTypes.value.length) {
-    getUserStoryTypes();
+    userStoryStore.getUserStoryTypes();
   }
 
   return {
     userStoryTypes,
     userStoryTypesMap,
-    getUserStoryTypes,
+    getUserStoryTypes: userStoryStore.getUserStoryTypes,
   };
 }

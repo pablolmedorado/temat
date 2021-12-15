@@ -59,12 +59,14 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 
 import Breakfast from "@/modules/breakfasts/models/breakfast";
 
 import BreakfastForm from "@/modules/breakfasts/components/forms/BreakfastForm";
 import BreakfastSummaryDialog from "@/modules/breakfasts/components/dialogs/BreakfastSummaryDialog";
+
+import { useMainStore } from "@/stores/main";
 
 import useLoading from "@/composables/useLoading";
 import { getServiceByBasename } from "@/services";
@@ -131,7 +133,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser"]),
+    ...mapState(useMainStore, ["loggedUser"]),
   },
   methods: {
     async getUserBreakfast() {

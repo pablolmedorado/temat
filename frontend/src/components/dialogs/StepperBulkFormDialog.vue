@@ -51,9 +51,11 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 
 import DialogMixin from "@/mixins/dialog-mixin";
+
+import { useMainStore } from "@/stores/main";
 
 export default {
   name: "StepperBulkFormDialog",
@@ -73,7 +75,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["locale"]),
+    ...mapState(useMainStore, ["locale"]),
     nextText() {
       return this.step < 2 ? "Siguiente" : "Guardar";
     },

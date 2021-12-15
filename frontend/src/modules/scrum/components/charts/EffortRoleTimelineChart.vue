@@ -1,10 +1,12 @@
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 import { has } from "lodash";
 
 import EffortService from "@/modules/scrum/services/effort-service";
 
 import BaseChart from "@/components/charts/BaseChart";
+
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 export default {
   name: "EffortRoleTimelineChart",
@@ -17,7 +19,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("scrum", ["effortRoles"]),
+    ...mapState(useUserStoryStore, ["effortRoles"]),
     localChartOptions() {
       return {
         chart: {

@@ -581,7 +581,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 import { DateTime } from "luxon";
 import { between, helpers, maxLength, minValue, numeric, required, requiredIf } from "vuelidate/lib/validators";
 import { isWebUri } from "valid-url";
@@ -592,6 +592,9 @@ import FormMixin from "@/mixins/form-mixin";
 import EpicService from "@/modules/scrum/services/epic-service";
 import SprintService from "@/modules/scrum/services/sprint-service";
 import UserStoryService from "@/modules/scrum/services/user-story-service";
+
+import { useMainStore } from "@/stores/main";
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 import useUserStoryTypes from "@/modules/scrum/composables/useUserStoryTypes";
 import { isoDateTimeToLocaleString, isoDateToLocaleString } from "@/utils/dates";
@@ -676,8 +679,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["locale", "loggedUser"]),
-    ...mapState("scrum", {
+    ...mapState(useMainStore, ["locale", "loggedUser"]),
+    ...mapState(useUserStoryStore, {
       riskLevelOptions: "riskLevels",
     }),
     canEdit() {

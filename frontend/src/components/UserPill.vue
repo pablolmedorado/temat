@@ -9,7 +9,9 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+
+import { useUserStore } from "@/stores/users";
 
 export default {
   name: "UserPill",
@@ -21,9 +23,9 @@ export default {
     },
   },
   computed: {
-    ...mapGetters("users", ["usersMap"]),
+    ...mapState(useUserStore, ["userMap"]),
     localUser() {
-      return typeof this.user == "number" ? this.usersMap[this.user] : this.user;
+      return typeof this.user == "number" ? this.userMap[this.user] : this.user;
     },
   },
 };

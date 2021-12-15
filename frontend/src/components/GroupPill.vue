@@ -8,7 +8,9 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+
+import { useUserStore } from "@/stores/users";
 
 export default {
   name: "GroupPill",
@@ -25,14 +27,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("users", ["groupsMap"]),
+    ...mapState(useUserStore, ["groupMap"]),
   },
   watch: {
     group: {
       deep: true,
       immediate: true,
       handler(newVal) {
-        this.localGroup = typeof newVal == "number" ? this.groupsMap[newVal] : newVal;
+        this.localGroup = typeof newVal == "number" ? this.groupMap[newVal] : newVal;
       },
     },
   },

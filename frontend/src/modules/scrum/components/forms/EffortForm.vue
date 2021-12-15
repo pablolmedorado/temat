@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 import { DateTime } from "luxon";
 import { isObject } from "lodash";
 import { maxLength, minValue, numeric, required } from "vuelidate/lib/validators";
@@ -70,6 +70,8 @@ import { maxLength, minValue, numeric, required } from "vuelidate/lib/validators
 import FormMixin from "@/mixins/form-mixin";
 
 import EffortService from "@/modules/scrum/services/effort-service";
+
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 export default {
   name: "EffortForm",
@@ -97,7 +99,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("scrum", {
+    ...mapState(useUserStoryStore, {
       effortRoleOptions: "effortRoles",
     }),
   },

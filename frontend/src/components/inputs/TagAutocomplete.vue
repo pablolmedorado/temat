@@ -10,7 +10,9 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+
+import { useTagStore } from "@/stores/tags";
 
 export default {
   name: "TagAutocomplete",
@@ -26,7 +28,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters("tags", {
+    ...mapState(useTagStore, {
       tagOptions: "tagFlatList",
     }),
   },

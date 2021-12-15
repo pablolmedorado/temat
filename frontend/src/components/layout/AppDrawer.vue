@@ -51,7 +51,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
+
+import { useMainStore } from "@/stores/main";
 
 export default {
   name: "AppDrawer",
@@ -131,7 +133,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser"]),
+    ...mapState(useMainStore, ["loggedUser"]),
   },
 };
 </script>

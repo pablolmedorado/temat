@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapState } from "pinia";
 
 import UserStory from "@/modules/scrum/models/user-story";
 
@@ -85,6 +85,9 @@ import UserStoryAuthorshipIcon from "@/modules/scrum/components/UserStoryAuthors
 import UserStoryForm from "@/modules/scrum/components/forms/UserStoryForm";
 import UserStoryProgressBar from "@/modules/scrum/components/UserStoryProgressBar";
 import UserStoryStatus from "@/modules/scrum/components/UserStoryStatus";
+
+import { useMainStore } from "@/stores/main";
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 import { isoDateTimeToLocaleString } from "@/utils/dates";
 import { userHasPermission } from "@/utils/permissions";
@@ -108,8 +111,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser"]),
-    ...mapGetters("scrum", ["riskLevelsMap"]),
+    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useUserStoryStore, ["riskLevelsMap"]),
     canEdit() {
       const action = this.item.id ? "change" : "add";
       return (
@@ -128,7 +131,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["showSnackbar"]),
+    ...mapActions(useMainStore, ["showSnackbar"]),
     async saveUserStory() {
       const newUserStory = await this.$refs.userStoryForm.submit();
       if (newUserStory) {

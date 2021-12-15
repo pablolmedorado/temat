@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "pinia";
 
 import Effort from "@/modules/scrum/models/effort";
 
@@ -76,6 +76,9 @@ import DialogMixin from "@/mixins/dialog-mixin";
 
 import EffortRoleTimelineChart from "@/modules/scrum/components/charts/EffortRoleTimelineChart";
 import EffortUserTimelineChart from "@/modules/scrum/components/charts/EffortUserTimelineChart";
+
+import { useMainStore } from "@/stores/main";
+import { useUserStore } from "@/stores/users";
 
 import useLoading from "@/composables/useLoading";
 import { userHasPermission } from "@/utils/permissions";
@@ -98,8 +101,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser"]),
-    ...mapGetters("users", ["usersMap"]),
+    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useUserStore, ["userMap"]),
     showUserChart() {
       return userHasPermission(Effort.VIEW_PERMISSION);
     },
@@ -109,7 +112,7 @@ export default {
       }
       return this.filters.user_id__in
         .split(",")
-        .map((user) => this.usersMap[user].acronym)
+        .map((user) => this.userMap[user].acronym)
         .join(", ");
     },
   },

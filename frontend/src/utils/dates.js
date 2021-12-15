@@ -1,14 +1,14 @@
 import { DateTime, Duration } from "luxon";
 
-import store from "@/store/index";
+import { useMainStore } from "@/stores/main";
 
 export function isoDateToLocaleString(isoDate, format) {
   if (!isoDate) {
     return null;
   }
-  const locale = store.state.locale;
+  const mainStore = useMainStore();
   return DateTime.fromISO(isoDate)
-    .setLocale(locale)
+    .setLocale(mainStore.locale)
     .toLocaleString(format || DateTime.DATE_HUGE);
 }
 
@@ -16,9 +16,9 @@ export function isoDateTimeToLocaleString(isoDateTime, format) {
   if (!isoDateTime) {
     return null;
   }
-  const locale = store.state.locale;
+  const mainStore = useMainStore();
   return DateTime.fromISO(isoDateTime)
-    .setLocale(locale)
+    .setLocale(mainStore.locale)
     .toLocaleString(format || DateTime.DATETIME_MED_WITH_SECONDS);
 }
 

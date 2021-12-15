@@ -22,12 +22,15 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
-import { useMutations } from "vuex-composition-helpers/dist";
+import { mapActions, mapState } from "pinia";
 import { pick } from "lodash";
 
 import AppDrawer from "@/components/layout/AppDrawer";
 import AppNavbar from "@/components/layout/AppNavbar";
+
+import { useMainStore } from "@/stores/main";
+import { useTagStore } from "@/stores/tags";
+import { useUserStore } from "@/stores/users";
 
 import useKonamiCode from "@/composables/useKonamiCode";
 import loperaSentences from "@/utils/lopera-sentences";
@@ -43,8 +46,8 @@ export default {
   },
   components: { AppDrawer, AppNavbar },
   setup() {
-    const { toggleKonamiCode } = useMutations(["toggleKonamiCode"]);
-    useKonamiCode(() => toggleKonamiCode());
+    const store = useMainStore();
+    useKonamiCode(() => store.toggleKonamiCode());
   },
   data() {
     return {
@@ -57,8 +60,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["isKonamiCodeActive", "snackbar"]),
-    ...mapGetters(["appLabel"]),
+    ...mapState(useMainStore, ["appLabel", "isKonamiCodeActive", "snackbar"]),
   },
   watch: {
     "$vuetify.theme.dark": function (newValue) {
@@ -77,9 +79,9 @@ export default {
     handleError(err);
   },
   methods: {
-    ...mapActions(["clearSnackbar"]),
-    ...mapActions("users", ["getUsers", "getGroups"]),
-    ...mapActions("tags", ["getTags"]),
+    ...mapActions(useMainStore, ["clearSnackbar"]),
+    ...mapActions(useTagStore, ["getTags"]),
+    ...mapActions(useUserStore, ["getUsers", "getGroups"]),
     onSnackbarInput(value) {
       if (!value) {
         this.clearSnackbar();

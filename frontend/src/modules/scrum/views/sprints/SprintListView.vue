@@ -63,13 +63,15 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 
 import Sprint from "@/modules/scrum/models/sprint";
 
 import SprintFilters from "@/modules/scrum/components/filters/SprintFilters";
 import SprintForm from "@/modules/scrum/components/forms/SprintForm";
 import SprintViewSelector from "@/modules/scrum/components/SprintViewSelector";
+
+import { useMainStore } from "@/stores/main";
 
 export default {
   name: "SprintListView",
@@ -134,7 +136,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser"]),
+    ...mapState(useMainStore, ["loggedUser"]),
   },
   methods: {
     setTagFilter(tag) {

@@ -1,10 +1,10 @@
 import { ref } from "@vue/composition-api";
-import { useActions } from "vuex-composition-helpers/dist";
+import { useMainStore } from "@/stores/main";
 
 import HolidayService from "@/modules/holidays/services/holiday-service";
 
 export default function () {
-  const { showSnackbar } = useActions(["showSnackbar"]);
+  const mainStore = useMainStore();
 
   const datesToRequest = ref([]);
   async function request() {
@@ -13,7 +13,7 @@ export default function () {
       confirm(`¿Confirmas que deseas solicitar estos ${datesToRequest.value.length} días?`)
     ) {
       const response = await HolidayService.request(datesToRequest.value);
-      showSnackbar({
+      mainStore.showSnackbar({
         color: "success",
         message: `Días de vacaciones solicitados correctamente: ${datesToRequest.value.length}`,
       });
@@ -25,7 +25,7 @@ export default function () {
 
   async function edit(item, approved) {
     const response = await HolidayService.changeApprovalStatus(item.id, approved);
-    showSnackbar({
+    mainStore.showSnackbar({
       color: "success",
       message: "Día de vacaciones modificado correctamente",
     });
@@ -35,7 +35,7 @@ export default function () {
   async function cancel(item) {
     if (confirm(`¿Confirmas que deseas cancelar el día de vacaciones con fecha ${item.planned_date}?`)) {
       const response = await HolidayService.cancel(item.id);
-      showSnackbar({
+      mainStore.showSnackbar({
         color: "success",
         message: "Día de vacaciones cancelado correctamente",
       });

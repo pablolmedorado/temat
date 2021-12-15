@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 import { get } from "lodash";
 
 import Effort from "@/modules/scrum/models/effort";
@@ -111,6 +111,8 @@ import TaskQuickManagementDialog from "@/modules/scrum/components/dialogs/TaskQu
 import UserStoryActors from "@/modules/scrum/components/UserStoryActors";
 import UserStoryFilters from "@/modules/scrum/components/filters/UserStoryFilters";
 import UserStoryIndexStatus from "@/modules/scrum/components/UserStoryIndexStatus";
+
+import { useMainStore } from "@/stores/main";
 
 import useLoading from "@/composables/useLoading";
 import useScrumContext, { scrumContextProps } from "@/modules/scrum/composables/useScrumContext";
@@ -209,7 +211,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser"]),
+    ...mapState(useMainStore, ["loggedUser"]),
     breadcrumbs() {
       if (this.contextItem) {
         const result = [

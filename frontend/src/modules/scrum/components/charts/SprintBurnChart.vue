@@ -1,11 +1,13 @@
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
 import { has, get } from "lodash";
 import colors from "vuetify/lib/util/colors";
 
 import SprintService from "@/modules/scrum/services/sprint-service";
 
 import BaseChart from "@/components/charts/BaseChart";
+
+import { useUserStore } from "@/stores/users";
 
 export default {
   name: "SprintBurnChart",
@@ -28,7 +30,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("users", ["workerUsers"]),
+    ...mapState(useUserStore, ["workerUsers"]),
     totalEffort() {
       return get(this.chartData, "total_effort", 0);
     },

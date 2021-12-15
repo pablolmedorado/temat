@@ -81,12 +81,15 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState } from "pinia";
 import { not, required, requiredIf, sameAs } from "vuelidate/lib/validators";
 
 import FormMixin from "@/mixins/form-mixin";
 
 import BreakfastService from "@/modules/breakfasts/services/breakfast-service";
+
+import { useMainStore } from "@/stores/main";
+import { useBreakfastStore } from "@/modules/breakfasts/stores/breakfasts";
 
 export default {
   name: "BreakfastForm",
@@ -109,8 +112,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser"]),
-    ...mapState("breakfasts", {
+    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useBreakfastStore, {
       breadOptions: "breads",
       baseOptions: "bases",
       ingredientOptions: "ingredients",
@@ -132,7 +135,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("breakfasts", ["getBreads", "getBases", "getIngredients", "getDrinks"]),
+    ...mapActions(useBreakfastStore, ["getBreads", "getBases", "getIngredients", "getDrinks"]),
   },
 };
 </script>

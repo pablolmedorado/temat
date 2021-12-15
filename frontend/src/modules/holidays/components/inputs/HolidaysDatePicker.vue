@@ -22,12 +22,15 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "pinia";
 import { DateTime, Interval } from "luxon";
 import { defaultTo, property } from "lodash";
 
 import HolidayService from "@/modules/holidays/services/holiday-service";
 import EventService from "@/modules/calendar/services/event-service";
+
+import { useMainStore } from "@/stores/main";
+import { useUserStore } from "@/stores/users";
 
 import useLoading from "@/composables/useLoading";
 
@@ -75,8 +78,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["locale", "loggedUser"]),
-    ...mapGetters("users", ["workerUsers"]),
+    ...mapState(useMainStore, ["locale", "loggedUser"]),
+    ...mapState(useUserStore, ["workerUsers"]),
     pickerInterval() {
       const date = DateTime.fromObject({ year: this.year });
       const startDate = date.startOf("year");

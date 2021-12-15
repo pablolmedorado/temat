@@ -17,7 +17,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
+
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 export default {
   name: "UserStoryStatus",
@@ -28,7 +30,7 @@ export default {
     },
   },
   computed: {
-    ...mapState("scrum", ["userStoryStatus"]),
+    ...mapState(useUserStoryStore, ["userStoryStatus"]),
   },
 };
 </script>

@@ -1,12 +1,13 @@
-import store from "@/store/index";
+import { useMainStore } from "@/stores/main";
 
 import { userHasPermission } from "@/utils/permissions";
 
 export function adminUsersOnly(to, from, next) {
-  if (store.state.loggedUser.is_superuser) {
+  const mainStore = useMainStore();
+  if (mainStore.loggedUser.is_superuser) {
     next();
   } else {
-    store.dispatch("showSnackbar", {
+    mainStore.dispatch("showSnackbar", {
       color: "error",
       message: "Ruta disponible sólo para usuarios administradores.",
     });
@@ -19,7 +20,8 @@ export function usersWithPermissionOnly(permission) {
     if (userHasPermission(permission)) {
       next();
     } else {
-      store.dispatch("showSnackbar", {
+      const mainStore = useMainStore();
+      mainStore.dispatch("showSnackbar", {
         color: "error",
         message: "Ruta disponible sólo para usuarios con permisos.",
       });

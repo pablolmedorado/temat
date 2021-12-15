@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "pinia";
 import { DateTime, Interval } from "luxon";
 import { countBy, get, pick, set } from "lodash";
 
@@ -99,6 +99,9 @@ import HolidayService from "@/modules/holidays/services/holiday-service";
 
 import HolidayManagementDialog from "@/modules/holidays/components/dialogs/HolidayManagementDialog";
 import HolidayTableCell from "@/modules/holidays/components/HolidayTableCell";
+
+import { useMainStore } from "@/stores/main";
+import { useUserStore } from "@/stores/users";
 
 import useLoading from "@/composables/useLoading";
 import { userHasPermission } from "@/utils/permissions";
@@ -131,9 +134,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["locale"]),
-    ...mapGetters(["yearOptions"]),
-    ...mapGetters("users", ["workerUsers"]),
+    ...mapState(useMainStore, ["locale", "yearOptions"]),
+    ...mapState(useUserStore, ["workerUsers"]),
     intervalDates() {
       const yearDateTime = DateTime.fromObject({ year: this.year });
       return Interval.fromDateTimes(yearDateTime, yearDateTime.endOf("year"))
