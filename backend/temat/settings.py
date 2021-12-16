@@ -63,12 +63,13 @@ INSTALLED_APPS = [
     "colorfield",
     "taggit",
     "notifications",
-    "common.apps.CommonConfig",
-    "users.apps.UsersConfig",
-    "events.apps.EventsConfig",
-    "work_organization.apps.WorkOrganizationConfig",
-    "scrum.apps.ScrumConfig",
-    "breakfasts.apps.BreakfastsConfig",
+    # Local apps
+    "common",
+    "users",
+    "events",
+    "work_organization",
+    "scrum",
+    "breakfasts",
 ]
 
 MIDDLEWARE = [
