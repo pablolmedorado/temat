@@ -9,7 +9,9 @@ import { withTemplate } from "~storybook/addon-show-vue-markup";
 import "@/plugins/composition";
 import "@/plugins/global-components";
 
-addDecorator(StoryRouter());
+import { routes } from "@/router";
+
+addDecorator(StoryRouter({}, { routes }));
 addDecorator(withPinia);
 addDecorator(withVuetify);
 addDecorator(withTemplate);

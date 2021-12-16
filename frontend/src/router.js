@@ -16,46 +16,48 @@ import NotFoundView from "@/views/NotFoundView";
 Vue.use(Router);
 Vue.use(VueMeta);
 
+export const routes = [
+  {
+    path: "/",
+    name: "home",
+    redirect: { name: "timeline" },
+  },
+
+  ...calendarRoutes,
+  ...scrumRoutes,
+  ...holidaysRoutes,
+  ...greenWorkingDaysRoutes,
+  ...supportWorkingDaysRoutes,
+  ...breakfastsRoutes,
+  ...analyticsRoutes,
+  ...notificationsRoutes,
+
+  {
+    path: "/admin",
+    name: "admin",
+    beforeEnter() {
+      window.open("/admin", "_blank");
+    },
+  },
+  {
+    path: "/logout",
+    name: "logout",
+    beforeEnter() {
+      location.href = "/accounts/logout/";
+    },
+  },
+  {
+    path: "*",
+    name: "not-found",
+    component: NotFoundView,
+    meta: {
+      keepAlive: true,
+    },
+  },
+];
+
 const router = new Router({
-  routes: [
-    {
-      path: "/",
-      name: "home",
-      redirect: { name: "timeline" },
-    },
-
-    ...calendarRoutes,
-    ...scrumRoutes,
-    ...holidaysRoutes,
-    ...greenWorkingDaysRoutes,
-    ...supportWorkingDaysRoutes,
-    ...breakfastsRoutes,
-    ...analyticsRoutes,
-    ...notificationsRoutes,
-
-    {
-      path: "/admin",
-      name: "admin",
-      beforeEnter() {
-        window.open("/admin", "_blank");
-      },
-    },
-    {
-      path: "/logout",
-      name: "logout",
-      beforeEnter() {
-        location.href = "/accounts/logout/";
-      },
-    },
-    {
-      path: "*",
-      name: "not-found",
-      component: NotFoundView,
-      meta: {
-        keepAlive: true,
-      },
-    },
-  ],
+  routes,
 });
 
 export default router;
