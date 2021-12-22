@@ -6,10 +6,10 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 from .querysets import HolidayQuerySet
-from common.behaviors import Eventable, Notifiable, Uuidable
+from common.behaviors import Authorable, Eventable, Notifiable, Transactionable, Uuidable
 
 
-class GreenWorkingDay(Uuidable, Notifiable, Eventable, models.Model):
+class GreenWorkingDay(Transactionable, Uuidable, Authorable, Notifiable, Eventable, models.Model):
     label = models.CharField(_("etiqueta"), max_length=100, blank=True)
     date = models.DateField(_("fecha"), unique=True, blank=False, null=False)
     main_user = models.ForeignKey(
@@ -44,7 +44,7 @@ class GreenWorkingDay(Uuidable, Notifiable, Eventable, models.Model):
         ordering = ["-date"]
 
 
-class SupportWorkingDay(Uuidable, Notifiable, Eventable, models.Model):
+class SupportWorkingDay(Transactionable, Uuidable, Authorable, Notifiable, Eventable, models.Model):
     date = models.DateField(_("fecha"), unique=True, blank=False, null=False)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -64,7 +64,7 @@ class SupportWorkingDay(Uuidable, Notifiable, Eventable, models.Model):
         ordering = ["-date"]
 
 
-class HolidayType(models.Model):
+class HolidayType(Transactionable, models.Model):
     class SystemSlug(models.TextChoices):
         GENERAL = "GENERAL", _("General")
         GREEN = "GREEN", _("Jornada especial")
@@ -109,7 +109,7 @@ def holiday_type_default():
         return None
 
 
-class Holiday(Uuidable, Notifiable, Eventable, models.Model):
+class Holiday(Transactionable, Uuidable, Authorable, Notifiable, Eventable, models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name=_("usuario"),

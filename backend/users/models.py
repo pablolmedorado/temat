@@ -1,13 +1,15 @@
 from datetime import date
 
 from django.contrib.auth.models import AbstractUser
-from django.db import models, transaction
+from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from .managers import UserManager
+from common.behaviors import Transactionable
+from common.decorators import atomic_transaction_singleton
 
 
-class Company(models.Model):
+class Company(Transactionable, models.Model):
     name = models.CharField(_("nombre"), max_length=200, blank=False, unique=True)
     yearly_holiday_allocation = models.PositiveSmallIntegerField(
         _("días de vacaciones al año"),
@@ -26,7 +28,7 @@ class Company(models.Model):
         ordering = ["name"]
 
 
-class User(AbstractUser):
+class User(Transactionable, AbstractUser):
     acronym = models.CharField(
         _("siglas"),
         help_text=_("Siglas identificativas del usuario para vistas resumen. Máximo 3 caracteres."),
@@ -53,7 +55,7 @@ class User(AbstractUser):
     def get_short_name(self):
         return f"{self.acronym}"
 
-    @transaction.atomic
+    @atomic_transaction_singleton
     def assign_year_holidays(self, year=None):
         if self.company and self.is_active:
             holidays_year = year if year else date.today().year

@@ -6,8 +6,10 @@ from colorfield.fields import ColorField
 from ordered_model.models import OrderedModel as Orderable
 from taggit.models import GenericUUIDTaggedItemBase, TagBase
 
+from .behaviors import Transactionable
 
-class Tag(TagBase):
+
+class Tag(Transactionable, TagBase):
     colour = ColorField(_("color en la aplicación"), blank=True, default="#00AEC7")
     icon = models.CharField(
         _("icono en la aplicación"),
@@ -28,7 +30,7 @@ class Tag(TagBase):
         verbose_name_plural = _("etiquetas")
 
 
-class TaggedItem(GenericUUIDTaggedItemBase):
+class TaggedItem(Transactionable, GenericUUIDTaggedItemBase):
     tag = models.ForeignKey(Tag, related_name="%(app_label)s_%(class)s_items", on_delete=models.CASCADE)
 
     class Meta:
@@ -38,7 +40,7 @@ class TaggedItem(GenericUUIDTaggedItemBase):
         unique_together = [["content_type", "object_id", "tag"]]
 
 
-class LinkType(Orderable, models.Model):
+class LinkType(Transactionable, Orderable, models.Model):
     name = models.CharField(_("nombre"), max_length=200, blank=False, unique=True)
 
     def __str__(self):
@@ -49,7 +51,7 @@ class LinkType(Orderable, models.Model):
         verbose_name_plural = _("tipos de enlace")
 
 
-class Link(Orderable, models.Model):
+class Link(Transactionable, Orderable, models.Model):
     name = models.CharField(_("nombre"), max_length=2000, blank=False, unique=True)
     icon = models.CharField(
         _("icono en la aplicación"),

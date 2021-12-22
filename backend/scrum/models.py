@@ -2,7 +2,7 @@ from datetime import date
 
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator, URLValidator
-from django.db import models, transaction
+from django.db import models
 from django.db.models import Sum, Value
 from django.db.models.functions import Coalesce
 from django.utils.html import format_html
@@ -14,10 +14,11 @@ from ordered_model.models import OrderedModel as Orderable
 
 from .behaviors import UserStoryContainer
 from .querysets import EpicQuerySet, SprintQuerySet, UserStoryQuerySet
-from common.behaviors import Authorable, Eventable, Notifiable, Taggable, Uuidable
+from common.behaviors import Authorable, Eventable, Notifiable, Taggable, Transactionable, Uuidable
+from common.decorators import atomic_transaction_singleton
 
 
-class Sprint(Taggable, Notifiable, Eventable, UserStoryContainer, models.Model):
+class Sprint(Transactionable, Taggable, Authorable, Notifiable, Eventable, UserStoryContainer, models.Model):
     name = models.CharField(_("nombre"), max_length=200, blank=False, unique=True)
     start_date = models.DateField(_("fecha de inicio"), blank=False, null=False, default=date.today)
     end_date = models.DateField(_("fecha de fin"), blank=False, null=False)
@@ -47,7 +48,7 @@ class Sprint(Taggable, Notifiable, Eventable, UserStoryContainer, models.Model):
         ordering = ("-start_date",)
 
 
-class Epic(Taggable, Authorable, UserStoryContainer, models.Model):
+class Epic(Transactionable, Taggable, Authorable, UserStoryContainer, models.Model):
     name = models.CharField(_("nombre"), max_length=200, blank=False, unique=True)
     description = models.CharField(_("descripción"), max_length=2000, blank=True)
     external_reference = models.CharField(_("referencia externa"), max_length=2000, blank=True)
@@ -63,7 +64,7 @@ class Epic(Taggable, Authorable, UserStoryContainer, models.Model):
         ordering = ("-creation_datetime",)
 
 
-class UserStoryType(models.Model):
+class UserStoryType(Transactionable, models.Model):
     name = models.CharField(_("nombre"), max_length=50, blank=False, unique=True)
     colour = ColorField(_("color en las gráficas"), blank=False)
 
@@ -82,7 +83,7 @@ class UserStoryType(models.Model):
         ordering = ("name",)
 
 
-class UserStory(Taggable, Notifiable, models.Model):
+class UserStory(Transactionable, Taggable, Authorable, Notifiable, models.Model):
     class Status(models.IntegerChoices):
         BACKLOG = 0, _("Backlog")
         NOT_STARTED = 1, _("Sin comenzar")
@@ -128,7 +129,12 @@ class UserStory(Taggable, Notifiable, models.Model):
     validated = models.BooleanField(_("validada"), null=True, blank=True)
     validated_changed = MonitorField(_("último cambio en validación"), monitor="validated")
     status = models.PositiveSmallIntegerField(
-        _("estado"), choices=Status.choices, default=Status.BACKLOG, blank=False, editable=False, db_index=True,
+        _("estado"),
+        choices=Status.choices,
+        default=Status.BACKLOG,
+        blank=False,
+        editable=False,
+        db_index=True,
     )
     planned_effort = models.PositiveSmallIntegerField(
         _("esfuerzo planificado"),
@@ -192,7 +198,7 @@ class UserStory(Taggable, Notifiable, models.Model):
         return f"{self.name}"
 
     @classmethod
-    @transaction.atomic
+    @atomic_transaction_singleton
     def get_copy(cls, instance, owner=None):
         new_instance = cls.objects.create(
             **{
@@ -221,7 +227,7 @@ class UserStory(Taggable, Notifiable, models.Model):
         ]
 
 
-class Progress(Uuidable, Authorable, models.Model):
+class Progress(Transactionable, Uuidable, Authorable, models.Model):
     user_story = models.ForeignKey(
         UserStory,
         verbose_name=_("historia de usuario"),
@@ -245,7 +251,7 @@ class Progress(Uuidable, Authorable, models.Model):
         constraints = [models.UniqueConstraint(fields=["date", "user_story"], name="unique_progress")]
 
 
-class Effort(Uuidable, Authorable, models.Model):
+class Effort(Transactionable, Uuidable, Authorable, models.Model):
     class EffortRole(models.TextChoices):
         DEVELOPMENT = "D", _("Desarrollo")
         VALIDATION = "V", _("Validación")
@@ -288,7 +294,7 @@ class Effort(Uuidable, Authorable, models.Model):
         constraints = [models.UniqueConstraint(fields=["date", "user", "role", "user_story"], name="unique_effort")]
 
 
-class Task(Uuidable, Orderable, Authorable, models.Model):
+class Task(Transactionable, Uuidable, Orderable, Authorable, models.Model):
     name = models.CharField(_("nombre"), max_length=2000, blank=False)
     user_story = models.ForeignKey(
         UserStory,

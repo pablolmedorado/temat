@@ -8,7 +8,7 @@ from django.utils.timezone import make_aware
 from notifications.signals import notify
 
 from .models import GreenWorkingDay, Holiday, HolidayType, SupportWorkingDay
-from common.utils import notify_item_assignation_to_user
+from common.utils import get_notification_sender, notify_item_assignation_to_user
 from events.models import Event, EventType
 
 
@@ -45,7 +45,7 @@ def notify_user_of_holiday_status(sender, instance, *args, **kwargs):
         old_instance = Holiday.objects.get(pk=instance.id)
 
         if instance.approved != old_instance.approved:
-            notification_sender = instance.notification_sender
+            notification_sender = get_notification_sender()
 
             if notification_sender != instance.user:
                 level = "success" if instance.approved else "warning"
@@ -92,7 +92,7 @@ def notify_users_of_existing_support_assignation(sender, instance, *args, **kwar
 @receiver(post_save, sender=SupportWorkingDay)
 def notify_users_of_new_support_assignation(sender, instance, created, *args, **kwargs):
     """
-    Notifies an user that has been assigned to an new Support Working Day
+    Notifies an user that has been assigned to a new Support Working Day
     """
     if created:
         notify_item_assignation_to_user(instance, "user", "te ha asignado la jornada de soporte")
@@ -155,7 +155,7 @@ def notify_users_of_existing_green_assignation(sender, instance, *args, **kwargs
 @receiver(post_save, sender=GreenWorkingDay)
 def notify_users_of_new_green_assignation(sender, instance, created, *args, **kwargs):
     """
-    Notifies users that they have been assigned to an new Green Working Day
+    Notifies users that they have been assigned to a new Green Working Day
     """
     if created:
         notify_item_assignation_to_user(instance, "main_user", "te ha asignado, con rol principal, la jornada especial")

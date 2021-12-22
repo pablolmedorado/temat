@@ -2,8 +2,6 @@ import os
 import environ
 import warnings
 
-from django.urls import reverse_lazy
-
 
 PROJECT_ROOT = environ.Path(__file__) - 3
 BACKEND_DIR = environ.Path(__file__) - 2

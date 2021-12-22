@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
+from rest_flex_fields.views import FlexFieldsModelViewSet
 from rest_framework import permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -15,10 +16,9 @@ from .serializers import EventSerializer, EventTypeSerializer
 from ..models import Event, EventType
 from ..utils import monthly_chart_data
 from common.api.permissions import HasDjangoPermissionOrReadOnly, IsOwnerOrReadOnly
-from common.api.viewsets import AtomicFlexFieldsModelViewSet
 
 
-class EventTypeViewSet(AtomicFlexFieldsModelViewSet):
+class EventTypeViewSet(FlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = EventType.objects.all()
     serializer_class = EventTypeSerializer
@@ -28,7 +28,7 @@ class EventTypeViewSet(AtomicFlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class EventViewSet(AtomicFlexFieldsModelViewSet):
+class EventViewSet(FlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly)
     serializer_class = EventSerializer
     permit_list_expands = ["attendees", "type", "groups", "tags"]
