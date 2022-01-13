@@ -1,91 +1,44 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <v-card>
-          <v-toolbar flat>
-            <v-toolbar-title class="text-h6"> Vacaciones del equipo ({{ year }}) </v-toolbar-title>
-            <v-spacer />
-            <v-tooltip v-if="canManage" bottom>
-              <template #activator="{ on }">
-                <v-btn icon v-on="on" @click="$refs.holidayManagementDialog.open()">
-                  <v-icon>mdi-table-check</v-icon>
-                </v-btn>
-              </template>
-              <span>Gestionar</span>
-            </v-tooltip>
-            <v-menu bottom left offset-y>
-              <template #activator="{ on: menu }">
-                <v-tooltip bottom>
-                  <template #activator="{ on: tooltip }">
-                    <v-btn icon :disabled="isLoading" v-on="{ ...tooltip, ...menu }">
-                      <v-icon>mdi-calendar-range</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Año</span>
-                </v-tooltip>
-              </template>
-              <v-list>
-                <v-list-item v-for="item in yearOptions" :key="item" @click="year = item">
-                  <v-list-item-title>{{ item }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-            <v-tooltip bottom>
-              <template #activator="{ attrs, on }">
-                <v-btn icon :disabled="isTaskLoading('fetch-holidays')" v-bind="attrs" v-on="on" @click="fetchHolidays">
-                  <v-icon>mdi-refresh</v-icon>
-                </v-btn>
-              </template>
-              <span>Refrescar</span>
-            </v-tooltip>
-          </v-toolbar>
-          <v-card-text>
-            <v-skeleton-loader v-if="isLoading || !workerUsers.length" type="table" />
-            <v-simple-table
-              v-else
-              :height="workerUsers.length >= 10 ? '600px' : undefined"
-              :fixed-header="workerUsers.length >= 10"
-            >
-              <thead>
-                <tr>
-                  <th class="fixed"></th>
-                  <th v-for="(numOfDays, month) in datesByMonth" :key="month" :colspan="numOfDays" class="first-day">
-                    {{ month }}
-                  </th>
-                </tr>
-                <tr>
-                  <th class="fixed">Usuario</th>
-                  <th
-                    v-for="date in intervalDates"
-                    :key="date.ts"
-                    :class="{ 'day-th': true, weekend: date.weekday > 5, 'first-day': date.day === 1 }"
-                  >
-                    {{ date.day }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="user in workerUsers" :key="user.id">
-                  <td class="fixed">
-                    <UserPill :user="user" />
-                  </td>
-                  <HolidayTableCell
-                    v-for="date in intervalDates"
-                    :key="date.ts"
-                    v-bind="getCellProps(user, date)"
-                    @change:holiday="onHolidayChange"
-                  />
-                </tr>
-              </tbody>
-            </v-simple-table>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <HolidayManagementDialog ref="holidayManagementDialog" @change:holiday="onHolidayChange" />
-  </v-container>
+  <div>
+    <v-skeleton-loader v-if="isLoading || !workerUsers.length" type="table" />
+    <v-simple-table
+      v-else
+      :height="workerUsers.length >= 10 ? '600px' : undefined"
+      :fixed-header="workerUsers.length >= 10"
+    >
+      <thead>
+        <tr>
+          <th class="fixed"></th>
+          <th v-for="(numOfDays, month) in datesByMonth" :key="month" :colspan="numOfDays" class="first-day">
+            {{ month }}
+          </th>
+        </tr>
+        <tr>
+          <th class="fixed">Usuario</th>
+          <th
+            v-for="date in intervalDates"
+            :key="date.ts"
+            :class="{ 'day-th': true, weekend: date.weekday > 5, 'first-day': date.day === 1 }"
+          >
+            {{ date.day }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="user in workerUsers" :key="user.id">
+          <td class="fixed">
+            <UserPill :user="user" />
+          </td>
+          <HolidayTableCell
+            v-for="date in intervalDates"
+            :key="date.ts"
+            v-bind="getCellProps(user, date)"
+            @change:holiday="onHolidayChange"
+          />
+        </tr>
+      </tbody>
+    </v-simple-table>
+  </div>
 </template>
 
 <script>
@@ -93,29 +46,25 @@ import { mapState } from "pinia";
 import { DateTime, Interval } from "luxon";
 import { countBy, get, pick, set } from "lodash";
 
-import Holiday from "@/modules/holidays/models/holiday";
-
 import HolidayService from "@/modules/holidays/services/holiday-service";
 
-import HolidayManagementDialog from "@/modules/holidays/components/dialogs/HolidayManagementDialog";
 import HolidayTableCell from "@/modules/holidays/components/HolidayTableCell";
 
 import { useMainStore } from "@/stores/main";
 import { useUserStore } from "@/stores/users";
 
 import useLoading from "@/composables/useLoading";
-import { userHasPermission } from "@/utils/permissions";
 
 export default {
-  name: "HolidayTableTeamView",
-  metaInfo() {
-    return {
-      title: `Vacaciones ${this.year}`,
-    };
-  },
+  name: "HolidayTable",
   components: {
-    HolidayManagementDialog,
     HolidayTableCell,
+  },
+  props: {
+    year: {
+      type: Number,
+      required: true,
+    },
   },
   setup() {
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
@@ -129,12 +78,11 @@ export default {
   },
   data() {
     return {
-      year: DateTime.local().year,
       holidays: [],
     };
   },
   computed: {
-    ...mapState(useMainStore, ["locale", "yearOptions"]),
+    ...mapState(useMainStore, ["locale"]),
     ...mapState(useUserStore, ["workerUsers"]),
     intervalDates() {
       const yearDateTime = DateTime.fromObject({ year: this.year });
@@ -151,9 +99,6 @@ export default {
         set(result, [currentValue.user, currentValue.planned_date], currentValue);
         return result;
       }, {});
-    },
-    canManage() {
-      return userHasPermission(Holiday.CHANGE_PERMISSION);
     },
   },
   watch: {
