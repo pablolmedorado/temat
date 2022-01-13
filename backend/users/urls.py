@@ -3,7 +3,7 @@ from django.urls import path
 from rest_framework import routers
 
 from .api.viewsets import GroupViewSet, UserViewSet
-from .views import login, logout
+from .api.views import login, logout
 
 app_name = "users"
 
