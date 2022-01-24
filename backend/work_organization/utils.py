@@ -41,39 +41,20 @@ def user_availability_chart_data(queryset: QuerySet) -> Dict:
 
 
 def green_working_day_user_chart_data(queryset: QuerySet) -> Dict:
-    user_list = (
+    queryset_result = (
         get_user_model()
         .objects.active()
-        .filter(Q(green_working_days_as_main__in=queryset) | Q(green_working_days_as_support__in=queryset))
-        .order_by("acronym")
+        .filter(green_working_days__in=queryset)
         .distinct()
-        .values_list("acronym", flat=True)
+        .annotate(count=Count("green_working_days"))
+        .order_by("acronym")
+        .values("acronym", "count")
     )
 
-    main_queryset = (
-        get_user_model()
-        .objects.active()
-        .filter(green_working_days_as_main__in=queryset)
-        .annotate(main=Count("green_working_days_as_main"))
-        .values("acronym", "main")
-    )
-    main_data = {item["acronym"]: item["main"] for item in main_queryset}
-    support_queryset = (
-        get_user_model()
-        .objects.active()
-        .filter(green_working_days_as_support__in=queryset)
-        .annotate(support=Count("green_working_days_as_support"))
-        .values("acronym", "support")
-    )
-    support_data = {item["acronym"]: item["support"] for item in support_queryset}
-
-    chart_data = {
-        "categories": user_list,
-        "series": [
-            {"name": _("Principal"), "data": [main_data.get(item, 0) for item in user_list]},
-            {"name": _("Apoyo"), "data": [support_data.get(item, 0) for item in user_list]},
-        ],
-    }
+    chart_data: Dict = {"categories": [], "data": []}
+    for item in queryset_result:
+        chart_data["categories"].append(item["acronym"])
+        chart_data["data"].append(item["count"])
 
     return chart_data
 

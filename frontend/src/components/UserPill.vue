@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span class="d-inline-block">
     <v-chip v-if="localUser" v-bind="$attrs" pill v-on="$listeners">
       <UserAvatar left :user="localUser" />
       {{ `${localUser.first_name} ${localUser.last_name}` }}

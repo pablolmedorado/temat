@@ -44,11 +44,8 @@
           <template #item.date="{ value }">
             <DateRouterLink :date="value" />
           </template>
-          <template #item.main_user="{ value }">
-            <UserPill v-if="value" :user="value" />
-          </template>
-          <template #item.support_user="{ value }">
-            <UserPill v-if="value" :user="value" />
+          <template #item.users="{ value }">
+            <UserPill v-for="user in value" :key="user" :user="user" class="my-1 mr-2" />
           </template>
           <template #item.table_actions="{ item }">
             <v-badge bottom left overlap>
@@ -137,20 +134,11 @@ export default {
         { text: "Fecha", align: "start", sortable: true, value: "date", fixed: true },
         { text: "Etiqueta", align: "start", sortable: true, value: "label", default: true },
         {
-          text: "Usuario principal",
+          text: "Usuarios",
           align: "start",
-          sortable: true,
-          value: "main_user",
-          sortingField: "main_user__acronym",
+          sortable: false,
+          value: "users",
           fixed: true,
-        },
-        {
-          text: "Usuario de apoyo",
-          align: "start",
-          sortable: true,
-          value: "support_user",
-          sortingField: "support_user__acronym",
-          default: true,
         },
         {
           text: "Acciones",

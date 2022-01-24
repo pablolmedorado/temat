@@ -10,23 +10,13 @@ from common.behaviors import Authorable, Eventable, Notifiable, Transactionable,
 
 
 class GreenWorkingDay(Transactionable, Uuidable, Authorable, Notifiable, Eventable, models.Model):
-    label = models.CharField(_("etiqueta"), max_length=100, blank=True)
+    label = models.CharField(_("etiqueta"), max_length=100, blank=False)
     date = models.DateField(_("fecha"), unique=True, blank=False, null=False)
-    main_user = models.ForeignKey(
+    users = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
-        verbose_name=_("usuario principal"),
-        related_name="green_working_days_as_main",
+        verbose_name=_("usuarios"),
+        related_name="green_working_days",
         blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
-    )
-    support_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        verbose_name=_("usuario de apoyo"),
-        related_name="green_working_days_as_support",
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
     )
     volunteers = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
@@ -36,7 +26,7 @@ class GreenWorkingDay(Transactionable, Uuidable, Authorable, Notifiable, Eventab
     )
 
     def __str__(self):
-        return f"{self.date}"
+        return f"{self.label} ({self.date})"
 
     class Meta:
         verbose_name = _("jornada especial")
@@ -130,7 +120,7 @@ class Holiday(Transactionable, Uuidable, Authorable, Notifiable, Eventable, mode
     allowance_date = models.DateField(_("fecha de concesión"), blank=False, null=False, default=date.today)
     planned_date = models.DateField(_("fecha planificada"), blank=True, null=True)
     approved = models.BooleanField(_("aprobado"), null=True, blank=True)
-    green_working_day = models.OneToOneField(
+    green_working_day = models.ForeignKey(
         GreenWorkingDay,
         verbose_name=_("jornada especial"),
         related_name="holiday",

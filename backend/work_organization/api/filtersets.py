@@ -11,9 +11,8 @@ class GreenWorkingDayFilterSet(django_filters.rest_framework.FilterSet):
         model = GreenWorkingDay
         fields = {
             "id": ["exact", "in"],
-            "main_user_id": ["exact", "in"],
-            "support_user_id": ["exact", "in"],
             "date": ["exact", "gte", "lte", "year"],
+            "users__id": ["exact", "in"],
             "volunteers__id": ["exact", "in"],
         }
 

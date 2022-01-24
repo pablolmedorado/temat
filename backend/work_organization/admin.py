@@ -9,29 +9,23 @@ from .resources import GreenWorkingDayResource, HolidayResource, HolidayTypeReso
 
 @admin.register(GreenWorkingDay)
 class GreenWorkingDayAdmin(ImportExportActionModelAdmin):
-    list_display = ("id", "date", "label", "main_user", "support_user")
+    list_display = ("id", "date", "label")
     list_display_links = ("date",)
-    list_select_related = ("main_user", "support_user")
-    search_fields = (
-        "label",
-        "main_user__username",
-        "main_user__first_name",
-        "main_user__last_name",
-        "support_user__username",
-        "support_user__first_name",
-        "support_user__last_name",
-    )
-    list_filter = ("main_user", "support_user", "date")
+    search_fields = ("label",)
+    list_filter = ("users", "date")
     ordering = ("-date",)
     fieldsets = (
         (_("Información básica"), {"fields": ("date", "label")}),
-        (_("Usuarios"), {"fields": ("main_user", "support_user", "volunteers")}),
+        (_("Usuarios"), {"fields": ("users", "volunteers")}),
         (
             _("Autoría"),
             {"fields": ("creation_user", "creation_datetime", "modification_user", "modification_datetime")},
         ),
     )
-    filter_horizontal = ("volunteers",)
+    filter_horizontal = (
+        "users",
+        "volunteers",
+    )
     readonly_fields = ("creation_user", "creation_datetime", "modification_user", "modification_datetime")
     resource_class = GreenWorkingDayResource
 

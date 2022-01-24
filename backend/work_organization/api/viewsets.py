@@ -31,11 +31,11 @@ from common.api.permissions import HasDjangoPermissionOrReadOnly
 
 class GreenWorkingDayViewSet(FlatDatesMixin, AtomicBulkCreateModelMixin, FlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, GreenWorkingDayPermission)
-    queryset = GreenWorkingDay.objects.all()
+    queryset = GreenWorkingDay.objects.all().prefetch_related("users").distinct()
     serializer_class = GreenWorkingDaySerializer
-    permit_list_expands = ["main_user", "support_user"]
+    permit_list_expands = ["users"]
     filterset_class = GreenWorkingDayFilterSet
-    ordering_fields = ("date", "label", "main_user__acronym", "support_user__acronym")
+    ordering_fields = ("date", "label")
     ordering = ("date",)
 
     @atomic_transaction_singleton

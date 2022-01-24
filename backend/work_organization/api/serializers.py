@@ -12,20 +12,13 @@ from users.api.serializers import UserSerializer
 class GreenWorkingDaySerializer(BulkSerializerMixin, FlexFieldsModelSerializer):
     date = serializers.DateField(validators=[UniqueValidator(queryset=GreenWorkingDay.objects.all())])
 
-    def validate(self, data):
-        data = super().validate(data)
-        if data.get("main_user") and data.get("support_user") and data.get("main_user") == data.get("support_user"):
-            raise serializers.ValidationError(_("No es posible asignar el rol principal y de apoyo al mismo usuario"))
-        return data
-
     class Meta:
         model = GreenWorkingDay
         fields = (
             "id",
             "label",
             "date",
-            "main_user",
-            "support_user",
+            "users",
             "volunteers",
             "creation_datetime",
             "creation_user",
@@ -34,8 +27,7 @@ class GreenWorkingDaySerializer(BulkSerializerMixin, FlexFieldsModelSerializer):
         )
         read_only_fields = ("id", "creation_datetime", "creation_user", "modification_datetime", "modification_user")
         expandable_fields = {
-            "main_user": UserSerializer,
-            "support_user": UserSerializer,
+            "users": (UserSerializer, {"many": True}),
             "volunteers": (UserSerializer, {"many": True}),
         }
 
