@@ -42,6 +42,8 @@ class SprintSerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "accountable_user",
             "num_of_user_stories",
             "current_progress",
+            "planned_effort",
+            "current_effort",
             "tags",
         )
         read_only_fields = (
@@ -49,6 +51,8 @@ class SprintSerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "ongoing",
             "num_of_user_stories",
             "current_progress",
+            "planned_effort",
+            "current_effort",
             "creation_datetime",
             "creation_user",
             "modification_datetime",
@@ -68,11 +72,23 @@ class EpicSerializer(TaggitSerializer, FlexFieldsModelSerializer):
 
     class Meta:
         model = Epic
-        fields = ("id", "name", "description", "external_reference", "num_of_user_stories", "current_progress", "tags")
+        fields = (
+            "id",
+            "name",
+            "description",
+            "external_reference",
+            "num_of_user_stories",
+            "current_progress",
+            "planned_effort",
+            "current_effort",
+            "tags",
+        )
         read_only_fields = (
             "id",
             "num_of_user_stories",
             "current_progress",
+            "planned_effort",
+            "current_effort",
             "creation_datetime",
             "creation_user",
             "modification_datetime",

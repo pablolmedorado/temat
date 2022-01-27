@@ -22,6 +22,12 @@ class UserStoryContainerQuerySet(models.QuerySet):
             )
         )
 
+    def with_effort(self):
+        return self.annotate(
+            annotated_planned_effort=Coalesce(Sum("user_stories__planned_effort"), Value(0)),
+            annotated_current_effort=Coalesce(Sum("user_stories__effort_allocation__effort"), Value(0)),
+        )
+
 
 class SprintQuerySet(UserStoryContainerQuerySet):
     def with_ongoing(self, reference_date):

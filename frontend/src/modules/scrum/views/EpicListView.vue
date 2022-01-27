@@ -31,6 +31,8 @@
               <TruncatedText :value="value" :text-length="100" />
             </template>
           </template>
+          <template #item.planned_effort="{ value }">{{ value }} UT</template>
+          <template #item.current_effort="{ value }">{{ value }} UT</template>
           <template #item.current_progress="{ value }">
             <v-progress-circular :rotate="-90" :size="32" :value="value" :width="3" color="primary">
               {{ value }}
@@ -85,6 +87,20 @@ export default {
           sortingField: "user_stories__count",
           value: "num_of_user_stories",
           default: true,
+        },
+        {
+          text: "Esfuerzo planificado",
+          align: "start",
+          sortable: true,
+          sortingField: "annotated_planned_effort",
+          value: "planned_effort",
+        },
+        {
+          text: "Esfuerzo acumulado",
+          align: "start",
+          sortable: true,
+          sortingField: "annotated_current_effort",
+          value: "current_effort",
         },
         {
           text: "Progreso",

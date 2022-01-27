@@ -60,12 +60,19 @@ class SprintViewSet(FlexFieldsModelViewSet):
         "accountable_user__acronym",
         "user_stories__count",
         "annotated_current_progress",
+        "annotated_planned_effort",
+        "annotated_current_effort",
     )
     ordering = ("-annotated_ongoing", "-start_date")
 
     def get_queryset(self, *args, **kwargs):
         return (
-            Sprint.objects.with_ongoing(date.today()).with_current_progress().all().prefetch_related("tags").distinct()
+            Sprint.objects.with_ongoing(date.today())
+            .with_current_progress()
+            .with_effort()
+            .all()
+            .prefetch_related("tags")
+            .distinct()
         )
 
     @action(detail=True, methods=["GET"])
@@ -99,12 +106,19 @@ class SprintViewSet(FlexFieldsModelViewSet):
 
 class EpicViewSet(FlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
-    queryset = Epic.objects.with_current_progress().all().prefetch_related("tags").distinct()
+    queryset = Epic.objects.with_current_progress().with_effort().all().prefetch_related("tags").distinct()
     serializer_class = EpicSerializer
     permit_list_expands = ["tags"]
     filterset_class = EpicFilterSet
     search_fields = ("name", "description", "external_reference")
-    ordering_fields = ("id", "name", "user_stories__count", "annotated_current_progress")
+    ordering_fields = (
+        "id",
+        "name",
+        "user_stories__count",
+        "annotated_current_progress",
+        "annotated_planned_effort",
+        "annotated_current_effort",
+    )
     ordering = ("name",)
 
 
