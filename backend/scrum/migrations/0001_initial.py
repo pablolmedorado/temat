@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"verbose_name": "epic", "verbose_name_plural": "epics", "ordering": ("-creation_datetime",),},
+            options={"verbose_name": "epic", "verbose_name_plural": "epics", "ordering": ("-creation_datetime",)},
         ),
         migrations.CreateModel(
             name="Sprint",
@@ -96,7 +96,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"verbose_name": "sprint", "verbose_name_plural": "sprints", "ordering": ("-start_date",),},
+            options={"verbose_name": "sprint", "verbose_name_plural": "sprints", "ordering": ("-start_date",)},
         ),
         migrations.CreateModel(
             name="UserStoryType",
@@ -506,7 +506,7 @@ class Migration(migrations.Migration):
             constraint=models.UniqueConstraint(fields=("name", "epic"), name="unique_user_story_epic"),
         ),
         migrations.AddConstraint(
-            model_name="task", constraint=models.UniqueConstraint(fields=("name", "user_story"), name="unique_task"),
+            model_name="task", constraint=models.UniqueConstraint(fields=("name", "user_story"), name="unique_task")
         ),
         migrations.AddConstraint(
             model_name="progress",

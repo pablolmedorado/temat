@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                     models.BooleanField(default=True, verbose_name="vacaciones extra con dias verdes"),
                 ),
             ],
-            options={"verbose_name": "empresa", "verbose_name_plural": "empresas", "ordering": ["name"],},
+            options={"verbose_name": "empresa", "verbose_name_plural": "empresas", "ordering": ["name"]},
         ),
         migrations.CreateModel(
             name="User",
@@ -127,6 +127,6 @@ class Migration(migrations.Migration):
                 "verbose_name_plural": "users",
                 "abstract": False,
             },
-            managers=[("objects", django.contrib.auth.models.UserManager()),],
+            managers=[("objects", django.contrib.auth.models.UserManager())],
         ),
     ]

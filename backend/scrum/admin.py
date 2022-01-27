@@ -35,7 +35,7 @@ class SprintAdmin(ImportExportActionModelAdmin):
         (_("Identificación"), {"fields": ("id",)}),
         (_("Información básica"), {"fields": ("name",)}),
         (_("Información temporal"), {"fields": ("start_date", "end_date")}),
-        (_("Actores"), {"fields": ("accountable_user",)},),
+        (_("Actores"), {"fields": ("accountable_user",)}),
         (_("Clasificación"), {"fields": ("tags",)}),
         (
             _("Autoría"),
@@ -96,13 +96,13 @@ class UserStoryAdmin(ImportExportActionModelAdmin):
     ordering = ("-start_date",)
     fieldsets = (
         (_("Identificación"), {"fields": ("id",)}),
-        (_("Información básica"), {"fields": ("name",)},),
+        (_("Información básica"), {"fields": ("name",)}),
         (_("Clasificación"), {"fields": ("epic", "type", "tags")}),
         (
             _("Descripción"),
             {"fields": ("functional_description", "technical_description", "priority", "planned_effort")},
         ),
-        (_("Información temporal"), {"fields": ("sprint", "start_date", "end_date",)}),
+        (_("Información temporal"), {"fields": ("sprint", "start_date", "end_date")}),
         (
             _("Estado"),
             {
@@ -185,8 +185,8 @@ class EffortAdmin(ImportExportActionModelAdmin):
     ordering = ("-date",)
     fieldsets = (
         (_("Identificación"), {"fields": ("id",)}),
-        (_("Información básica"), {"fields": ("user_story", "date", "user", "role", "effort")},),
-        (_("Información extra"), {"fields": ("comments",)},),
+        (_("Información básica"), {"fields": ("user_story", "date", "user", "role", "effort")}),
+        (_("Información extra"), {"fields": ("comments",)}),
         (
             _("Autoría"),
             {"fields": ("creation_user", "creation_datetime", "modification_user", "modification_datetime")},

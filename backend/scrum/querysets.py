@@ -12,9 +12,7 @@ class UserStoryContainerQuerySet(models.QuerySet):
                 annotated_current_progress=Case(
                     When(Q(user_stories__count=0), then=0),
                     default=ExpressionWrapper(
-                        Cast(
-                            F("current_progress__sum") / F("user_stories__count"), models.PositiveSmallIntegerField(),
-                        ),
+                        Cast(F("current_progress__sum") / F("user_stories__count"), models.PositiveSmallIntegerField()),
                         output_field=models.PositiveSmallIntegerField(),
                     ),
                     output_field=models.PositiveSmallIntegerField(),

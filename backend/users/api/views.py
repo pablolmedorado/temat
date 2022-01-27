@@ -22,7 +22,7 @@ def login(request):
 
     user = authenticate(username=username, password=password)
     if not user:
-        return Response("Login failed. Invalid username or password.", status=status.HTTP_401_UNAUTHORIZED,)
+        return Response("Login failed. Invalid username or password.", status=status.HTTP_401_UNAUTHORIZED)
     django_login(request._request, user)
     return Response()
 

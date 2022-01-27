@@ -160,6 +160,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"verbose_name": "evento", "verbose_name_plural": "eventos", "ordering": ("-start_datetime",),},
+            options={"verbose_name": "evento", "verbose_name_plural": "eventos", "ordering": ("-start_datetime",)},
         ),
     ]

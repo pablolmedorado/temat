@@ -9,5 +9,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterModelManagers(name="user", managers=[("objects", users.managers.UserManager())],),
+        migrations.AlterModelManagers(name="user", managers=[("objects", users.managers.UserManager())]),
     ]
