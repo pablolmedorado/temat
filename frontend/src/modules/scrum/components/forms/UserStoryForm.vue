@@ -455,7 +455,7 @@
                           v-model="item.validated"
                           :items="validatedOptions"
                           :disabled="item.status < 3"
-                          :readonly="!canEdit && loggedUser.id !== item.validation_user"
+                          :readonly="!canEdit && ![item.development_user, item.validation_user].includes(loggedUser.id)"
                           :hint="validatedHintText"
                           persistent-hint
                           label="Estado"
@@ -663,11 +663,6 @@ export default {
       sprintService: SprintService,
       showStartDatepicker: false,
       showEndDatepicker: false,
-      validatedOptions: [
-        { value: null, text: "Sin validar" },
-        { value: false, text: "Rechazada" },
-        { value: true, text: "Validada" },
-      ],
       useMigrationsOptions: [
         { value: false, text: "No" },
         { value: true, text: "Sí" },
@@ -693,6 +688,22 @@ export default {
       return [this.item.development_user, this.item.validation_user, this.item.support_user].includes(
         this.loggedUser.id
       );
+    },
+    validatedOptions() {
+      const canValidate = this.canEdit || this.item.validation_user === this.loggedUser.id;
+      return [
+        { value: null, text: "Sin validar", disabled: false },
+        {
+          value: false,
+          text: "Rechazada",
+          disabled: this.sourceItem.validated !== false && !canValidate,
+        },
+        {
+          value: true,
+          text: "Validada",
+          disabled: this.sourceItem.validated !== true && !canValidate,
+        },
+      ];
     },
     validatedHintText() {
       if (this.item.validated !== null && this.item.validated === this.sourceItem.validated) {

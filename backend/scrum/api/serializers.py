@@ -237,6 +237,15 @@ class UserStorySerializer(TaggitSerializer, FlexFieldsModelSerializer):
 
 
 class UserStoryDeveloperSerializer(UserStorySerializer):
+    def validate_validated(self, value):
+        if (not self.instance and value is not None) or (
+            self.instance and self.instance.validated is not value and value is not None
+        ):
+            raise serializers.ValidationError(
+                _("El desarrollador no puede validar ni rechazar una historia de usuario")
+            )
+        return value
+
     class Meta(UserStorySerializer.Meta):
         read_only_fields = tuple(  # type: ignore
             field
@@ -246,6 +255,7 @@ class UserStoryDeveloperSerializer(UserStorySerializer):
                 "external_resource",
                 "development_comments",
                 "cvs_reference",
+                "validated",
                 "risk_level",
                 "risk_comments",
                 "use_migrations",
