@@ -139,7 +139,7 @@ export default {
 </script>
 
 <style scoped>
-::v-deep .v-navigation-drawer--mini-variant > .v-navigation-drawer__content {
-  overflow: hidden;
+::v-deep .v-navigation-drawer__content {
+  scrollbar-width: none;
 }
 </style>
