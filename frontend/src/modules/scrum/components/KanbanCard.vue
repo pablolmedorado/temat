@@ -60,20 +60,15 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
-            <template #activator="{ on, attrs }">
-              <v-chip :color="effortPillColour" :text-color="effortPillColour" outlined v-bind="attrs" v-on="on">
-                <v-avatar left :class="[effortPillColour, 'darken-4', 'white--text']">
-                  {{ userStory.planned_effort }}
-                </v-avatar>
-                UT
-                <v-avatar right>
-                  <v-icon>mdi-dumbbell</v-icon>
-                </v-avatar>
-              </v-chip>
-            </template>
-            <span>Esfuerzo real: {{ userStory.actual_effort }}UT</span>
-          </v-tooltip>
+          <v-chip :color="effortPillColour" :text-color="effortPillColour" outlined>
+            <v-avatar left :class="[effortPillColour, 'darken-4', 'white--text']">
+              {{ userStory.actual_effort }}
+            </v-avatar>
+            {{ userStory.planned_effort }} UT
+            <v-avatar right>
+              <v-icon>mdi-dumbbell</v-icon>
+            </v-avatar>
+          </v-chip>
         </v-col>
         <v-spacer />
         <v-col class="d-flex justify-end">
