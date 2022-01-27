@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.18.0](https://github.com/pablolmedorado/temat/compare/v1.17.0...v1.18.0) (2022-01-27)
+
+
+### Features
+
+* **green-working-days:** make green working days users multiple ([1f53888](https://github.com/pablolmedorado/temat/commit/1f53888a7c24c812dc56fcde22c62f883efd7043))
+* **scrum:** add planned effort and current effort columns in Epic and Sprint views ([d8a04ff](https://github.com/pablolmedorado/temat/commit/d8a04ffe70af46c56a32fe249c82bf6b6f21bf03))
+* **sprints:** show actual effort in kanban cards ([013df0e](https://github.com/pablolmedorado/temat/commit/013df0e8f49238985d83abc5544fd0033ce696f5))
+* **user-stories:** allow developer users to un-validate user stories ([773d94a](https://github.com/pablolmedorado/temat/commit/773d94aa6443256370e7ee90f78bf3d90603279a))
+* **user-stories:** remove development user constraint when sprint is not present ([7fc88ed](https://github.com/pablolmedorado/temat/commit/7fc88edbcee0686c62fd820855fba20d28adf0dc))
+
+
+### Bug Fixes
+
+* **frontend:** check ItemTable filters value after trigger watcher effect ([df0fcdd](https://github.com/pablolmedorado/temat/commit/df0fcdd5cb339cb45b8dfabfdb79eb2f4f296e1c))
+* **frontend:** hide navigation drawer scrollbar ([b33b16d](https://github.com/pablolmedorado/temat/commit/b33b16d2fdc13fc3adf6c9745abc3f3c3d06d6d4))
+* **storybook:** add routes to StoryRouter ([540847f](https://github.com/pablolmedorado/temat/commit/540847f628029fe2d21391cd8ec3c717ed4d0c70))
+* **user-stories:** fix sprint date buttons in UserStoryForm ([106f014](https://github.com/pablolmedorado/temat/commit/106f014b5a60e1bed8bf0a0a46792128fb171cb2))
+
 ## [1.17.0](https://github.com/pablolmedorado/temat/compare/v1.16.0...v1.17.0) (2021-12-01)
 
 
