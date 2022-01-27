@@ -236,13 +236,14 @@
                       @blur="$v.item.start_date.$touch()"
                       v-on="on"
                     >
-                      <template #append-outer>
+                      <template #append>
                         <v-tooltip bottom>
                           <template #activator="{ on: onTooltip, attrs: attrTooltip }">
                             <v-btn
                               v-bind="attrTooltip"
                               :disabled="!canEdit"
                               icon
+                              small
                               v-on="onTooltip"
                               @click="setStartDateFromSprint"
                             >
@@ -290,13 +291,14 @@
                       @blur="$v.item.end_date.$touch()"
                       v-on="on"
                     >
-                      <template #append-outer>
+                      <template #append>
                         <v-tooltip bottom>
                           <template #activator="{ on: onTooltip, attrs: attrTooltip }">
                             <v-btn
                               v-bind="attrTooltip"
                               :disabled="!canEdit"
                               icon
+                              small
                               v-on="onTooltip"
                               @click="setEndDateFromSprint"
                             >
