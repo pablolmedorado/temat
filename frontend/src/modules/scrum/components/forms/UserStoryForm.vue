@@ -637,7 +637,7 @@ export default {
       },
       planned_effort: { required, numeric, minValue: minValue(1) },
       priority: { required, numeric, between: between(1, 10) },
-      development_user: { requiredIfSprint: requiredIf("sprint") },
+      development_user: {},
       development_comments: { maxLength: maxLength(2000) },
       cvs_reference: { maxLength: maxLength(255) },
       validation_comments: { maxLength: maxLength(2000) },

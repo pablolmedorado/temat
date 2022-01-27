@@ -161,10 +161,6 @@ class UserStorySerializer(TaggitSerializer, FlexFieldsModelSerializer):
                 )
             if data["end_date"] > data["sprint"].end_date:
                 raise serializers.ValidationError(_("La fecha de fin debe ser anterior a la del sprint"))
-            if not data.get("development_user"):
-                raise serializers.ValidationError(
-                    _("No es posible incluir una historia de usuario en un sprint sin un responsable asignado.")
-                )
         return data
 
     class Meta:

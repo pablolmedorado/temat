@@ -94,7 +94,8 @@ class SprintViewSet(FlexFieldsModelViewSet):
             "progress": instance.current_progress,
             "user_story_count": instance.user_stories.count(),
             "user_stories_with_migrations": instance.user_stories.filter(use_migrations=True).values("id", "name"),
-            "development_users": instance.user_stories.order_by("development_user")
+            "development_users": instance.user_stories.exclude(development_user__isnull=True)
+            .order_by("development_user")
             .values_list("development_user", flat=True)
             .distinct(),
             "deployment_notes": instance.user_stories.exclude(deployment_notes="").values(
