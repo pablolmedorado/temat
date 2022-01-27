@@ -2,8 +2,10 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from common.behaviors import Transactionable
 
-class Bread(models.Model):
+
+class Bread(Transactionable, models.Model):
     name = models.CharField(_("nombre"), max_length=50, blank=False, unique=True)
 
     def __str__(self):
@@ -18,7 +20,7 @@ class Bread(models.Model):
         ordering = ("name",)
 
 
-class Base(models.Model):
+class Base(Transactionable, models.Model):
     name = models.CharField(_("nombre"), max_length=50, blank=False, unique=True)
 
     def __str__(self):
@@ -33,7 +35,7 @@ class Base(models.Model):
         ordering = ("name",)
 
 
-class Ingredient(models.Model):
+class Ingredient(Transactionable, models.Model):
     name = models.CharField(_("nombre"), max_length=50, blank=False, unique=True)
 
     def __str__(self):
@@ -48,7 +50,7 @@ class Ingredient(models.Model):
         ordering = ("name",)
 
 
-class Drink(models.Model):
+class Drink(Transactionable, models.Model):
     name = models.CharField(_("nombre"), max_length=50, blank=False, unique=True)
 
     def __str__(self):
@@ -63,7 +65,7 @@ class Drink(models.Model):
         ordering = ("name",)
 
 
-class Breakfast(models.Model):
+class Breakfast(Transactionable, models.Model):
     OWNERSHIP_FIELD = "user"
 
     user = models.OneToOneField(

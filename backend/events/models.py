@@ -17,10 +17,10 @@ from colorfield.fields import ColorField
 from icalendar import Calendar, Event as ICalendarEvent, vCalAddress, vText
 
 from .querysets import EventQuerySet
-from common.behaviors import Notifiable, Taggable
+from common.behaviors import Authorable, Notifiable, Taggable, Transactionable
 
 
-class EventType(models.Model):
+class EventType(Transactionable, models.Model):
     class SystemSlug(models.TextChoices):
         HOLIDAY = "HOLIDAY", _("Vacaciones")
         SUPPORT = "SUPPORT", _("Soporte")
@@ -69,7 +69,7 @@ class EventType(models.Model):
         ]
 
 
-class Event(Taggable, Notifiable, models.Model):
+class Event(Transactionable, Taggable, Authorable, Notifiable, models.Model):
     ALLOWED_LINK_TYPES = (
         ("work_organization", "holiday"),
         ("work_organization", "greenworkingday"),

@@ -126,8 +126,7 @@
 </template>
 
 <script>
-import { computed, ref, onActivated, watch } from "@vue/composition-api";
-import { useGetters, useState } from "vuex-composition-helpers/dist";
+import { computed, onActivated, ref, toRefs, watch } from "@vue/composition-api";
 import { DateTime } from "luxon";
 
 import HolidaysDatePicker from "@/modules/holidays/components/inputs/HolidaysDatePicker";
@@ -136,21 +135,23 @@ import HolidaysHelpDialog from "@/modules/holidays/components/dialogs/HolidaysHe
 
 import HolidayService from "@/modules/holidays/services/holiday-service";
 
+import { useMainStore } from "@/stores/main";
+
 import useHolidays from "@/modules/holidays/composables/useHolidays";
 import useLoading from "@/composables/useLoading";
 
 const currentDate = DateTime.local();
 
 export default {
-  name: "HolidayListUserView",
+  name: "HolidayUserView",
   metaInfo: {
     title: "Vacaciones usuario",
   },
   components: { HolidaysDatePicker, HolidaysDetailDialog, HolidaysHelpDialog },
   setup(props, { refs }) {
-    // Vuex
-    const { loggedUser } = useState(["loggedUser"]);
-    const { yearOptions } = useGetters(["yearOptions"]);
+    // Store
+    const mainStore = useMainStore();
+    const { loggedUser, yearOptions } = toRefs(mainStore);
 
     // General
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
@@ -254,7 +255,7 @@ export default {
     });
 
     return {
-      //Vuex
+      // Store
       yearOptions,
       // General
       isLoading,

@@ -45,9 +45,11 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 
 import FilterMixin from "@/mixins/filter-mixin";
+
+import { useNotificationStore } from "@/modules/notifications/stores/notifications";
 
 export default {
   name: "NotificationFilters",
@@ -61,7 +63,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("notifications", ["notificationTargets"]),
+    ...mapState(useNotificationStore, ["notificationTargets"]),
   },
 };
 </script>

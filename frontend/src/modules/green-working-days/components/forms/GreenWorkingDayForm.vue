@@ -14,25 +14,17 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6">
+      <v-col>
         <UserAutocomplete
-          v-model.number="item.main_user"
-          label="Usuario principal"
+          v-model="item.users"
+          label="Usuarios"
           prepend-icon="mdi-account"
           :limit-random-choices-to="item.volunteers"
           show-random-btn
-        />
-      </v-col>
-      <v-col cols="12" sm="6">
-        <UserAutocomplete
-          v-model.number="item.support_user"
-          label="Usuario de apoyo"
-          prepend-icon="mdi-account-outline"
-          :limit-random-choices-to="item.volunteers"
-          show-random-btn
-          :error-messages="buildValidationErrorMessages($v.item.support_user)"
-          @change="$v.item.support_user.$touch()"
-          @blur="$v.item.support_user.$touch()"
+          multiple
+          chips
+          small-chips
+          deletable-chips
         />
       </v-col>
     </v-row>
@@ -54,7 +46,7 @@
 </template>
 
 <script>
-import { maxLength, not, sameAs } from "vuelidate/lib/validators";
+import { maxLength, required } from "vuelidate/lib/validators";
 
 import FormMixin from "@/mixins/form-mixin";
 
@@ -65,16 +57,12 @@ export default {
   mixins: [FormMixin({ service: GreenWorkingDayService })],
   validations: {
     item: {
-      label: { maxLength: maxLength(100) },
-      support_user: { notSameAsMainUser: not(sameAs("main_user")) },
+      label: { required, maxLength: maxLength(100) },
     },
   },
   data() {
     return {
       saveFunctionName: "update",
-      validationErrorMessages: {
-        notSameAsMainUser: "Usuario repetido",
-      },
       successMessage: "Jornada especial guardada correctamente",
     };
   },

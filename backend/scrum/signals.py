@@ -11,7 +11,7 @@ from django.utils.timezone import make_aware
 from notifications.signals import notify
 
 from .models import Progress, Sprint, Task, UserStory
-from common.utils import notify_item_assignation_to_user
+from common.utils import get_notification_sender, notify_item_assignation_to_user
 from events.models import Event, EventType
 
 
@@ -122,7 +122,7 @@ def notify_users_of_user_story_changes(sender, instance, created, raw, using, up
     Notifies assigned users of changes made in an existing User Story
     """
     if not created and not update_fields:
-        notification_sender = instance.notification_sender
+        notification_sender = get_notification_sender()
         excluded_users = instance.change_notification_excluded_users + [notification_sender]
         recipient_qs = (
             get_user_model()

@@ -1,11 +1,12 @@
 import { ref } from "@vue/composition-api";
-import { useActions } from "vuex-composition-helpers/dist";
 import { defaultTo, get, isArray, isFunction, isString } from "lodash";
+
+import { useMainStore } from "@/stores/main";
 
 import getService from "@/services";
 
 export default function (service, fn, options = {}) {
-  const { showSnackbar } = useActions(["showSnackbar"]);
+  const mainStore = useMainStore();
   service = isString(service) ? getService(service) : service;
 
   const requestLoading = ref(false);
@@ -22,7 +23,7 @@ export default function (service, fn, options = {}) {
       requestDataCount.value = defaultTo(response.data.count, isArray(response.data) ? response.data.length : 0);
 
       if (options.successMsg) {
-        showSnackbar({
+        mainStore.showSnackbar({
           color: "success",
           message: options.successMsg,
         });
@@ -36,7 +37,7 @@ export default function (service, fn, options = {}) {
         throw error;
       } else {
         console.error(error);
-        showSnackbar({
+        mainStore.showSnackbar({
           color: "error",
           message: get(options, "errorMsg", "Ocurrió un error realizando la petición"),
         });

@@ -157,7 +157,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
 import { DateTime } from "luxon";
 
 import EffortRoleChart from "@/modules/scrum/components/charts/EffortRoleChart";
@@ -172,6 +172,8 @@ import UserStoryDelayedChart from "@/modules/scrum/components/charts/UserStoryDe
 import UserStoryOverworkedChart from "@/modules/scrum/components/charts/UserStoryOverworkedChart";
 import UserStoryTypeChart from "@/modules/scrum/components/charts/UserStoryTypeChart";
 import UserStoryUserChart from "@/modules/scrum/components/charts/UserStoryUserChart";
+
+import { useMainStore } from "@/stores/main";
 
 import useLoading from "@/composables/useLoading";
 
@@ -221,7 +223,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["yearOptions"]),
+    ...mapState(useMainStore, ["yearOptions"]),
   },
 };
 </script>

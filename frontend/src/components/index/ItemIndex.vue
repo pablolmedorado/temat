@@ -160,8 +160,10 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState } from "pinia";
 import { defaultTo, get, invoke, isBoolean, isFunction, omit } from "lodash";
+
+import { useMainStore } from "@/stores/main";
 
 import useLoading from "@/composables/useLoading";
 import useLocalStorage from "@/composables/useLocalStorage";
@@ -311,7 +313,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser"]),
+    ...mapState(useMainStore, ["loggedUser"]),
   },
   watch: {
     tableHeaders: {
@@ -333,7 +335,7 @@ export default {
     this.filters = this.getDefaultFilters();
   },
   methods: {
-    ...mapActions(["showSnackbar"]),
+    ...mapActions(useMainStore, ["showSnackbar"]),
     fetchTableItems(resetPagination = false) {
       invoke(this.$refs.itemTable, "fetchItems", resetPagination);
     },

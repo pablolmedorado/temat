@@ -71,8 +71,10 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from "pinia";
 import { isEqual, isObject } from "lodash";
+
+import { useMainStore } from "@/stores/main";
 
 import useLocalStorage from "@/composables/useLocalStorage";
 
@@ -116,7 +118,7 @@ export default {
   },
   methods: {
     isEqual,
-    ...mapActions(["showSnackbar"]),
+    ...mapActions(useMainStore, ["showSnackbar"]),
     addQuickFilter(filter) {
       if (isObject(filter)) {
         filter.filters = { ...this.filters };

@@ -206,7 +206,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 import { DateTime } from "luxon";
 import { cloneDeep, defaultTo } from "lodash";
 import { maxLength, required, requiredUnless } from "vuelidate/lib/validators";
@@ -214,6 +214,9 @@ import { maxLength, required, requiredUnless } from "vuelidate/lib/validators";
 import FormMixin from "@/mixins/form-mixin";
 
 import EventService from "@/modules/calendar/services/event-service";
+
+import { useMainStore } from "@/stores/main";
+import { useEventStore } from "@/modules/calendar/stores/events";
 
 export default {
   name: "EventForm",
@@ -259,8 +262,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["locale"]),
-    ...mapState("calendar", {
+    ...mapState(useMainStore, ["locale"]),
+    ...mapState(useEventStore, {
       eventTypesOptions: "eventTypes",
       visibilityOptions: "eventVisibilityTypes",
     }),

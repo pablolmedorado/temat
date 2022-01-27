@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ("creation_datetime", models.DateTimeField(auto_now_add=True, verbose_name="fecha de creación")),
                 ("modification_datetime", models.DateTimeField(auto_now=True, verbose_name="fecha de modificación")),
                 ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ("label", models.CharField(blank=True, max_length=100, verbose_name="etiqueta")),
+                ("label", models.CharField(blank=False, max_length=100, verbose_name="etiqueta")),
                 ("date", models.DateField(unique=True, verbose_name="fecha")),
                 (
                     "creation_user",

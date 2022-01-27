@@ -95,7 +95,6 @@ export default {
     return {
       items: [],
       itemCount: 0,
-      resetPagination: false,
     };
   },
   computed: {
@@ -133,8 +132,8 @@ export default {
   },
   watch: {
     filters: {
-      handler() {
-        if (this.reactiveFilters) {
+      handler(newValue, oldValue) {
+        if (!isEqual(newValue, oldValue) && this.reactiveFilters) {
           this.fetchItems(true);
         }
       },

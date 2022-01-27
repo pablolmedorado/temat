@@ -30,7 +30,9 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 export default {
   name: "UserStoryActors",
@@ -49,7 +51,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters("scrum", ["effortRolesMap"]),
+    ...mapState(useUserStoryStore, ["effortRolesMap"]),
   },
 };
 </script>

@@ -18,7 +18,7 @@
             <tbody>
               <tr>
                 <td>Creación</td>
-                <td><UserPill :user="userStory.creation_user" /></td>
+                <td><UserPill v-if="userStory.creation_user" :user="userStory.creation_user" /></td>
                 <td>{{ userStory.creation_datetime | datetime }}</td>
               </tr>
               <tr>

@@ -144,11 +144,14 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "pinia";
 import { DateTime } from "luxon";
 import { camelCase } from "lodash";
 
 import EventAuthorshipTag from "@/modules/calendar/components/EventAuthorshipTag";
+
+import { useMainStore } from "@/stores/main";
+import { useEventStore } from "@/modules/calendar/stores/events";
 
 import useEventTypes from "@/modules/calendar/composables/useEventTypes";
 import { applyDarkVariant } from "@/utils/colours";
@@ -168,8 +171,8 @@ export default {
     return { eventTypesMap };
   },
   computed: {
-    ...mapState(["locale"]),
-    ...mapGetters("calendar", ["eventVisibilityTypesMap"]),
+    ...mapState(useMainStore, ["locale"]),
+    ...mapState(useEventStore, ["eventVisibilityTypesMap"]),
     startDate() {
       return this.item.luxonStart.toISODate();
     },

@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 import { get } from "lodash";
 
 import Task from "@/modules/scrum/models/task";
@@ -53,6 +53,8 @@ import Task from "@/modules/scrum/models/task";
 import DialogMixin from "@/mixins/dialog-mixin";
 
 import TaskService from "@/modules/scrum/services/task-service";
+
+import { useMainStore } from "@/stores/main";
 
 import useLoading from "@/composables/useLoading";
 import { userHasPermission } from "@/utils/permissions";
@@ -107,7 +109,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser"]),
+    ...mapState(useMainStore, ["loggedUser"]),
     systemFilters() {
       return { user_story_id: get(this.userStory, "id", null) };
     },

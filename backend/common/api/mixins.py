@@ -1,49 +1,23 @@
-from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
 
-from rest_framework import mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework_bulk import BulkCreateModelMixin, BulkDestroyModelMixin
 
-
-class AtomicCreateModelMixin(mixins.CreateModelMixin):
-    @transaction.atomic
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+from ..decorators import atomic_transaction_singleton
 
 
 class AtomicBulkCreateModelMixin(BulkCreateModelMixin):
-    @transaction.atomic
+    @atomic_transaction_singleton
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
 
-class AtomicUpdateModelMixin(mixins.UpdateModelMixin):
-    @transaction.atomic
-    def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
-
-
-class AtomicDestroyModelMixin(mixins.DestroyModelMixin):
-    @transaction.atomic
-    def destroy(self, request, *args, **kwargs):
-        return super().destroy(request, *args, **kwargs)
-
-
 class AtomicBulkDestroyModelMixin(BulkDestroyModelMixin):
-    @transaction.atomic
+    @atomic_transaction_singleton
     def bulk_destroy(self, request, *args, **kwargs):
         return super().bulk_destroy(request, *args, **kwargs)
-
-
-class AtomicModelViewSetMixin(AtomicUpdateModelMixin, AtomicCreateModelMixin, AtomicDestroyModelMixin):
-    """
-    https://gist.github.com/prudnikov/3a968a1ee1cf9b02730cc40bc1d3d9f2
-    """
-
-    pass
 
 
 class OrderedMixin(object):
@@ -57,7 +31,7 @@ class OrderedMixin(object):
         if "order" in self.request.data:
             serializer.instance.to(int(self.request.data.get("order")))
 
-    @transaction.atomic
+    @atomic_transaction_singleton
     @action(detail=True, methods=["PATCH"])
     def to(self, request, *args, **kwargs):  # noqa
         """
@@ -70,7 +44,7 @@ class OrderedMixin(object):
         instance.to(int(self.request.data.get("order")), extra_update=extra_update)
         return Response(status=HTTP_200_OK)
 
-    @transaction.atomic
+    @atomic_transaction_singleton
     @action(detail=True, methods=["PATCH"])
     def up(self, request, *args, **kwargs):  # noqa
         """
@@ -80,7 +54,7 @@ class OrderedMixin(object):
         instance.up()
         return Response(status=HTTP_200_OK)
 
-    @transaction.atomic
+    @atomic_transaction_singleton
     @action(detail=True, methods=["PATCH"])
     def down(self, request, *args, **kwargs):  # noqa
         """
@@ -90,7 +64,7 @@ class OrderedMixin(object):
         instance.down()
         return Response(status=HTTP_200_OK)
 
-    @transaction.atomic
+    @atomic_transaction_singleton
     @action(detail=True, methods=["PATCH"])
     def top(self, request, *args, **kwargs):
         """
@@ -101,7 +75,7 @@ class OrderedMixin(object):
         instance.top(extra_update=extra_update)
         return Response(status=HTTP_200_OK)
 
-    @transaction.atomic
+    @atomic_transaction_singleton
     @action(detail=True, methods=["PATCH"])
     def bottom(self, request, *args, **kwargs):
         """

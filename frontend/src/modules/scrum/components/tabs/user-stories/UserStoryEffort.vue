@@ -57,12 +57,15 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "pinia";
 import { DateTime } from "luxon";
 
 import Effort from "@/modules/scrum/models/effort";
 
 import EffortForm from "@/modules/scrum/components/forms/EffortForm";
+
+import { useMainStore } from "@/stores/main";
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 import { userHasPermission } from "@/utils/permissions";
 
@@ -108,8 +111,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["locale", "loggedUser"]),
-    ...mapGetters("scrum", ["effortRolesMap"]),
+    ...mapState(useMainStore, ["locale", "loggedUser"]),
+    ...mapState(useUserStoryStore, ["effortRolesMap"]),
     systemFilters() {
       return {
         user_story_id: this.userStory.id,

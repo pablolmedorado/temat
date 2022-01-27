@@ -2,12 +2,12 @@ from datetime import date
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
-from django.db import transaction
 from django.db.models import Count, F, Min
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from notifications.signals import notify
+from rest_flex_fields.views import FlexFieldsModelViewSet
 from rest_framework import permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -24,21 +24,21 @@ from .serializers import (
 )
 from ..models import GreenWorkingDay, Holiday, HolidayType, SupportWorkingDay
 from ..utils import green_working_day_user_chart_data, support_working_day_user_chart_data, user_availability_chart_data
+from common.decorators import atomic_transaction_singleton
 from common.api.mixins import AtomicBulkCreateModelMixin
 from common.api.permissions import HasDjangoPermissionOrReadOnly
-from common.api.viewsets import AtomicFlexFieldsModelViewSet
 
 
-class GreenWorkingDayViewSet(FlatDatesMixin, AtomicBulkCreateModelMixin, AtomicFlexFieldsModelViewSet):
+class GreenWorkingDayViewSet(FlatDatesMixin, AtomicBulkCreateModelMixin, FlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, GreenWorkingDayPermission)
-    queryset = GreenWorkingDay.objects.all()
+    queryset = GreenWorkingDay.objects.all().prefetch_related("users").distinct()
     serializer_class = GreenWorkingDaySerializer
-    permit_list_expands = ["main_user", "support_user"]
+    permit_list_expands = ["users"]
     filterset_class = GreenWorkingDayFilterSet
-    ordering_fields = ("date", "label", "main_user__acronym", "support_user__acronym")
+    ordering_fields = ("date", "label")
     ordering = ("date",)
 
-    @transaction.atomic
+    @atomic_transaction_singleton
     @action(detail=True, methods=["PATCH"])
     def toggle_volunteer(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -56,7 +56,7 @@ class GreenWorkingDayViewSet(FlatDatesMixin, AtomicBulkCreateModelMixin, AtomicF
         return Response(chart_data)
 
 
-class SupportWorkingDayViewSet(FlatDatesMixin, BulkCreateModelMixin, AtomicFlexFieldsModelViewSet):
+class SupportWorkingDayViewSet(FlatDatesMixin, BulkCreateModelMixin, FlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = SupportWorkingDay.objects.all()
     serializer_class = SupportWorkingDaySerializer
@@ -72,7 +72,7 @@ class SupportWorkingDayViewSet(FlatDatesMixin, BulkCreateModelMixin, AtomicFlexF
         return Response(chart_data)
 
 
-class HolidayTypeViewSet(AtomicFlexFieldsModelViewSet):
+class HolidayTypeViewSet(FlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = HolidayType.objects.all()
     serializer_class = HolidayTypeSerializer
@@ -82,7 +82,7 @@ class HolidayTypeViewSet(AtomicFlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class HolidayViewSet(FlatDatesMixin, AtomicFlexFieldsModelViewSet):
+class HolidayViewSet(FlatDatesMixin, FlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HolidayPermission)
     queryset = Holiday.objects.with_expiration_date()
     serializer_class = HolidaySerializer
@@ -100,7 +100,7 @@ class HolidayViewSet(FlatDatesMixin, AtomicFlexFieldsModelViewSet):
 
     flat_dates_field = "planned_date"
 
-    @transaction.atomic
+    @atomic_transaction_singleton
     @action(detail=False, methods=["POST"])
     def request(self, request, *args, **kwargs):
         if "dates" not in request.data:
@@ -163,7 +163,7 @@ class HolidayViewSet(FlatDatesMixin, AtomicFlexFieldsModelViewSet):
         serializer = self.get_serializer(base_queryset.filter(pk__in=holiday_pks), many=True)
         return Response(serializer.data)
 
-    @transaction.atomic
+    @atomic_transaction_singleton
     @action(detail=True, methods=["PATCH"])
     def cancel(self, request, *args, **kwargs):
         instance = self.get_object()

@@ -1,6 +1,8 @@
-import { mapActions } from "vuex";
+import { mapActions } from "pinia";
 import { validationMixin } from "vuelidate";
 import { cloneDeep, difference, forOwn, isArray, isEqualWith } from "lodash";
+
+import { useMainStore } from "@/stores/main";
 
 import useLoading from "@/composables/useLoading";
 import { buildValidationErrorMessages, validationErrorMessages } from "@/utils/validation";
@@ -57,7 +59,7 @@ export default function FormMixin({ service }) {
       },
     },
     methods: {
-      ...mapActions(["showSnackbar"]),
+      ...mapActions(useMainStore, ["showSnackbar"]),
       buildValidationErrorMessages,
       initializeItem(newItem) {
         return cloneDeep(newItem);

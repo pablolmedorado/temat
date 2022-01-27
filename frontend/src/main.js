@@ -3,10 +3,9 @@ import Vue from "vue";
 import "./plugins/composition";
 
 import router from "./router";
-import store from "./store";
 
-import "roboto-fontface/css/roboto/roboto-fontface.css";
-import "@mdi/font/css/materialdesignicons.css";
+import pinia from "./plugins/pinia";
+
 import vuetify from "./plugins/vuetify";
 
 import "./plugins/highcharts";
@@ -23,7 +22,7 @@ Vue.config.productionTip = false;
 export default new Vue({
   el: "#app",
   router,
-  store,
+  pinia,
   vuetify,
   render: (h) => h(App),
 });

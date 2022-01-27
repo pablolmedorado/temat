@@ -15,4 +15,5 @@ export default [
   '"Antes de vender yo las acciones del Betis me voy debajo de un puente, que me gusta mucho el pan con aceitunas."',
   '"Y el muchacho me mira todos los domingos, cuando el Betis marca un gol, y abraza a su padre."',
   '"No se puede venir a los sitios cargado de whisky."',
+  '"Nada hombre, yo lo vi todo normal y, porque una persona tenga los nervios trastornados, pues hemos pagado todos por ello."',
 ];

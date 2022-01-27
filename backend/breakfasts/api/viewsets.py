@@ -1,13 +1,13 @@
+from rest_flex_fields.views import FlexFieldsModelViewSet
 from rest_framework import permissions
 
 from .serializers import BaseSerializer, BreadSerializer, BreakfastSerializer, DrinkSerializer, IngredientSerializer
 from ..models import Base, Bread, Breakfast, Drink, Ingredient
 from common.api.permissions import HasDjangoPermissionOrReadOnly, IsOwnerOrReadOnly
-from common.api.viewsets import AtomicFlexFieldsModelViewSet
 from common.api.utils import check_api_user_permissions
 
 
-class BreadViewSet(AtomicFlexFieldsModelViewSet):
+class BreadViewSet(FlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = Bread.objects.all()
     serializer_class = BreadSerializer
@@ -16,7 +16,7 @@ class BreadViewSet(AtomicFlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class BaseViewSet(AtomicFlexFieldsModelViewSet):
+class BaseViewSet(FlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = Base.objects.all()
     serializer_class = BaseSerializer
@@ -25,7 +25,7 @@ class BaseViewSet(AtomicFlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class IngredientViewSet(AtomicFlexFieldsModelViewSet):
+class IngredientViewSet(FlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
@@ -34,7 +34,7 @@ class IngredientViewSet(AtomicFlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class DrinkViewSet(AtomicFlexFieldsModelViewSet):
+class DrinkViewSet(FlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, HasDjangoPermissionOrReadOnly)
     queryset = Drink.objects.all()
     serializer_class = DrinkSerializer
@@ -43,7 +43,7 @@ class DrinkViewSet(AtomicFlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class BreakfastViewSet(AtomicFlexFieldsModelViewSet):
+class BreakfastViewSet(FlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly)
     queryset = Breakfast.objects.exclude(user__is_active=False)
     serializer_class = BreakfastSerializer

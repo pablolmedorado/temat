@@ -42,6 +42,8 @@ class SprintSerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "accountable_user",
             "num_of_user_stories",
             "current_progress",
+            "planned_effort",
+            "current_effort",
             "tags",
         )
         read_only_fields = (
@@ -49,6 +51,8 @@ class SprintSerializer(TaggitSerializer, FlexFieldsModelSerializer):
             "ongoing",
             "num_of_user_stories",
             "current_progress",
+            "planned_effort",
+            "current_effort",
             "creation_datetime",
             "creation_user",
             "modification_datetime",
@@ -68,11 +72,23 @@ class EpicSerializer(TaggitSerializer, FlexFieldsModelSerializer):
 
     class Meta:
         model = Epic
-        fields = ("id", "name", "description", "external_reference", "num_of_user_stories", "current_progress", "tags")
+        fields = (
+            "id",
+            "name",
+            "description",
+            "external_reference",
+            "num_of_user_stories",
+            "current_progress",
+            "planned_effort",
+            "current_effort",
+            "tags",
+        )
         read_only_fields = (
             "id",
             "num_of_user_stories",
             "current_progress",
+            "planned_effort",
+            "current_effort",
             "creation_datetime",
             "creation_user",
             "modification_datetime",
@@ -145,10 +161,6 @@ class UserStorySerializer(TaggitSerializer, FlexFieldsModelSerializer):
                 )
             if data["end_date"] > data["sprint"].end_date:
                 raise serializers.ValidationError(_("La fecha de fin debe ser anterior a la del sprint"))
-            if not data.get("development_user"):
-                raise serializers.ValidationError(
-                    _("No es posible incluir una historia de usuario en un sprint sin un responsable asignado.")
-                )
         return data
 
     class Meta:
@@ -225,6 +237,15 @@ class UserStorySerializer(TaggitSerializer, FlexFieldsModelSerializer):
 
 
 class UserStoryDeveloperSerializer(UserStorySerializer):
+    def validate_validated(self, value):
+        if (not self.instance and value is not None) or (
+            self.instance and self.instance.validated is not value and value is not None
+        ):
+            raise serializers.ValidationError(
+                _("El desarrollador no puede validar ni rechazar una historia de usuario")
+            )
+        return value
+
     class Meta(UserStorySerializer.Meta):
         read_only_fields = tuple(  # type: ignore
             field
@@ -234,6 +255,7 @@ class UserStoryDeveloperSerializer(UserStorySerializer):
                 "external_resource",
                 "development_comments",
                 "cvs_reference",
+                "validated",
                 "risk_level",
                 "risk_comments",
                 "use_migrations",

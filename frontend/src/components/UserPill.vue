@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span class="d-inline-block">
     <v-chip v-if="localUser" v-bind="$attrs" pill v-on="$listeners">
       <UserAvatar left :user="localUser" />
       {{ `${localUser.first_name} ${localUser.last_name}` }}
@@ -9,7 +9,9 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+
+import { useUserStore } from "@/stores/users";
 
 export default {
   name: "UserPill",
@@ -21,9 +23,9 @@ export default {
     },
   },
   computed: {
-    ...mapGetters("users", ["usersMap"]),
+    ...mapState(useUserStore, ["userMap"]),
     localUser() {
-      return typeof this.user == "number" ? this.usersMap[this.user] : this.user;
+      return typeof this.user == "number" ? this.userMap[this.user] : this.user;
     },
   },
 };

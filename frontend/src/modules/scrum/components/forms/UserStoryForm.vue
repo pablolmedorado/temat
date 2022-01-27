@@ -236,13 +236,14 @@
                       @blur="$v.item.start_date.$touch()"
                       v-on="on"
                     >
-                      <template #append-outer>
+                      <template #append>
                         <v-tooltip bottom>
                           <template #activator="{ on: onTooltip, attrs: attrTooltip }">
                             <v-btn
                               v-bind="attrTooltip"
                               :disabled="!canEdit"
                               icon
+                              small
                               v-on="onTooltip"
                               @click="setStartDateFromSprint"
                             >
@@ -290,13 +291,14 @@
                       @blur="$v.item.end_date.$touch()"
                       v-on="on"
                     >
-                      <template #append-outer>
+                      <template #append>
                         <v-tooltip bottom>
                           <template #activator="{ on: onTooltip, attrs: attrTooltip }">
                             <v-btn
                               v-bind="attrTooltip"
                               :disabled="!canEdit"
                               icon
+                              small
                               v-on="onTooltip"
                               @click="setEndDateFromSprint"
                             >
@@ -453,7 +455,7 @@
                           v-model="item.validated"
                           :items="validatedOptions"
                           :disabled="item.status < 3"
-                          :readonly="!canEdit && loggedUser.id !== item.validation_user"
+                          :readonly="!canEdit && ![item.development_user, item.validation_user].includes(loggedUser.id)"
                           :hint="validatedHintText"
                           persistent-hint
                           label="Estado"
@@ -581,7 +583,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 import { DateTime } from "luxon";
 import { between, helpers, maxLength, minValue, numeric, required, requiredIf } from "vuelidate/lib/validators";
 import { isWebUri } from "valid-url";
@@ -592,6 +594,9 @@ import FormMixin from "@/mixins/form-mixin";
 import EpicService from "@/modules/scrum/services/epic-service";
 import SprintService from "@/modules/scrum/services/sprint-service";
 import UserStoryService from "@/modules/scrum/services/user-story-service";
+
+import { useMainStore } from "@/stores/main";
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 import useUserStoryTypes from "@/modules/scrum/composables/useUserStoryTypes";
 import { isoDateTimeToLocaleString, isoDateToLocaleString } from "@/utils/dates";
@@ -632,7 +637,7 @@ export default {
       },
       planned_effort: { required, numeric, minValue: minValue(1) },
       priority: { required, numeric, between: between(1, 10) },
-      development_user: { requiredIfSprint: requiredIf("sprint") },
+      development_user: {},
       development_comments: { maxLength: maxLength(2000) },
       cvs_reference: { maxLength: maxLength(255) },
       validation_comments: { maxLength: maxLength(2000) },
@@ -658,11 +663,6 @@ export default {
       sprintService: SprintService,
       showStartDatepicker: false,
       showEndDatepicker: false,
-      validatedOptions: [
-        { value: null, text: "Sin validar" },
-        { value: false, text: "Rechazada" },
-        { value: true, text: "Validada" },
-      ],
       useMigrationsOptions: [
         { value: false, text: "No" },
         { value: true, text: "Sí" },
@@ -676,8 +676,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["locale", "loggedUser"]),
-    ...mapState("scrum", {
+    ...mapState(useMainStore, ["locale", "loggedUser"]),
+    ...mapState(useUserStoryStore, {
       riskLevelOptions: "riskLevels",
     }),
     canEdit() {
@@ -688,6 +688,22 @@ export default {
       return [this.item.development_user, this.item.validation_user, this.item.support_user].includes(
         this.loggedUser.id
       );
+    },
+    validatedOptions() {
+      const canValidate = this.canEdit || this.item.validation_user === this.loggedUser.id;
+      return [
+        { value: null, text: "Sin validar", disabled: false },
+        {
+          value: false,
+          text: "Rechazada",
+          disabled: this.sourceItem.validated !== false && !canValidate,
+        },
+        {
+          value: true,
+          text: "Validada",
+          disabled: this.sourceItem.validated !== true && !canValidate,
+        },
+      ];
     },
     validatedHintText() {
       if (this.item.validated !== null && this.item.validated === this.sourceItem.validated) {

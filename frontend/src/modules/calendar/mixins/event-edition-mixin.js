@@ -1,4 +1,4 @@
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 import { cloneDeep } from "lodash";
 
 import CalendarEvent from "@/modules/calendar/models/event";
@@ -7,6 +7,8 @@ import EventService from "@/modules/calendar/services/event-service";
 
 import EventForm from "@/modules/calendar/components/forms/EventForm";
 import EventRepresentation from "@/modules/calendar/components/EventRepresentation";
+
+import { useMainStore } from "@/stores/main";
 
 import useEventTypes from "@/modules/calendar/composables/useEventTypes";
 import { userHasPermission } from "@/utils/permissions";
@@ -22,7 +24,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser", "tz"]),
+    ...mapState(useMainStore, ["loggedUser", "tz"]),
     canChange() {
       return this.loggedUser.id === this.item.creation_user || userHasPermission(CalendarEvent.CHANGE_PERMISSION);
     },

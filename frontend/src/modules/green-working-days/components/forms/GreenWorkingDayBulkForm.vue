@@ -25,21 +25,12 @@
       </v-col>
       <v-col>
         <UserAutocomplete
-          v-model.number="item.main_user"
-          label="Usuario principal"
+          v-model="item.users"
+          label="Usuarios"
           prepend-icon="mdi-account"
+          multiple
+          truncate-results
           show-random-btn
-        />
-      </v-col>
-      <v-col>
-        <UserAutocomplete
-          v-model.number="item.support_user"
-          label="Usuario de apoyo"
-          prepend-icon="mdi-account-outline"
-          show-random-btn
-          :error-messages="buildValidationErrorMessages($v.items.$each.$iter[index].support_user)"
-          @change="$v.items.$each.$iter[index].support_user.$touch()"
-          @blur="$v.items.$each.$iter[index].support_user.$touch()"
         />
       </v-col>
     </v-row>
@@ -48,7 +39,7 @@
 </template>
 
 <script>
-import { maxLength, minLength, not, required, sameAs } from "vuelidate/lib/validators";
+import { maxLength, minLength, required } from "vuelidate/lib/validators";
 
 import BulkFormMixin from "@/mixins/bulk-form-mixin";
 
@@ -63,8 +54,7 @@ export default {
       minLength: minLength(1),
       $each: {
         date: { required },
-        label: { maxLength: maxLength(100) },
-        support_user: { notSameAsMainUser: not(sameAs("main_user")) },
+        label: { required, maxLength: maxLength(100) },
       },
     },
   },

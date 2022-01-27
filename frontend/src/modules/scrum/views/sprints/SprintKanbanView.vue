@@ -63,7 +63,7 @@
 
 <script>
 import { ref } from "@vue/composition-api";
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "pinia";
 import { useFullscreen } from "@vueuse/core";
 import { get, groupBy } from "lodash";
 
@@ -72,6 +72,9 @@ import UserStoryService from "@/modules/scrum/services/user-story-service";
 import ContextBreadcrumbs from "@/modules/scrum/components/ContextBreadcrumbs";
 import KanbanCard from "@/modules/scrum/components/KanbanCard";
 import SprintViewSelector from "@/modules/scrum/components/SprintViewSelector";
+
+import { useUserStore } from "@/stores/users";
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 import useLoading from "@/composables/useLoading";
 import useScrumContext from "@/modules/scrum/composables/useScrumContext";
@@ -115,8 +118,8 @@ export default {
     };
   },
   computed: {
-    ...mapState("scrum", ["userStoryStatus"]),
-    ...mapGetters("users", ["workerUsers"]),
+    ...mapState(useUserStore, ["workerUsers"]),
+    ...mapState(useUserStoryStore, ["userStoryStatus"]),
     kanbanStatus() {
       return this.userStoryStatus.filter((status) => status.value);
     },

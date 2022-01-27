@@ -7,7 +7,13 @@ module.exports = {
   globals: {
     Urls: "readonly",
   },
-  extends: ["plugin:vue/recommended", "plugin:testing-library/vue", "eslint:recommended", "@vue/prettier"],
+  extends: [
+    "plugin:vue/recommended",
+    "plugin:testing-library/vue",
+    "plugin:storybook/recommended",
+    "eslint:recommended",
+    "@vue/prettier",
+  ],
   parserOptions: {
     parser: "babel-eslint",
   },
@@ -19,9 +25,20 @@ module.exports = {
     "testing-library/prefer-screen-queries": "off",
     "vue/component-definition-name-casing": ["error", "PascalCase"],
     "vue/component-name-in-template-casing": ["error", "PascalCase"],
-    "vue/component-tags-order": ["error", { order: ["template", "script", "style"] }],
+    "vue/component-tags-order": [
+      "error",
+      {
+        order: ["template", "script", "style"],
+      },
+    ],
     "vue/custom-event-name-casing": "off", // TODO: activate after migrating to vue3/vuetify3
-    "vue/match-component-file-name": ["error", { extensions: ["vue"], shouldMatchCase: true }],
+    "vue/match-component-file-name": [
+      "error",
+      {
+        extensions: ["vue"],
+        shouldMatchCase: true,
+      },
+    ],
     "vue/max-attributes-per-line": "off",
     "vue/no-deprecated-scope-attribute": "error",
     "vue/no-deprecated-slot-attribute": "error",

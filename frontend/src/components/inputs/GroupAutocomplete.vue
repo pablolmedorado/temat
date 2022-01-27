@@ -25,7 +25,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
+
+import { useUserStore } from "@/stores/users";
 
 export default {
   name: "GroupAutocomplete",
@@ -57,7 +59,7 @@ export default {
     },
   },
   computed: {
-    ...mapState("users", {
+    ...mapState(useUserStore, {
       groupOptions: "groups",
     }),
   },

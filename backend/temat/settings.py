@@ -2,8 +2,6 @@ import os
 import environ
 import warnings
 
-from django.urls import reverse_lazy
-
 
 PROJECT_ROOT = environ.Path(__file__) - 3
 BACKEND_DIR = environ.Path(__file__) - 2
@@ -63,12 +61,13 @@ INSTALLED_APPS = [
     "colorfield",
     "taggit",
     "notifications",
-    "common.apps.CommonConfig",
-    "users.apps.UsersConfig",
-    "events.apps.EventsConfig",
-    "work_organization.apps.WorkOrganizationConfig",
-    "scrum.apps.ScrumConfig",
-    "breakfasts.apps.BreakfastsConfig",
+    # Local apps
+    "common",
+    "users",
+    "events",
+    "work_organization",
+    "scrum",
+    "breakfasts",
 ]
 
 MIDDLEWARE = [

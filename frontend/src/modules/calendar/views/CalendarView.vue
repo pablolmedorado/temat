@@ -137,7 +137,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState } from "pinia";
 import { DateTime, Interval } from "luxon";
 import { debounce, defaultTo, sortBy } from "lodash";
 import { escapeHTML } from "vuetify/es5/util/helpers";
@@ -148,6 +148,8 @@ import EventService from "@/modules/calendar/services/event-service";
 
 import EventCard from "@/modules/calendar/components/EventCard";
 import EventForm from "@/modules/calendar/components/forms/EventForm";
+
+import { useMainStore } from "@/stores/main";
 
 import useEventTypes from "@/modules/calendar/composables/useEventTypes";
 import useLoading from "@/composables/useLoading";
@@ -211,7 +213,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["locale", "loggedUser"]),
+    ...mapState(useMainStore, ["locale", "loggedUser"]),
     pickerDate: {
       get() {
         if (this.calendarType === "month") {
@@ -249,7 +251,7 @@ export default {
     this.fetchEvents();
   },
   methods: {
-    ...mapActions(["showSnackbar"]),
+    ...mapActions(useMainStore, ["showSnackbar"]),
     onCalendarChange: debounce(function () {
       this.events = [];
       this.fetchEvents();

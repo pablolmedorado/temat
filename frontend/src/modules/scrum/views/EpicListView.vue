@@ -31,6 +31,8 @@
               <TruncatedText :value="value" :text-length="100" />
             </template>
           </template>
+          <template #item.planned_effort="{ value }">{{ value }} UT</template>
+          <template #item.current_effort="{ value }">{{ value }} UT</template>
           <template #item.current_progress="{ value }">
             <v-progress-circular :rotate="-90" :size="32" :value="value" :width="3" color="primary">
               {{ value }}
@@ -56,13 +58,15 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 import { isWebUri } from "valid-url";
 
 import Epic from "@/modules/scrum/models/epic";
 
 import EpicFilters from "@/modules/scrum/components/filters/EpicFilters";
 import EpicForm from "@/modules/scrum/components/forms/EpicForm";
+
+import { useMainStore } from "@/stores/main";
 
 export default {
   name: "EpicListView",
@@ -83,6 +87,20 @@ export default {
           sortingField: "user_stories__count",
           value: "num_of_user_stories",
           default: true,
+        },
+        {
+          text: "Esfuerzo planificado",
+          align: "start",
+          sortable: true,
+          sortingField: "annotated_planned_effort",
+          value: "planned_effort",
+        },
+        {
+          text: "Esfuerzo acumulado",
+          align: "start",
+          sortable: true,
+          sortingField: "annotated_current_effort",
+          value: "current_effort",
         },
         {
           text: "Progreso",
@@ -112,7 +130,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser"]),
+    ...mapState(useMainStore, ["loggedUser"]),
   },
   methods: {
     isWebUri,

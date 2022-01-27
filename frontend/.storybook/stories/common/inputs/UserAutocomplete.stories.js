@@ -1,7 +1,5 @@
 import { action } from "@storybook/addon-actions";
 
-import store from "@/store/index";
-
 import UserAutocomplete from "@/components/inputs/UserAutocomplete";
 
 export default {
@@ -16,7 +14,6 @@ export default {
 };
 
 const Template = (args, { argTypes }) => ({
-  store,
   components: { UserAutocomplete },
   props: Object.keys(argTypes),
   data() {

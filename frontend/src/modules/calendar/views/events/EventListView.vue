@@ -79,12 +79,14 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
 import { DateTime } from "luxon";
 
 import CalendarEvent from "@/modules/calendar/models/event";
 
 import EventFilters from "@/modules/calendar/components/filters/EventFilters";
+
+import { useEventStore } from "@/modules/calendar/stores/events";
 
 import useEventTypes from "@/modules/calendar/composables/useEventTypes";
 import { getReadableDuration, isoDateToLocaleString, isoDateTimeToLocaleString } from "@/utils/dates";
@@ -149,7 +151,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("calendar", ["eventVisibilityTypesMap"]),
+    ...mapState(useEventStore, ["eventVisibilityTypesMap"]),
     quickFilters() {
       return [
         {

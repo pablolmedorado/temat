@@ -26,7 +26,9 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 export default {
   name: "UserStoryIndexStatus",
@@ -37,7 +39,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters("scrum", ["userStoryStatusMap", "riskLevelsMap"]),
+    ...mapState(useUserStoryStore, ["userStoryStatusMap", "riskLevelsMap"]),
     statusLabelStyle() {
       if (this.userStory.risk_level) {
         return {

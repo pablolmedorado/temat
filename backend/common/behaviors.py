@@ -9,6 +9,21 @@ from django_currentuser.db.models import CurrentUserField
 from django_currentuser.middleware import get_current_authenticated_user
 from taggit.managers import TaggableManager
 
+from .decorators import atomic_transaction_singleton
+
+
+class Transactionable(models.Model):
+    @atomic_transaction_singleton
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+    @atomic_transaction_singleton
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+
+    class Meta:
+        abstract = True
+
 
 class Uuidable(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -61,7 +76,7 @@ class Eventable(models.Model):
         abstract = True
 
 
-class Notifiable(Authorable):
+class Notifiable(models.Model):
     notifications = GenericRelation(
         "notifications.Notification",
         content_type_field="target_content_type",

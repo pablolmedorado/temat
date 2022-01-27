@@ -40,9 +40,11 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
 
 import FilterMixin from "@/mixins/filter-mixin";
+
+import { useMainStore } from "@/stores/main";
 
 export default {
   name: "HolidayFilters",
@@ -56,7 +58,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["yearOptions"]),
+    ...mapState(useMainStore, ["yearOptions"]),
     userFilter() {
       return this.splitFilterValue("user_id__in", true);
     },

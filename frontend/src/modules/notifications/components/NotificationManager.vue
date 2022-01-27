@@ -110,12 +110,14 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from "vuex";
-import { createNamespacedHelpers } from "vuex-composition-helpers/dist";
+import { mapState, mapWritableState } from "pinia";
 import { useIntervalFn } from "@vueuse/core";
 import { isNil, partition } from "lodash";
 
 import NotificationService from "@/modules/notifications/services/notification-service";
+
+import { useMainStore } from "@/stores/main";
+import { useNotificationStore } from "@/modules/notifications/stores/notifications";
 
 import useLoading from "@/composables/useLoading";
 import useNotifications from "@/composables/useNotifications";
@@ -130,12 +132,10 @@ export default {
     },
   },
   setup() {
-    const { useActions } = createNamespacedHelpers("notifications");
-    const { getUnreadCount } = useActions(["getUnreadCount"]);
-
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
 
     const { areEnabled: areNotificationsEnabled } = useNotifications();
+    const { getUnreadCount } = useNotificationStore();
     useIntervalFn(() => getUnreadCount(), 300000, true); // 5 minutes
 
     return {
@@ -154,8 +154,9 @@ export default {
     };
   },
   computed: {
-    ...mapState("notifications", ["unreadCount"]),
-    ...mapGetters("notifications", ["notificationTargetMap", "unreadCountBadgeColour"]),
+    ...mapState(useMainStore, ["appName"]),
+    ...mapState(useNotificationStore, ["notificationTargetMap", "unreadCountBadgeColour"]),
+    ...mapWritableState(useNotificationStore, ["unreadCount"]),
     notificationPartition() {
       return partition(this.notifications, { unread: true });
     },
@@ -163,7 +164,7 @@ export default {
   watch: {
     unreadCount(newValue, oldValue) {
       if (this.areNotificationsEnabled && newValue > oldValue) {
-        new Notification("TeMaT", {
+        new Notification(this.appName, {
           body: `Tienes ${newValue} notificación/es sin leer`,
           icon: NotificationImg,
         });
@@ -181,13 +182,12 @@ export default {
     this.getUnreadCount();
   },
   methods: {
-    ...mapMutations("notifications", ["setUnreadCount"]),
     async getUnreadSummary() {
       this.addTask("fetch-unread-summary");
       try {
         const response = await NotificationService.unreadSummary();
         this.notifications = response.data.results;
-        this.setUnreadCount(response.data.count);
+        this.unreadCount = response.data.count;
       } finally {
         this.removeTask("fetch-unread-summary");
       }

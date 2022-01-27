@@ -10,6 +10,7 @@ from django.utils.timezone import make_aware
 from notifications.signals import notify
 
 from .models import Event
+from common.utils import get_notification_sender
 
 
 @receiver(pre_save, sender=Event)
@@ -29,7 +30,7 @@ def notify_attendees_of_invitation(sender, instance, action, reverse, model, pk_
     Notifies attendees that they have been invited to a new event
     """
     if action == "post_add" and isinstance(instance, Event) and not instance.type.system_slug:
-        notification_sender = instance.notification_sender
+        notification_sender = get_notification_sender()
 
         recipient_qs = None
         if model == get_user_model():
@@ -58,7 +59,7 @@ def notify_attendees_of_changes(sender, instance, created, *args, **kwargs):
     Notifies attendees of changes made in an existent event
     """
     if not created and not instance.type.system_slug:
-        notification_sender = instance.notification_sender
+        notification_sender = get_notification_sender()
 
         recipient_qs = (
             get_user_model()

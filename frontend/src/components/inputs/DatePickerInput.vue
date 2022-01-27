@@ -42,7 +42,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
+
+import { useMainStore } from "@/stores/main";
 
 import { isoDateToLocaleString } from "@/utils/dates";
 
@@ -96,7 +98,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["locale"]),
+    ...mapState(useMainStore, ["locale"]),
   },
 };
 </script>

@@ -18,7 +18,10 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "pinia";
+
+import { useMainStore } from "@/stores/main";
+import { useUserStore } from "@/stores/users";
 
 export default {
   name: "UserAvatar",
@@ -42,10 +45,10 @@ export default {
     },
   },
   computed: {
-    ...mapState(["isKonamiCodeActive"]),
-    ...mapGetters("users", ["usersMap"]),
+    ...mapState(useMainStore, ["isKonamiCodeActive"]),
+    ...mapState(useUserStore, ["userMap"]),
     localUser() {
-      return typeof this.user == "number" ? this.usersMap[this.user] : this.user;
+      return typeof this.user == "number" ? this.userMap[this.user] : this.user;
     },
   },
 };

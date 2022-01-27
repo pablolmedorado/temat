@@ -141,7 +141,7 @@
                 <v-icon>{{ `mdi-numeric-${value}-box` }}</v-icon>
               </template>
               <template #item.development_user="{ value }">
-                <UserPill :user="value" />
+                <UserPill v-if="value" :user="value" />
               </template>
               <template #item.status="{ item }">
                 <UserStoryIndexStatus :user-story="item" />

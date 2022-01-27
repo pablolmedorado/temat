@@ -1,10 +1,12 @@
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
 import { has } from "lodash";
 
 import EffortService from "@/modules/scrum/services/effort-service";
 
 import BaseChart from "@/components/charts/BaseChart";
+
+import { useUserStore } from "@/stores/users";
 
 export default {
   name: "EffortUserTimelineChart",
@@ -17,7 +19,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("users", ["workerUsers"]),
+    ...mapState(useUserStore, ["workerUsers"]),
     localChartOptions() {
       return {
         chart: {

@@ -44,11 +44,8 @@
           <template #item.date="{ value }">
             <DateRouterLink :date="value" />
           </template>
-          <template #item.main_user="{ value }">
-            <UserPill v-if="value" :user="value" />
-          </template>
-          <template #item.support_user="{ value }">
-            <UserPill v-if="value" :user="value" />
+          <template #item.users="{ value }">
+            <UserPill v-for="user in value" :key="user" :user="user" class="my-1 mr-2" />
           </template>
           <template #item.table_actions="{ item }">
             <v-badge bottom left overlap>
@@ -101,7 +98,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapState } from "pinia";
 import { DateTime } from "luxon";
 
 import GreenWorkingDay from "@/modules/green-working-days/models/green-working-day";
@@ -110,6 +107,8 @@ import StepperBulkFormDialog from "@/components/dialogs/StepperBulkFormDialog";
 import GreenWorkingDayBulkForm from "@/modules/green-working-days/components/forms/GreenWorkingDayBulkForm";
 import GreenWorkingDayForm from "@/modules/green-working-days/components/forms/GreenWorkingDayForm";
 import VoluteersDialog from "@/modules/green-working-days/components/dialogs/VoluteersDialog";
+
+import { useMainStore } from "@/stores/main";
 
 import useLoading from "@/composables/useLoading";
 import { getServiceByBasename } from "@/services";
@@ -135,20 +134,11 @@ export default {
         { text: "Fecha", align: "start", sortable: true, value: "date", fixed: true },
         { text: "Etiqueta", align: "start", sortable: true, value: "label", default: true },
         {
-          text: "Usuario principal",
+          text: "Usuarios",
           align: "start",
-          sortable: true,
-          value: "main_user",
-          sortingField: "main_user__acronym",
+          sortable: false,
+          value: "users",
           fixed: true,
-        },
-        {
-          text: "Usuario de apoyo",
-          align: "start",
-          sortable: true,
-          value: "support_user",
-          sortingField: "support_user__acronym",
-          default: true,
         },
         {
           text: "Acciones",
@@ -170,14 +160,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(["loggedUser"]),
-    ...mapGetters(["yearOptions"]),
+    ...mapState(useMainStore, ["loggedUser", "yearOptions"]),
     canAdd() {
       return userHasPermission(this.modelClass.ADD_PERMISSION);
     },
   },
   methods: {
-    ...mapActions(["showSnackbar"]),
+    ...mapActions(useMainStore, ["showSnackbar"]),
     fetchTableItems() {
       this.$refs.itemIndex.fetchTableItems();
     },

@@ -38,10 +38,12 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapState } from "pinia";
 
 import LinkManager from "@/modules/links/components/LinkManager";
 import NotificationManager from "@/modules/notifications/components/NotificationManager";
+
+import { useMainStore } from "@/stores/main";
 
 import { isXmas } from "@/utils/dates";
 
@@ -49,12 +51,11 @@ export default {
   name: "AppNavbar",
   components: { LinkManager, NotificationManager },
   computed: {
-    ...mapState(["loggedUser"]),
-    ...mapGetters(["appLabel", "loadingRequests"]),
+    ...mapState(useMainStore, ["appLabel", "loadingRequests", "loggedUser"]),
     isXmas,
   },
   methods: {
-    ...mapActions(["showSnackbar"]),
+    ...mapActions(useMainStore, ["showSnackbar"]),
     clearAppData() {
       localStorage.clear();
       if (window.caches) {

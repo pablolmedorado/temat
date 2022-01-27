@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip v-if="Object.keys(usersMap).length" bottom>
+  <v-tooltip v-if="Object.keys(userMap).length" bottom>
     <template #activator="{ on }">
       <v-chip class="elevation-1" v-bind="$attrs" v-on="on">
         <v-icon left>mdi-account-edit</v-icon>
@@ -13,9 +13,11 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
 import { DateTime } from "luxon";
 import { defaultTo } from "lodash";
+
+import { useUserStore } from "@/stores/users";
 
 export default {
   name: "EventAuthorshipTag",
@@ -27,11 +29,11 @@ export default {
     },
   },
   computed: {
-    ...mapGetters("users", ["usersMap"]),
+    ...mapState(useUserStore, ["userMap"]),
     lastModificationUser() {
       return this.event.modification_user
-        ? this.usersMap[this.event.modification_user]
-        : this.usersMap[this.event.creation_user];
+        ? this.userMap[this.event.modification_user]
+        : this.userMap[this.event.creation_user];
     },
     lastModificationDatetime() {
       const lastModification = defaultTo(this.event.modification_datetime, this.event.creation_datetime);

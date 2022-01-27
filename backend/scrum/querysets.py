@@ -12,14 +12,18 @@ class UserStoryContainerQuerySet(models.QuerySet):
                 annotated_current_progress=Case(
                     When(Q(user_stories__count=0), then=0),
                     default=ExpressionWrapper(
-                        Cast(
-                            F("current_progress__sum") / F("user_stories__count"), models.PositiveSmallIntegerField(),
-                        ),
+                        Cast(F("current_progress__sum") / F("user_stories__count"), models.PositiveSmallIntegerField()),
                         output_field=models.PositiveSmallIntegerField(),
                     ),
                     output_field=models.PositiveSmallIntegerField(),
                 )
             )
+        )
+
+    def with_effort(self):
+        return self.annotate(
+            annotated_planned_effort=Coalesce(Sum("user_stories__planned_effort"), Value(0)),
+            annotated_current_effort=Coalesce(Sum("user_stories__effort_allocation__effort"), Value(0)),
         )
 
 

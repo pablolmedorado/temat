@@ -1,9 +1,11 @@
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
 
 import UserStoryService from "@/modules/scrum/services/user-story-service";
 
 import BaseChart from "@/components/charts/BaseChart";
+
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 export default {
   name: "EffortRoleChart",
@@ -15,7 +17,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("scrum", ["effortRolesMap"]),
+    ...mapState(useUserStoryStore, ["effortRolesMap"]),
     localChartOptions() {
       return {
         chart: {

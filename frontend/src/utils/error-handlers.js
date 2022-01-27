@@ -1,9 +1,10 @@
 import { has } from "lodash";
 
-import store from "@/store/index";
+import { useMainStore } from "@/stores/main";
 
 function handleUnknownError() {
-  store.dispatch("showSnackbar", {
+  const mainStore = useMainStore();
+  mainStore.showSnackbar({
     color: "error",
     message: "Algo salió mal. Presiona F12 para obtener más detalles.",
   });

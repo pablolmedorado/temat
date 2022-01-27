@@ -3,7 +3,8 @@ import { DateTime } from "luxon";
 
 import BaseModel from "@/models/base-model";
 
-import store from "@/store/index";
+import { useMainStore } from "@/stores/main";
+import { useUserStore } from "@/stores/users";
 
 export default class Effort extends BaseModel {
   static contentType = {
@@ -19,11 +20,11 @@ export default class Effort extends BaseModel {
   static localStorageNamespace = "effort";
 
   static itemText(item) {
-    const usersMap = store.getters["users/usersMap"];
+    const userStore = useUserStore();
     const representationParts = [
       item.date,
       get(item, "user_story.name"),
-      item.user ? get(usersMap, [item.user, "acronym"]) : undefined,
+      item.user ? get(userStore.userMap, [item.user, "acronym"]) : undefined,
       item.role,
       `${item.effort}UT`,
     ];
@@ -31,10 +32,11 @@ export default class Effort extends BaseModel {
   }
 
   static get defaults() {
+    const mainStore = useMainStore();
     return {
       id: null,
       date: DateTime.local().toISODate(),
-      user: store.state.loggedUser.id,
+      user: mainStore.loggedUser.id,
       role: null,
       user_story: null,
       effort: 1,

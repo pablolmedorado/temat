@@ -433,13 +433,15 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 import { range } from "lodash";
 
 import FilterMixin from "@/mixins/filter-mixin";
 
 import EpicService from "@/modules/scrum/services/epic-service";
 import SprintService from "@/modules/scrum/services/sprint-service";
+
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 import useUserStoryTypes from "@/modules/scrum/composables/useUserStoryTypes";
 
@@ -465,7 +467,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("scrum", {
+    ...mapState(useUserStoryStore, {
       riskLevelOptions: "riskLevels",
       userStoryStatusOptions: "userStoryStatus",
     }),

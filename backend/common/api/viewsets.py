@@ -1,42 +1,19 @@
-from django.db import transaction
-
 from rest_flex_fields.views import FlexFieldsMixin
 from rest_framework import mixins, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
 
 from .filtersets import NotificationFilterSet, TagFilterSet
-from .mixins import (
-    AtomicBulkDestroyModelMixin,
-    AtomicCreateModelMixin,
-    AtomicDestroyModelMixin,
-    AtomicUpdateModelMixin,
-)
+from .mixins import AtomicBulkDestroyModelMixin
 from .permissions import NotificationPermission
 from .serializers import LinkSerializer, NotificationSerializer, TagSerializer
+from ..decorators import atomic_transaction_singleton
 from ..models import Link, Tag
-
-
-class AtomicModelViewSet(
-    AtomicCreateModelMixin,
-    mixins.RetrieveModelMixin,
-    AtomicUpdateModelMixin,
-    AtomicDestroyModelMixin,
-    mixins.ListModelMixin,
-    GenericViewSet,
-):
-    pass
-
-
-class AtomicFlexFieldsModelViewSet(FlexFieldsMixin, AtomicModelViewSet):
-    pass
 
 
 class NotificationViewSet(
     FlexFieldsMixin,
     mixins.RetrieveModelMixin,
-    AtomicDestroyModelMixin,
     AtomicBulkDestroyModelMixin,
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
@@ -56,7 +33,7 @@ class NotificationViewSet(
         queryset = self.filter_queryset(self.get_queryset().unread())
         return Response({"count": queryset.count()})
 
-    @transaction.atomic
+    @atomic_transaction_singleton
     @action(detail=True, methods=["PATCH"])
     def mark_as_read(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -64,7 +41,7 @@ class NotificationViewSet(
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-    @transaction.atomic
+    @atomic_transaction_singleton
     @action(detail=False, methods=["PATCH"])
     def mark_all_as_read(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -76,7 +53,7 @@ class NotificationViewSet(
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    @transaction.atomic
+    @atomic_transaction_singleton
     @action(detail=True, methods=["PATCH"])
     def mark_as_unread(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -84,7 +61,7 @@ class NotificationViewSet(
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-    @transaction.atomic
+    @atomic_transaction_singleton
     @action(detail=False, methods=["PATCH"])
     def mark_all_as_unread(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())

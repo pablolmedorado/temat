@@ -2,22 +2,18 @@ from django.contrib.auth import get_user_model
 
 from import_export import resources
 from import_export.fields import Field
-from import_export.widgets import ForeignKeyWidget
+from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 
 from .models import GreenWorkingDay, Holiday, HolidayType, SupportWorkingDay
 
 
 class GreenWorkingDayResource(resources.ModelResource):
-    main_user = Field(attribute="main_user", widget=ForeignKeyWidget(model=get_user_model(), field="username"))
-    support_user = Field(
-        attribute="support_user",
-        widget=ForeignKeyWidget(model=get_user_model(), field="username"),
-    )
+    users = Field(attribute="users", widget=ManyToManyWidget(model=get_user_model(), field="username"))
 
     class Meta:
         model = GreenWorkingDay
-        fields = ("id", "label", "date", "main_user", "support_user")
-        export_order = ("id", "label", "date", "main_user", "support_user")
+        fields = ("id", "label", "date", "users")
+        export_order = ("id", "label", "date", "users")
 
 
 class SupportWorkingDayResource(resources.ModelResource):

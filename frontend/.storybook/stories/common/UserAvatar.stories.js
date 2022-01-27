@@ -1,4 +1,4 @@
-import store from "@/store/index";
+import { useMainStore } from "@/stores/main";
 
 import UserAvatar from "@/components/UserAvatar";
 
@@ -19,10 +19,10 @@ export default {
 };
 
 const Template = (args, { argTypes }) => {
+  const mainStore = useMainStore();
   const { activeKonamiCode } = args;
-  store.commit("setKonamiCodeActive", Boolean(activeKonamiCode));
+  mainStore.isKonamiCodeActive = Boolean(activeKonamiCode);
   return {
-    store,
     components: { UserAvatar },
     props: Object.keys(argTypes),
     template: `

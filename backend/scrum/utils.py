@@ -144,7 +144,7 @@ def user_story_delayed_pie_chart_data(queryset: QuerySet) -> List:
 def user_story_overworked_pie_chart_data(queryset: QuerySet) -> List:
     queryset = queryset.exclude(status=UserStory.Status.BACKLOG)
     acceptable_estimation_count = queryset.filter(
-        annotated_actual_effort__gte=F("planned_effort") * 0.9, annotated_actual_effort__lte=F("planned_effort") * 1.1,
+        annotated_actual_effort__gte=F("planned_effort") * 0.9, annotated_actual_effort__lte=F("planned_effort") * 1.1
     ).count()
     underestimated_count = queryset.filter(annotated_actual_effort__gt=F("planned_effort") * 1.1).count()
     overestimated_count = queryset.filter(annotated_actual_effort__lt=F("planned_effort") * 0.9).count()

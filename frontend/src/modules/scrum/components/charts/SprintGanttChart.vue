@@ -1,11 +1,13 @@
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
 import { get } from "lodash";
 import colors from "vuetify/lib/util/colors";
 
 import SprintService from "@/modules/scrum/services/sprint-service";
 
 import BaseChart from "@/components/charts/BaseChart";
+
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 import { truncate } from "@/filters";
 
@@ -30,7 +32,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("scrum", ["riskLevelsMap"]),
+    ...mapState(useUserStoryStore, ["riskLevelsMap"]),
     localChartOptions() {
       const router = this.$router;
       function navigateToUSDetail(event) {

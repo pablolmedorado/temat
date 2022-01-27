@@ -1,5 +1,3 @@
-import store from "@/store/index";
-
 import DatePickerInput from "@/components/inputs/DatePickerInput";
 
 export default {
@@ -21,7 +19,6 @@ export default {
 };
 
 const Template = (args, { argTypes }) => ({
-  store,
   components: { DatePickerInput },
   props: Object.keys(argTypes),
   data() {

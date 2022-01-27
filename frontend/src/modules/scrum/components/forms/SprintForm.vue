@@ -58,13 +58,15 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 import { DateTime } from "luxon";
 import { maxLength, required } from "vuelidate/lib/validators";
 
 import FormMixin from "@/mixins/form-mixin";
 
 import SprintService from "@/modules/scrum/services/sprint-service";
+
+import { useMainStore } from "@/stores/main";
 
 export default {
   name: "SprintForm",
@@ -93,7 +95,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["locale"]),
+    ...mapState(useMainStore, ["locale"]),
   },
   watch: {
     "item.start_date": {

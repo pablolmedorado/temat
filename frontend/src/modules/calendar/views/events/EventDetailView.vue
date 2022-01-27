@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from "pinia";
 import { get } from "lodash";
 
 import CalendarEvent from "@/modules/calendar/models/event";
@@ -75,6 +75,8 @@ import CalendarEvent from "@/modules/calendar/models/event";
 import EventEditionMixin from "@/modules/calendar/mixins/event-edition-mixin";
 
 import EventService from "@/modules/calendar/services/event-service";
+
+import { useMainStore } from "@/stores/main";
 
 import { handleError } from "@/utils/error-handlers";
 import { truncate } from "@/filters";
@@ -131,7 +133,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["showSnackbar"]),
+    ...mapActions(useMainStore, ["showSnackbar"]),
     async fetchItem(id) {
       const response = await this.service.retrieve(id, { expand: "tags" });
       this.item = new CalendarEvent(response.data);

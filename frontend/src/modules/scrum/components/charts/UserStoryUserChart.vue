@@ -1,11 +1,13 @@
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
 import Highcharts from "highcharts";
 import { get } from "lodash";
 
 import UserStoryService from "@/modules/scrum/services/user-story-service";
 
 import BaseChart from "@/components/charts/BaseChart";
+
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 export default {
   name: "UserStoryUserChart",
@@ -17,7 +19,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("scrum", ["effortRoles"]),
+    ...mapState(useUserStoryStore, ["effortRoles"]),
     localChartOptions() {
       const series = Highcharts.merge(
         this.effortRoles.map((role) => ({
