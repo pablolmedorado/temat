@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.18.1](https://github.com/pablolmedorado/temat/compare/v1.18.0...v1.18.1) (2022-01-30)
+
+
+### Bug Fixes
+
+* **backend:** modify green working days migration to make it compatible with Oracle ([b84a2a2](https://github.com/pablolmedorado/temat/commit/b84a2a2f7ef5b2718e7f177820ceb8732e5ba800))
+* **docker:** add needed packages ([d345aec](https://github.com/pablolmedorado/temat/commit/d345aecc673f06039c3a5c021846af6c1773aeb9))
+
 ## [1.18.0](https://github.com/pablolmedorado/temat/compare/v1.17.0...v1.18.0) (2022-01-27)
 
 

@@ -10,7 +10,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV PIPENV_VENV_IN_PROJECT 1
 RUN apk update \
-    && apk add --no-cache postgresql-dev gcc musl-dev \
+    && apk add --no-cache postgresql-dev gcc musl-dev jpeg-dev zlib-dev \
     && pip install --no-cache-dir --trusted-host pypi.python.org pipenv
 WORKDIR /usr/src/app/backend
 COPY ./backend/Pipfile* ./
