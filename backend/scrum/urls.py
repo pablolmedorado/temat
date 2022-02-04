@@ -1,4 +1,4 @@
-from rest_framework import routers
+from rest_framework_bulk.routes import BulkRouter
 
 from .api.viewsets import (
     EffortViewSet,
@@ -12,7 +12,7 @@ from .api.viewsets import (
 
 app_name = "scrum"
 
-router = routers.DefaultRouter()
+router = BulkRouter()
 
 router.register(r"effort", EffortViewSet, basename="effort")
 router.register(r"user-stories/(?P<user_story>.+)/effort-log", EffortViewSet, basename="user-story-effort")

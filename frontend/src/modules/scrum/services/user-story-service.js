@@ -14,6 +14,10 @@ class UserStoryService extends BaseService {
     return Api.post(url);
   }
 
+  bulkUpdate(payload, queryParams) {
+    return Api.patch(this.listUrl, payload, { params: queryParams });
+  }
+
   tasksByUserStory(pk, queryParams) {
     const url = Urls["scrum:user-story-tasks-list"]({ user_story: pk });
     return Api.get(url, { params: queryParams });

@@ -23,6 +23,7 @@ from .serializers import (
     ProgressSerializer,
     SprintSerializer,
     TaskSerializer,
+    UserStoryBulkSerializer,
     UserStoryDeveloperSerializer,
     UserStorySerializer,
     UserStorySupportSerializer,
@@ -40,7 +41,7 @@ from ..utils import (
     user_story_user_chart_data,
 )
 from common.decorators import atomic_transaction_singleton
-from common.api.mixins import OrderedMixin
+from common.api.mixins import AtomicBulkUpdateModelMixin, OrderedMixin
 from common.api.permissions import HasDjangoPermissionOrReadOnly
 from common.api.utils import check_api_user_permissions
 
@@ -132,7 +133,7 @@ class UserStoryTypeViewSet(FlexFieldsModelViewSet):
     ordering = ("name",)
 
 
-class UserStoryViewSet(FlexFieldsModelViewSet):
+class UserStoryViewSet(AtomicBulkUpdateModelMixin, FlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, UserStoryPermission)
     queryset = UserStory.objects.with_actual_effort().prefetch_related("tags").distinct()
     serializer_class = UserStorySerializer
@@ -188,6 +189,9 @@ class UserStoryViewSet(FlexFieldsModelViewSet):
     def get_serializer_class(self):
         serializer_class = super().get_serializer_class()
         if check_api_user_permissions(self):
+            if self.action in ["bulk_update", "partial_bulk_update"]:
+                return UserStoryBulkSerializer
+            else:
             return serializer_class
         if self.request.method not in permissions.SAFE_METHODS and self.detail:
             instance = self.get_object()

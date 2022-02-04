@@ -5,9 +5,11 @@ from django.utils.translation import ugettext_lazy as _
 from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
+from rest_framework_bulk import BulkListSerializer
 from taggit.serializers import TagListSerializerField, TaggitSerializer
 
 from ..models import Effort, Epic, Progress, Sprint, Task, UserStory, UserStoryType
+from common.api.mixins import BulkSerializerMixin
 from common.api.serializers import TagSerializer
 from users.api.serializers import UserSerializer
 
@@ -234,6 +236,25 @@ class UserStorySerializer(TaggitSerializer, FlexFieldsModelSerializer):
             UniqueTogetherValidator(queryset=UserStory.objects.all(), fields=["name", "sprint"]),
             UniqueTogetherValidator(queryset=UserStory.objects.all(), fields=["name", "epic"]),
         ]
+
+
+class UserStoryBulkSerializer(BulkSerializerMixin, UserStorySerializer):
+    def validate(self, data):
+        if data.get("sprint"):
+            data["start_date"] = data["sprint"].start_date
+            data["end_date"] = data["sprint"].end_date
+        return super().validate(data)
+
+    class Meta(UserStorySerializer.Meta):
+        list_serializer_class = BulkListSerializer
+        fields = (
+            "id",
+            "sprint",
+            "start_date",
+            "end_date",
+        )
+        read_only_fields = ("id",)
+        validators = []
 
 
 class UserStoryDeveloperSerializer(UserStorySerializer):
