@@ -2,8 +2,8 @@
   <v-autocomplete
     v-bind="{ ...$props, ...$attrs }"
     :items="userOptions"
-    :item-text="(user) => `${user.first_name} ${user.last_name}`"
     item-value="id"
+    :filter="filterFunction"
     :item-disabled="(user) => !user.is_active"
     :disabled="disabled"
     :readonly="readonly"
@@ -93,6 +93,10 @@ export default {
     },
   },
   methods: {
+    filterFunction(item, queryText) {
+      const fullText = `${item.acronym} ${item.first_name} ${item.last_name}`;
+      return fullText.toLocaleLowerCase().indexOf(queryText.toLocaleLowerCase()) > -1;
+    },
     getRandomInt(max) {
       return Math.floor(Math.random() * Math.floor(max));
     },

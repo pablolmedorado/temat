@@ -113,7 +113,7 @@
       </v-col>
     </v-row>
 
-    <TaskQuickManagementDialog ref="taskDialog" @updated-tasks="fetchTableItems" />
+    <TaskQuickManagementDialog ref="taskDialog" @change:tasks="fetchTableItems" />
 
     <FormDialog ref="effortFormDialog" verbose-name="esfuerzo" :form-component="effortFormComponent" />
 

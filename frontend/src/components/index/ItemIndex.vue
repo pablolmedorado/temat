@@ -23,7 +23,7 @@
             isTableLoading: isChildLoading('itemTable'),
             isIndexLoading: isLoading,
           }"
-        ></slot>
+        />
         <FilterManager
           v-if="filterComponent"
           :local-storage-namespace="lsNamespace"

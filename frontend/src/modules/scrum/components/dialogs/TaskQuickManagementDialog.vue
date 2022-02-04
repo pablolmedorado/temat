@@ -139,7 +139,7 @@ export default {
       this.userStory = null;
       this.showDialog = false;
       if (this.updateTableAfterTaskMgmt) {
-        this.$emit("updated-tasks");
+        this.$emit("change:tasks");
       }
       this.updateTableAfterTaskMgmt = false;
     },
