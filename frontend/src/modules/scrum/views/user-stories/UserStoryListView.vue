@@ -43,7 +43,7 @@
           <template #item.name="{ value }">
             <TruncatedText :value="value" :text-length="100" />
           </template>
-          <template #item.planned_effort="{ value }">{{ value }} UT</template>
+          <template #item.effort="{ item }">{{ item.current_effort }}/{{ item.planned_effort }} UT</template>
           <template #item.start_date="{ value }">
             <DateRouterLink v-if="value" :date="value" />
           </template>
@@ -194,7 +194,14 @@ export default {
           sortingField: "sprint__name",
           default: true,
         },
-        { text: "Esfuerzo p.", align: "start", sortable: true, value: "planned_effort" },
+        {
+          text: "Esfuerzo",
+          align: "start",
+          sortable: true,
+          sortingField: "annotated_current_effort",
+          value: "effort",
+          fields: ["planned_effort", "current_effort"],
+        },
         { text: "Fecha inicio p.", align: "start", sortable: true, value: "start_date" },
         { text: "Fecha límite", align: "start", sortable: true, value: "end_date", default: true },
         { text: "Prioridad", align: "start", sortable: true, value: "priority", default: true },

@@ -71,7 +71,7 @@ export default {
     },
     effortData() {
       if (has(this.chartData, "data")) {
-        return this.chartData.data.map((item) => [new Date(item.date).getTime(), item.actual_effort]);
+        return this.chartData.data.map((item) => [new Date(item.date).getTime(), item.current_effort]);
       }
       return [];
     },

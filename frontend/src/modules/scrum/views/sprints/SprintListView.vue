@@ -32,8 +32,7 @@
           <template #item.accountable_user="{ value }">
             <UserPill :user="value" />
           </template>
-          <template #item.planned_effort="{ value }">{{ value }} UT</template>
-          <template #item.current_effort="{ value }">{{ value }} UT</template>
+          <template #item.effort="{ item }">{{ item.current_effort }}/{{ item.planned_effort }} UT</template>
           <template #item.current_progress="{ value }">
             <v-progress-circular :rotate="-90" :size="32" :value="value" :width="3" color="primary">
               {{ value }}
@@ -112,18 +111,12 @@ export default {
           value: "num_of_user_stories",
         },
         {
-          text: "Esfuerzo planificado",
-          align: "start",
-          sortable: true,
-          sortingField: "annotated_planned_effort",
-          value: "planned_effort",
-        },
-        {
-          text: "Esfuerzo acumulado",
+          text: "Esfuerzo",
           align: "start",
           sortable: true,
           sortingField: "annotated_current_effort",
-          value: "current_effort",
+          value: "effort",
+          fields: ["planned_effort", "current_effort"],
         },
         {
           text: "Progreso",

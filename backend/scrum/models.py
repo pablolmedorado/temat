@@ -186,11 +186,11 @@ class UserStory(Transactionable, Taggable, Authorable, Notifiable, models.Model)
     deployment_notes = models.CharField(_("notas de despliegue"), max_length=2000, blank=True)
 
     @property
-    def actual_effort(self):
-        if hasattr(self, "annotated_actual_effort"):
-            return self.annotated_actual_effort
-        actual_effort = self.effort_allocation.all().aggregate(effort__sum=Coalesce(Sum("effort"), Value(0)))
-        return actual_effort["effort__sum"]
+    def current_effort(self):
+        if hasattr(self, "annotated_current_effort"):
+            return self.annotated_current_effort
+        current_effort = self.effort_allocation.all().aggregate(effort__sum=Coalesce(Sum("effort"), Value(0)))
+        return current_effort["effort__sum"]
 
     objects = UserStoryQuerySet.as_manager()
 

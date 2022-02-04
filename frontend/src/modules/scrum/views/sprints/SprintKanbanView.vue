@@ -179,7 +179,7 @@ export default {
           ordering: "status,priority,-risk_level,start_date",
           fields:
             "id,name,status,priority,current_progress,current_progress_changed,validated,validated_changed," +
-            "actual_effort,planned_effort,start_date,end_date,development_user,validation_user,support_user," +
+            "current_effort,planned_effort,start_date,end_date,development_user,validation_user,support_user," +
             "risk_level",
         });
         this.items = response.data;

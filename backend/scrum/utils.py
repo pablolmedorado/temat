@@ -18,7 +18,7 @@ def burn_chart_data(instance: Sprint) -> Dict:
     user_stories_count = instance.user_stories.count()
     if not user_stories_count:
         result = [
-            {"date": str(sprint_date), "effort_burned": None, "actual_effort": None} for sprint_date in sprint_dates
+            {"date": str(sprint_date), "effort_burned": None, "current_effort": None} for sprint_date in sprint_dates
         ]
         return {"total_effort": 0, "data": result}
     else:
@@ -62,7 +62,7 @@ def burn_chart_data(instance: Sprint) -> Dict:
 
         chart_data = []
         for date_index, sprint_date in enumerate(sprint_dates):
-            item = {"date": str(sprint_date), "effort_burned": None, "actual_effort": None}
+            item = {"date": str(sprint_date), "effort_burned": None, "current_effort": None}
             effort = None
             for user_story in user_stories:
                 progress = user_story["progress_data"][date_index]
@@ -76,7 +76,7 @@ def burn_chart_data(instance: Sprint) -> Dict:
             effort_record = next(
                 filter(lambda effort, sprint_date=sprint_date: effort["date"] == sprint_date, effort_records), None
             )
-            item["actual_effort"] = effort_record["effort__sum"] if effort_record else 0
+            item["current_effort"] = effort_record["effort__sum"] if effort_record else 0
             chart_data.append(item)
         return {"total_effort": total_effort, "data": chart_data}
 
@@ -144,10 +144,10 @@ def user_story_delayed_pie_chart_data(queryset: QuerySet) -> List:
 def user_story_overworked_pie_chart_data(queryset: QuerySet) -> List:
     queryset = queryset.exclude(status=UserStory.Status.BACKLOG)
     acceptable_estimation_count = queryset.filter(
-        annotated_actual_effort__gte=F("planned_effort") * 0.9, annotated_actual_effort__lte=F("planned_effort") * 1.1
+        annotated_current_effort__gte=F("planned_effort") * 0.9, annotated_current_effort__lte=F("planned_effort") * 1.1
     ).count()
-    underestimated_count = queryset.filter(annotated_actual_effort__gt=F("planned_effort") * 1.1).count()
-    overestimated_count = queryset.filter(annotated_actual_effort__lt=F("planned_effort") * 0.9).count()
+    underestimated_count = queryset.filter(annotated_current_effort__gt=F("planned_effort") * 1.1).count()
+    overestimated_count = queryset.filter(annotated_current_effort__lt=F("planned_effort") * 0.9).count()
     return [
         {"name": _("Estimación aceptable (+-10%)"), "color": "#4CAF50", "y": acceptable_estimation_count},
         {"name": _("Sobreestimación (>10%)"), "color": "#FF9800", "y": overestimated_count},

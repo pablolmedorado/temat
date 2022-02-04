@@ -135,7 +135,7 @@ class UserStoryTypeViewSet(FlexFieldsModelViewSet):
 
 class UserStoryViewSet(AtomicBulkUpdateModelMixin, FlexFieldsModelViewSet):
     permission_classes = (permissions.IsAuthenticated, UserStoryPermission)
-    queryset = UserStory.objects.with_actual_effort().prefetch_related("tags").distinct()
+    queryset = UserStory.objects.with_current_effort().prefetch_related("tags").distinct()
     serializer_class = UserStorySerializer
     filterset_class = UserStoryFilterSet
     search_fields = (
@@ -162,6 +162,7 @@ class UserStoryViewSet(AtomicBulkUpdateModelMixin, FlexFieldsModelViewSet):
         "validated",
         "status",
         "planned_effort",
+        "annotated_current_effort",
         "priority",
         "risk_level",
         "cvs_reference",
@@ -192,7 +193,7 @@ class UserStoryViewSet(AtomicBulkUpdateModelMixin, FlexFieldsModelViewSet):
             if self.action in ["bulk_update", "partial_bulk_update"]:
                 return UserStoryBulkSerializer
             else:
-            return serializer_class
+                return serializer_class
         if self.request.method not in permissions.SAFE_METHODS and self.detail:
             instance = self.get_object()
             if self.request.user == instance.development_user:
