@@ -23,8 +23,8 @@
             <span><strong>Esfuerzo planificado:</strong>&nbsp;{{ userStory.planned_effort }} UT</span> /
             <span>
               <strong>Esfuerzo real acumulado:</strong>&nbsp;
-              <span :class="`${userStory.planned_effort >= userStory.actual_effort ? 'green' : 'orange'}--text`">
-                {{ userStory.actual_effort }} UT</span
+              <span :class="`${userStory.planned_effort >= userStory.current_effort ? 'green' : 'orange'}--text`">
+                {{ userStory.current_effort }} UT</span
               >.
             </span>
           </div>

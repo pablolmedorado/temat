@@ -3,9 +3,9 @@ from django.utils.translation import ugettext_lazy as _
 from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from rest_framework_bulk import BulkSerializerMixin
 
 from ..models import GreenWorkingDay, Holiday, HolidayType, SupportWorkingDay
+from common.api.mixins import BulkSerializerMixin
 from users.api.serializers import UserSerializer
 
 

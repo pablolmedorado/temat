@@ -74,7 +74,7 @@ class UserStoryFilterSet(FilterSet):
             return queryset
 
     def overworked_filter(self, queryset, field_name, value):
-        condition = Q(planned_effort__lt=F("annotated_actual_effort"))
+        condition = Q(planned_effort__lt=F("annotated_current_effort"))
         if value is True:
             return queryset.filter(condition)
         elif value is False:

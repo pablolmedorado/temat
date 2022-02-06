@@ -16,13 +16,34 @@
           :allow-add="modelClass.ADD_PERMISSION"
           :allow-delete="modelClass.DELETE_PERMISSION"
           :disable-row-edition="isLoading"
+          :selectable-rows="userHasPermission(modelClass.CHANGE_PERMISSION)"
           custom-headers
           delete-child-items-warning
         >
+          <template v-if="userHasPermission(modelClass.CHANGE_PERMISSION)" #toolbar="{ selectedItems, isIndexLoading }">
+            <v-tooltip bottom>
+              <template #activator="{ attrs, on }">
+                <v-btn
+                  icon
+                  :disabled="!selectedItems.length || isIndexLoading"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="$refs.bulkUpdateDialog.open(selectedItems)"
+                >
+                  <v-badge :value="selectedItems.length" :content="`${selectedItems.length}`" color="secondary" overlap>
+                    <v-icon>mdi-playlist-edit</v-icon>
+                  </v-badge>
+                </v-btn>
+              </template>
+              <span>Actualización en bloque</span>
+            </v-tooltip>
+            <v-divider class="mx-2" vertical inset />
+          </template>
+
           <template #item.name="{ value }">
             <TruncatedText :value="value" :text-length="100" />
           </template>
-          <template #item.planned_effort="{ value }">{{ value }} UT</template>
+          <template #item.effort="{ item }">{{ item.current_effort }}/{{ item.planned_effort }} UT</template>
           <template #item.start_date="{ value }">
             <DateRouterLink v-if="value" :date="value" />
           </template>
@@ -92,9 +113,11 @@
       </v-col>
     </v-row>
 
-    <TaskQuickManagementDialog ref="taskDialog" @updated-tasks="fetchTableItems" />
+    <TaskQuickManagementDialog ref="taskDialog" @change:tasks="fetchTableItems" />
 
     <FormDialog ref="effortFormDialog" verbose-name="esfuerzo" :form-component="effortFormComponent" />
+
+    <UserStoryBulkUpdateDialog ref="bulkUpdateDialog" @change:user-stories="fetchTableItems" />
   </v-container>
 </template>
 
@@ -109,6 +132,7 @@ import ContextBreadcrumbs from "@/modules/scrum/components/ContextBreadcrumbs";
 import EffortForm from "@/modules/scrum/components/forms/EffortForm";
 import TaskQuickManagementDialog from "@/modules/scrum/components/dialogs/TaskQuickManagementDialog";
 import UserStoryActors from "@/modules/scrum/components/UserStoryActors";
+import UserStoryBulkUpdateDialog from "@/modules/scrum/components/dialogs/UserStoryBulkUpdateDialog";
 import UserStoryFilters from "@/modules/scrum/components/filters/UserStoryFilters";
 import UserStoryIndexStatus from "@/modules/scrum/components/UserStoryIndexStatus";
 
@@ -133,6 +157,7 @@ export default {
     ContextBreadcrumbs,
     TaskQuickManagementDialog,
     UserStoryActors,
+    UserStoryBulkUpdateDialog,
     UserStoryIndexStatus,
   },
   props: {
@@ -169,7 +194,14 @@ export default {
           sortingField: "sprint__name",
           default: true,
         },
-        { text: "Esfuerzo p.", align: "start", sortable: true, value: "planned_effort" },
+        {
+          text: "Esfuerzo",
+          align: "start",
+          sortable: true,
+          sortingField: "annotated_current_effort",
+          value: "effort",
+          fields: ["planned_effort", "current_effort"],
+        },
         { text: "Fecha inicio p.", align: "start", sortable: true, value: "start_date" },
         { text: "Fecha límite", align: "start", sortable: true, value: "end_date", default: true },
         { text: "Prioridad", align: "start", sortable: true, value: "priority", default: true },
@@ -328,6 +360,7 @@ export default {
     },
   },
   methods: {
+    userHasPermission,
     fetchTableItems() {
       this.$refs.itemIndex.fetchTableItems();
     },

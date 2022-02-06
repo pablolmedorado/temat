@@ -46,5 +46,5 @@ class UserStoryQuerySet(models.QuerySet):
     def by_user(self, user):
         return self.filter(Q(development_user=user) | Q(validation_user=user) | Q(support_user=user))
 
-    def with_actual_effort(self):
-        return self.annotate(annotated_actual_effort=Coalesce(Sum("effort_allocation__effort"), Value(0)))
+    def with_current_effort(self):
+        return self.annotate(annotated_current_effort=Coalesce(Sum("effort_allocation__effort"), Value(0)))

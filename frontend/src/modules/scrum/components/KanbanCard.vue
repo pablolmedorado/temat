@@ -62,7 +62,7 @@
         <v-col>
           <v-chip :color="effortPillColour" :text-color="effortPillColour" outlined>
             <v-avatar left :class="[effortPillColour, 'darken-4', 'white--text']">
-              {{ userStory.actual_effort }}
+              {{ userStory.current_effort }}
             </v-avatar>
             {{ userStory.planned_effort }} UT
             <v-avatar right>
@@ -134,7 +134,7 @@ export default {
       return style;
     },
     effortPillColour() {
-      return this.userStory.actual_effort <= this.userStory.planned_effort ? "green" : "orange";
+      return this.userStory.current_effort <= this.userStory.planned_effort ? "green" : "orange";
     },
     endDatePillNumber() {
       const startDate = DateTime.fromISO(this.userStory.start_date);
