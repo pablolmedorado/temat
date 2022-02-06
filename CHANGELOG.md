@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.19.0](https://github.com/pablolmedorado/temat/compare/v1.18.1...v1.19.0) (2022-02-06)
+
+
+### Features
+
+* **frontend:** include acronym in UserAutocomplete search ([84ccb49](https://github.com/pablolmedorado/temat/commit/84ccb494d5baa3ff03272a03640590f5fb796205))
+* **scrum:** merge planned effort & current effort columns in index views ([e450c04](https://github.com/pablolmedorado/temat/commit/e450c04b1077932c96ce41191686060e6fbf0c59))
+* **user-stories:** add user stories bulk-update dialog ([9b1744c](https://github.com/pablolmedorado/temat/commit/9b1744cdbc1471264041ee521444a130ad670533))
+
+
+### Bug Fixes
+
+* **events:** update calendar events that rely on user acronym when an user is updated ([2dbe001](https://github.com/pablolmedorado/temat/commit/2dbe0016a4a283d27bcbd87b74b22d1c7cd37578))
+
 ### [1.18.1](https://github.com/pablolmedorado/temat/compare/v1.18.0...v1.18.1) (2022-01-30)
 
 
