@@ -2,6 +2,7 @@ import { ref, watch } from "@vue/composition-api";
 import { isFunction } from "lodash";
 
 export default function (key, initialValue, options = {}) {
+  // State
   const lsInitialValue = localStorage[key] ? JSON.parse(localStorage[key]) : undefined;
   let value;
   if (lsInitialValue) {
@@ -10,6 +11,7 @@ export default function (key, initialValue, options = {}) {
     value = ref(initialValue);
   }
 
+  // Watchers
   watch(
     value,
     (newValue) => {

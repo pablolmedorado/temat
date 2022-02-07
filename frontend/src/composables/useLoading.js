@@ -24,7 +24,7 @@ export default function ({ includedChildren } = {}) {
     emit("change:loading", newValue);
   });
 
-  // Functions
+  // Methods
   function isChildLoading(childRef) {
     const child = refs[childRef];
     if (!child) {
@@ -86,9 +86,11 @@ export default function ({ includedChildren } = {}) {
   });
 
   return {
+    // Computed
     isLoading,
     isChildLoading,
     isTaskLoading,
+    // Methods
     addTask,
     removeTask,
     withTask,
