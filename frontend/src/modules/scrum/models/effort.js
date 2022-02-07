@@ -36,7 +36,7 @@ export default class Effort extends BaseModel {
     return {
       id: null,
       date: DateTime.local().toISODate(),
-      user: mainStore.loggedUser.id,
+      user: mainStore.currentUser.id,
       role: null,
       user_story: null,
       effort: 1,

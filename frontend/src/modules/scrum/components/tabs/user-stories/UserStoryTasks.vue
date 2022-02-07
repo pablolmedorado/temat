@@ -123,7 +123,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useMainStore, ["currentUser"]),
     systemFilters() {
       return {
         user_story_id: this.userStory.id,
@@ -171,7 +171,7 @@ export default {
     },
     canToggle() {
       return (
-        this.loggedUser.id === this.userStory.development_user || userHasPermission(this.modelClass.CHANGE_PERMISSION)
+        this.currentUser.id === this.userStory.development_user || userHasPermission(this.modelClass.CHANGE_PERMISSION)
       );
     },
   },

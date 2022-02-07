@@ -109,14 +109,14 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useMainStore, ["currentUser"]),
     systemFilters() {
       return { user_story_id: get(this.userStory, "id", null) };
     },
   },
   methods: {
     canChange(item) {
-      return this.loggedUser.id === item.user_story.development_user || userHasPermission(Task.CHANGE_PERMISSION);
+      return this.currentUser.id === item.user_story.development_user || userHasPermission(Task.CHANGE_PERMISSION);
     },
     async toggleItem(item) {
       this.addTask("toggle-item", item.id);

@@ -24,15 +24,15 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["loggedUser", "tz"]),
+    ...mapState(useMainStore, ["currentUser", "tz"]),
     canChange() {
-      return this.loggedUser.id === this.item.creation_user || userHasPermission(CalendarEvent.CHANGE_PERMISSION);
+      return this.currentUser.id === this.item.creation_user || userHasPermission(CalendarEvent.CHANGE_PERMISSION);
     },
     canCopy() {
-      return this.loggedUser.id === this.item.creation_user || userHasPermission(CalendarEvent.ADD_PERMISSION);
+      return this.currentUser.id === this.item.creation_user || userHasPermission(CalendarEvent.ADD_PERMISSION);
     },
     canDelete() {
-      return this.loggedUser.id === this.item.creation_user || userHasPermission(CalendarEvent.DELETE_PERMISSION);
+      return this.currentUser.id === this.item.creation_user || userHasPermission(CalendarEvent.DELETE_PERMISSION);
     },
     itemForCopy() {
       const copy = cloneDeep(this.item);

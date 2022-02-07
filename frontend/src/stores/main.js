@@ -18,7 +18,7 @@ export const useMainStore = defineStore("main", {
       locale: "es",
       tz: "Europe/Madrid",
       currentYear: DateTime.local().year,
-      loggedUser: { ...window.djangoUserData },
+      currentUser: { ...window.djangoUserData },
       pendingRequests: 0,
       snackbar: defaultSnackbarConfig,
       isKonamiCodeActive: false,

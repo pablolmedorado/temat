@@ -10,7 +10,7 @@
   >
     <v-list nav dense>
       <template v-for="(item, i) in items">
-        <template v-if="!item.staffOnly || (item.staffOnly && loggedUser.is_staff)">
+        <template v-if="!item.staffOnly || (item.staffOnly && currentUser.is_staff)">
           <v-divider v-if="item.divider" :key="i" dark class="my-3" />
 
           <v-list-group
@@ -133,7 +133,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useMainStore, ["currentUser"]),
   },
 };
 </script>

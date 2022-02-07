@@ -313,7 +313,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useMainStore, ["currentUser"]),
   },
   watch: {
     tableHeaders: {
@@ -373,7 +373,7 @@ export default {
       if (isBoolean(permission)) {
         return permission;
       }
-      return isFunction(permission) ? permission(this.loggedUser, item) : userHasPermission(permission);
+      return isFunction(permission) ? permission(this.currentUser, item) : userHasPermission(permission);
     },
     async openFormDialog(item) {
       if (!item) {

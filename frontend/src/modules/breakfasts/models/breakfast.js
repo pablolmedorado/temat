@@ -19,7 +19,7 @@ export default class Breakfast extends BaseModel {
     const mainStore = useMainStore();
     return {
       id: null,
-      user: mainStore.loggedUser.id,
+      user: mainStore.currentUser.id,
       bread: null,
       base: null,
       ingredient1: null,

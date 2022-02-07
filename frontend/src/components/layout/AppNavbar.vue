@@ -10,7 +10,7 @@
     <v-progress-circular v-show="loadingRequests" class="mr-5" :size="32" color="white" indeterminate />
     <LinkManager />
     <NotificationManager class="mr-5" />
-    <UserAvatar size="36" :font-size="14" :user="loggedUser" />
+    <UserAvatar size="36" :font-size="14" :user="currentUser" />
     <v-menu bottom left offset-y>
       <template #activator="{ on, attrs }">
         <v-btn icon v-bind="attrs" v-on="on">
@@ -51,7 +51,7 @@ export default {
   name: "AppNavbar",
   components: { LinkManager, NotificationManager },
   computed: {
-    ...mapState(useMainStore, ["appLabel", "loadingRequests", "loggedUser"]),
+    ...mapState(useMainStore, ["appLabel", "loadingRequests", "currentUser"]),
     isXmas,
   },
   methods: {

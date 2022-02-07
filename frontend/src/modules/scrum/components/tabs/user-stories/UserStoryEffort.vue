@@ -111,7 +111,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["locale", "loggedUser"]),
+    ...mapState(useMainStore, ["locale", "currentUser"]),
     ...mapState(useUserStoryStore, ["effortRolesMap"]),
     systemFilters() {
       return {
@@ -119,7 +119,7 @@ export default {
       };
     },
     loggedUserRole() {
-      switch (this.loggedUser.id) {
+      switch (this.currentUser.id) {
         case this.userStory.development_user:
           return "D";
         case this.userStory.validation_user:
@@ -155,7 +155,7 @@ export default {
       if (userHasPermission(`scrum.${action}_effort`)) {
         return true;
       }
-      if (item.user !== this.loggedUser.id) {
+      if (item.user !== this.currentUser.id) {
         return false;
       }
       const limitDatetime = DateTime.local().minus({ minutes: 30 });

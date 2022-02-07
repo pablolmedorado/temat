@@ -111,17 +111,17 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useMainStore, ["currentUser"]),
     ...mapState(useUserStoryStore, ["riskLevelsMap"]),
     canEdit() {
       const action = this.item.id ? "change" : "add";
       return (
-        [this.item.development_user, this.item.validation_user, this.item.support_user].includes(this.loggedUser.id) ||
+        [this.item.development_user, this.item.validation_user, this.item.support_user].includes(this.currentUser.id) ||
         userHasPermission(`scrum.${action}_userstory`)
       );
     },
     canValidate() {
-      return this.loggedUser.id === this.item.validation_user || userHasPermission(UserStory.CHANGE_PERMISSION);
+      return this.currentUser.id === this.item.validation_user || userHasPermission(UserStory.CHANGE_PERMISSION);
     },
     canCopy() {
       return userHasPermission(UserStory.ADD_PERMISSION);

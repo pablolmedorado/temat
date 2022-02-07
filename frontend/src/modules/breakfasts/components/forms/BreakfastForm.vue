@@ -112,7 +112,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useMainStore, ["currentUser"]),
     ...mapState(useBreakfastStore, {
       breadOptions: "breads",
       baseOptions: "bases",

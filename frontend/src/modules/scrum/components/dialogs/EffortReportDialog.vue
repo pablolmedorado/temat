@@ -101,7 +101,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useMainStore, ["currentUser"]),
     ...mapState(useUserStore, ["userMap"]),
     showUserChart() {
       return userHasPermission(Effort.VIEW_PERMISSION);

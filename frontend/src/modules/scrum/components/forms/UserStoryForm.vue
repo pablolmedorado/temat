@@ -120,7 +120,7 @@
                   counter="2000"
                   hint="URL de fichero o directorio"
                   persistent-hint
-                  :readonly="!canEdit && loggedUser.id !== item.development_user"
+                  :readonly="!canEdit && currentUser.id !== item.development_user"
                   :error-messages="buildValidationErrorMessages($v.item.external_resource)"
                   @input="$v.item.external_resource.$touch()"
                   @blur="$v.item.external_resource.$touch()"
@@ -395,7 +395,7 @@
                           label="Comentarios del desarrollador"
                           counter="2000"
                           prepend-icon="mdi-comment-quote"
-                          :readonly="!canEdit && loggedUser.id !== item.development_user"
+                          :readonly="!canEdit && currentUser.id !== item.development_user"
                           :error-messages="buildValidationErrorMessages($v.item.development_comments)"
                           @input="$v.item.development_comments.$touch()"
                           @blur="$v.item.development_comments.$touch()"
@@ -409,7 +409,7 @@
                           label="Referencia SCV"
                           counter="255"
                           prepend-icon="mdi-git"
-                          :readonly="!canEdit && loggedUser.id !== item.development_user"
+                          :readonly="!canEdit && currentUser.id !== item.development_user"
                           :error-messages="buildValidationErrorMessages($v.item.cvs_reference)"
                           @input="$v.item.cvs_reference.$touch()"
                           @blur="$v.item.cvs_reference.$touch()"
@@ -442,7 +442,7 @@
                           label="Comentarios del validador"
                           counter="2000"
                           prepend-icon="mdi-comment-quote"
-                          :readonly="!canEdit && loggedUser.id !== item.validation_user"
+                          :readonly="!canEdit && currentUser.id !== item.validation_user"
                           :error-messages="buildValidationErrorMessages($v.item.validation_comments)"
                           @input="$v.item.validation_comments.$touch()"
                           @blur="$v.item.validation_comments.$touch()"
@@ -455,7 +455,9 @@
                           v-model="item.validated"
                           :items="validatedOptions"
                           :disabled="item.status < 3"
-                          :readonly="!canEdit && ![item.development_user, item.validation_user].includes(loggedUser.id)"
+                          :readonly="
+                            !canEdit && ![item.development_user, item.validation_user].includes(currentUser.id)
+                          "
                           :hint="validatedHintText"
                           persistent-hint
                           label="Estado"
@@ -489,7 +491,7 @@
                           label="Comentarios de soporte"
                           counter="2000"
                           prepend-icon="mdi-comment-quote"
-                          :readonly="!canEdit && loggedUser.id !== item.support_user"
+                          :readonly="!canEdit && currentUser.id !== item.support_user"
                           :error-messages="buildValidationErrorMessages($v.item.support_comments)"
                           @input="$v.item.support_comments.$touch()"
                           @blur="$v.item.support_comments.$touch()"
@@ -553,7 +555,7 @@
                   :items="useMigrationsOptions"
                   label="Usa migraciones*"
                   prepend-icon="mdi-database-arrow-right"
-                  :readonly="!canEdit && loggedUser.id !== item.development_user"
+                  :readonly="!canEdit && currentUser.id !== item.development_user"
                   :error-messages="buildValidationErrorMessages($v.item.use_migrations)"
                   @change="$v.item.use_migrations.$touch()"
                   @blur="$v.item.use_migrations.$touch()"
@@ -567,7 +569,7 @@
                   label="Notas de despliegue"
                   counter="2000"
                   prepend-icon="mdi-note-text"
-                  :readonly="!canEdit && loggedUser.id !== item.development_user"
+                  :readonly="!canEdit && currentUser.id !== item.development_user"
                   :error-messages="buildValidationErrorMessages($v.item.deployment_notes)"
                   @input="$v.item.deployment_notes.$touch()"
                   @blur="$v.item.deployment_notes.$touch()"
@@ -676,7 +678,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["locale", "loggedUser"]),
+    ...mapState(useMainStore, ["locale", "currentUser"]),
     ...mapState(useUserStoryStore, {
       riskLevelOptions: "riskLevels",
     }),
@@ -686,11 +688,11 @@ export default {
     },
     hasARole() {
       return [this.item.development_user, this.item.validation_user, this.item.support_user].includes(
-        this.loggedUser.id
+        this.currentUser.id
       );
     },
     validatedOptions() {
-      const canValidate = this.canEdit || this.item.validation_user === this.loggedUser.id;
+      const canValidate = this.canEdit || this.item.validation_user === this.currentUser.id;
       return [
         { value: null, text: "Sin validar", disabled: false },
         {
