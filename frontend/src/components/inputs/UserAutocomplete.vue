@@ -2,6 +2,7 @@
   <v-autocomplete
     v-bind="{ ...$props, ...$attrs }"
     :items="userOptions"
+    :item-text="(user) => `${user.first_name} ${user.last_name}`"
     item-value="id"
     :filter="filterFunction"
     :item-disabled="(user) => !user.is_active"
