@@ -9,10 +9,12 @@ export default function (service, fn, options = {}) {
   const mainStore = useMainStore();
   service = isString(service) ? getService(service) : service;
 
+  // State
   const requestLoading = ref(false);
   const requestData = ref(options.defaultData);
   const requestDataCount = ref(0);
 
+  // Methods
   async function performRequest(...args) {
     requestLoading.value = true;
     try {
@@ -48,14 +50,17 @@ export default function (service, fn, options = {}) {
     }
   }
 
+  // Lifecycle hooks
   if (options.immediate) {
     performRequest();
   }
 
   return {
+    // State
     requestLoading,
     requestData,
     requestDataCount,
+    // Methods
     performRequest,
   };
 }

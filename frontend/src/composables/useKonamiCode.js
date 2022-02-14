@@ -1,6 +1,7 @@
 import { onBeforeUnmount, onMounted } from "@vue/composition-api";
 
 export default function (callback) {
+  // State
   const code = [
     "ArrowUp",
     "ArrowUp",
@@ -16,6 +17,7 @@ export default function (callback) {
   const length = code.length;
   let pos = 0;
 
+  // Methods
   function handleKeyDown(event) {
     if (event.key !== undefined) {
       // Handle the event with KeyboardEvent.key and set handled true.

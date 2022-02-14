@@ -151,7 +151,7 @@ export default {
   setup(props, { refs }) {
     // Store
     const mainStore = useMainStore();
-    const { loggedUser, yearOptions } = toRefs(mainStore);
+    const { currentUser, yearOptions } = toRefs(mainStore);
 
     // General
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
@@ -190,7 +190,7 @@ export default {
       addTask("fetch-items");
       try {
         const response = await HolidayService.list({
-          user_id: loggedUser.value.id,
+          user_id: currentUser.value.id,
           allowance_date__year: year.value,
           fields: "id,planned_date,approved,expiration_date,allowance_date",
         });

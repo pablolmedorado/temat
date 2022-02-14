@@ -213,7 +213,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["locale", "loggedUser"]),
+    ...mapState(useMainStore, ["locale", "currentUser"]),
     pickerDate: {
       get() {
         if (this.calendarType === "month") {

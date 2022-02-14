@@ -123,7 +123,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useMainStore, ["currentUser"]),
   },
   methods: {
     isWebUri,

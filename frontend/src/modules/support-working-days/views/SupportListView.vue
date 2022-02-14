@@ -77,7 +77,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useMainStore, ["currentUser"]),
     canAdd() {
       return userHasPermission(this.modelClass.ADD_PERMISSION);
     },
@@ -107,7 +107,7 @@ export default {
         {
           key: "my-next-days",
           label: "Mis próximas jornadas",
-          filters: { date__gte: DateTime.local().toISODate(), user_id: this.loggedUser.id },
+          filters: { date__gte: DateTime.local().toISODate(), user_id: this.currentUser.id },
         },
       ];
     },

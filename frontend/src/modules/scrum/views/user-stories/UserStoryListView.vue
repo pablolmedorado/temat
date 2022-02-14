@@ -243,7 +243,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useMainStore, ["currentUser"]),
     breadcrumbs() {
       if (this.contextItem) {
         const result = [
@@ -318,7 +318,7 @@ export default {
           label: "Mis historias en curso",
           filters: {
             status__in: "1,2,3",
-            any_role_user__in: String(this.loggedUser.id),
+            any_role_user__in: String(this.currentUser.id),
           },
         },
         {
@@ -326,7 +326,7 @@ export default {
           label: "Mis desarrollos pendientes",
           filters: {
             status__in: "1,2",
-            development_user_id__in: String(this.loggedUser.id),
+            development_user_id__in: String(this.currentUser.id),
           },
         },
         {
@@ -334,7 +334,7 @@ export default {
           label: "Mis validaciones pendientes",
           filters: {
             status__in: "3",
-            validation_user_id__in: String(this.loggedUser.id),
+            validation_user_id__in: String(this.currentUser.id),
           },
         },
       ];
@@ -377,10 +377,10 @@ export default {
       return linkConfig;
     },
     canDevelop(item) {
-      return this.loggedUser.id === item.development_user || userHasPermission(this.modelClass.CHANGE_PERMISSION);
+      return this.currentUser.id === item.development_user || userHasPermission(this.modelClass.CHANGE_PERMISSION);
     },
     canValidate(item) {
-      return this.loggedUser.id === item.validation_user || userHasPermission(this.modelClass.CHANGE_PERMISSION);
+      return this.currentUser.id === item.validation_user || userHasPermission(this.modelClass.CHANGE_PERMISSION);
     },
     async validateItem(item) {
       if (confirm(`Estás seguro de que deseas validar la historia "${item.name}"`)) {
@@ -394,7 +394,7 @@ export default {
       }
     },
     calculateLoggedUserRole(userStory) {
-      switch (this.loggedUser.id) {
+      switch (this.currentUser.id) {
         case userStory.development_user:
           return "D";
         case userStory.validation_user:

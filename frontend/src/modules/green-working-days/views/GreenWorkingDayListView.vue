@@ -61,7 +61,7 @@
               @click="toggleVolunteer(item)"
             >
               <v-icon>
-                {{ item.volunteers.includes(loggedUser.id) ? "mdi-account-remove" : "mdi-account-plus-outline" }}
+                {{ item.volunteers.includes(currentUser.id) ? "mdi-account-remove" : "mdi-account-plus-outline" }}
               </v-icon>
             </v-btn>
           </template>
@@ -160,7 +160,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["loggedUser", "yearOptions"]),
+    ...mapState(useMainStore, ["currentUser", "yearOptions"]),
     canAdd() {
       return userHasPermission(this.modelClass.ADD_PERMISSION);
     },

@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.20.0](https://github.com/pablolmedorado/temat/compare/v1.19.0...v1.20.0) (2022-02-14)
+
+
+### Features
+
+* **user-stories:** improve UserStoryResource adding new columns and using 'name' field as epic/sprint identifier ([1b66a65](https://github.com/pablolmedorado/temat/commit/1b66a65490a5d2069f38117b71d1e538ed19c743))
+
+
+### Bug Fixes
+
+* **frontend:** fix UserAutocomplete itemText ([a65a109](https://github.com/pablolmedorado/temat/commit/a65a1095b82a79402d402317cc38784e7ec52c72))
+* **user-stories:** use text area field in task form ([47d447b](https://github.com/pablolmedorado/temat/commit/47d447b190a93b1d67d37e50b6d568ca15cc58cb))
+
 ## [1.19.0](https://github.com/pablolmedorado/temat/compare/v1.18.1...v1.19.0) (2022-02-06)
 
 

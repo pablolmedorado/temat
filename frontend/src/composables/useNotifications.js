@@ -1,9 +1,11 @@
 import { onMounted, ref } from "@vue/composition-api";
 
 export default function () {
+  // State
   const areSupported = ref(undefined);
   const areEnabled = ref(false);
 
+  // Methods
   function handleNotificationPermission(permission) {
     if (!("permission" in Notification)) {
       Notification.permission = permission;
@@ -44,6 +46,7 @@ export default function () {
   });
 
   return {
+    // State
     areSupported,
     areEnabled,
   };

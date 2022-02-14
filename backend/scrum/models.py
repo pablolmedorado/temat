@@ -125,9 +125,9 @@ class UserStory(Transactionable, Taggable, Authorable, Notifiable, models.Model)
     current_progress = models.PositiveSmallIntegerField(
         _("avance actual"), blank=False, default=0, validators=[MaxValueValidator(100)], editable=False
     )
-    current_progress_changed = MonitorField(_("último cambio de avance"), monitor="current_progress")
+    current_progress_changed = MonitorField(_("último cambio de avance"), monitor="current_progress", editable=False)
     validated = models.BooleanField(_("validada"), null=True, blank=True)
-    validated_changed = MonitorField(_("último cambio en validación"), monitor="validated")
+    validated_changed = MonitorField(_("último cambio en validación"), monitor="validated", editable=False)
     status = models.PositiveSmallIntegerField(
         _("estado"),
         choices=Status.choices,
@@ -308,7 +308,7 @@ class Task(Transactionable, Uuidable, Orderable, Authorable, models.Model):
         _("peso"), blank=False, null=False, default=1, validators=[MinValueValidator(1)]
     )
     done = models.BooleanField(_("finalizada"), default=False)
-    done_changed = MonitorField(_("último cambio en finalizada"), monitor="done")
+    done_changed = MonitorField(_("último cambio en finalizada"), monitor="done", editable=False)
 
     order_with_respect_to = ("user_story",)
 

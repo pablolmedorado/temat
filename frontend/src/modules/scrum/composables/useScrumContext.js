@@ -15,11 +15,15 @@ export const scrumContextProps = {
 };
 
 export default function (props) {
+  //State
+  const contextItem = ref(null);
+
+  // Computed
   const hasContext = computed(() => Boolean(props.sprintId || props.epicId));
   const context = computed(() => ({ sprint: props.sprintId, epic: props.epicId }));
   provide("context", context.value);
 
-  const contextItem = ref(null);
+  // Methods
   async function getContextItem() {
     let service, pk;
     if (props.sprintId) {
@@ -46,8 +50,10 @@ export default function (props) {
   );
 
   return {
+    // State
+    contextItem,
+    // Computed
     hasContext,
     context,
-    contextItem,
   };
 }

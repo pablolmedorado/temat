@@ -145,7 +145,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useMainStore, ["currentUser"]),
   },
   methods: {
     setTagFilter(tag) {

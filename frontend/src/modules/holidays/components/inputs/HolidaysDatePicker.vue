@@ -78,7 +78,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["locale", "loggedUser"]),
+    ...mapState(useMainStore, ["locale", "currentUser"]),
     ...mapState(useUserStore, ["workerUsers"]),
     pickerInterval() {
       const date = DateTime.fromObject({ year: this.year });
@@ -140,7 +140,7 @@ export default {
       this.addTask("fetch-used-dates");
       try {
         const response = await HolidayService.list({
-          user_id: this.loggedUser.id,
+          user_id: this.currentUser.id,
           planned_date__gte: this.pickerInterval.start.toISODate(),
           planned_date__lte: this.pickerInterval.end.toISODate(),
           fields: "planned_date",

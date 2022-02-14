@@ -4,9 +4,13 @@ import { useMainStore } from "@/stores/main";
 import HolidayService from "@/modules/holidays/services/holiday-service";
 
 export default function () {
+  // Store
   const mainStore = useMainStore();
 
+  // State
   const datesToRequest = ref([]);
+
+  // Methods
   async function request() {
     if (
       datesToRequest.value.length &&
@@ -57,7 +61,9 @@ export default function () {
   }
 
   return {
+    // State
     datesToRequest,
+    // Methods
     request,
     edit,
     cancel,

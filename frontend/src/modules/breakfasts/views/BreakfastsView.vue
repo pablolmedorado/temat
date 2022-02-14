@@ -133,14 +133,14 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useMainStore, ["currentUser"]),
   },
   methods: {
     async getUserBreakfast() {
       this.addTask("fetch-user-breakfast");
       try {
         const response = await this.service.list({
-          user_id: this.loggedUser.id,
+          user_id: this.currentUser.id,
           page_size: 1,
           page: 1,
         });

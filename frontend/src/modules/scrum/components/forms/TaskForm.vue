@@ -2,9 +2,10 @@
   <v-form v-if="item" ref="itemForm" :disabled="isTaskLoading('submit')">
     <v-row>
       <v-col>
-        <v-text-field
+        <v-textarea
           v-model="item.name"
           label="Título*"
+          rows="3"
           prepend-icon="mdi-format-title"
           counter="2000"
           :error-messages="buildValidationErrorMessages($v.item.name)"

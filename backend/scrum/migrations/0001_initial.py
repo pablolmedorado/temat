@@ -146,6 +146,7 @@ class Migration(migrations.Migration):
                     "current_progress_changed",
                     model_utils.fields.MonitorField(
                         default=django.utils.timezone.now,
+                        editable=False,
                         monitor="current_progress",
                         verbose_name="último cambio de avance",
                     ),
@@ -155,6 +156,7 @@ class Migration(migrations.Migration):
                     "validated_changed",
                     model_utils.fields.MonitorField(
                         default=django.utils.timezone.now,
+                        editable=False,
                         monitor="validated",
                         verbose_name="último cambio en validación",
                     ),
@@ -332,7 +334,10 @@ class Migration(migrations.Migration):
                 (
                     "done_changed",
                     model_utils.fields.MonitorField(
-                        default=django.utils.timezone.now, monitor="done", verbose_name="último cambio en finalizada"
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        monitor="done",
+                        verbose_name="último cambio en finalizada",
                     ),
                 ),
                 (

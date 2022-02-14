@@ -4,7 +4,7 @@ import { userHasPermission } from "@/utils/permissions";
 
 export function adminUsersOnly(to, from, next) {
   const mainStore = useMainStore();
-  if (mainStore.loggedUser.is_superuser) {
+  if (mainStore.currentUser.is_superuser) {
     next();
   } else {
     mainStore.dispatch("showSnackbar", {

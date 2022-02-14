@@ -106,7 +106,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useMainStore, ["loggedUser"]),
+    ...mapState(useMainStore, ["currentUser"]),
     ...mapState(useUserStoryStore, ["effortRolesMap"]),
     tableHeaders() {
       return [
@@ -144,7 +144,7 @@ export default {
     systemFilters() {
       const filters = {};
       if (!userHasPermission(this.modelClass.VIEW_PERMISSION)) {
-        filters.user_id = this.loggedUser.id;
+        filters.user_id = this.currentUser.id;
       }
       return filters;
     },
@@ -166,7 +166,7 @@ export default {
       if (userHasPermission(`scrum.${action}_effort`)) {
         return true;
       }
-      if (item.user !== this.loggedUser.id) {
+      if (item.user !== this.currentUser.id) {
         return false;
       }
       const limitDatetime = DateTime.local().minus({ minutes: 30 });
