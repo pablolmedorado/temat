@@ -39,6 +39,12 @@ class UserStoryTypeResource(resources.ModelResource):
 
 class UserStoryResource(resources.ModelResource):
     type = Field(attribute="type", widget=ForeignKeyWidget(model=UserStoryType, field="name"))
+    epic = Field(attribute="epic", widget=ForeignKeyWidget(model=Epic, field="name"))
+    sprint = Field(attribute="sprint", widget=ForeignKeyWidget(model=Sprint, field="name"))
+    current_progress = Field(attribute="current_progress", readonly=True)
+    current_progress_changed = Field(attribute="current_progress_changed", readonly=True)
+    validated_changed = Field(attribute="validated_changed", readonly=True)
+    status = Field(attribute="status", readonly=True)
     development_user = Field(
         attribute="development_user", widget=ForeignKeyWidget(model=get_user_model(), field="username")
     )
@@ -49,6 +55,11 @@ class UserStoryResource(resources.ModelResource):
     tags = Field(attribute="tags", widget=TagsWidget())
     creation_user = Field(
         attribute="creation_user",
+        widget=ForeignKeyWidget(model=get_user_model(), field="username"),
+        default=get_current_authenticated_user,
+    )
+    modification_user = Field(
+        attribute="modification_user",
         widget=ForeignKeyWidget(model=get_user_model(), field="username"),
         default=get_current_authenticated_user,
     )
@@ -63,9 +74,14 @@ class UserStoryResource(resources.ModelResource):
             "sprint",
             "functional_description",
             "technical_description",
+            "external_resource",
             "start_date",
             "end_date",
+            "current_progress",
+            "current_progress_changed",
             "validated",
+            "validated_changed",
+            "status",
             "planned_effort",
             "priority",
             "development_user",
@@ -81,6 +97,9 @@ class UserStoryResource(resources.ModelResource):
             "deployment_notes",
             "tags",
             "creation_user",
+            "creation_datetime",
+            "modification_user",
+            "modification_datetime",
         )
         export_order = fields
 
