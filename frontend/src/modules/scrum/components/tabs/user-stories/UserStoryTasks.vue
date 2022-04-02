@@ -8,6 +8,7 @@
         local-storage-namespace="userStoryTask"
         :table-available-headers="tableHeaders"
         :table-initial-options="tableOptions"
+        :table-footer-props="tableFooterProps"
         :system-filters="systemFilters"
         :form-component="formComponent"
         :default-item="defaultItem"
@@ -118,6 +119,9 @@ export default {
         sortBy: ["order"],
         sortDesc: [false],
         mustSort: true,
+      },
+      tableFooterProps: {
+        itemsPerPageOptions: [10, 25, 50, -1],
       },
       formComponent: TaskForm,
     };
