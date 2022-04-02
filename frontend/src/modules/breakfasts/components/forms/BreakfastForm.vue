@@ -1,5 +1,5 @@
 <template>
-  <v-form v-if="item" ref="itemForm" :disabled="isTaskLoading('submit')">
+  <v-form v-if="item" ref="itemForm" :disabled="isFormLoading">
     <v-row>
       <v-col cols="6">
         <v-select
@@ -10,9 +10,7 @@
           label="Pan*"
           prepend-icon="mdi-baguette"
           :loading="!breadOptions.length"
-          :error-messages="buildValidationErrorMessages($v.item.bread)"
-          @change="$v.item.bread.$touch()"
-          @blur="$v.item.bread.$touch()"
+          :error-messages="getErrorMsgs(v$.item.bread)"
         />
       </v-col>
       <v-col cols="6">
@@ -24,9 +22,7 @@
           label="Base*"
           prepend-icon="mdi-soy-sauce"
           :loading="!baseOptions.length"
-          :error-messages="buildValidationErrorMessages($v.item.base)"
-          @change="$v.item.base.$touch()"
-          @blur="$v.item.base.$touch()"
+          :error-messages="getErrorMsgs(v$.item.base)"
         />
       </v-col>
     </v-row>
@@ -41,9 +37,7 @@
           prepend-icon="mdi-numeric-1-box"
           :loading="!ingredientOptions.length"
           clearable
-          :error-messages="buildValidationErrorMessages($v.item.ingredient1)"
-          @change="$v.item.ingredient1.$touch()"
-          @blur="$v.item.ingredient1.$touch()"
+          :error-messages="getErrorMsgs(v$.item.ingredient1)"
         />
       </v-col>
       <v-col cols="6">
@@ -56,9 +50,7 @@
           prepend-icon="mdi-numeric-2-box"
           :loading="!ingredientOptions.length"
           clearable
-          :error-messages="buildValidationErrorMessages($v.item.ingredient2)"
-          @change="$v.item.ingredient2.$touch()"
-          @blur="$v.item.ingredient2.$touch()"
+          :error-messages="getErrorMsgs(v$.item.ingredient2)"
         />
       </v-col>
     </v-row>
@@ -81,61 +73,79 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "pinia";
-import { not, required, requiredIf, sameAs } from "vuelidate/lib/validators";
-
-import FormMixin from "@/mixins/form-mixin";
+import { toRefs } from "@vue/composition-api";
+import { not, required, requiredIf, sameAs } from "@vuelidate/validators";
 
 import BreakfastService from "@/modules/breakfasts/services/breakfast-service";
 
-import { useMainStore } from "@/stores/main";
 import { useBreakfastStore } from "@/modules/breakfasts/stores/breakfasts";
+
+import useForm, { formProps } from "@/composables/useForm";
 
 export default {
   name: "BreakfastForm",
-  mixins: [FormMixin({ service: BreakfastService })],
-  validations: {
-    item: {
-      bread: { required },
-      base: { required },
-      ingredient1: { requiredIfIngredient2: requiredIf("ingredient2") },
-      ingredient2: { notSameAsIngredient1: not(sameAs("ingredient1")) },
-    },
-  },
-  data() {
+  props: formProps,
+  validations() {
     return {
-      successMessage: "Desayuno guardado correctamente",
-      validationErrorMessages: {
-        requiredIfIngredient2: "Requerido si hay ingrediente 2",
-        notSameAsIngredient1: "Ingrediente repetido",
+      item: {
+        bread: { required },
+        base: { required },
+        ingredient1: { requiredIfIngredient2: requiredIf(this.item.ingredient2) },
+        ingredient2: { notSameAsIngredient1: not(sameAs(this.item.ingredient1)) },
       },
     };
   },
-  computed: {
-    ...mapState(useMainStore, ["currentUser"]),
-    ...mapState(useBreakfastStore, {
-      breadOptions: "breads",
-      baseOptions: "bases",
-      ingredientOptions: "ingredients",
-      drinkOptions: "drinks",
-    }),
-  },
-  created() {
-    if (!this.breadOptions.length) {
-      this.getBreads();
+  setup(props) {
+    // Store
+    const breakfastStore = useBreakfastStore();
+
+    // Composables
+    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(props, BreakfastService, {
+      successMessage: "Desayuno guardado correctamente",
+      customErrorMsgs: {
+        requiredIfIngredient2: "Requerido si hay ingrediente 2",
+        notSameAsIngredient1: "Ingrediente repetido",
+      },
+    });
+
+    // Computed
+    const {
+      breads: breadOptions,
+      bases: baseOptions,
+      ingredients: ingredientOptions,
+      drinks: drinkOptions,
+    } = toRefs(breakfastStore);
+
+    // Initialization
+    if (!breadOptions.length) {
+      breakfastStore.getBreads();
     }
-    if (!this.baseOptions.length) {
-      this.getBases();
+    if (!baseOptions.length) {
+      breakfastStore.getBases();
     }
-    if (!this.ingredientOptions.length) {
-      this.getIngredients();
+    if (!ingredientOptions.length) {
+      breakfastStore.getIngredients();
     }
-    if (!this.drinkOptions.length) {
-      this.getDrinks();
+    if (!drinkOptions.length) {
+      breakfastStore.getDrinks();
     }
-  },
-  methods: {
-    ...mapActions(useBreakfastStore, ["getBreads", "getBases", "getIngredients", "getDrinks"]),
+
+    return {
+      // State
+      item,
+      // Computed
+      v$,
+      itemHasChanged,
+      isFormLoading,
+      breadOptions,
+      baseOptions,
+      ingredientOptions,
+      drinkOptions,
+      // Methods
+      getErrorMsgs,
+      submit,
+      reset,
+    };
   },
 };
 </script>

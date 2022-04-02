@@ -31,6 +31,7 @@
                 v-if="Boolean(itemsToCreate.length)"
                 ref="itemsForm"
                 :source-items="itemsToCreate"
+                @changed:items="itemsHaveChanged = $event"
                 @change:loading="isFormLoading = $event"
               />
             </v-stepper-content>
@@ -51,61 +52,87 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
-
-import DialogMixin from "@/mixins/dialog-mixin";
+import { computed, ref, toRefs } from "@vue/composition-api";
 
 import { useMainStore } from "@/stores/main";
+import useDialog, { dialogProps } from "@/composables/useDialog";
 
 export default {
   name: "StepperBulkFormDialog",
-  mixins: [DialogMixin],
+  inheritAttrs: false,
   props: {
+    ...dialogProps,
     formComponent: {
       type: Object,
       required: true,
     },
   },
-  data() {
-    return {
-      step: 1,
-      datesToCreate: [],
-      itemsToCreate: [],
-      isFormLoading: false,
-    };
-  },
-  computed: {
-    ...mapState(useMainStore, ["locale"]),
-    nextText() {
-      return this.step < 2 ? "Siguiente" : "Guardar";
-    },
-  },
-  methods: {
-    reset() {
-      this.datesToCreate = [];
-      this.itemsToCreate = [];
-      this.step = 1;
-    },
-    close() {
-      this.reset();
-      this.showDialog = false;
-    },
-    step2() {
-      this.itemsToCreate = this.datesToCreate.map((date) => {
+  setup(props, { emit, refs }) {
+    // Store
+    const store = useMainStore();
+
+    // Composables
+    const { showDialog, open, close: _close } = useDialog(props);
+
+    // State
+    const step = ref(1);
+    const datesToCreate = ref([]);
+    const itemsToCreate = ref([]);
+    const itemsHaveChanged = ref(false);
+    const isFormLoading = ref(false);
+
+    // Computed
+    const { locale } = toRefs(store);
+    const nextText = computed(() => {
+      return step.value < 2 ? "Siguiente" : "Guardar";
+    });
+
+    // Methods
+    function reset() {
+      datesToCreate.value = [];
+      itemsToCreate.value = [];
+      step.value = 1;
+    }
+    function close() {
+      reset();
+      _close();
+    }
+    function step2() {
+      itemsToCreate.value = datesToCreate.value.map((date) => {
         return { date, user: null };
       });
-      this.step = 2;
-    },
-    async submit() {
-      const newItems = await this.$refs.itemsForm.submit();
+      step.value = 2;
+    }
+    async function submit() {
+      const newItems = await refs.itemsForm.submit();
       if (newItems) {
-        this.$emit("submit", newItems);
-        this.close();
+        emit("submit", newItems);
+        close();
       }
-    },
-    next() {
-      this.step < 2 ? this.step2() : this.submit();
-    },
+    }
+    function next() {
+      step.value < 2 ? step2() : submit();
+    }
+
+    return {
+      // State
+      showDialog,
+      step,
+      datesToCreate,
+      itemsToCreate,
+      itemsHaveChanged,
+      isFormLoading,
+      // Computed
+      locale,
+      nextText,
+      // Methods
+      open,
+      close,
+      next,
+      step2,
+      reset,
+      submit,
+    };
   },
 };
 </script>

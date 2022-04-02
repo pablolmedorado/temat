@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { keyBy } from "lodash";
+import { keyBy } from "lodash-es";
 
 import NotificationService from "@/modules/notifications/services/notification-service";
 

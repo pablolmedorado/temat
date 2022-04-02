@@ -45,104 +45,113 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
-import { get } from "lodash";
+import { computed, ref } from "@vue/composition-api";
+import { get } from "lodash-es";
 
 import Task from "@/modules/scrum/models/task";
-
-import DialogMixin from "@/mixins/dialog-mixin";
 
 import TaskService from "@/modules/scrum/services/task-service";
 
 import { useMainStore } from "@/stores/main";
 
 import useLoading from "@/composables/useLoading";
+import useDialog, { dialogProps } from "@/composables/useDialog";
 import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "TaskQuickManagementDialog",
-  mixins: [DialogMixin],
-  setup() {
+  inheritAttrs: false,
+  props: dialogProps,
+  setup(props, { emit, refs }) {
+    // Store
+    const store = useMainStore();
+
+    // Composables
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading({
       includedChildren: ["itemTable"],
     });
-    return {
-      isLoading,
-      isTaskLoading,
-      addTask,
-      removeTask,
-    };
-  },
-  data() {
-    return {
-      service: TaskService,
-      tableHeaders: [
-        {
-          text: "Orden",
-          align: "start",
-          sortable: true,
-          value: "order",
-        },
-        {
-          text: "Nombre",
-          align: "start",
-          sortable: true,
-          value: "name",
-        },
-        { text: "Peso", align: "start", sortable: true, value: "weight" },
-        {
-          text: "Terminada",
-          align: "start",
-          sortable: true,
-          value: "done",
-          fields: ["done", "user_story.development_user"],
-        },
-      ],
-      tableOptions: {
-        itemsPerPage: 10,
-        sortBy: ["order"],
-        sortDesc: [false],
-        mustSort: true,
+    const { showDialog, open: _open, close: _close } = useDialog(props);
+
+    // State
+    const tableHeaders = [
+      {
+        text: "Orden",
+        align: "start",
+        sortable: true,
+        value: "order",
       },
-      userStory: null,
-      updateTableAfterTaskMgmt: false,
-    };
-  },
-  computed: {
-    ...mapState(useMainStore, ["currentUser"]),
-    systemFilters() {
-      return { user_story_id: get(this.userStory, "id", null) };
-    },
-  },
-  methods: {
-    canChange(item) {
-      return this.currentUser.id === item.user_story.development_user || userHasPermission(Task.CHANGE_PERMISSION);
-    },
-    async toggleItem(item) {
-      this.addTask("toggle-item", item.id);
+      {
+        text: "Nombre",
+        align: "start",
+        sortable: true,
+        value: "name",
+      },
+      { text: "Peso", align: "start", sortable: true, value: "weight" },
+      {
+        text: "Terminada",
+        align: "start",
+        sortable: true,
+        value: "done",
+        fields: ["done", "user_story.development_user"],
+      },
+    ];
+    const tableOptions = ref({
+      itemsPerPage: 10,
+      sortBy: ["order"],
+      sortDesc: [false],
+      mustSort: true,
+    });
+    const userStory = ref(null);
+    let updateTableAfterClose = false;
+
+    // Computed
+    const systemFilters = computed(() => ({ user_story_id: get(userStory.value, "id", null) }));
+
+    // Methods
+    function canChange(item) {
+      return store.currentUser.id === item.user_story.development_user || userHasPermission(Task.CHANGE_PERMISSION);
+    }
+    async function toggleItem(item) {
+      addTask("toggle-item", item.id);
       try {
         await TaskService.toggle(item.id);
-        this.$refs.itemTable.fetchItems();
-        this.updateTableAfterTaskMgmt = true;
+        refs.itemTable.fetchItems();
+        updateTableAfterClose = true;
       } finally {
-        this.removeTask("toggle-item", item.id);
+        removeTask("toggle-item", item.id);
       }
-    },
-    open(userStory) {
-      this.userStory = userStory;
-      this.showDialog = true;
-      this.$nextTick(() => {
-        this.$refs.itemTable.fetchItems();
-      });
-    },
-    close() {
-      this.userStory = null;
-      this.showDialog = false;
-      if (this.updateTableAfterTaskMgmt) {
-        this.$emit("change:tasks");
+    }
+    async function open(newUserStory) {
+      userStory.value = newUserStory;
+      await _open();
+      refs.itemTable.fetchItems();
+    }
+    function close() {
+      userStory.value = null;
+      _close();
+      if (updateTableAfterClose) {
+        emit("change:tasks");
       }
-      this.updateTableAfterTaskMgmt = false;
-    },
+      updateTableAfterClose = false;
+    }
+
+    return {
+      // State
+      isLoading,
+      isTaskLoading,
+      showDialog,
+      service: TaskService,
+      tableHeaders,
+      tableOptions,
+      userStory,
+      // Computed
+      systemFilters,
+      // Methods
+      open,
+      close,
+      canChange,
+      toggleItem,
+    };
   },
 };
 </script>

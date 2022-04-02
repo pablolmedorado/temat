@@ -30,7 +30,8 @@
 </template>
 
 <script>
-import { get } from "lodash";
+import { computed, onMounted, ref } from "@vue/composition-api";
+import { get } from "lodash-es";
 
 import ContextBreadcrumbs from "@/modules/scrum/components/ContextBreadcrumbs";
 import SprintBurnChart from "@/modules/scrum/components/charts/SprintBurnChart";
@@ -53,45 +54,50 @@ export default {
       required: true,
     },
   },
-  setup(props) {
+  setup(props, { refs }) {
+    // Composables
     const { isLoading } = useLoading({
       includedChildren: ["chart"],
     });
     const { contextItem } = useScrumContext(props);
-    return {
-      isLoading,
-      contextItem,
-    };
-  },
-  data() {
-    return {
-      burnUp: false,
-    };
-  },
-  computed: {
-    breadcrumbs() {
-      if (this.contextItem) {
+
+    // State
+    const burnUp = ref(false);
+
+    // Computed
+    const breadcrumbs = computed(() => {
+      if (contextItem.value) {
         return [
           {
             text: "Sprints",
             to: { name: "sprints" },
             exact: true,
           },
-          { text: this.contextItem.name, disabled: false, link: false },
+          { text: contextItem.value.name, disabled: false, link: false },
           { text: "Diagrama de quemado", disabled: true },
         ];
       } else {
         return [];
       }
-    },
-  },
-  mounted() {
-    this.fetchChartData();
-  },
-  methods: {
-    fetchChartData() {
-      this.$refs.chart.fetchChartData();
-    },
+    });
+
+    // Methods
+    function fetchChartData() {
+      refs.chart.fetchData();
+    }
+
+    // Lifecycle hooks
+    onMounted(fetchChartData);
+
+    return {
+      // State
+      burnUp,
+      // Computed
+      isLoading,
+      breadcrumbs,
+      // Methods
+      fetchChartData,
+    };
   },
 };
 </script>

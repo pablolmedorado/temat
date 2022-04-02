@@ -1,19 +1,31 @@
-<script>
-import UserStoryService from "@/modules/scrum/services/user-story-service";
+<template>
+  <AsyncChart ref="chart" :options-function="buildOptions" v-bind="{ ...$attrs, ...fetchProps }" />
+</template>
 
-import BaseChart from "@/components/charts/BaseChart";
+<script>
+import { computed } from "@vue/composition-api";
+
+import UserStoryService from "@/modules/scrum/services/user-story-service";
 
 export default {
   name: "UserStoryOverworkedChart",
-  extends: BaseChart,
-  data() {
-    return {
+  inheritAttrs: false,
+  props: {
+    filter: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  setup(props, { refs, root }) {
+    // Computed
+    const fetchProps = computed(() => ({
       service: UserStoryService,
       fetchFunctionName: "overworkedChartData",
-    };
-  },
-  computed: {
-    localChartOptions() {
+      fetchFunctionArgs: [props.filter],
+    }));
+
+    // Methods
+    function buildOptions(chartData) {
       return {
         chart: {
           type: "pie",
@@ -30,7 +42,7 @@ export default {
           },
           series: {
             borderWidth: 1,
-            borderColor: this.$vuetify.theme.isDark ? "#ffffff" : "rgba(0, 0, 0, 0.54)",
+            borderColor: root.$vuetify.theme.isDark ? "#ffffff" : "rgba(0, 0, 0, 0.54)",
           },
         },
         series: [
@@ -39,11 +51,22 @@ export default {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false,
-            data: this.chartData || [],
+            data: chartData || [],
           },
         ],
       };
-    },
+    }
+    function fetchData() {
+      refs.chart.fetchData();
+    }
+
+    return {
+      // Computed
+      fetchProps,
+      // Methods
+      buildOptions,
+      fetchData,
+    };
   },
 };
 </script>

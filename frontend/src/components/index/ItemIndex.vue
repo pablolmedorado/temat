@@ -160,8 +160,8 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "pinia";
-import { defaultTo, get, invoke, isBoolean, isFunction, omit } from "lodash";
+import { nextTick, provide, ref, watch } from "@vue/composition-api";
+import { defaultTo, get, invoke, isBoolean, isFunction, omit } from "lodash-es";
 
 import { useMainStore } from "@/stores/main";
 
@@ -173,11 +173,6 @@ import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "ItemIndex",
-  provide() {
-    return {
-      indexModelClass: this.modelClass,
-    };
-  },
   props: {
     modelClass: {
       type: Function,
@@ -270,143 +265,165 @@ export default {
       default: false,
     },
   },
-  setup(props) {
+  setup(props, { emit, refs }) {
+    // Store
+    const store = useMainStore();
+
+    // Composables
     const { isLoading, isChildLoading, isTaskLoading, addTask, removeTask } = useLoading({
       includedChildren: ["itemTable"],
     });
 
+    // State
+    const service = getServiceByBasename(props.modelClass.serviceBasename);
     const lsNamespace = defaultTo(props.localStorageNamespace, props.modelClass.localStorageNamespace);
 
+    // Table
+    const selectedItems = ref([]);
     const localTableOptions = { ...defaultTableOptions, ...props.tableInitialOptions };
     const tableOptions = useLocalStorage(`${lsNamespace}TableOptions`, localTableOptions, {
       getter: (lsOptions) => ({ ...localTableOptions, ...lsOptions }),
       setter: (options) => omit(options, ["page"]),
     });
-
     const defaultTableHeaders = props.tableAvailableHeaders.filter((header) => header.default || header.fixed);
     const tableHeaders = useLocalStorage(`${lsNamespace}TableHeaders`, defaultTableHeaders, {
       getter: (lsHeaders) => props.tableAvailableHeaders.filter((header) => lsHeaders.includes(header.value)),
       setter: (headers) => headers.map((header) => header.value),
     });
+    watch(
+      tableHeaders,
+      (newValue) => {
+        const flatHeaders = newValue.map((header) => header.value);
+        const sortingConfig = { sortBy: [], sortDesc: [] };
+        tableOptions.value.sortBy.forEach((field, index) => {
+          if (flatHeaders.includes(field)) {
+            sortingConfig.sortBy.push(field);
+            sortingConfig.sortDesc.push(tableOptions.value.sortDesc[index]);
+          }
+        });
+        tableOptions.value = { ...tableOptions.value, ...sortingConfig };
+      },
+      { deep: true }
+    );
+    function fetchTableItems(resetPagination = false) {
+      invoke(refs.itemTable, "fetchItems", resetPagination);
+    }
 
+    // Filters
+    const filters = ref({});
     const pinnedQuickFilter = useLocalStorage(`${lsNamespace}PinnedQuickFilter`, props.defaultQuickFilter);
+    const advancedFilters = ref(false);
+    const dialogFilterCount = ref(0);
+    function getDefaultFilters() {
+      if (!pinnedQuickFilter.value) {
+        return {};
+      }
+      const defaultFilter = props.quickFilters.find((filter) => filter.key === pinnedQuickFilter.value);
+      return get(defaultFilter, "filters", {});
+    }
+    function addFilter(newFilter) {
+      filters.value = { ...filters.value, ...newFilter };
+    }
+    function setFiltersAndFetch(newFilters) {
+      filters.value = newFilters;
+      if (!props.reactiveFilters) {
+        nextTick(() => {
+          fetchTableItems(true);
+        });
+      }
+    }
+    function applyQuickFilter(quickFilter) {
+      setFiltersAndFetch(quickFilter.filters);
+    }
+
+    // Permissions
+    function canAddItems() {
+      return checkPermission(props.allowAdd);
+    }
+    function canChangeItem(item) {
+      return checkPermission(props.allowChange, item);
+    }
+    function canDeleteItem(item) {
+      return checkPermission(props.allowDelete, item);
+    }
+    function checkPermission(permission, item) {
+      if (isBoolean(permission)) {
+        return permission;
+      }
+      return isFunction(permission) ? permission(store.currentUser, item) : userHasPermission(permission);
+    }
+
+    // Form
+    async function openFormDialog(item) {
+      if (!item) {
+        const newItem = defaultTo(props.defaultItem, props.modelClass.getDefaults());
+        refs.formDialog.open(newItem);
+      } else {
+        addTask("fetch-item", item.id);
+        try {
+          const response = await service.retrieve(item.id);
+          refs.formDialog.open(response.data);
+        } finally {
+          removeTask("fetch-item", item.id);
+        }
+      }
+    }
+    function onFormSubmit(item) {
+      fetchTableItems();
+      emit("submit:form", item);
+    }
+
+    // Item
+    async function deleteItem(item) {
+      addTask("delete-item", item.id);
+      try {
+        await service.delete(item.id);
+        emit("delete:item", item);
+        fetchTableItems();
+        store.showSnackbar({
+          color: "success",
+          message: "Elemento eliminado correctamente",
+        });
+      } finally {
+        removeTask("delete-item", item.id);
+      }
+    }
+
+    // Dependency injection
+    provide("indexModelClass", props.modelClass);
+
+    // Initialization
+    filters.value = getDefaultFilters();
 
     return {
       isLoading,
       isChildLoading,
       isTaskLoading,
-      addTask,
-      removeTask,
+      service,
       lsNamespace,
-      tableHeaders,
+      // Table
+      selectedItems,
       tableOptions,
+      tableHeaders,
+      fetchTableItems,
+      // Filters
+      filters,
       pinnedQuickFilter,
+      advancedFilters,
+      dialogFilterCount,
+      addFilter,
+      setFiltersAndFetch,
+      applyQuickFilter,
+      // Permissions
+      canAddItems,
+      canChangeItem,
+      canDeleteItem,
+      // Form
+      openFormDialog,
+      onFormSubmit,
+      // Item
+      deleteItem,
     };
-  },
-  data() {
-    return {
-      service: getServiceByBasename(this.modelClass.serviceBasename),
-      filters: {},
-      advancedFilters: false,
-      dialogFilterCount: 0,
-      selectedItems: [],
-    };
-  },
-  computed: {
-    ...mapState(useMainStore, ["currentUser"]),
-  },
-  watch: {
-    tableHeaders: {
-      handler(newValue) {
-        const flatHeaders = newValue.map((header) => header.value);
-        const sortingConfig = { sortBy: [], sortDesc: [] };
-        this.tableOptions.sortBy.forEach((field, index) => {
-          if (flatHeaders.includes(field)) {
-            sortingConfig.sortBy.push(field);
-            sortingConfig.sortDesc.push(this.tableOptions.sortDesc[index]);
-          }
-        });
-        this.tableOptions = { ...this.tableOptions, ...sortingConfig };
-      },
-      deep: true,
-    },
-  },
-  created() {
-    this.filters = this.getDefaultFilters();
-  },
-  methods: {
-    ...mapActions(useMainStore, ["showSnackbar"]),
-    fetchTableItems(resetPagination = false) {
-      invoke(this.$refs.itemTable, "fetchItems", resetPagination);
-    },
-    getDefaultFilters() {
-      if (!this.pinnedQuickFilter) {
-        return {};
-      }
-      const defaultFilter = this.quickFilters.find((filter) => filter.key === this.pinnedQuickFilter);
-      return get(defaultFilter, "filters", {});
-    },
-    addFilter(filter) {
-      this.filters = { ...this.filters, ...filter };
-    },
-    setFiltersAndFetch(filters) {
-      this.filters = filters;
-      if (!this.reactiveFilters) {
-        this.$nextTick(() => {
-          this.fetchTableItems(true);
-        });
-      }
-    },
-    applyQuickFilter(filter) {
-      this.setFiltersAndFetch(filter.filters);
-    },
-    canAddItems() {
-      return this.checkPermission(this.allowAdd);
-    },
-    canChangeItem(item) {
-      return this.checkPermission(this.allowChange, item);
-    },
-    canDeleteItem(item) {
-      return this.checkPermission(this.allowDelete, item);
-    },
-    checkPermission(permission, item) {
-      if (isBoolean(permission)) {
-        return permission;
-      }
-      return isFunction(permission) ? permission(this.currentUser, item) : userHasPermission(permission);
-    },
-    async openFormDialog(item) {
-      if (!item) {
-        const newItem = defaultTo(this.defaultItem, this.modelClass.defaults);
-        this.$refs.formDialog.open(newItem);
-      } else {
-        this.addTask("fetch-item", item.id);
-        try {
-          const response = await this.service.retrieve(item.id);
-          this.$refs.formDialog.open(response.data);
-        } finally {
-          this.removeTask("fetch-item", item.id);
-        }
-      }
-    },
-    onFormSubmit(item) {
-      this.fetchTableItems();
-      this.$emit("submit:form", item);
-    },
-    async deleteItem(item) {
-      this.addTask("delete-item", item.id);
-      try {
-        await this.service.delete(item.id);
-        this.$emit("delete:item", item);
-        this.fetchTableItems();
-        this.showSnackbar({
-          color: "success",
-          message: "Elemento eliminado correctamente",
-        });
-      } finally {
-        this.removeTask("delete-item", item.id);
-      }
-    },
   },
 };
 </script>

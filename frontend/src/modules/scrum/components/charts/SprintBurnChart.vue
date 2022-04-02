@@ -1,17 +1,24 @@
+<template>
+  <AsyncChart
+    ref="chart"
+    constructor-type="stockChart"
+    :options-function="buildOptions"
+    v-bind="{ ...$attrs, ...fetchProps }"
+  />
+</template>
+
 <script>
-import { mapState } from "pinia";
-import { has, get } from "lodash";
+import { computed } from "@vue/composition-api";
+import { has, get } from "lodash-es";
 import colors from "vuetify/lib/util/colors";
 
 import SprintService from "@/modules/scrum/services/sprint-service";
-
-import BaseChart from "@/components/charts/BaseChart";
 
 import { useUserStore } from "@/stores/users";
 
 export default {
   name: "SprintBurnChart",
-  extends: BaseChart,
+  inheritAttrs: false,
   props: {
     sprintId: {
       type: String,
@@ -22,60 +29,53 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-      constructorType: "stockChart",
+  setup(props, { refs }) {
+    // Store
+    const userStore = useUserStore();
+
+    // Computed
+    const fetchProps = computed(() => ({
       service: SprintService,
       fetchFunctionName: "burnChartData",
-    };
-  },
-  computed: {
-    ...mapState(useUserStore, ["workerUsers"]),
-    totalEffort() {
-      return get(this.chartData, "total_effort", 0);
-    },
-    dailyProgress() {
-      return has(this.chartData, "data") ? this.totalEffort / this.chartData.data.length : 0;
-    },
-    actualData() {
-      if (has(this.chartData, "data")) {
-        return this.chartData.data.map((item) => {
+      fetchFunctionArgs: [props.sprintId],
+    }));
+
+    // Methods
+    function buildOptions(chartData) {
+      const totalEffort = get(chartData, "total_effort", 0);
+      const dailyProgress = has(chartData, "data") ? totalEffort / chartData.data.length : 0;
+
+      let actualData, idealData, effortData;
+      if (has(chartData, "data")) {
+        actualData = chartData.data.map((item) => {
           const timestamp = new Date(item.date).getTime();
           let value = null;
           if (item.effort_burned !== null) {
-            if (this.burnUp) {
+            if (props.burnUp) {
               value = item.effort_burned;
             } else {
-              value = this.totalEffort - item.effort_burned;
+              value = totalEffort - item.effort_burned;
             }
           }
           return [timestamp, value];
         });
-      }
-      return [];
-    },
-    idealData() {
-      if (has(this.chartData, "data")) {
-        return this.chartData.data.map((item, index) => {
+        idealData = chartData.data.map((item, index) => {
           const timestamp = new Date(item.date).getTime();
           let value;
-          if (this.burnUp) {
-            value = (index + 1) * this.dailyProgress;
+          if (props.burnUp) {
+            value = (index + 1) * dailyProgress;
           } else {
-            value = this.totalEffort - (index + 1) * this.dailyProgress;
+            value = totalEffort - (index + 1) * dailyProgress;
           }
           return [timestamp, value];
         });
+        effortData = chartData.data.map((item) => [new Date(item.date).getTime(), item.current_effort]);
+      } else {
+        actualData = [];
+        idealData = [];
+        effortData = [];
       }
-      return [];
-    },
-    effortData() {
-      if (has(this.chartData, "data")) {
-        return this.chartData.data.map((item) => [new Date(item.date).getTime(), item.current_effort]);
-      }
-      return [];
-    },
-    localChartOptions() {
+
       return {
         chart: {
           zoomType: "xy",
@@ -111,7 +111,7 @@ export default {
           },
           plotLines: [
             {
-              value: this.workerUsers.length * 14,
+              value: userStore.workerUsers.length * 14,
               color: colors.grey.base,
               dashStyle: "Dash",
               width: 1,
@@ -126,7 +126,7 @@ export default {
         },
         series: [
           {
-            name: `${this.burnUp ? "Acumulado" : "Remanente"} real`,
+            name: `${props.burnUp ? "Acumulado" : "Remanente"} real`,
             type: "line",
             color: colors.blue.base,
             zIndex: 3,
@@ -134,34 +134,40 @@ export default {
               enabled: true,
               radius: 3,
             },
-            data: this.actualData,
+            data: actualData,
           },
           {
-            name: `${this.burnUp ? "Acumulado" : "Remanente"} ideal`,
+            name: `${props.burnUp ? "Acumulado" : "Remanente"} ideal`,
             type: "line",
             dashStyle: "longdash",
             color: colors.lightGreen.base,
             zIndex: 2,
-            data: this.idealData,
+            data: idealData,
           },
           {
             name: "Esfuerzo real",
             type: "column",
             color: colors.teal.lighten4,
             zIndex: 1,
-            data: this.effortData,
+            data: effortData,
           },
         ],
         navigator: {
           enabled: false,
         },
       };
-    },
-  },
-  methods: {
-    buildFetchFunctionArgs() {
-      return [this.sprintId];
-    },
+    }
+    function fetchData() {
+      refs.chart.fetchData();
+    }
+
+    return {
+      // Computed
+      fetchProps,
+      // Methods
+      buildOptions,
+      fetchData,
+    };
   },
 };
 </script>

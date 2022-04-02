@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { truncate } from "@/filters";
+import { truncate } from "@/utils/text";
 
 export default {
   name: "ContextBreadcrumbs",

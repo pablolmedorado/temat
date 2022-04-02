@@ -1,22 +1,33 @@
+<template>
+  <AsyncChart ref="chart" :options-function="buildOptions" v-bind="{ ...$attrs, ...fetchProps }" />
+</template>
+
 <script>
-import { get, mean } from "lodash";
+import { computed } from "@vue/composition-api";
+import { get, mean } from "lodash-es";
 import colors from "vuetify/lib/util/colors";
 
 import SupportService from "@/modules/support-working-days/services/support-service";
 
-import BaseChart from "@/components/charts/BaseChart";
-
 export default {
   name: "SupportUsersChart",
-  extends: BaseChart,
-  data() {
-    return {
+  inheritAttrs: false,
+  props: {
+    filter: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  setup(props, { refs, root }) {
+    // Computed
+    const fetchProps = computed(() => ({
       service: SupportService,
       fetchFunctionName: "userChartData",
-    };
-  },
-  computed: {
-    localChartOptions() {
+      fetchFunctionArgs: [props.filter],
+    }));
+
+    // Methods
+    function buildOptions(chartData) {
       return {
         chart: {
           type: "column",
@@ -25,7 +36,7 @@ export default {
           text: "Jornadas de soporte por usuario",
         },
         xAxis: {
-          categories: get(this.chartData, "categories", []),
+          categories: get(chartData, "categories", []),
         },
         yAxis: {
           allowDecimals: false,
@@ -34,13 +45,13 @@ export default {
           },
           plotLines: [
             {
-              value: get(this.chartData, "data") ? mean(this.chartData.data) : null,
+              value: get(chartData, "data") ? mean(chartData.data) : null,
               color: colors.grey.base,
               dashStyle: "longdash",
               width: 2,
               label: {
                 text: "Media",
-                style: { color: this.$vuetify.theme.isDark ? "#ffffff" : "#000000" },
+                style: { color: root.$vuetify.theme.isDark ? "#ffffff" : "#000000" },
               },
             },
           ],
@@ -57,11 +68,22 @@ export default {
           {
             name: "Número de jornadas de soporte",
             color: colors.blue.base,
-            data: get(this.chartData, "data", []),
+            data: get(chartData, "data", []),
           },
         ],
       };
-    },
+    }
+    function fetchData() {
+      refs.chart.fetchData();
+    }
+
+    return {
+      // Computed
+      fetchProps,
+      // Methods
+      buildOptions,
+      fetchData,
+    };
   },
 };
 </script>

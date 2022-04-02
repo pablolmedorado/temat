@@ -77,7 +77,8 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { computed, onMounted, watch } from "@vue/composition-api";
+import { invoke } from "lodash-es";
 
 import Task from "@/modules/scrum/models/task";
 
@@ -99,124 +100,123 @@ export default {
       required: true,
     },
   },
-  setup() {
+  setup(props, { emit, refs }) {
+    // Store
+    const mainStore = useMainStore();
+
+    // Composables
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading({
       includedChildren: ["itemIndex"],
     });
-    return {
-      isLoading,
-      isTaskLoading,
-      addTask,
-      removeTask,
-    };
-  },
-  data() {
-    return {
-      modelClass: Task,
-      service: getServiceByBasename(Task.serviceBasename),
-      tableOptions: {
-        itemsPerPage: -1,
-        sortBy: ["order"],
-        sortDesc: [false],
-        mustSort: true,
+
+    // State
+    const modelClass = Task;
+    const service = getServiceByBasename(modelClass.serviceBasename);
+    const defaultTableHeaders = [
+      {
+        text: "Orden",
+        align: "start",
+        sortable: true,
+        value: "order",
+        fixed: true,
       },
-      tableFooterProps: {
-        itemsPerPageOptions: [10, 25, 50, -1],
+      {
+        text: "Nombre",
+        align: "start",
+        sortable: true,
+        value: "name",
+        fixed: true,
       },
-      formComponent: TaskForm,
+      { text: "Peso", align: "start", sortable: true, value: "weight", fixed: true },
+      { text: "Terminada", align: "start", sortable: true, value: "done", fixed: true },
+    ];
+    const adminTableHeaders = [
+      ...defaultTableHeaders,
+      {
+        text: "Acciones",
+        align: "start",
+        sortable: false,
+        value: "table_actions",
+        fields: ["user_story"],
+        fixed: true,
+      },
+    ];
+    const tableOptions = {
+      itemsPerPage: -1,
+      sortBy: ["order"],
+      sortDesc: [false],
+      mustSort: true,
     };
-  },
-  computed: {
-    ...mapState(useMainStore, ["currentUser"]),
-    systemFilters() {
-      return {
-        user_story_id: this.userStory.id,
-      };
-    },
-    defaultItem() {
-      return {
-        ...this.modelClass.defaults,
-        user_story: this.userStory.id,
-      };
-    },
-    tableHeaders() {
-      const defaultOptions = [
-        {
-          text: "Orden",
-          align: "start",
-          sortable: true,
-          value: "order",
-          fixed: true,
-        },
-        {
-          text: "Nombre",
-          align: "start",
-          sortable: true,
-          value: "name",
-          fixed: true,
-        },
-        { text: "Peso", align: "start", sortable: true, value: "weight", fixed: true },
-        { text: "Terminada", align: "start", sortable: true, value: "done", fixed: true },
-      ];
-      const adminOptions = [
-        ...defaultOptions,
-        {
-          text: "Acciones",
-          align: "start",
-          sortable: false,
-          value: "table_actions",
-          fields: ["user_story"],
-          fixed: true,
-        },
-      ];
-      return userHasAnyPermission([this.modelClass.CHANGE_PERMISSION, this.modelClass.DELETE_PERMISSION])
-        ? adminOptions
-        : defaultOptions;
-    },
-    canToggle() {
+    const tableFooterProps = {
+      itemsPerPageOptions: [10, 25, 50, -1],
+    };
+    const formComponent = TaskForm;
+
+    // Computed
+    const systemFilters = computed(() => ({ user_story_id: props.userStory.id }));
+    const defaultItem = computed(() => ({
+      ...modelClass.getDefaults(),
+      user_story: props.userStory.id,
+    }));
+    const tableHeaders = computed(() => {
+      return userHasAnyPermission([modelClass.CHANGE_PERMISSION, modelClass.DELETE_PERMISSION])
+        ? adminTableHeaders
+        : defaultTableHeaders;
+    });
+    const canToggle = computed(() => {
       return (
-        this.currentUser.id === this.userStory.development_user || userHasPermission(this.modelClass.CHANGE_PERMISSION)
+        mainStore.currentUser.id === props.userStory.development_user || userHasPermission(modelClass.CHANGE_PERMISSION)
       );
-    },
-  },
-  watch: {
-    "userStory.id": {
-      handler() {
-        this.$refs.itemIndex.fetchTableItems();
-      },
-    },
-  },
-  mounted() {
-    if (this.$refs.itemIndex) {
-      this.$refs.itemIndex.fetchTableItems();
+    });
+
+    // Watchers
+    watch(
+      () => props.userStory.id,
+      () => invoke(refs, "itemIndex.fetchTableItems")
+    );
+
+    // Methods
+    async function moveItem(item, action) {
+      addTask(`move-item-${action}`, item.id);
+      try {
+        await service.move(item.id, action);
+        refs.itemIndex.fetchTableItems();
+      } finally {
+        removeTask(`move-item-${action}`, item.id);
+      }
     }
-  },
-  methods: {
-    onFormSubmit() {
-      this.$emit("change:progress");
-    },
-    onDeleteItem() {
-      this.$emit("change:progress");
-    },
-    async moveItem(item, action) {
-      this.addTask(`move-item-${action}`, item.id);
+    async function toggleItem(item) {
+      addTask("toggle-item", item.id);
       try {
-        await this.service.move(item.id, action);
-        this.$refs.itemIndex.fetchTableItems();
+        await service.toggle(item.id);
+        refs.itemIndex.fetchTableItems();
+        emit("change:progress");
       } finally {
-        this.removeTask(`move-item-${action}`, item.id);
+        removeTask("toggle-item", item.id);
       }
-    },
-    async toggleItem(item) {
-      this.addTask("toggle-item", item.id);
-      try {
-        await this.service.toggle(item.id);
-        this.$refs.itemIndex.fetchTableItems();
-        this.$emit("change:progress");
-      } finally {
-        this.removeTask("toggle-item", item.id);
-      }
-    },
+    }
+
+    // Lifecycle hooks
+    onMounted(() => invoke(refs, "itemIndex.fetchTableItems"));
+
+    return {
+      // State
+      modelClass,
+      service,
+      tableOptions,
+      tableFooterProps,
+      formComponent,
+      // Computed
+      isLoading,
+      systemFilters,
+      defaultItem,
+      tableHeaders,
+      canToggle,
+      // Methods
+      isTaskLoading,
+      moveItem,
+      toggleItem,
+    };
   },
 };
 </script>

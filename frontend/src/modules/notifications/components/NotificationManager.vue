@@ -11,10 +11,10 @@
       left
       offset-y
     >
-      <template #activator="{ on: menu }">
+      <template #activator="{ attrs: menuAttrs, on: menuOn }">
         <v-tooltip bottom>
-          <template #activator="{ on: tooltip }">
-            <v-btn icon v-on="{ ...tooltip, ...menu }">
+          <template #activator="{ attrs: tooltipAttrs, on: tooltipOn }">
+            <v-btn icon v-bind="{ ...tooltipAttrs, ...menuAttrs }" v-on="{ ...tooltipOn, ...menuOn }">
               <v-badge :color="unreadCountBadgeColour" :content="unreadCount | text" bordered overlap>
                 <v-icon>{{ areNotificationsEnabled ? "mdi-bell-ring" : "mdi-bell" }}</v-icon>
               </v-badge>
@@ -110,9 +110,9 @@
 </template>
 
 <script>
-import { mapState, mapWritableState } from "pinia";
+import { computed, ref, toRefs, watch } from "@vue/composition-api";
 import { useIntervalFn } from "@vueuse/core";
-import { isNil, partition } from "lodash";
+import { isNil, partition } from "lodash-es";
 
 import NotificationService from "@/modules/notifications/services/notification-service";
 
@@ -131,104 +131,116 @@ export default {
       return isNil(value) ? "" : value.toString();
     },
   },
-  setup() {
-    const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
+  setup(props, { root }) {
+    // Store
+    const mainStore = useMainStore();
+    const notificationStore = useNotificationStore();
 
+    // Composables
+    const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
     const { areEnabled: areNotificationsEnabled } = useNotifications();
     const { getUnreadCount } = useNotificationStore();
-    useIntervalFn(() => getUnreadCount(), 300000, true); // 5 minutes
 
-    return {
-      isLoading,
-      isTaskLoading,
-      addTask,
-      removeTask,
-      areNotificationsEnabled,
-      getUnreadCount,
-    };
-  },
-  data() {
-    return {
-      showNotificationSummary: false,
-      notifications: [],
-    };
-  },
-  computed: {
-    ...mapState(useMainStore, ["appName"]),
-    ...mapState(useNotificationStore, ["notificationTargetMap", "unreadCountBadgeColour"]),
-    ...mapWritableState(useNotificationStore, ["unreadCount"]),
-    notificationPartition() {
-      return partition(this.notifications, { unread: true });
-    },
-  },
-  watch: {
-    unreadCount(newValue, oldValue) {
-      if (this.areNotificationsEnabled && newValue > oldValue) {
-        new Notification(this.appName, {
-          body: `Tienes ${newValue} notificación/es sin leer`,
-          icon: NotificationImg,
-        });
+    // State
+    const showNotificationSummary = ref(false);
+    const notifications = ref([]);
+
+    // Computed
+    const { unreadCount, unreadCountBadgeColour } = toRefs(notificationStore);
+    const notificationPartition = computed(() => partition(notifications.value, { unread: true }));
+
+    // Watchers
+    watch(
+      () => notificationStore.unreadCount,
+      (newValue, oldValue) => {
+        if (areNotificationsEnabled.value && newValue > oldValue) {
+          new Notification(mainStore.appName, {
+            body: `Tienes ${newValue} notificación/es sin leer`,
+            icon: NotificationImg,
+          });
+        }
       }
-    },
-    showNotificationSummary(newValue) {
+    );
+    watch(showNotificationSummary, (newValue) => {
       if (newValue) {
-        this.getUnreadSummary();
+        getUnreadSummary();
       } else {
-        this.notifications = [];
+        notifications.value = [];
       }
-    },
-  },
-  created() {
-    this.getUnreadCount();
-  },
-  methods: {
-    async getUnreadSummary() {
-      this.addTask("fetch-unread-summary");
+    });
+
+    // Methods
+    async function getUnreadSummary() {
+      addTask("fetch-unread-summary");
       try {
         const response = await NotificationService.unreadSummary();
-        this.notifications = response.data.results;
-        this.unreadCount = response.data.count;
+        notifications.value = response.data.results;
+        notificationStore.unreadCount = response.data.count;
       } finally {
-        this.removeTask("fetch-unread-summary");
+        removeTask("fetch-unread-summary");
       }
-    },
-    async markNotificationAsRead(id) {
-      this.addTask("mark-as-read", id);
+    }
+    async function markNotificationAsRead(id) {
+      addTask("mark-as-read", id);
       try {
         const response = await NotificationService.markAsRead(id);
         const notification = response.data;
-        const notificationIndex = this.notifications.findIndex((item) => item.id === notification.id);
-        this.notifications.splice(notificationIndex, 1, notification);
-        this.getUnreadCount();
+        const notificationIndex = notifications.value.findIndex((item) => item.id === notification.id);
+        notifications.value.splice(notificationIndex, 1, notification);
+        getUnreadCount();
       } finally {
-        this.removeTask("mark-as-read", id);
+        removeTask("mark-as-read", id);
       }
-    },
-    async markAllNotificationsAsRead() {
-      if (this.notificationPartition[0].length) {
-        this.addTask("mark-all-as-read");
+    }
+    async function markAllNotificationsAsRead() {
+      if (notificationPartition.value[0].length) {
+        addTask("mark-all-as-read");
         try {
-          const notificationIds = this.notificationPartition[0].map((notification) => notification.id);
+          const notificationIds = notificationPartition.value[0].map((notification) => notification.id);
           await NotificationService.markSummaryAsRead({ id__in: notificationIds.join(",") });
-          this.getUnreadSummary();
+          getUnreadSummary();
         } finally {
-          this.removeTask("mark-all-as-read");
+          removeTask("mark-all-as-read");
         }
       }
-    },
-    getNotificationIcon(notification) {
-      return notification.target ? this.notificationTargetMap[notification.target_content_type].icon : "mdi-bell-alert";
-    },
-    navigateToTarget(notification) {
+    }
+    function getNotificationIcon(notification) {
+      return notification.target
+        ? notificationStore.notificationTargetMap[notification.target_content_type].icon
+        : "mdi-bell-alert";
+    }
+    function navigateToTarget(notification) {
       if (notification.unread) {
-        this.markNotificationAsRead(notification.id);
+        markNotificationAsRead(notification.id);
       }
-      this.$router.push({
-        ...this.notificationTargetMap[notification.target_content_type].route,
+      root.$router.push({
+        ...notificationStore.notificationTargetMap[notification.target_content_type].route,
         params: { id: notification.target.id },
       });
-      this.showNotificationSummary = false;
-    },
+      showNotificationSummary.value = false;
+    }
+
+    // Initialization
+    useIntervalFn(getUnreadCount, 300000, { immediate: true, immediateCallback: true }); // 5 minutes
+
+    return {
+      // State
+      areNotificationsEnabled,
+      showNotificationSummary,
+      notifications,
+      // Computed
+      isLoading,
+      unreadCount,
+      unreadCountBadgeColour,
+      notificationPartition,
+      // Methods
+      isTaskLoading,
+      getUnreadSummary,
+      markNotificationAsRead,
+      markAllNotificationsAsRead,
+      getNotificationIcon,
+      navigateToTarget,
+    };
   },
 };
 </script>

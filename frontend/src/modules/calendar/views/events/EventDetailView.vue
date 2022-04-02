@@ -52,7 +52,7 @@
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
       </template>
-      <v-btn v-if="canCopy" fab dark small color="secondary" @click="onEdit(itemForCopy)">
+      <v-btn v-if="canCopy" fab dark small color="secondary" @click="onCopy(item)">
         <v-icon>mdi-content-copy</v-icon>
       </v-btn>
       <v-btn v-if="canDelete" fab dark small color="red" @click.stop="onDelete(item)">
@@ -67,26 +67,30 @@
 </template>
 
 <script>
-import { mapActions } from "pinia";
-import { get } from "lodash";
+import { ref, computed } from "@vue/composition-api";
+import { cloneDeep, get } from "lodash-es";
 
 import CalendarEvent from "@/modules/calendar/models/event";
 
-import EventEditionMixin from "@/modules/calendar/mixins/event-edition-mixin";
-
 import EventService from "@/modules/calendar/services/event-service";
+
+import EventForm from "@/modules/calendar/components/forms/EventForm";
+import EventRepresentation from "@/modules/calendar/components/EventRepresentation";
 
 import { useMainStore } from "@/stores/main";
 
+import useEventTypes from "@/modules/calendar/composables/useEventTypes";
 import { handleError } from "@/utils/error-handlers";
-import { truncate } from "@/filters";
+import { userHasPermission } from "@/utils/permissions";
+import { truncate } from "@/utils/text";
+import { buildGoogleCalendarUrl } from "@/modules/calendar/utils";
 
 export default {
   name: "EventDetailView",
   metaInfo: {
     title: "Evento",
   },
-  mixins: [EventEditionMixin],
+  components: { EventRepresentation },
   async beforeRouteEnter(to, from, next) {
     try {
       const response = await EventService.retrieve(to.params.id, { expand: "tags" });
@@ -116,36 +120,91 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      item: null,
-      showSpeedDial: false,
-    };
-  },
-  computed: {
-    breadcrumbs() {
-      const text = get(this.item, "name", "Evento");
+  setup(props, { refs, root }) {
+    // Store
+    const mainStore = useMainStore();
+
+    // Composables
+    const { eventTypesMap } = useEventTypes();
+
+    // State
+    const formComponent = EventForm;
+    const item = ref(null);
+    const showSpeedDial = ref(false);
+
+    // Computed
+    const canChange = computed(() => {
+      return (
+        mainStore.currentUser.id === item.value.creation_user || userHasPermission(CalendarEvent.CHANGE_PERMISSION)
+      );
+    });
+    const canCopy = computed(() => {
+      return mainStore.currentUser.id === item.value.creation_user || userHasPermission(CalendarEvent.ADD_PERMISSION);
+    });
+    const canDelete = computed(() => {
+      return (
+        mainStore.currentUser.id === item.value.creation_user || userHasPermission(CalendarEvent.DELETE_PERMISSION)
+      );
+    });
+    const breadcrumbs = computed(() => {
+      const text = get(item.value, "name", "Evento");
       return [
         { text: "Calendario", to: { name: "calendar" }, exact: true },
         { text: "Eventos", to: { name: "events" }, exact: true },
         { text: truncate(text, 50), disabled: true },
       ];
-    },
-  },
-  methods: {
-    ...mapActions(useMainStore, ["showSnackbar"]),
-    async fetchItem(id) {
-      const response = await this.service.retrieve(id, { expand: "tags" });
-      this.item = new CalendarEvent(response.data);
-    },
-    onFormSubmit(newItem) {
-      this.item = new CalendarEvent(newItem);
-    },
-    async onDeleteConfirm() {
-      await this.service.delete(this.item.id);
-      this.showSnackbar({ color: "success", message: "Evento eliminado correctamente" });
-      this.$router.push({ name: "events" });
-    },
+    });
+    const googleCalendarUrl = computed(() => buildGoogleCalendarUrl(item.value));
+
+    // Methods
+    async function fetchItem(id) {
+      const response = await EventService.retrieve(id, { expand: "tags" });
+      item.value = new CalendarEvent(response.data);
+    }
+    function onEdit(itemToEdit) {
+      refs.formDialog.open(itemToEdit);
+    }
+    function onCopy(itemToCopy) {
+      const copy = cloneDeep(itemToCopy);
+      delete copy.id;
+      refs.formDialog.open(copy);
+    }
+    function onFormSubmit(newItem) {
+      item.value = new CalendarEvent(newItem);
+    }
+    function onDelete(itemToDelete) {
+      refs.deleteDialog.open(itemToDelete);
+    }
+    async function onDeleteConfirm() {
+      await EventService.delete(item.value.id);
+      mainStore.showSnackbar({ color: "success", message: "Evento eliminado correctamente" });
+      root.$router.push({ name: "events" });
+    }
+    function buildIcalUrl({ id }) {
+      return `${Urls["calendar:event-ical"]()}?id=${id}&page_size=1`;
+    }
+
+    return {
+      // State
+      formComponent,
+      item,
+      showSpeedDial,
+      // Computed
+      eventTypesMap,
+      canChange,
+      canCopy,
+      canDelete,
+      breadcrumbs,
+      googleCalendarUrl,
+      // Methods
+      fetchItem,
+      onEdit,
+      onCopy,
+      onFormSubmit,
+      onDelete,
+      onDeleteConfirm,
+      buildIcalUrl,
+    };
   },
 };
 </script>

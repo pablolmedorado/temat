@@ -9,7 +9,7 @@ export default function () {
   // State
   const { userStoryTypes, userStoryTypesMap } = toRefs(userStoryStore);
 
-  // Lifecycle hooks
+  // Initialization
   if (!userStoryTypes.value.length) {
     userStoryStore.getUserStoryTypes();
   }

@@ -65,9 +65,9 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { ref, computed, onActivated } from "@vue/composition-api";
 import { DateTime } from "luxon";
-import { groupBy } from "lodash";
+import { groupBy } from "lodash-es";
 
 import CalendarEvent from "@/modules/calendar/models/event";
 
@@ -76,7 +76,6 @@ import EventService from "@/modules/calendar/services/event-service";
 import EventRepresentation from "@/modules/calendar/components/EventRepresentation";
 
 import { useMainStore } from "@/stores/main";
-import { useEventStore } from "@/modules/calendar/stores/events";
 
 import useEventTypes from "@/modules/calendar/composables/useEventTypes";
 import useLoading from "@/composables/useLoading";
@@ -90,51 +89,56 @@ export default {
   components: {
     EventRepresentation,
   },
-  setup() {
+  setup(props, { root }) {
+    // Store
+    const store = useMainStore();
+
+    // Composables
     const { isLoading, addTask, removeTask } = useLoading();
     const { eventTypesMap } = useEventTypes();
-    return {
-      isLoading,
-      addTask,
-      removeTask,
-      eventTypesMap,
-    };
-  },
-  data() {
-    return {
-      events: [],
-    };
-  },
-  computed: {
-    ...mapState(useMainStore, ["locale"]),
-    ...mapState(useEventStore, ["eventVisibilityTypesMap"]),
-    eventsMap() {
-      return groupBy(this.events, (event) => {
-        return event.luxonStart.setLocale(this.locale).toLocaleString(DateTime.DATE_HUGE);
-      });
-    },
-  },
-  activated() {
-    this.fetchTimeLine();
-  },
-  methods: {
-    applyDarkVariant,
-    getFontColourFromBackground,
-    async fetchTimeLine() {
-      this.addTask("fetch-timeline");
+
+    // State
+    const events = ref([]);
+
+    // Computed
+    const eventsMap = computed(() =>
+      groupBy(events.value, (event) => {
+        return event.luxonStart.setLocale(store.locale).toLocaleString(DateTime.DATE_HUGE);
+      })
+    );
+
+    // Methods
+    async function fetchTimeLine() {
+      addTask("fetch-timeline");
       try {
         const response = await EventService.myTimeline();
-        this.events = response.data.results.map((event) => {
+        events.value = response.data.results.map((event) => {
           return new CalendarEvent(event);
         });
       } finally {
-        this.removeTask("fetch-timeline");
+        removeTask("fetch-timeline");
       }
-    },
-    viewInCalendar(event) {
+    }
+    function viewInCalendar(event) {
       const date = DateTime.fromISO(event.start_datetime).toISODate();
-      this.$router.push({ name: "calendar", params: { initialDate: date } });
-    },
+      root.$router.push({ name: "calendar", params: { initialDate: date } });
+    }
+
+    // Lifecycle hooks
+    onActivated(() => fetchTimeLine());
+
+    return {
+      // State
+      events,
+      // Computed
+      eventTypesMap,
+      eventsMap,
+      // Methods
+      isLoading,
+      viewInCalendar,
+      applyDarkVariant,
+      getFontColourFromBackground,
+    };
   },
 };
 </script>

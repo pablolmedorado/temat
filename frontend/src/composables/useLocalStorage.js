@@ -1,5 +1,5 @@
 import { ref, watch } from "@vue/composition-api";
-import { isFunction } from "lodash";
+import { isFunction } from "lodash-es";
 
 export default function (key, initialValue, options = {}) {
   // State

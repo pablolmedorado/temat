@@ -1,24 +1,36 @@
+<template>
+  <AsyncChart ref="chart" :options-function="buildOptions" v-bind="{ ...$attrs, ...fetchProps }" />
+</template>
+
 <script>
-import { mapState } from "pinia";
+import { computed } from "@vue/composition-api";
 
 import UserStoryService from "@/modules/scrum/services/user-story-service";
-
-import BaseChart from "@/components/charts/BaseChart";
 
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 export default {
   name: "EffortRoleChart",
-  extends: BaseChart,
-  data() {
-    return {
+  inheritAttrs: false,
+  props: {
+    filter: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  setup(props, { refs, root }) {
+    // Store
+    const userStoryStore = useUserStoryStore();
+
+    // Computed
+    const fetchProps = computed(() => ({
       service: UserStoryService,
       fetchFunctionName: "effortRoleChartData",
-    };
-  },
-  computed: {
-    ...mapState(useUserStoryStore, ["effortRolesMap"]),
-    localChartOptions() {
+      fetchFunctionArgs: [props.filter],
+    }));
+
+    // Methods
+    function buildOptions(chartData) {
       return {
         chart: {
           type: "pie",
@@ -35,7 +47,7 @@ export default {
           },
           series: {
             borderWidth: 1,
-            borderColor: this.$vuetify.theme.isDark ? "#ffffff" : "rgba(0, 0, 0, 0.54)",
+            borderColor: root.$vuetify.theme.isDark ? "#ffffff" : "rgba(0, 0, 0, 0.54)",
           },
         },
         series: [
@@ -44,17 +56,28 @@ export default {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false,
-            data: this.chartData.map((item) => {
+            data: chartData.map((item) => {
               return {
                 ...item,
-                name: this.effortRolesMap[item.name].label,
-                color: this.effortRolesMap[item.name].colour,
+                name: userStoryStore.effortRolesMap[item.name].label,
+                color: userStoryStore.effortRolesMap[item.name].colour,
               };
             }),
           },
         ],
       };
-    },
+    }
+    function fetchData() {
+      refs.chart.fetchData();
+    }
+
+    return {
+      // Computed
+      fetchProps,
+      // Methods
+      buildOptions,
+      fetchData,
+    };
   },
 };
 </script>

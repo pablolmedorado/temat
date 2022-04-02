@@ -1,5 +1,5 @@
 <template>
-  <v-form v-if="item" ref="itemForm" :disabled="isTaskLoading('submit')">
+  <v-form v-if="item" ref="itemForm" :disabled="isFormLoading">
     <v-row>
       <v-col>
         <UserAutocomplete
@@ -7,9 +7,7 @@
           label="Usuario*"
           prepend-icon="mdi-account"
           show-random-btn
-          :error-messages="buildValidationErrorMessages($v.item.user)"
-          @input="$v.item.user.$touch()"
-          @blur="$v.item.user.$touch()"
+          :error-messages="getErrorMsgs(v$.item.user)"
         />
       </v-col>
     </v-row>
@@ -18,24 +16,40 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
-
-import FormMixin from "@/mixins/form-mixin";
+import { required } from "@vuelidate/validators";
 
 import SupportService from "@/modules/support-working-days/services/support-service";
 
+import useForm, { formProps } from "@/composables/useForm";
+
 export default {
   name: "SupportDayForm",
-  mixins: [FormMixin({ service: SupportService })],
-  validations: {
-    item: {
-      user: { required },
-    },
-  },
-  data() {
+  props: formProps,
+  validations() {
     return {
+      item: {
+        user: { required },
+      },
+    };
+  },
+  setup(props) {
+    // Composables
+    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(props, SupportService, {
       saveFunctionName: "update",
       successMessage: "Día de soporte guardado correctamente",
+    });
+
+    return {
+      // State
+      item,
+      // Computed
+      v$,
+      itemHasChanged,
+      isFormLoading,
+      // Methods
+      getErrorMsgs,
+      submit,
+      reset,
     };
   },
 };

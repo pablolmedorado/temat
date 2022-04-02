@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { toRefs } from "@vue/composition-api";
 
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
@@ -29,8 +29,16 @@ export default {
       required: true,
     },
   },
-  computed: {
-    ...mapState(useUserStoryStore, ["userStoryStatus"]),
+  setup() {
+    // Store
+    const userStoryStore = useUserStoryStore();
+
+    // Computed
+    const { userStoryStatus } = toRefs(userStoryStore);
+
+    return {
+      userStoryStatus,
+    };
   },
 };
 </script>

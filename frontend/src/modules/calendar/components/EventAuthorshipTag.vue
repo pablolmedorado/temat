@@ -13,9 +13,9 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { computed, toRefs } from "@vue/composition-api";
 import { DateTime } from "luxon";
-import { defaultTo } from "lodash";
+import { defaultTo } from "lodash-es";
 
 import { useUserStore } from "@/stores/users";
 
@@ -28,17 +28,27 @@ export default {
       required: true,
     },
   },
-  computed: {
-    ...mapState(useUserStore, ["userMap"]),
-    lastModificationUser() {
-      return this.event.modification_user
-        ? this.userMap[this.event.modification_user]
-        : this.userMap[this.event.creation_user];
-    },
-    lastModificationDatetime() {
-      const lastModification = defaultTo(this.event.modification_datetime, this.event.creation_datetime);
+  setup(props) {
+    // Store
+    const userStore = useUserStore();
+
+    // Computed
+    const { userMap } = toRefs(userStore);
+    const lastModificationUser = computed(() => {
+      return props.event.modification_user
+        ? userMap.value[props.event.modification_user]
+        : userMap.value[props.event.creation_user];
+    });
+    const lastModificationDatetime = computed(() => {
+      const lastModification = defaultTo(props.event.modification_datetime, props.event.creation_datetime);
       return DateTime.fromISO(lastModification).toFormat("yyyy-MM-dd HH:mm");
-    },
+    });
+
+    return {
+      userMap,
+      lastModificationUser,
+      lastModificationDatetime,
+    };
   },
 };
 </script>

@@ -26,25 +26,39 @@
 </template>
 
 <script>
-import DialogMixin from "@/mixins/dialog-mixin";
+import { ref } from "@vue/composition-api";
+
+import useDialog, { dialogProps } from "@/composables/useDialog";
 
 export default {
   name: "VoluteersDialog",
-  mixins: [DialogMixin],
-  data() {
+  inheritAttrs: false,
+  props: dialogProps,
+  setup(props) {
+    // Composables
+    const { showDialog, open: _open, close: _close } = useDialog(props);
+
+    // State
+    const item = ref(null);
+
+    // Methods
+    function open(newItem) {
+      item.value = newItem;
+      _open();
+    }
+    function close() {
+      _close();
+      item.value = null;
+    }
+
     return {
-      item: null,
+      // State
+      showDialog,
+      item,
+      // Methods
+      open,
+      close,
     };
-  },
-  methods: {
-    open(item) {
-      this.item = item;
-      this.showDialog = true;
-    },
-    close() {
-      this.item = null;
-      this.showDialog = false;
-    },
   },
 };
 </script>

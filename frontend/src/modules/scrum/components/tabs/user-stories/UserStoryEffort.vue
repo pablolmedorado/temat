@@ -57,8 +57,9 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { computed, onMounted, toRefs, watch } from "@vue/composition-api";
 import { DateTime } from "luxon";
+import { invoke } from "lodash-es";
 
 import Effort from "@/modules/scrum/models/effort";
 
@@ -77,90 +78,98 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      modelClass: Effort,
-      tableHeaders: [
-        { text: "Fecha", align: "start", sortable: true, value: "date", fixed: true },
-        {
-          text: "Usuario",
-          align: "start",
-          sortable: true,
-          value: "user",
-          sortingField: "user__acronym",
-          fixed: true,
-        },
-        { text: "Rol", align: "start", sortable: false, value: "role", fixed: true },
-        { text: "Esfuerzo", align: "start", sortable: true, value: "effort", fixed: true },
-        { text: "Comentarios", align: "start", sortable: true, value: "comments", default: true },
-        {
-          text: "Acciones",
-          align: "start",
-          sortable: false,
-          value: "table_actions",
-          fields: ["user_story", "creation_datetime"],
-          fixed: true,
-        },
-      ],
-      tableOptions: {
-        sortBy: ["date"],
-        sortDesc: [true],
-        multiSort: true,
+  setup(props, { refs }) {
+    // Store
+    const mainStore = useMainStore();
+    const userStoryStore = useUserStoryStore();
+
+    // State
+    const modelClass = Effort;
+    const tableHeaders = [
+      { text: "Fecha", align: "start", sortable: true, value: "date", fixed: true },
+      {
+        text: "Usuario",
+        align: "start",
+        sortable: true,
+        value: "user",
+        sortingField: "user__acronym",
+        fixed: true,
       },
-      formComponent: EffortForm,
+      { text: "Rol", align: "start", sortable: false, value: "role", fixed: true },
+      { text: "Esfuerzo", align: "start", sortable: true, value: "effort", fixed: true },
+      { text: "Comentarios", align: "start", sortable: true, value: "comments", default: true },
+      {
+        text: "Acciones",
+        align: "start",
+        sortable: false,
+        value: "table_actions",
+        fields: ["user_story", "creation_datetime"],
+        fixed: true,
+      },
+    ];
+    const tableOptions = {
+      sortBy: ["date"],
+      sortDesc: [true],
+      multiSort: true,
     };
-  },
-  computed: {
-    ...mapState(useMainStore, ["locale", "currentUser"]),
-    ...mapState(useUserStoryStore, ["effortRolesMap"]),
-    systemFilters() {
-      return {
-        user_story_id: this.userStory.id,
-      };
-    },
-    loggedUserRole() {
-      switch (this.currentUser.id) {
-        case this.userStory.development_user:
+    const formComponent = EffortForm;
+
+    // Computed
+    const { effortRolesMap } = toRefs(userStoryStore);
+    const systemFilters = computed(() => ({ user_story_id: props.userStory.id }));
+    const loggedUserRole = computed(() => {
+      switch (mainStore.currentUser.id) {
+        case props.userStory.development_user:
           return "D";
-        case this.userStory.validation_user:
+        case props.userStory.validation_user:
           return "V";
-        case this.userStory.support_user:
+        case props.userStory.support_user:
           return "S";
         default:
           return null;
       }
-    },
-    defaultItem() {
-      return {
-        ...this.modelClass.defaults,
-        role: this.loggedUserRole,
-        user_story: this.userStory.id,
-      };
-    },
-  },
-  watch: {
-    "userStory.id": {
-      handler() {
-        this.$refs.itemIndex.fetchTableItems();
-      },
-    },
-  },
-  mounted() {
-    if (this.$refs.itemIndex) {
-      this.$refs.itemIndex.fetchTableItems();
-    }
-  },
-  methods: {
-    canPerformAction(item, action) {
+    });
+    const defaultItem = computed(() => ({
+      ...modelClass.getDefaults(),
+      role: mainStore.loggedUserRole,
+      user_story: props.userStory.id,
+    }));
+
+    // Watchers
+    watch(
+      () => props.userStory.id,
+      () => invoke(refs, "itemIndex.fetchTableItems")
+    );
+
+    // Methods
+    function canPerformAction(item, action) {
       if (userHasPermission(`scrum.${action}_effort`)) {
         return true;
       }
-      if (item.user !== this.currentUser.id) {
+      if (item.user !== mainStore.currentUser.id) {
         return false;
       }
       const limitDatetime = DateTime.local().minus({ minutes: 30 });
       return DateTime.fromISO(item.creation_datetime) > limitDatetime;
-    },
+    }
+
+    // Lifecycle hooks
+    onMounted(() => invoke(refs, "itemIndex.fetchTableItems"));
+
+    return {
+      // State
+      modelClass,
+      tableHeaders,
+      tableOptions,
+      formComponent,
+      // Computed
+      effortRolesMap,
+      systemFilters,
+      loggedUserRole,
+      defaultItem,
+      // Methods
+      canPerformAction,
+    };
   },
 };
 </script>

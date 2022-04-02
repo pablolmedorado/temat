@@ -18,9 +18,9 @@
 </template>
 
 <script>
-import { camelCase } from "lodash";
+import { camelCase } from "lodash-es";
 
-import { truncate } from "@/filters";
+import { truncate } from "@/utils/text";
 import { applyDarkVariant } from "@/utils/colours";
 
 export default {
@@ -39,9 +39,12 @@ export default {
       default: false,
     },
   },
-  methods: {
-    camelCase,
-    applyDarkVariant,
+  setup() {
+    return {
+      // Methods
+      camelCase,
+      applyDarkVariant,
+    };
   },
 };
 </script>

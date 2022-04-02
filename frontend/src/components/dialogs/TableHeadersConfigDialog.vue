@@ -41,12 +41,15 @@
 </template>
 
 <script>
-import DialogMixin from "@/mixins/dialog-mixin";
+import { computed, ref } from "@vue/composition-api";
+
+import useDialog, { dialogProps } from "@/composables/useDialog";
 
 export default {
   name: "TableHeadersConfigDialog",
-  mixins: [DialogMixin],
+  inheritAttrs: false,
   props: {
+    ...dialogProps,
     availableHeaders: {
       type: Array,
       required: true,
@@ -56,27 +59,50 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      selectedHeaders: this.headers.map((header) => header.value),
-    };
-  },
-  computed: {
-    defaultHeaders() {
-      return this.availableHeaders.filter((header) => header.default || header.fixed).map((header) => header.value);
-    },
-  },
-  methods: {
-    applyChanges() {
-      const selectedHeaders = this.availableHeaders.filter((header) => {
-        return this.selectedHeaders.includes(header.value);
+  setup(props, { emit }) {
+    // Composables
+    const { showDialog, open: _open, close: _close } = useDialog(props);
+
+    // State
+    const selectedHeaders = ref([]);
+
+    // Computed
+    const defaultHeaders = computed(() =>
+      props.availableHeaders.filter((header) => header.default || header.fixed).map((header) => header.value)
+    );
+
+    // Methods
+    function open() {
+      selectedHeaders.value = props.headers.map((header) => header.value);
+      _open();
+    }
+    function close() {
+      _close();
+      selectedHeaders.value = [];
+    }
+    function applyChanges() {
+      const headers = props.availableHeaders.filter((header) => {
+        return selectedHeaders.value.includes(header.value);
       });
-      this.$emit("update:headers", selectedHeaders);
-      this.close();
-    },
-    resetHeaders() {
-      this.selectedHeaders = this.defaultHeaders;
-    },
+      emit("update:headers", headers);
+      close();
+    }
+    function resetHeaders() {
+      selectedHeaders.value = defaultHeaders.value;
+    }
+
+    return {
+      // State
+      showDialog,
+      selectedHeaders,
+      // Computed
+      defaultHeaders,
+      // Methods
+      open,
+      close,
+      applyChanges,
+      resetHeaders,
+    };
   },
 };
 </script>

@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { nextTick } from "@vue/composition-api";
 import { isWebUri } from "valid-url";
 
 import Epic from "@/modules/scrum/models/epic";
@@ -65,74 +65,80 @@ import Epic from "@/modules/scrum/models/epic";
 import EpicFilters from "@/modules/scrum/components/filters/EpicFilters";
 import EpicForm from "@/modules/scrum/components/forms/EpicForm";
 
-import { useMainStore } from "@/stores/main";
-
 export default {
   name: "EpicListView",
   metaInfo: {
     title: "Épicas",
   },
-  data() {
-    return {
-      modelClass: Epic,
-      tableHeaders: [
-        { text: "Nombre", align: "start", sortable: true, value: "name", fixed: true },
-        { text: "Descripción", align: "start", sortable: false, value: "description", default: true },
-        { text: "Referencia externa", align: "start", sortable: false, value: "external_reference", default: true },
-        {
-          text: "Historias de usuario",
-          align: "start",
-          sortable: true,
-          sortingField: "user_stories__count",
-          value: "num_of_user_stories",
-          default: true,
-        },
-        {
-          text: "Esfuerzo",
-          align: "start",
-          sortable: true,
-          sortingField: "annotated_current_effort",
-          value: "effort",
-          fields: ["planned_effort", "current_effort"],
-        },
-        {
-          text: "Progreso",
-          align: "start",
-          sortable: true,
-          sortingField: "annotated_current_progress",
-          value: "current_progress",
-          default: true,
-        },
-        {
-          text: "Tags",
-          align: "start",
-          sortable: false,
-          value: "tags",
-          fields: ["tags.name", "tags.colour", "tags.icon"],
-        },
-        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
-      ],
-      tableOptions: {
-        sortBy: ["name"],
-        sortDesc: [false],
-        mustSort: true,
+  setup(props, { refs }) {
+    // State
+    const modelClass = Epic;
+    const tableHeaders = [
+      { text: "Nombre", align: "start", sortable: true, value: "name", fixed: true },
+      { text: "Descripción", align: "start", sortable: false, value: "description", default: true },
+      { text: "Referencia externa", align: "start", sortable: false, value: "external_reference", default: true },
+      {
+        text: "Historias de usuario",
+        align: "start",
+        sortable: true,
+        sortingField: "user_stories__count",
+        value: "num_of_user_stories",
+        default: true,
       },
-      filterComponent: EpicFilters,
-      quickFilters: [{ key: "ongoing", label: "En curso", filters: { finished: false } }],
-      formComponent: EpicForm,
+      {
+        text: "Esfuerzo",
+        align: "start",
+        sortable: true,
+        sortingField: "annotated_current_effort",
+        value: "effort",
+        fields: ["planned_effort", "current_effort"],
+      },
+      {
+        text: "Progreso",
+        align: "start",
+        sortable: true,
+        sortingField: "annotated_current_progress",
+        value: "current_progress",
+        default: true,
+      },
+      {
+        text: "Tags",
+        align: "start",
+        sortable: false,
+        value: "tags",
+        fields: ["tags.name", "tags.colour", "tags.icon"],
+      },
+      { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
+    ];
+    const tableOptions = {
+      sortBy: ["name"],
+      sortDesc: [false],
+      mustSort: true,
     };
-  },
-  computed: {
-    ...mapState(useMainStore, ["currentUser"]),
-  },
-  methods: {
-    isWebUri,
-    setTagFilter(tag) {
-      this.$refs.itemIndex.addFilter({ tags__name__in: tag });
-      this.$nextTick(() => {
-        this.$refs.itemIndex.fetchTableItems();
+    const filterComponent = EpicFilters;
+    const quickFilters = [{ key: "ongoing", label: "En curso", filters: { finished: false } }];
+    const formComponent = EpicForm;
+
+    // Methods
+    function setTagFilter(tag) {
+      refs.itemIndex.addFilter({ tags__name__in: tag });
+      nextTick(() => {
+        refs.itemIndex.fetchTableItems();
       });
-    },
+    }
+
+    return {
+      // State
+      modelClass,
+      tableHeaders,
+      tableOptions,
+      filterComponent,
+      quickFilters,
+      formComponent,
+      // Methods
+      isWebUri,
+      setTagFilter,
+    };
   },
 };
 </script>

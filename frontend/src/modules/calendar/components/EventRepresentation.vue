@@ -144,9 +144,9 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { computed, toRefs } from "@vue/composition-api";
 import { DateTime } from "luxon";
-import { camelCase } from "lodash";
+import { camelCase } from "lodash-es";
 
 import EventAuthorshipTag from "@/modules/calendar/components/EventAuthorshipTag";
 
@@ -166,35 +166,43 @@ export default {
       required: true,
     },
   },
-  setup() {
+  setup(props) {
+    // Store
+    const mainStore = useMainStore();
+    const eventStore = useEventStore();
+
+    // Composables
     const { eventTypesMap } = useEventTypes();
-    return { eventTypesMap };
-  },
-  computed: {
-    ...mapState(useMainStore, ["locale"]),
-    ...mapState(useEventStore, ["eventVisibilityTypesMap"]),
-    startDate() {
-      return this.item.luxonStart.toISODate();
-    },
-    startTime() {
-      return this.item.luxonStart.toFormat("HH:mm");
-    },
-    endDate() {
-      return this.item.luxonEnd.toISODate();
-    },
-    endTime() {
-      return this.item.luxonEnd.toFormat("HH:mm");
-    },
-    readableDuration() {
-      return getReadableDuration(this.item.luxonEnd.diff(this.item.luxonStart).toObject());
-    },
-  },
-  methods: {
-    camelCase,
-    applyDarkVariant,
-    dateLocaleString(dateTime) {
-      return dateTime.setLocale(this.locale).toLocaleString(DateTime.DATE_HUGE);
-    },
+
+    // Computed
+    const { eventVisibilityTypesMap } = toRefs(eventStore);
+    const startDate = computed(() => props.item.luxonStart.toISODate());
+    const startTime = computed(() => props.item.luxonStart.toFormat("HH:mm"));
+    const endDate = computed(() => props.item.luxonEnd.toISODate());
+    const endTime = computed(() => props.item.luxonEnd.toFormat("HH:mm"));
+    const readableDuration = computed(() =>
+      getReadableDuration(props.item.luxonEnd.diff(props.item.luxonStart).toObject())
+    );
+
+    // Methods
+    function dateLocaleString(dateTime) {
+      return dateTime.setLocale(mainStore.locale).toLocaleString(DateTime.DATE_HUGE);
+    }
+
+    return {
+      // Computed
+      eventTypesMap,
+      eventVisibilityTypesMap,
+      startDate,
+      startTime,
+      endDate,
+      endTime,
+      readableDuration,
+      // Methods
+      camelCase,
+      applyDarkVariant,
+      dateLocaleString,
+    };
   },
 };
 </script>

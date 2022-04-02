@@ -12,9 +12,9 @@
               :items="quickFilters"
               item-text="label"
               label="Nombre*"
-              :error-messages="buildValidationErrorMessages($v.newQuickFilter)"
-              @change="$v.newQuickFilter.$touch()"
-              @blur="$v.newQuickFilter.$touch()"
+              :error-messages="getErrorMsgs(v$.newQuickFilter)"
+              @change="v$.newQuickFilter.$touch()"
+              @blur="v$.newQuickFilter.$touch()"
             />
           </v-col>
         </v-row>
@@ -32,7 +32,7 @@
       <v-card-actions>
         <v-spacer />
         <v-btn text @click.stop="close"> Volver </v-btn>
-        <v-btn text :disabled="$v.$invalid" @click="addQuickFilter">
+        <v-btn text :disabled="v$.$invalid" @click="addQuickFilter">
           {{ isObject(newQuickFilter) ? "Actualizar" : "Guardar" }}
         </v-btn>
       </v-card-actions>
@@ -41,47 +41,61 @@
 </template>
 
 <script>
-import { isObject } from "lodash";
-import { validationMixin } from "vuelidate";
-import { required } from "vuelidate/lib/validators";
+import { nextTick, ref, watch } from "@vue/composition-api";
+import { isObject } from "lodash-es";
+import { required } from "@vuelidate/validators";
 
-import DialogMixin from "@/mixins/dialog-mixin";
-
-import { buildValidationErrorMessages, validationErrorMessages } from "@/utils/validation";
+import useValidations from "@/composables/useValidations";
+import useDialog, { dialogProps } from "@/composables/useDialog";
 
 export default {
   name: "QuickFilterDialog",
-  mixins: [DialogMixin, validationMixin],
   props: {
+    ...dialogProps,
     quickFilters: {
       type: Array,
       required: true,
     },
   },
-  validations: {
-    newQuickFilter: { required },
-  },
-  data() {
+  validations() {
     return {
-      validationErrorMessages,
-      newQuickFilter: undefined,
+      newQuickFilter: { required },
     };
   },
-  watch: {
-    showDialog() {
-      this.newQuickFilter = undefined;
-      this.$v.$reset();
-    },
-  },
-  methods: {
-    isObject,
-    buildValidationErrorMessages,
-    addQuickFilter() {
-      this.$nextTick(() => {
-        this.$emit("add:quick-filter", this.newQuickFilter);
-        this.close();
+  setup(props, { emit }) {
+    // Composables
+    const { v$, getErrorMsgs } = useValidations();
+    const { showDialog, open, close } = useDialog(props);
+
+    // State
+    const newQuickFilter = ref(undefined);
+
+    // Watchers
+    watch(showDialog, () => {
+      newQuickFilter.value = undefined;
+      v$.value.$reset();
+    });
+
+    // Methods
+    function addQuickFilter() {
+      nextTick(() => {
+        emit("add:quick-filter", newQuickFilter.value);
+        close();
       });
-    },
+    }
+
+    return {
+      v$,
+      // State
+      showDialog,
+      newQuickFilter,
+      // Methods
+      open,
+      close,
+      isObject,
+      getErrorMsgs,
+      addQuickFilter,
+    };
   },
 };
 </script>

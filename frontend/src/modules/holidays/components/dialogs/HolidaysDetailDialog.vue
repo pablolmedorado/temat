@@ -27,56 +27,73 @@
 </template>
 
 <script>
-import { chain } from "lodash";
+import { computed, ref } from "@vue/composition-api";
+import { chain } from "lodash-es";
 
-import DialogMixin from "@/mixins/dialog-mixin";
+import useDialog, { dialogProps } from "@/composables/useDialog";
 
 export default {
   name: "HolidaysDetailDialog",
-  mixins: [DialogMixin],
-  data() {
-    return {
-      headers: [
-        { text: "Fecha de concesión", align: "start", sortable: true, value: "allowance_date" },
-        {
-          text: "Fecha de caducidad",
-          align: "start",
-          sortable: true,
-          value: "expiration_date",
-        },
-        { text: "Total", align: "start", sortable: true, value: "count" },
-      ],
-      options: {
-        sortBy: ["expiration_date", "allowance_date"],
-        sortDesc: [false, false],
-        mustSort: true,
+  inheritAttrs: false,
+  props: dialogProps,
+  setup(props) {
+    // Composables
+    const { showDialog, open: _open, close: _close } = useDialog(props);
+
+    // State
+    const headers = [
+      { text: "Fecha de concesión", align: "start", sortable: true, value: "allowance_date" },
+      {
+        text: "Fecha de caducidad",
+        align: "start",
+        sortable: true,
+        value: "expiration_date",
       },
-      holidays: [],
-      type: null,
-    };
-  },
-  computed: {
-    holidaysSummary() {
-      return chain(this.holidays)
+      { text: "Total", align: "start", sortable: true, value: "count" },
+    ];
+    const options = ref({
+      sortBy: ["expiration_date", "allowance_date"],
+      sortDesc: [false, false],
+      mustSort: true,
+    });
+    const holidays = ref([]);
+    const type = ref(null);
+
+    // Computed
+    const holidaysSummary = computed(() => {
+      return chain(holidays.value)
         .countBy((item) => [item.allowance_date, item.expiration_date])
         .map((count, item) => {
           const dates = item.split(",");
           return { allowance_date: dates[0], expiration_date: dates[1], count };
         })
         .value();
-    },
-  },
-  methods: {
-    open({ holidays, type }) {
-      this.holidays = holidays;
-      this.type = type;
-      this.showDialog = true;
-    },
-    close() {
-      this.holidays = [];
-      this.type = null;
-      this.showDialog = false;
-    },
+    });
+
+    // Methods
+    function open({ holidays: newHolidays, type: newType }) {
+      holidays.value = newHolidays;
+      type.value = newType;
+      _open();
+    }
+    function close() {
+      _close();
+      holidays.value = [];
+      type.value = null;
+    }
+
+    return {
+      // State
+      showDialog,
+      headers,
+      options,
+      type,
+      // Computed
+      holidaysSummary,
+      // Methods
+      open,
+      close,
+    };
   },
 };
 </script>

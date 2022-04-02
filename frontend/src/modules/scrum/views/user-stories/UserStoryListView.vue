@@ -122,8 +122,8 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
-import { get } from "lodash";
+import { computed, nextTick } from "@vue/composition-api";
+import { get } from "lodash-es";
 
 import Effort from "@/modules/scrum/models/effort";
 import UserStory from "@/modules/scrum/models/user-story";
@@ -163,101 +163,93 @@ export default {
   props: {
     ...scrumContextProps,
   },
-  setup(props) {
+  setup(props, { refs }) {
+    // Store
+    const store = useMainStore();
+
+    // Composables
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading({
       includedChildren: ["itemIndex"],
     });
     const { hasContext, contextItem } = useScrumContext(props);
-    return {
-      isLoading,
-      isTaskLoading,
-      addTask,
-      removeTask,
-      hasContext,
-      contextItem,
-    };
-  },
-  data() {
-    return {
-      modelClass: UserStory,
-      service: getServiceByBasename(UserStory.serviceBasename),
-      tableHeaders: [
-        { text: "Id", align: "start", sortable: false, value: "id" },
-        { text: "Título", align: "start", sortable: true, value: "name", fixed: true },
-        { text: "Tipo", align: "start", sortable: true, value: "type.name", sortingField: "type__name" },
-        { text: "Épica", align: "start", sortable: true, value: "epic.name", sortingField: "epic__name" },
-        {
-          text: "Sprint",
-          align: "start",
-          sortable: true,
-          value: "sprint.name",
-          sortingField: "sprint__name",
-          default: true,
-        },
-        {
-          text: "Esfuerzo",
-          align: "start",
-          sortable: true,
-          sortingField: "annotated_current_effort",
-          value: "effort",
-          fields: ["planned_effort", "current_effort"],
-        },
-        { text: "Fecha inicio p.", align: "start", sortable: true, value: "start_date" },
-        { text: "Fecha límite", align: "start", sortable: true, value: "end_date", default: true },
-        { text: "Prioridad", align: "start", sortable: true, value: "priority", default: true },
-        { text: "Referencia SCV", align: "start", sortable: true, value: "cvs_reference" },
-        {
-          text: "Estado",
-          align: "start",
-          sortable: true,
-          value: "status",
-          fields: ["status", "current_progress", "validated", "risk_level"],
-          orderingField: "current_progress",
-          fixed: true,
-        },
-        {
-          text: "Personas",
-          align: "start",
-          sortable: false,
-          value: "people",
-          fields: ["development_user", "validation_user", "support_user"],
-          default: true,
-        },
-        {
-          text: "Tags",
-          align: "start",
-          sortable: false,
-          value: "tags",
-          fields: ["tags.name", "tags.colour", "tags.icon"],
-        },
-        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
-      ],
-      tableOptions: {
-        sortBy: ["end_date", "priority"],
-        sortDesc: [false, false],
-        multiSort: true,
+
+    // State
+    const modelClass = UserStory;
+    const service = getServiceByBasename(modelClass.serviceBasename);
+    const tableHeaders = [
+      { text: "Id", align: "start", sortable: false, value: "id" },
+      { text: "Título", align: "start", sortable: true, value: "name", fixed: true },
+      { text: "Tipo", align: "start", sortable: true, value: "type.name", sortingField: "type__name" },
+      { text: "Épica", align: "start", sortable: true, value: "epic.name", sortingField: "epic__name" },
+      {
+        text: "Sprint",
+        align: "start",
+        sortable: true,
+        value: "sprint.name",
+        sortingField: "sprint__name",
+        default: true,
       },
-      filterComponent: UserStoryFilters,
-      effortFormComponent: EffortForm,
-      showTaskDialog: false,
+      {
+        text: "Esfuerzo",
+        align: "start",
+        sortable: true,
+        sortingField: "annotated_current_effort",
+        value: "effort",
+        fields: ["planned_effort", "current_effort"],
+      },
+      { text: "Fecha inicio p.", align: "start", sortable: true, value: "start_date" },
+      { text: "Fecha límite", align: "start", sortable: true, value: "end_date", default: true },
+      { text: "Prioridad", align: "start", sortable: true, value: "priority", default: true },
+      { text: "Referencia SCV", align: "start", sortable: true, value: "cvs_reference" },
+      {
+        text: "Estado",
+        align: "start",
+        sortable: true,
+        value: "status",
+        fields: ["status", "current_progress", "validated", "risk_level"],
+        orderingField: "current_progress",
+        fixed: true,
+      },
+      {
+        text: "Personas",
+        align: "start",
+        sortable: false,
+        value: "people",
+        fields: ["development_user", "validation_user", "support_user"],
+        default: true,
+      },
+      {
+        text: "Tags",
+        align: "start",
+        sortable: false,
+        value: "tags",
+        fields: ["tags.name", "tags.colour", "tags.icon"],
+      },
+      { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
+    ];
+    const tableOptions = {
+      sortBy: ["end_date", "priority"],
+      sortDesc: [false, false],
+      multiSort: true,
     };
-  },
-  computed: {
-    ...mapState(useMainStore, ["currentUser"]),
-    breadcrumbs() {
-      if (this.contextItem) {
+    const filterComponent = UserStoryFilters;
+    const effortFormComponent = EffortForm;
+
+    // Computed
+    const breadcrumbs = computed(() => {
+      if (contextItem.value) {
         const result = [
-          { text: this.contextItem.name, disabled: false, link: false },
+          { text: contextItem.value.name, disabled: false, link: false },
           { text: "Historias de usuario", disabled: true },
         ];
-        if (this.sprintId) {
+        if (props.sprintId) {
           result.unshift({
             text: "Sprints",
             to: { name: "sprints" },
             exact: true,
           });
         }
-        if (this.epicId) {
+        if (props.epicId) {
           result.unshift({
             text: "Épicas",
             to: { name: "epics" },
@@ -268,38 +260,38 @@ export default {
       } else {
         return [];
       }
-    },
-    localStorageNamespace() {
+    });
+    const localStorageNamespace = computed(() => {
       let namespace = UserStory.localStorageNamespace;
-      if (this.sprintId) {
+      if (props.sprintId) {
         namespace += "Sprint";
       }
-      if (this.epicId) {
+      if (props.epicId) {
         namespace += "Epic";
       }
       return namespace;
-    },
-    newUserStoryRouteConfig() {
+    });
+    const newUserStoryRouteConfig = computed(() => {
       const queryParams = {};
-      if (this.sprintId) {
-        queryParams.sprint = this.sprintId;
+      if (props.sprintId) {
+        queryParams.sprint = props.sprintId;
       }
-      if (this.epicId) {
-        queryParams.epic = this.epicId;
+      if (props.epicId) {
+        queryParams.epic = props.epicId;
       }
       return { name: "user-story-new", query: queryParams };
-    },
-    systemFilters() {
+    });
+    const systemFilters = computed(() => {
       const filters = {};
-      if (this.sprintId) {
-        filters.sprint_id = this.sprintId;
+      if (props.sprintId) {
+        filters.sprint_id = props.sprintId;
       }
-      if (this.epicId) {
-        filters.epic_id = this.epicId;
+      if (props.epicId) {
+        filters.epic_id = props.epicId;
       }
       return filters;
-    },
-    quickFilters() {
+    });
+    const quickFilters = computed(() => {
       return [
         {
           key: "all",
@@ -318,7 +310,7 @@ export default {
           label: "Mis historias en curso",
           filters: {
             status__in: "1,2,3",
-            any_role_user__in: String(this.currentUser.id),
+            any_role_user__in: String(store.currentUser.id),
           },
         },
         {
@@ -326,7 +318,7 @@ export default {
           label: "Mis desarrollos pendientes",
           filters: {
             status__in: "1,2",
-            development_user_id__in: String(this.currentUser.id),
+            development_user_id__in: String(store.currentUser.id),
           },
         },
         {
@@ -334,67 +326,54 @@ export default {
           label: "Mis validaciones pendientes",
           filters: {
             status__in: "3",
-            validation_user_id__in: String(this.currentUser.id),
+            validation_user_id__in: String(store.currentUser.id),
           },
         },
       ];
-    },
-    defaultQuickFilter() {
-      if (this.hasContext) {
+    });
+    const defaultQuickFilter = computed(() => {
+      if (hasContext.value) {
         return "all";
       } else {
-        return userHasPermission(this.modelClass.VIEW_PERMISSION) ? "ongoing" : "my-stories";
+        return userHasPermission(modelClass.VIEW_PERMISSION) ? "ongoing" : "my-stories";
       }
-    },
-  },
-  watch: {
-    tableHeaders(newValue) {
-      const sortingValues = newValue.map((header) => header.sortingField || header.value);
-      if (this.tableOptions.sortBy.some((header) => !sortingValues.includes(header))) {
-        this.tableOptions = {
-          ...this.tableOptions,
-          sortBy: [],
-          sortDesc: [],
-        };
-      }
-    },
-  },
-  methods: {
-    userHasPermission,
-    fetchTableItems() {
-      this.$refs.itemIndex.fetchTableItems();
-    },
-    buildDetailLink(id) {
+    });
+
+    // Methods
+    function fetchTableItems() {
+      refs.itemIndex.fetchTableItems();
+    }
+    function buildDetailLink(id) {
       const linkConfig = { name: "user-story", params: { id } };
-      if (this.sprintId) {
+      if (props.sprintId) {
         linkConfig.name = "sprint-user-story";
-        linkConfig.params.sprintId = this.sprintId;
+        linkConfig.params.sprintId = props.sprintId;
       }
-      if (this.epicId) {
+      if (props.epicId) {
         linkConfig.name = "epic-user-story";
-        linkConfig.params.epicId = this.epicId;
+        linkConfig.params.epicId = props.epicId;
       }
       return linkConfig;
-    },
-    canDevelop(item) {
-      return this.currentUser.id === item.development_user || userHasPermission(this.modelClass.CHANGE_PERMISSION);
-    },
-    canValidate(item) {
-      return this.currentUser.id === item.validation_user || userHasPermission(this.modelClass.CHANGE_PERMISSION);
-    },
-    async validateItem(item) {
+    }
+    function canDevelop(item) {
+      return store.currentUser.id === item.development_user || userHasPermission(modelClass.CHANGE_PERMISSION);
+    }
+    function canValidate(item) {
+      return store.currentUser.id === item.validation_user || userHasPermission(modelClass.CHANGE_PERMISSION);
+    }
+    async function validateItem(item) {
       if (confirm(`Estás seguro de que deseas validar la historia "${item.name}"`)) {
-        this.addTask("validate-item", item.id);
+        addTask("validate-item", item.id);
         try {
-          await this.service.validate(item.id);
-          this.$refs.itemIndex.fetchTableItems();
+          await service.validate(item.id);
+          refs.itemIndex.fetchTableItems();
         } finally {
-          this.removeTask("validate-item", item.id);
+          removeTask("validate-item", item.id);
         }
       }
-    },
-    calculateLoggedUserRole(userStory) {
-      switch (this.currentUser.id) {
+    }
+    function calculateLoggedUserRole(userStory) {
+      switch (store.currentUser.id) {
         case userStory.development_user:
           return "D";
         case userStory.validation_user:
@@ -404,20 +383,49 @@ export default {
         default:
           return null;
       }
-    },
-    openNewEffortDialog(userStory) {
-      this.$refs.effortFormDialog.open({
-        ...Effort.defaults,
-        role: this.calculateLoggedUserRole(userStory),
+    }
+    function openNewEffortDialog(userStory) {
+      refs.effortFormDialog.open({
+        ...Effort.getDefaults(),
+        role: calculateLoggedUserRole(userStory),
         user_story: userStory.id,
       });
-    },
-    setTagFilter(tag) {
-      this.$refs.itemIndex.addFilter({ tags__name__in: tag });
-      this.$nextTick(() => {
-        this.$refs.itemIndex.fetchTableItems();
+    }
+    function setTagFilter(tag) {
+      refs.itemIndex.addFilter({ tags__name__in: tag });
+      nextTick(() => {
+        refs.itemIndex.fetchTableItems();
       });
-    },
+    }
+
+    return {
+      // State
+      modelClass,
+      tableHeaders,
+      tableOptions,
+      filterComponent,
+      effortFormComponent,
+      // Computed
+      isLoading,
+      hasContext,
+      contextItem,
+      breadcrumbs,
+      localStorageNamespace,
+      newUserStoryRouteConfig,
+      systemFilters,
+      quickFilters,
+      defaultQuickFilter,
+      // Methods
+      isTaskLoading,
+      userHasPermission,
+      fetchTableItems,
+      buildDetailLink,
+      canDevelop,
+      canValidate,
+      validateItem,
+      openNewEffortDialog,
+      setTagFilter,
+    };
   },
 };
 </script>

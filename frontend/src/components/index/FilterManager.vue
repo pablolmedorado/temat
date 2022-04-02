@@ -71,8 +71,7 @@
 </template>
 
 <script>
-import { mapActions } from "pinia";
-import { isEqual, isObject } from "lodash";
+import { isEqual, isObject } from "lodash-es";
 
 import { useMainStore } from "@/stores/main";
 
@@ -110,40 +109,49 @@ export default {
       default: false,
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
+    // Store
+    const store = useMainStore();
+
+    // State
     const customQuickFilters = useLocalStorage(`${props.localStorageNamespace}QuickFilters`, []);
-    return {
-      customQuickFilters,
-    };
-  },
-  methods: {
-    isEqual,
-    ...mapActions(useMainStore, ["showSnackbar"]),
-    addQuickFilter(filter) {
+
+    // Methods
+    function addQuickFilter(filter) {
       if (isObject(filter)) {
-        filter.filters = { ...this.filters };
+        filter.filters = { ...props.filters };
       } else {
-        this.customQuickFilters.push({
+        customQuickFilters.value.push({
           label: filter,
-          filters: { ...this.filters },
+          filters: { ...props.filters },
         });
       }
-      this.showSnackbar({
+      store.showSnackbar({
         color: "success",
         message: "Filtro guardado correctamente",
       });
-    },
-    pinQuickFilter(filter) {
-      this.$emit("update:pinned-quick-filter", filter.key);
-      this.showSnackbar({ message: `Se ha fijado el filtro "${filter.label}"` });
-    },
-    deleteQuickFilter(filter) {
-      this.customQuickFilters = this.customQuickFilters.filter((item) => item.label !== filter.label);
-      this.showSnackbar({
+    }
+    function pinQuickFilter(filter) {
+      emit("update:pinned-quick-filter", filter.key);
+      store.showSnackbar({ message: `Se ha fijado el filtro "${filter.label}"` });
+    }
+    function deleteQuickFilter(filter) {
+      customQuickFilters.value = customQuickFilters.value.filter((item) => item.label !== filter.label);
+      store.showSnackbar({
         color: "success",
         message: "Filtro eliminado correctamente",
       });
-    },
+    }
+
+    return {
+      // State
+      customQuickFilters,
+      // Methods
+      isEqual,
+      addQuickFilter,
+      pinQuickFilter,
+      deleteQuickFilter,
+    };
   },
 };
 </script>

@@ -60,14 +60,14 @@
 </template>
 
 <script>
-import { get } from "lodash";
-
-import DialogMixin from "@/mixins/dialog-mixin";
+import { ref } from "@vue/composition-api";
+import { get } from "lodash-es";
 
 import SprintService from "@/modules/scrum/services/sprint-service";
 import UserStoryService from "@/modules/scrum/services/user-story-service";
 
 import useLoading from "@/composables/useLoading";
+import useDialog, { dialogProps } from "@/composables/useDialog";
 import { isoDateToLocaleString } from "@/utils/dates";
 
 export default {
@@ -75,50 +75,58 @@ export default {
   filters: {
     date: isoDateToLocaleString,
   },
-  mixins: [DialogMixin],
-  setup() {
+  inheritAttrs: false,
+  props: dialogProps,
+  setup(props, { emit }) {
+    // Composables
     const { isLoading, addTask, removeTask } = useLoading();
-    return {
-      isLoading,
-      addTask,
-      removeTask,
-    };
-  },
-  data() {
-    return {
-      service: UserStoryService,
-      sprintService: SprintService,
-      sprint: null,
-      items: [],
-      confirmation: false,
-    };
-  },
-  methods: {
-    open(userStories) {
-      this.items = userStories;
-      this.showDialog = true;
-    },
-    close() {
-      this.sprint = null;
-      this.items = [];
-      this.confirmation = false;
-      this.showDialog = false;
-    },
-    async updateStories() {
-      this.addTask("update-stories");
+    const { showDialog, open: _open, close: _close } = useDialog(props);
+
+    // State
+    const sprint = ref(null);
+    const items = ref([]);
+    const confirmation = ref(false);
+
+    // Methods
+    function open(userStories) {
+      items.value = userStories;
+      return _open();
+    }
+    async function close() {
+      await _close();
+      sprint.value = null;
+      items.value = [];
+      confirmation.value = false;
+    }
+    async function updateStories() {
+      addTask("update-stories");
       try {
-        const payload = this.items.map((item) => ({
+        const payload = items.value.map((item) => ({
           id: item.id,
-          sprint: get(this.sprint, "id", null),
+          sprint: get(sprint.value, "id", null),
         }));
-        const params = { id__in: this.items.map((item) => item.id).join(",") };
-        await this.service.bulkUpdate(payload, params);
-        this.$emit("change:user-stories");
-        this.close();
+        const params = { id__in: items.value.map((item) => item.id).join(",") };
+        await UserStoryService.bulkUpdate(payload, params);
+        emit("change:user-stories");
+        close();
       } finally {
-        this.removeTask("update-stories");
+        removeTask("update-stories");
       }
-    },
+    }
+
+    return {
+      // State
+      isLoading,
+      showDialog,
+      sprintService: SprintService,
+      sprint,
+      items,
+      confirmation,
+      // Methods
+      open,
+      close,
+      updateStories,
+    };
   },
 };
 </script>

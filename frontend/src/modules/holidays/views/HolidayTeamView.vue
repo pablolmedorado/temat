@@ -52,9 +52,9 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { ref, toRefs } from "@vue/composition-api";
 import { DateTime } from "luxon";
-import { invoke } from "lodash";
+import { invoke } from "lodash-es";
 
 import Holiday from "@/modules/holidays/models/holiday";
 
@@ -77,33 +77,41 @@ export default {
     HolidayManagementDialog,
     HolidayTable,
   },
-  setup() {
+  setup(props, { refs }) {
+    // Store
+    const store = useMainStore();
+
+    // Composables
     const { isLoading } = useLoading({
       includedChildren: ["holidayTable"],
     });
 
+    // State
+    const year = ref(DateTime.local().year);
+    const canManage = userHasPermission(Holiday.CHANGE_PERMISSION);
+
+    // Computed
+    const { yearOptions } = toRefs(store);
+
+    // Methods
+    function refresh() {
+      invoke(refs, "holidayTable.fetchHolidays");
+    }
+    function onHolidayChange(holiday) {
+      invoke(refs, "holidayTable.onHolidayChange", holiday);
+    }
+
     return {
+      // State
+      year,
+      canManage,
+      // Computed
       isLoading,
+      yearOptions,
+      // Functions
+      refresh,
+      onHolidayChange,
     };
-  },
-  data() {
-    return {
-      year: DateTime.local().year,
-    };
-  },
-  computed: {
-    ...mapState(useMainStore, ["yearOptions"]),
-    canManage() {
-      return userHasPermission(Holiday.CHANGE_PERMISSION);
-    },
-  },
-  methods: {
-    refresh() {
-      invoke(this.$refs, "holidayTable.fetchHolidays");
-    },
-    onHolidayChange(holiday) {
-      invoke(this.$refs, "holidayTable.onHolidayChange", holiday);
-    },
   },
 };
 </script>

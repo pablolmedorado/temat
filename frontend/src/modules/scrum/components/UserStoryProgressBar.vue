@@ -29,8 +29,10 @@ export default {
       required: true,
     },
   },
-  methods: {
-    isoDateTimeToLocaleString,
+  setup() {
+    return {
+      isoDateTimeToLocaleString,
+    };
   },
 };
 </script>

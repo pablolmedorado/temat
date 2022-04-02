@@ -1,26 +1,42 @@
+<template>
+  <AsyncChart
+    ref="chart"
+    constructor-type="stockChart"
+    :options-function="buildOptions"
+    v-bind="{ ...$attrs, ...fetchProps }"
+  />
+</template>
+
 <script>
-import { mapState } from "pinia";
-import { has } from "lodash";
+import { computed } from "@vue/composition-api";
+import { has } from "lodash-es";
 
 import EffortService from "@/modules/scrum/services/effort-service";
-
-import BaseChart from "@/components/charts/BaseChart";
 
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 export default {
   name: "EffortRoleTimelineChart",
-  extends: BaseChart,
-  data() {
-    return {
-      constructorType: "stockChart",
+  inheritAttrs: false,
+  props: {
+    filter: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  setup(props, { refs, root }) {
+    // Store
+    const userStoryStore = useUserStoryStore();
+
+    // Computed
+    const fetchProps = computed(() => ({
       service: EffortService,
       fetchFunctionName: "roleTimelineChartData",
-    };
-  },
-  computed: {
-    ...mapState(useUserStoryStore, ["effortRoles"]),
-    localChartOptions() {
+      fetchFunctionArgs: [props.filter],
+    }));
+
+    // Methods
+    function buildOptions(chartData) {
       return {
         chart: {
           type: "column",
@@ -72,7 +88,7 @@ export default {
               label: {
                 text: "Jornada laboral",
                 style: {
-                  color: this.$vuetify.theme.isDark ? "#ffffff" : "#606060",
+                  color: root.$vuetify.theme.isDark ? "#ffffff" : "#606060",
                 },
               },
             },
@@ -86,17 +102,28 @@ export default {
             },
           },
         },
-        series: this.effortRoles.map((role) => {
+        series: userStoryStore.effortRoles.map((role) => {
           return {
             name: role.label,
             color: role.colour,
-            data: has(this.chartData, role.value)
-              ? this.chartData[role.value].map((item) => [new Date(item.date).getTime(), item.total_effort])
+            data: has(chartData, role.value)
+              ? chartData[role.value].map((item) => [new Date(item.date).getTime(), item.total_effort])
               : [],
           };
         }),
       };
-    },
+    }
+    function fetchData() {
+      refs.chart.fetchData();
+    }
+
+    return {
+      // Computed
+      fetchProps,
+      // Methods
+      buildOptions,
+      fetchData,
+    };
   },
 };
 </script>

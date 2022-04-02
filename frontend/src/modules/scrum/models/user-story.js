@@ -13,7 +13,7 @@ export default class UserStory extends BaseModel {
 
   static localStorageNamespace = "userStory";
 
-  static get defaults() {
+  static getDefaults = function () {
     return {
       id: null,
       name: "",
@@ -45,5 +45,5 @@ export default class UserStory extends BaseModel {
       deployment_notes: "",
       tags: [],
     };
-  }
+  };
 }

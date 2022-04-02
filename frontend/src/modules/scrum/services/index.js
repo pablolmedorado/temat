@@ -1,4 +1,4 @@
-import { keyBy } from "lodash";
+import { keyBy } from "lodash-es";
 
 import EffortService from "./effort-service";
 import EpicService from "./epic-service";

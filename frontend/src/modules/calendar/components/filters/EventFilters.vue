@@ -160,37 +160,56 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
-
-import FilterMixin from "@/mixins/filter-mixin";
+import { computed, toRefs } from "@vue/composition-api";
 
 import { useEventStore } from "@/modules/calendar/stores/events";
 
+import useFilters, { filterProps } from "@/composables/useFilters";
+
 export default {
   name: "EventFilters",
-  mixins: [FilterMixin],
-  data() {
+  props: filterProps,
+  setup(props) {
+    // Store
+    const eventStore = useEventStore();
+
+    // Composables
+    const {
+      showFiltersDialog,
+      hasAdvancedFilters,
+      updateFilters,
+      clearFilters,
+      openFiltersDialog,
+      closeFiltersDialog,
+      applyFiltersFromDialog,
+      splitFilterValue,
+    } = useFilters(props, { basicFilters: ["search", "type_id__in"] });
+
+    // Computed
+    const { eventTypes: eventTypesOptions, eventVisibilityTypes: visibilityOptions } = toRefs(eventStore);
+    const typeFilter = computed(() => splitFilterValue("type_id__in", true));
+    const attendeeFilter = computed(() => splitFilterValue("attendees__id__in", true));
+    const groupFilter = computed(() => splitFilterValue("groups__id__in", true));
+    const tagFilter = computed(() => splitFilterValue("tags__name__in"));
+
     return {
-      basicFilters: ["search", "type_id__in"],
+      // State
+      showFiltersDialog,
+      hasAdvancedFilters,
+      // Computed
+      eventTypesOptions,
+      visibilityOptions,
+      typeFilter,
+      attendeeFilter,
+      groupFilter,
+      tagFilter,
+      // Methods
+      updateFilters,
+      clearFilters,
+      openFiltersDialog,
+      closeFiltersDialog,
+      applyFiltersFromDialog,
     };
-  },
-  computed: {
-    ...mapState(useEventStore, {
-      eventTypesOptions: "eventTypes",
-      visibilityOptions: "eventVisibilityTypes",
-    }),
-    typeFilter() {
-      return this.splitFilterValue("type_id__in", true);
-    },
-    attendeeFilter() {
-      return this.splitFilterValue("attendees__id__in", true);
-    },
-    groupFilter() {
-      return this.splitFilterValue("groups__id__in", true);
-    },
-    tagFilter() {
-      return this.splitFilterValue("tags__name__in");
-    },
   },
 };
 </script>

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { computed } from "@vue/composition-api";
 
 import { useUserStore } from "@/stores/users";
 
@@ -22,11 +22,17 @@ export default {
       required: true,
     },
   },
-  computed: {
-    ...mapState(useUserStore, ["userMap"]),
-    localUser() {
-      return typeof this.user == "number" ? this.userMap[this.user] : this.user;
-    },
+  setup(props) {
+    // Store
+    const userStore = useUserStore();
+
+    // Computed
+    const localUser = computed(() => (typeof props.user == "number" ? userStore.userMap[props.user] : props.user));
+
+    return {
+      // Computed
+      localUser,
+    };
   },
 };
 </script>

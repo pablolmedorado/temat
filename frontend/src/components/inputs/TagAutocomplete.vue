@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { toRefs } from "@vue/composition-api";
 
 import { useTagStore } from "@/stores/tags";
 
@@ -27,10 +27,16 @@ export default {
       default: false,
     },
   },
-  computed: {
-    ...mapState(useTagStore, {
-      tagOptions: "tagFlatList",
-    }),
+  setup() {
+    // Store
+    const tagStore = useTagStore();
+
+    // Computed
+    const { tagFlatList: tagOptions } = toRefs(tagStore);
+
+    return {
+      tagOptions,
+    };
   },
 };
 </script>

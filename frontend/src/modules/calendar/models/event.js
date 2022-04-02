@@ -15,7 +15,7 @@ export default class CalendarEvent extends BaseModel {
 
   static localStorageNamespace = "event";
 
-  static get defaults() {
+  static getDefaults = function () {
     const now = DateTime.local().toISO();
     return {
       id: null,
@@ -31,7 +31,7 @@ export default class CalendarEvent extends BaseModel {
       groups: [],
       tags: [],
     };
-  }
+  };
 
   get luxonStart() {
     return DateTime.fromISO(this.start_datetime);

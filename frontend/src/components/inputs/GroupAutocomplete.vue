@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { toRefs } from "@vue/composition-api";
 
 import { useUserStore } from "@/stores/users";
 
@@ -58,10 +58,16 @@ export default {
       default: false,
     },
   },
-  computed: {
-    ...mapState(useUserStore, {
-      groupOptions: "groups",
-    }),
+  setup() {
+    // Store
+    const userStore = useUserStore();
+
+    // Computed
+    const { groups: groupOptions } = toRefs(userStore);
+
+    return {
+      groupOptions,
+    };
   },
 };
 </script>

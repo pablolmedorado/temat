@@ -13,11 +13,7 @@ export default class Task extends BaseModel {
 
   static localStorageNamespace = "task";
 
-  static itemText(item) {
-    return item.name;
-  }
-
-  static get defaults() {
+  static getDefaults = function () {
     return { id: null, user_story: null, name: "", weight: 1, done: false };
-  }
+  };
 }

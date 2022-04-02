@@ -37,12 +37,15 @@
 </template>
 
 <script>
-import DialogMixin from "@/mixins/dialog-mixin";
+import { computed, ref } from "@vue/composition-api";
+
+import useDialog, { dialogProps } from "@/composables/useDialog";
 
 export default {
   name: "FormDialog",
-  mixins: [DialogMixin],
+  inheritAttrs: false,
   props: {
+    ...dialogProps,
     verboseName: {
       type: String,
       default: "elemento",
@@ -56,47 +59,65 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-      item: null,
-      itemHasChanged: false,
-      isFormLoading: false,
-    };
-  },
-  computed: {
-    headerText() {
-      const verb = this.item && this.item.id ? "Editar" : "Crear";
-      return `${verb} ${this.verboseName.toLowerCase()}`;
-    },
-  },
-  methods: {
-    open(item) {
-      this.item = item;
-      this.showDialog = true;
-    },
-    close() {
-      this.item = null;
-      this.showDialog = false;
-    },
-    reset() {
-      this.$refs.itemForm.reset();
-    },
-    async submit() {
-      const item = await this.$refs.itemForm.submit();
-      if (item) {
-        this.$emit("submit", item);
-        if (!this.item.id && this.multiAdd) {
-          this.reset();
+  setup(props, { emit, refs }) {
+    // Composables
+    const { showDialog, open: _open, close: _close } = useDialog(props);
+
+    // State
+    const item = ref(null);
+    const itemHasChanged = ref(false);
+    const isFormLoading = ref(false);
+
+    // Computed
+    const headerText = computed(() => {
+      const verb = item.value && item.value.id ? "Editar" : "Crear";
+      return `${verb} ${props.verboseName.toLowerCase()}`;
+    });
+
+    // Methods
+    function open(newItem) {
+      item.value = newItem;
+      _open();
+    }
+    function close() {
+      item.value = null;
+      _close();
+    }
+    function reset() {
+      refs.itemForm.reset();
+    }
+    async function submit() {
+      const newItem = await refs.itemForm.submit();
+      if (newItem) {
+        emit("submit", newItem);
+        if (!item.value.id && props.multiAdd) {
+          reset();
         } else {
-          this.close();
+          close();
         }
       }
-    },
-    cancel() {
-      if (!this.itemHasChanged || confirm("Hay cambios sin guardar, ¿estás seguro que deseas salir?")) {
-        this.close();
+    }
+    function cancel() {
+      if (!itemHasChanged.value || confirm("Hay cambios sin guardar, ¿estás seguro que deseas salir?")) {
+        close();
       }
-    },
+    }
+
+    return {
+      // State
+      showDialog,
+      item,
+      itemHasChanged,
+      isFormLoading,
+      // Computed
+      headerText,
+      // Methods
+      open,
+      close,
+      reset,
+      submit,
+      cancel,
+    };
   },
 };
 </script>

@@ -15,7 +15,7 @@ export default class Sprint extends BaseModel {
 
   static localStorageNamespace = "sprint";
 
-  static get defaults() {
+  static getDefaults = function () {
     return {
       id: null,
       start_date: DateTime.local().toISODate(),
@@ -23,5 +23,5 @@ export default class Sprint extends BaseModel {
       accountable_user: null,
       tags: [],
     };
-  }
+  };
 }

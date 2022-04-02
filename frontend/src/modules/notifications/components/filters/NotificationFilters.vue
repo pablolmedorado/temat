@@ -45,25 +45,53 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
-
-import FilterMixin from "@/mixins/filter-mixin";
+import { toRefs } from "@vue/composition-api";
 
 import { useNotificationStore } from "@/modules/notifications/stores/notifications";
 
+import useFilters, { filterProps } from "@/composables/useFilters";
+
 export default {
   name: "NotificationFilters",
-  mixins: [FilterMixin],
-  data() {
+  props: filterProps,
+  setup(props) {
+    // Store
+    const notificationStore = useNotificationStore();
+
+    // Composables
+    const {
+      showFiltersDialog,
+      hasAdvancedFilters,
+      updateFilters,
+      clearFilters,
+      openFiltersDialog,
+      closeFiltersDialog,
+      applyFiltersFromDialog,
+    } = useFilters(props);
+
+    // State
+    const unreadOptions = [
+      { value: false, text: "Sí" },
+      { value: true, text: "No" },
+    ];
+
+    // Computed
+    const { notificationTargets } = toRefs(notificationStore);
+
     return {
-      unreadOptions: [
-        { value: false, text: "Sí" },
-        { value: true, text: "No" },
-      ],
+      // State
+      showFiltersDialog,
+      hasAdvancedFilters,
+      unreadOptions,
+      // Computed
+      notificationTargets,
+      // Methods
+      updateFilters,
+      clearFilters,
+      openFiltersDialog,
+      closeFiltersDialog,
+      applyFiltersFromDialog,
     };
-  },
-  computed: {
-    ...mapState(useNotificationStore, ["notificationTargets"]),
   },
 };
 </script>

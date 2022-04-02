@@ -1,23 +1,38 @@
+<template>
+  <AsyncChart
+    ref="chart"
+    constructor-type="stockChart"
+    :options-function="buildOptions"
+    v-bind="{ ...$attrs, ...fetchProps }"
+  />
+</template>
+
 <script>
+import { computed } from "@vue/composition-api";
 import colors from "vuetify/lib/util/colors";
 
 import HolidayService from "@/modules/holidays/services/holiday-service";
 
-import BaseChart from "@/components/charts/BaseChart";
-
 export default {
   name: "HolidaysDistributionChart",
-  extends: BaseChart,
-  data() {
-    return {
-      constructorType: "stockChart",
+  inheritAttrs: false,
+  props: {
+    filter: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  setup(props, { refs }) {
+    // Computed
+    const fetchProps = computed(() => ({
       service: HolidayService,
       fetchFunctionName: "summary",
-    };
-  },
-  computed: {
-    localChartOptions() {
-      const data = this.chartData || [];
+      fetchFunctionArgs: [props.filter],
+    }));
+
+    // Methods
+    function buildOptions(chartData) {
+      const data = chartData || [];
       return {
         chart: {
           zoomType: "xy",
@@ -68,7 +83,18 @@ export default {
           },
         ],
       };
-    },
+    }
+    function fetchData() {
+      refs.chart.fetchData();
+    }
+
+    return {
+      // Computed
+      fetchProps,
+      // Methods
+      buildOptions,
+      fetchData,
+    };
   },
 };
 </script>

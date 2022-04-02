@@ -140,8 +140,6 @@ import { useMainStore } from "@/stores/main";
 import useHolidays from "@/modules/holidays/composables/useHolidays";
 import useLoading from "@/composables/useLoading";
 
-const currentDate = DateTime.local();
-
 export default {
   name: "HolidayUserView",
   metaInfo: {
@@ -150,15 +148,18 @@ export default {
   components: { HolidaysDatePicker, HolidaysDetailDialog, HolidaysHelpDialog },
   setup(props, { refs }) {
     // Store
-    const mainStore = useMainStore();
-    const { currentUser, yearOptions } = toRefs(mainStore);
+    const store = useMainStore();
 
-    // General
+    // Composables
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
 
     // State
+    const currentDate = DateTime.local();
     const year = ref(currentDate.year);
     const showHelpDialog = ref(false);
+
+    // Computed
+    const { yearOptions } = toRefs(store);
 
     // Table Management
     const tableOptions = {
@@ -190,7 +191,7 @@ export default {
       addTask("fetch-items");
       try {
         const response = await HolidayService.list({
-          user_id: currentUser.value.id,
+          user_id: store.currentUser.id,
           allowance_date__year: year.value,
           fields: "id,planned_date,approved,expiration_date,allowance_date",
         });
@@ -218,7 +219,7 @@ export default {
         return currentDate > DateTime.fromISO(holiday.expiration_date);
       });
     });
-    const { datesToRequest, request, cancel, getStatusInfo } = useHolidays();
+    const { datesToRequest, request, cancel, getStatusInfo: getHolidayStatusInfo } = useHolidays();
     async function requestHolidays() {
       addTask("request-holidays");
       try {
@@ -247,7 +248,7 @@ export default {
     }
 
     // Watchers
-    watch(year, () => fetchItems());
+    watch(year, fetchItems);
 
     // Lifecycle hooks
     onActivated(() => {
@@ -255,14 +256,14 @@ export default {
     });
 
     return {
-      // Store
-      yearOptions,
-      // General
-      isLoading,
-      isTaskLoading,
       // State
       showHelpDialog,
       year,
+      // Computed
+      isLoading,
+      yearOptions,
+      // Methods
+      isTaskLoading,
       // Table management
       items,
       fetchItems,
@@ -277,7 +278,7 @@ export default {
       datesToRequest,
       requestHolidays,
       cancelHoliday,
-      getHolidayStatusInfo: getStatusInfo,
+      getHolidayStatusInfo,
     };
   },
 };

@@ -40,33 +40,62 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
-
-import FilterMixin from "@/mixins/filter-mixin";
+import { computed, toRefs } from "@vue/composition-api";
 
 import { useMainStore } from "@/stores/main";
 
+import useFilters, { filterProps } from "@/composables/useFilters";
+
 export default {
   name: "HolidayFilters",
-  mixins: [FilterMixin],
-  data() {
+  props: filterProps,
+  setup(props) {
+    // Store
+    const store = useMainStore();
+
+    // Composables
+    const {
+      showFiltersDialog,
+      hasAdvancedFilters,
+      updateFilters,
+      clearFilters,
+      openFiltersDialog,
+      closeFiltersDialog,
+      applyFiltersFromDialog,
+      splitFilterValue,
+    } = useFilters(props);
+
+    // State
+    const approvedOptions = [
+      { label: "Sí", value: true },
+      { label: "No", value: false },
+    ];
+
+    // Computed
+    const { yearOptions } = toRefs(store);
+    const userFilter = computed(() => splitFilterValue("user_id__in", true));
+
+    // Methods
+    function reset() {
+      updateFilters({ user_id__in: "" });
+    }
+
     return {
-      approvedOptions: [
-        { label: "Sí", value: true },
-        { label: "No", value: false },
-      ],
+      // State
+      showFiltersDialog,
+      hasAdvancedFilters,
+      approvedOptions,
+      // Computed
+      yearOptions,
+      userFilter,
+      // Methods
+      updateFilters,
+      clearFilters,
+      openFiltersDialog,
+      closeFiltersDialog,
+      applyFiltersFromDialog,
+      reset,
     };
-  },
-  computed: {
-    ...mapState(useMainStore, ["yearOptions"]),
-    userFilter() {
-      return this.splitFilterValue("user_id__in", true);
-    },
-  },
-  methods: {
-    reset() {
-      this.filters.user_id__in = "";
-    },
   },
 };
 </script>

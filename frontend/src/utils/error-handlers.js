@@ -1,4 +1,4 @@
-import { has } from "lodash";
+import { has } from "lodash-es";
 
 import { useMainStore } from "@/stores/main";
 

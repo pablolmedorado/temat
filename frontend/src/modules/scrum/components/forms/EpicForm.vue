@@ -1,5 +1,5 @@
 <template>
-  <v-form v-if="item" ref="itemForm" :disabled="isTaskLoading('submit')">
+  <v-form v-if="item" ref="itemForm" :disabled="isFormLoading">
     <v-row>
       <v-col>
         <v-text-field
@@ -7,9 +7,7 @@
           label="Nombre*"
           prepend-icon="mdi-format-title"
           counter="200"
-          :error-messages="buildValidationErrorMessages($v.item.name)"
-          @input="$v.item.name.$touch()"
-          @blur="$v.item.name.$touch()"
+          :error-messages="getErrorMsgs(v$.item.name)"
         />
       </v-col>
     </v-row>
@@ -20,9 +18,7 @@
           label="Descripción"
           prepend-icon="mdi-text"
           counter="2000"
-          :error-messages="buildValidationErrorMessages($v.item.description)"
-          @input="$v.item.description.$touch()"
-          @blur="$v.item.description.$touch()"
+          :error-messages="getErrorMsgs(v$.item.description)"
         />
       </v-col>
     </v-row>
@@ -38,9 +34,7 @@
           label="Referencia externa"
           prepend-icon="mdi-open-in-new"
           counter="2000"
-          :error-messages="buildValidationErrorMessages($v.item.external_reference)"
-          @input="$v.item.external_reference.$touch()"
-          @blur="$v.item.external_reference.$touch()"
+          :error-messages="getErrorMsgs(v$.item.external_reference)"
         />
       </v-col>
     </v-row>
@@ -49,25 +43,41 @@
 </template>
 
 <script>
-import { maxLength, required } from "vuelidate/lib/validators";
-
-import FormMixin from "@/mixins/form-mixin";
+import { maxLength, required } from "@vuelidate/validators";
 
 import EpicService from "@/modules/scrum/services/epic-service";
 
+import useForm, { formProps } from "@/composables/useForm";
+
 export default {
   name: "EpicForm",
-  mixins: [FormMixin({ service: EpicService })],
-  validations: {
-    item: {
-      name: { required, maxLength: maxLength(200) },
-      description: { maxLength: maxLength(2000) },
-      external_reference: { maxLength: maxLength(2000) },
-    },
-  },
-  data() {
+  props: formProps,
+  validations() {
     return {
+      item: {
+        name: { required, maxLength: maxLength(200) },
+        description: { maxLength: maxLength(2000) },
+        external_reference: { maxLength: maxLength(2000) },
+      },
+    };
+  },
+  setup(props) {
+    // Composables
+    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(props, EpicService, {
       successMessage: "Épica guardada correctamente",
+    });
+
+    return {
+      // State
+      item,
+      // Computed
+      v$,
+      itemHasChanged,
+      isFormLoading,
+      // Methods
+      getErrorMsgs,
+      submit,
+      reset,
     };
   },
 };

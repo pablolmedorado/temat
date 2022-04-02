@@ -40,7 +40,8 @@
 </template>
 
 <script>
-import { defaultTo } from "lodash";
+import { computed, ref, watch } from "@vue/composition-api";
+import { defaultTo, invoke } from "lodash-es";
 
 import UserStory from "@/modules/scrum/models/user-story";
 
@@ -77,7 +78,7 @@ export default {
         item = response.data;
       } else {
         item = {
-          ...UserStory.defaults,
+          ...UserStory.getDefaults(),
           epic: defaultTo(to.query.epic, null),
           sprint: defaultTo(to.query.sprint, null),
         };
@@ -100,7 +101,7 @@ export default {
         await this.fetchItem(to.params.id);
       } else {
         this.item = {
-          ...UserStory.defaults,
+          ...UserStory.getDefaults(),
           epic: defaultTo(to.query.epic, null),
           sprint: defaultTo(to.query.sprint, null),
         };
@@ -124,29 +125,25 @@ export default {
     },
     ...scrumContextProps,
   },
-  setup(props) {
+  setup(props, { refs }) {
+    // Composables
     const { contextItem } = useScrumContext(props);
-    return {
-      contextItem,
-    };
-  },
-  data() {
-    return {
-      item: null,
-      tab: "data",
-      showConfirmBeforeLeaving: false,
-    };
-  },
-  computed: {
-    breadcrumbs() {
+
+    // State
+    const item = ref(null);
+    const tab = ref("data");
+    const showConfirmBeforeLeaving = ref(false);
+
+    // Computed
+    const breadcrumbs = computed(() => {
       const currentItemBreadcrumb = {
-        text: (this.item && this.item.name) || "Nueva historia de usuario",
+        text: (item.value && item.value.name) || "Nueva historia de usuario",
         disabled: true,
       };
-      if (this.contextItem) {
+      if (contextItem.value) {
         let result = [];
-        const contextItemBreadcrumb = { text: this.contextItem.name, disabled: false, link: false };
-        if (this.sprintId) {
+        const contextItemBreadcrumb = { text: contextItem.value.name, disabled: false, link: false };
+        if (props.sprintId) {
           result = [
             {
               text: "Sprints",
@@ -156,13 +153,13 @@ export default {
             contextItemBreadcrumb,
             {
               text: "Historias de usuario",
-              to: { name: "sprint-user-stories", params: { sprintId: this.sprintId } },
+              to: { name: "sprint-user-stories", params: { sprintId: props.sprintId } },
               exact: true,
             },
             currentItemBreadcrumb,
           ];
         }
-        if (this.epicId) {
+        if (props.epicId) {
           result = [
             {
               text: "Épicas",
@@ -172,7 +169,7 @@ export default {
             contextItemBreadcrumb,
             {
               text: "Historias de usuario",
-              to: { name: "epic-user-stories", params: { epicId: this.epicId } },
+              to: { name: "epic-user-stories", params: { epicId: props.epicId } },
               exact: true,
             },
             currentItemBreadcrumb,
@@ -189,29 +186,41 @@ export default {
           currentItemBreadcrumb,
         ];
       }
-    },
-  },
-  watch: {
-    tab(newValue, oldValue) {
-      if (oldValue === "data" && this.showConfirmBeforeLeaving) {
+    });
+
+    // Watchers
+    watch(tab, (newValue, oldValue) => {
+      if (oldValue === "data" && showConfirmBeforeLeaving.value) {
         alert("Hay cambios sin guardar en el formulario que podrían perderse al interactuar con otras pestañas.");
       }
-    },
-  },
-  methods: {
-    async fetchItem(id) {
+    });
+
+    // Methods
+    async function fetchItem(id) {
       const response = await UserStoryService.retrieve(id, { expand: "sprint" });
-      this.item = response.data;
-    },
-    onProgressUpdated() {
-      this.fetchItem(this.id);
-      if (this.$refs.progressComponent) {
-        this.$refs.progressComponent.fetchItems();
-      }
-    },
-    onEffortUpdated() {
-      this.fetchItem(this.id);
-    },
+      item.value = response.data;
+    }
+    function onProgressUpdated() {
+      fetchItem(props.id);
+      invoke(refs, "progressComponent.fetchItems");
+    }
+    function onEffortUpdated() {
+      fetchItem(props.id);
+    }
+
+    return {
+      // State
+      item,
+      tab,
+      showConfirmBeforeLeaving,
+      // Computed
+      contextItem,
+      breadcrumbs,
+      // Methods
+      fetchItem,
+      onProgressUpdated,
+      onEffortUpdated,
+    };
   },
 };
 </script>

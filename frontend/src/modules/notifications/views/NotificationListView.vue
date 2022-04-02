@@ -22,7 +22,9 @@
                   @click="performBulkAction('markAllAsRead', selectedItems)"
                   v-on="on"
                 >
-                  <v-icon>mdi-email-open</v-icon>
+                  <v-badge :value="selectedItems.length" :content="`${selectedItems.length}`" color="secondary" overlap>
+                    <v-icon>mdi-email-open</v-icon>
+                  </v-badge>
                 </v-btn>
               </template>
               <span> Marcar como leído </span>
@@ -37,19 +39,30 @@
                   @click="performBulkAction('markAllAsUnread', selectedItems)"
                   v-on="on"
                 >
-                  <v-icon>mdi-email-mark-as-unread</v-icon>
+                  <v-badge :value="selectedItems.length" :content="`${selectedItems.length}`" color="secondary" overlap>
+                    <v-icon>mdi-email-mark-as-unread</v-icon>
+                  </v-badge>
                 </v-btn>
               </template>
               <span> Marcar como no leído </span>
             </v-tooltip>
-            <v-btn
-              icon
-              :disabled="isLoading || !Boolean(selectedItems.length)"
-              :loading="isTaskLoading('bulk-action', 'bulkDelete')"
-              @click.stop="openDeleteDialog(selectedItems)"
-            >
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
+            <v-tooltip bottom>
+              <template #activator="{ on, attrs }">
+                <v-btn
+                  icon
+                  :disabled="isLoading || !Boolean(selectedItems.length)"
+                  :loading="isTaskLoading('bulk-action', 'bulkDelete')"
+                  v-bind="attrs"
+                  @click.stop="openDeleteDialog(selectedItems)"
+                  v-on="on"
+                >
+                  <v-badge :value="selectedItems.length" :content="`${selectedItems.length}`" color="error" overlap>
+                    <v-icon>mdi-delete</v-icon>
+                  </v-badge>
+                </v-btn>
+              </template>
+              <span> Eliminar </span>
+            </v-tooltip>
             <v-divider vertical inset />
           </template>
 
@@ -106,7 +119,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "pinia";
+import { toRefs } from "@vue/composition-api";
 
 import Notification from "@/modules/notifications/models/notification";
 
@@ -126,77 +139,88 @@ export default {
   filters: {
     datetime: isoDateTimeToLocaleString,
   },
-  setup() {
+  setup(props, { refs }) {
+    // Store
+    const notificationStore = useNotificationStore();
+
+    // Composables
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading({
       includedChildren: ["itemIndex"],
     });
-    return {
-      isLoading,
-      isTaskLoading,
-      addTask,
-      removeTask,
-    };
-  },
-  data() {
-    return {
-      modelClass: Notification,
-      service: getServiceByBasename(Notification.serviceBasename),
-      tableHeaders: [
-        { text: "Fecha", align: "start", sortable: true, value: "timestamp", fixed: true },
-        {
-          text: "Tipo",
-          align: "start",
-          sortable: true,
-          value: "target_content_type",
-          sortingField: "target_content_type__model",
-          default: true,
-        },
-        { text: "Nivel", align: "start", sortable: true, value: "level", default: true },
-        { text: "Quién", align: "start", sortable: false, value: "actor", default: true },
-        { text: "Qué", align: "start", sortable: true, value: "verb", fixed: true },
-        {
-          text: "Registro",
-          align: "start",
-          sortable: false,
-          value: "target",
-          fixed: true,
-        },
-        { text: "Leída", align: "start", sortable: true, value: "unread", fixed: true },
-        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
-      ],
-      tableOptions: {
-        sortBy: ["unread", "timestamp"],
-        sortDesc: [true, true],
-        multiSort: true,
+
+    // State
+    const modelClass = Notification;
+    const service = getServiceByBasename(Notification.serviceBasename);
+    const tableHeaders = [
+      { text: "Fecha", align: "start", sortable: true, value: "timestamp", fixed: true },
+      {
+        text: "Tipo",
+        align: "start",
+        sortable: true,
+        value: "target_content_type",
+        sortingField: "target_content_type__model",
+        default: true,
       },
-      filterComponent: NotificationFilters,
-      levelIcons: {
-        success: "mdi-check",
-        info: "mdi-information",
-        warning: "mdi-exclamation",
-        error: "mdi-alert",
+      { text: "Nivel", align: "start", sortable: true, value: "level", default: true },
+      { text: "Quién", align: "start", sortable: false, value: "actor", default: true },
+      { text: "Qué", align: "start", sortable: true, value: "verb", fixed: true },
+      {
+        text: "Registro",
+        align: "start",
+        sortable: false,
+        value: "target",
+        fixed: true,
       },
+      { text: "Leída", align: "start", sortable: true, value: "unread", fixed: true },
+      { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
+    ];
+    const tableOptions = {
+      sortBy: ["unread", "timestamp"],
+      sortDesc: [true, true],
+      multiSort: true,
     };
-  },
-  computed: {
-    ...mapState(useNotificationStore, ["notificationTargetMap"]),
-  },
-  methods: {
-    ...mapActions(useNotificationStore, ["getUnreadCount"]),
-    async performBulkAction(actionFunctionName, selectedItems) {
-      this.addTask("bulk-action", actionFunctionName);
+    const filterComponent = NotificationFilters;
+    const levelIcons = {
+      success: "mdi-check",
+      info: "mdi-information",
+      warning: "mdi-exclamation",
+      error: "mdi-alert",
+    };
+
+    // Computed
+    const { notificationTargetMap } = toRefs(notificationStore);
+
+    // Methods
+    async function performBulkAction(actionFunctionName, selectedItems) {
+      addTask("bulk-action", actionFunctionName);
       try {
         const params = { id__in: selectedItems.map((item) => item.id).join(",") };
-        await this.service[actionFunctionName](params);
-        this.$refs.itemIndex.fetchTableItems();
-        this.getUnreadCount();
+        await service[actionFunctionName](params);
+        refs.itemIndex.fetchTableItems();
+        notificationStore.getUnreadCount();
       } finally {
-        this.removeTask("bulk-action", actionFunctionName);
+        removeTask("bulk-action", actionFunctionName);
       }
-    },
-    openDeleteDialog(selectedItems) {
-      this.$refs.deleteDialog.open(selectedItems);
-    },
+    }
+    function openDeleteDialog(selectedItems) {
+      refs.deleteDialog.open(selectedItems);
+    }
+
+    return {
+      // State
+      modelClass,
+      tableHeaders,
+      tableOptions,
+      filterComponent,
+      levelIcons,
+      // Computed
+      isLoading,
+      notificationTargetMap,
+      // Methods
+      isTaskLoading,
+      performBulkAction,
+      openDeleteDialog,
+    };
   },
 };
 </script>

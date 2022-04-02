@@ -1,9 +1,9 @@
-// https://github.com/imcvampire/vue-truncate-filter/blob/master/vue-truncate.js
-export function truncate(text, length, clamp) {
-  text = text || "";
-  clamp = clamp || "...";
-  length = length || 30;
+export function normalize(text) {
+  return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
 
+// https://github.com/imcvampire/vue-truncate-filter/blob/master/vue-truncate.js
+export function truncate(text = "", length = 30, clamp = "...") {
   if (text.length <= length) {
     return text;
   }

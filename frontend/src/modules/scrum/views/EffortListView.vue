@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { toRefs } from "@vue/composition-api";
 import { DateTime } from "luxon";
 
 import Effort from "@/modules/scrum/models/effort";
@@ -92,89 +92,97 @@ export default {
     title: "Esfuerzo",
   },
   components: { EffortReportDialog },
-  data() {
-    return {
-      modelClass: Effort,
-      tableOptions: {
-        sortBy: ["date", "user_story"],
-        sortDesc: [true, false],
-        mustSort: false,
-        multiSort: true,
+  setup(props, { refs }) {
+    // Store
+    const mainStore = useMainStore();
+    const userStoryStore = useUserStoryStore();
+
+    // State
+    const modelClass = Effort;
+    const tableHeaders = [
+      { text: "Fecha", align: "start", sortable: true, value: "date", fixed: true },
+      {
+        text: "Historia de usuario",
+        align: "start",
+        sortable: true,
+        value: "user_story",
+        sortingField: "user_story__name",
+        fields: ["user_story.id", "user_story.name"],
+        fixed: true,
       },
-      filterComponent: EffortFilters,
-      formComponent: EffortForm,
+      {
+        text: "Usuario",
+        align: "start",
+        sortable: true,
+        value: "user",
+        sortingField: "user__acronym",
+        default: userHasPermission("scrum.view_effort"),
+      },
+      { text: "Rol", align: "start", sortable: false, value: "role", fixed: true },
+      { text: "Esfuerzo", align: "start", sortable: true, value: "effort", fixed: true },
+      { text: "Comentarios", align: "start", sortable: true, value: "comments", default: true },
+      {
+        text: "Acciones",
+        align: "start",
+        sortable: false,
+        value: "table_actions",
+        fields: ["user", "creation_datetime"],
+        fixed: true,
+      },
+    ];
+    const tableOptions = {
+      sortBy: ["date", "user_story"],
+      sortDesc: [true, false],
+      mustSort: false,
+      multiSort: true,
     };
-  },
-  computed: {
-    ...mapState(useMainStore, ["currentUser"]),
-    ...mapState(useUserStoryStore, ["effortRolesMap"]),
-    tableHeaders() {
-      return [
-        { text: "Fecha", align: "start", sortable: true, value: "date", fixed: true },
-        {
-          text: "Historia de usuario",
-          align: "start",
-          sortable: true,
-          value: "user_story",
-          sortingField: "user_story__name",
-          fields: ["user_story.id", "user_story.name"],
-          fixed: true,
+    const filterComponent = EffortFilters;
+    const systemFilters = userHasPermission(modelClass.VIEW_PERMISSION) ? {} : { user_id: mainStore.currentUser.id };
+    const quickFilters = [
+      {
+        key: "last-week",
+        label: "Última semana",
+        filters: {
+          date__gte: DateTime.local().minus({ weeks: 1 }).toISODate(),
+          date__lte: DateTime.local().toISODate(),
         },
-        {
-          text: "Usuario",
-          align: "start",
-          sortable: true,
-          value: "user",
-          sortingField: "user__acronym",
-          default: userHasPermission("scrum.view_effort"),
-        },
-        { text: "Rol", align: "start", sortable: false, value: "role", fixed: true },
-        { text: "Esfuerzo", align: "start", sortable: true, value: "effort", fixed: true },
-        { text: "Comentarios", align: "start", sortable: true, value: "comments", default: true },
-        {
-          text: "Acciones",
-          align: "start",
-          sortable: false,
-          value: "table_actions",
-          fields: ["user", "creation_datetime"],
-          fixed: true,
-        },
-      ];
-    },
-    systemFilters() {
-      const filters = {};
-      if (!userHasPermission(this.modelClass.VIEW_PERMISSION)) {
-        filters.user_id = this.currentUser.id;
-      }
-      return filters;
-    },
-    quickFilters() {
-      return [
-        {
-          key: "last-week",
-          label: "Última semana",
-          filters: {
-            date__gte: DateTime.local().minus({ weeks: 1 }).toISODate(),
-            date__lte: DateTime.local().toISODate(),
-          },
-        },
-      ];
-    },
-  },
-  methods: {
-    canPerformAction(item, action) {
+      },
+    ];
+    const formComponent = EffortForm;
+
+    // Computed
+    const { effortRolesMap } = toRefs(userStoryStore);
+
+    // Methods
+    function canPerformAction(item, action) {
       if (userHasPermission(`scrum.${action}_effort`)) {
         return true;
       }
-      if (item.user !== this.currentUser.id) {
+      if (item.user !== mainStore.currentUser.id) {
         return false;
       }
       const limitDatetime = DateTime.local().minus({ minutes: 30 });
       return DateTime.fromISO(item.creation_datetime) > limitDatetime;
-    },
-    openReportDialog(filters) {
-      this.$refs.reportDialog.open(filters);
-    },
+    }
+    function openReportDialog(filters) {
+      refs.reportDialog.open(filters);
+    }
+
+    return {
+      // State
+      modelClass,
+      tableHeaders,
+      tableOptions,
+      filterComponent,
+      systemFilters,
+      quickFilters,
+      formComponent,
+      // Computed
+      effortRolesMap,
+      // Methods
+      canPerformAction,
+      openReportDialog,
+    };
   },
 };
 </script>

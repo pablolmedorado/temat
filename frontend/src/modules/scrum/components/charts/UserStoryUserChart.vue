@@ -1,33 +1,45 @@
+<template>
+  <AsyncChart ref="chart" :options-function="buildOptions" v-bind="{ ...$attrs, ...fetchProps }" />
+</template>
+
 <script>
-import { mapState } from "pinia";
+import { computed } from "@vue/composition-api";
 import Highcharts from "highcharts";
-import { get } from "lodash";
+import { get } from "lodash-es";
 
 import UserStoryService from "@/modules/scrum/services/user-story-service";
-
-import BaseChart from "@/components/charts/BaseChart";
 
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 export default {
   name: "UserStoryUserChart",
-  extends: BaseChart,
-  data() {
-    return {
+  inheritAttrs: false,
+  props: {
+    filter: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  setup(props, { refs }) {
+    // Store
+    const userStoryStore = useUserStoryStore();
+
+    // Computed
+    const fetchProps = computed(() => ({
       service: UserStoryService,
       fetchFunctionName: "userChartData",
-    };
-  },
-  computed: {
-    ...mapState(useUserStoryStore, ["effortRoles"]),
-    localChartOptions() {
+      fetchFunctionArgs: [props.filter],
+    }));
+
+    // Methods
+    function buildOptions(chartData) {
       const series = Highcharts.merge(
-        this.effortRoles.map((role) => ({
+        userStoryStore.effortRoles.map((role) => ({
           name: "",
           color: role.colour,
           data: [],
         })),
-        get(this.chartData, "series", [])
+        get(chartData, "series", [])
       );
       return {
         chart: {
@@ -37,7 +49,7 @@ export default {
           text: "Historias de usuario por usuario/rol",
         },
         xAxis: {
-          categories: get(this.chartData, "categories", []),
+          categories: get(chartData, "categories", []),
         },
         yAxis: {
           allowDecimals: false,
@@ -71,7 +83,18 @@ export default {
         },
         series,
       };
-    },
+    }
+    function fetchData() {
+      refs.chart.fetchData();
+    }
+
+    return {
+      // Computed
+      fetchProps,
+      // Methods
+      buildOptions,
+      fetchData,
+    };
   },
 };
 </script>

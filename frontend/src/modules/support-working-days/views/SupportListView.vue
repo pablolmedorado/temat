@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { computed } from "@vue/composition-api";
 import { DateTime } from "luxon";
 
 import SupportWorkingDay from "@/modules/support-working-days/models/support-working-day";
@@ -63,59 +63,71 @@ export default {
     title: "Soporte",
   },
   components: { StepperBulkFormDialog },
-  data() {
-    return {
-      modelClass: SupportWorkingDay,
-      tableOptions: {
-        sortBy: ["date"],
-        sortDesc: [false],
-        mustSort: true,
+  setup(props, { refs }) {
+    // Store
+    const store = useMainStore();
+
+    // State
+    const modelClass = SupportWorkingDay;
+    const defaultTableHeaders = [
+      { text: "Fecha", align: "start", sortable: true, value: "date", fixed: true },
+      {
+        text: "Usuario",
+        align: "start",
+        sortable: true,
+        value: "user",
+        sortingField: "user__acronym",
+        fixed: true,
       },
-      filterComponent: SupportFilters,
-      formComponent: SupportDayForm,
-      bulkFormComponent: SupportDayBulkForm,
+    ];
+    const adminTableHeaders = [
+      ...defaultTableHeaders,
+      { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
+    ];
+    const tableOptions = {
+      sortBy: ["date"],
+      sortDesc: [false],
+      mustSort: true,
     };
-  },
-  computed: {
-    ...mapState(useMainStore, ["currentUser"]),
-    canAdd() {
-      return userHasPermission(this.modelClass.ADD_PERMISSION);
-    },
-    tableHeaders() {
-      const defaultOptions = [
-        { text: "Fecha", align: "start", sortable: true, value: "date", fixed: true },
-        {
-          text: "Usuario",
-          align: "start",
-          sortable: true,
-          value: "user",
-          sortingField: "user__acronym",
-          fixed: true,
-        },
-      ];
-      const adminOptions = [
-        ...defaultOptions,
-        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
-      ];
-      return userHasAnyPermission([this.modelClass.CHANGE_PERMISSION, this.modelClass.DELETE_PERMISSION])
-        ? adminOptions
-        : defaultOptions;
-    },
-    quickFilters() {
-      return [
-        { key: "next-days", label: "Próximas jornadas", filters: { date__gte: DateTime.local().toISODate() } },
-        {
-          key: "my-next-days",
-          label: "Mis próximas jornadas",
-          filters: { date__gte: DateTime.local().toISODate(), user_id: this.currentUser.id },
-        },
-      ];
-    },
-  },
-  methods: {
-    fetchTableItems() {
-      this.$refs.itemIndex.fetchTableItems();
-    },
+    const filterComponent = SupportFilters;
+    const quickFilters = [
+      { key: "next-days", label: "Próximas jornadas", filters: { date__gte: DateTime.local().toISODate() } },
+      {
+        key: "my-next-days",
+        label: "Mis próximas jornadas",
+        filters: { date__gte: DateTime.local().toISODate(), user_id: store.currentUser.id },
+      },
+    ];
+    const formComponent = SupportDayForm;
+    const bulkFormComponent = SupportDayBulkForm;
+
+    // Computed
+    const canAdd = computed(() => userHasPermission(modelClass.ADD_PERMISSION));
+    const tableHeaders = computed(() => {
+      return userHasAnyPermission([modelClass.CHANGE_PERMISSION, modelClass.DELETE_PERMISSION])
+        ? adminTableHeaders
+        : defaultTableHeaders;
+    });
+
+    // Methods
+    function fetchTableItems() {
+      refs.itemIndex.fetchTableItems();
+    }
+
+    return {
+      // State
+      modelClass,
+      tableOptions,
+      filterComponent,
+      quickFilters,
+      formComponent,
+      bulkFormComponent,
+      // Computed
+      canAdd,
+      tableHeaders,
+      // Methods
+      fetchTableItems,
+    };
   },
 };
 </script>

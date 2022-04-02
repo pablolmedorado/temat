@@ -1,8 +1,9 @@
 <template>
-  <highcharts :key="theme" :constructor-type="'stockChart'" :update-args="[true, true, true]" :options="chartOptions" />
+  <highcharts :key="theme" constructor-type="stockChart" :update-args="[true, true, true]" :options="chartOptions" />
 </template>
 
 <script>
+import { computed } from "@vue/composition-api";
 import Highcharts from "highcharts";
 import { Chart } from "highcharts-vue";
 import colors from "vuetify/lib/util/colors";
@@ -28,36 +29,36 @@ export default {
       default: undefined,
     },
   },
-  computed: {
-    plotLines() {
+  setup(props, { root }) {
+    const plotLines = computed(() => {
       const result = [];
-      if (this.from) {
+      if (props.from) {
         result.push({
-          value: new Date(this.from).getTime(),
+          value: new Date(props.from).getTime(),
           color: colors.cyan.base,
           dashStyle: "Dash",
           width: 2,
           label: {
             text: "Fecha de inicio plan.",
-            style: { color: this.$vuetify.theme.isDark ? "#ffffff" : "#000000" },
+            style: { color: root.$vuetify.theme.isDark ? "#ffffff" : "#000000" },
           },
         });
       }
-      if (this.to) {
+      if (props.to) {
         result.push({
-          value: new Date(this.to).getTime(),
+          value: new Date(props.to).getTime(),
           color: colors.red.base,
           dashStyle: "Dash",
           width: 2,
           label: {
             text: "Fecha límite",
-            style: { color: this.$vuetify.theme.isDark ? "#ffffff" : "#000000" },
+            style: { color: root.$vuetify.theme.isDark ? "#ffffff" : "#000000" },
           },
         });
       }
       return result;
-    },
-    localChartOptions() {
+    });
+    const localChartOptions = computed(() => {
       return {
         chart: {
           zoomType: "xy",
@@ -86,7 +87,7 @@ export default {
           ],
         },
         xAxis: {
-          plotLines: this.plotLines,
+          plotLines: plotLines.value,
           ordinal: false,
         },
         yAxis: {
@@ -106,7 +107,7 @@ export default {
               enabled: true,
               radius: 3,
             },
-            data: this.chartData.map((item) => [new Date(item.date).getTime(), item.progress]),
+            data: props.chartData.map((item) => [new Date(item.date).getTime(), item.progress]),
           },
         ],
         navigator: {
@@ -125,14 +126,17 @@ export default {
           useHTML: true,
         },
       };
-    },
-    theme() {
-      return this.$vuetify.theme.isDark ? "dark" : "light";
-    },
-    chartOptions() {
-      const defaultTheme = this.$vuetify.theme.isDark ? darkUnica : Highcharts.getOptions();
-      return Highcharts.merge(defaultTheme, this.localChartOptions);
-    },
+    });
+    const theme = computed(() => (root.$vuetify.theme.isDark ? "dark" : "light"));
+    const chartOptions = computed(() => {
+      const defaultTheme = root.$vuetify.theme.isDark ? darkUnica : Highcharts.getOptions();
+      return Highcharts.merge(defaultTheme, localChartOptions.value);
+    });
+
+    return {
+      theme,
+      chartOptions,
+    };
   },
 };
 </script>

@@ -13,7 +13,7 @@ export default class Epic extends BaseModel {
 
   static localStorageNamespace = "epic";
 
-  static get defaults() {
+  static getDefaults = function () {
     return {
       id: null,
       name: "",
@@ -21,5 +21,5 @@ export default class Epic extends BaseModel {
       external_reference: "",
       tags: [],
     };
-  }
+  };
 }

@@ -13,7 +13,7 @@ export default class GreenWorkingDay extends BaseModel {
 
   static localStorageNamespace = "greenWorkingDay";
 
-  static itemText(item) {
-    return item.date;
-  }
+  static itemText = function (item) {
+    return item.label;
+  };
 }

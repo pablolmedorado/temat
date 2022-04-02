@@ -43,11 +43,7 @@ export default function (props) {
   }
 
   // Watchers
-  watch(
-    () => [props.sprintId, props.epicId],
-    () => getContextItem(),
-    { immediate: true, deep: true }
-  );
+  watch(() => [props.sprintId, props.epicId], getContextItem, { immediate: true, deep: true });
 
   return {
     // State

@@ -22,11 +22,8 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "pinia";
-import { pick } from "lodash";
-
-import AppDrawer from "@/components/layout/AppDrawer";
-import AppNavbar from "@/components/layout/AppNavbar";
+import { onErrorCaptured, ref, toRefs, watch } from "@vue/composition-api";
+import { pick } from "lodash-es";
 
 import { useMainStore } from "@/stores/main";
 import { useTagStore } from "@/stores/tags";
@@ -44,60 +41,72 @@ export default {
       titleTemplate: `%s | ${this.appLabel.name}`,
     };
   },
-  components: { AppDrawer, AppNavbar },
-  setup() {
-    const store = useMainStore();
-    useKonamiCode(() => store.toggleKonamiCode());
-  },
-  data() {
-    return {
-      drawer: null,
-      defaultThemeColours: {
-        light: pick(this.$vuetify.theme.themes.light, ["primary", "secondary"]),
-        dark: pick(this.$vuetify.theme.themes.dark, ["primary", "secondary"]),
-        betis: { primary: "#009655", secondary: "#d18d2a" },
-      },
+  setup(props, { root }) {
+    // Store
+    const mainStore = useMainStore();
+    const tagStore = useTagStore();
+    const userStore = useUserStore();
+
+    // State
+    const drawer = ref(null);
+
+    // Computed
+    const { appLabel, snackbar } = toRefs(mainStore);
+
+    // Theme
+    const themes = root.$vuetify.theme.themes;
+    const defaultThemeColours = {
+      light: pick(themes.light, ["primary", "secondary"]),
+      dark: pick(themes.dark, ["primary", "secondary"]),
+      betis: { primary: "#009655", secondary: "#d18d2a" },
     };
-  },
-  computed: {
-    ...mapState(useMainStore, ["appLabel", "isKonamiCodeActive", "snackbar"]),
-  },
-  watch: {
-    "$vuetify.theme.dark": function (newValue) {
-      localStorage.darkMode = JSON.stringify(newValue);
-    },
-    isKonamiCodeActive(newValue) {
-      this.onKonamiCodeChange(newValue);
-    },
-  },
-  created() {
-    this.getUsers();
-    this.getGroups();
-    this.getTags();
-  },
-  errorCaptured(err) {
-    handleError(err);
-  },
-  methods: {
-    ...mapActions(useMainStore, ["clearSnackbar"]),
-    ...mapActions(useTagStore, ["getTags"]),
-    ...mapActions(useUserStore, ["getUsers", "getGroups"]),
-    onSnackbarInput(value) {
+    watch(
+      () => root.$vuetify.theme.isDark,
+      (newValue) => (localStorage.darkMode = JSON.stringify(newValue))
+    );
+
+    // Snackbar
+    function onSnackbarInput(value) {
       if (!value) {
-        this.clearSnackbar();
+        mainStore.clearSnackbar();
       }
-    },
-    onKonamiCodeChange(value) {
+    }
+
+    // Konami Code
+    function onKonamiCodeChange(value) {
+      const themeColours = {
+        light: defaultThemeColours[value ? "betis" : "light"],
+        dark: defaultThemeColours[value ? "betis" : "dark"],
+      };
+      Object.assign(root.$vuetify.theme.themes.light, themeColours.light);
+      Object.assign(root.$vuetify.theme.themes.dark, themeColours.dark);
       if (value) {
         alert(loperaSentences[Math.floor(Math.random() * loperaSentences.length - 1 + 1)]);
       }
-      const themeColours = {
-        light: this.defaultThemeColours[value ? "betis" : "light"],
-        dark: this.defaultThemeColours[value ? "betis" : "dark"],
-      };
-      Object.assign(this.$vuetify.theme.themes.light, themeColours.light);
-      Object.assign(this.$vuetify.theme.themes.dark, themeColours.dark);
-    },
+    }
+    watch(() => mainStore.isKonamiCodeActive, onKonamiCodeChange);
+
+    // Lifecycle hooks
+    onErrorCaptured((error) => {
+      handleError(error);
+    });
+
+    // Initialization
+    userStore.getUsers();
+    userStore.getGroups();
+    tagStore.getTags();
+    useKonamiCode(() => mainStore.toggleKonamiCode());
+
+    return {
+      // State
+      drawer,
+      // Computed
+      appLabel,
+      // Snackbar
+      snackbar,
+      clearSnackbar: mainStore.clearSnackbar,
+      onSnackbarInput,
+    };
   },
 };
 </script>

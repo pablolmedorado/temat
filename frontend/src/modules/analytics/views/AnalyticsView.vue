@@ -157,7 +157,7 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { ref, toRefs } from "@vue/composition-api";
 import { DateTime } from "luxon";
 
 import EffortRoleChart from "@/modules/scrum/components/charts/EffortRoleChart";
@@ -197,6 +197,10 @@ export default {
     UserStoryUserChart,
   },
   setup() {
+    // Store
+    const store = useMainStore();
+
+    // Composables
     const { isLoading } = useLoading({
       includedChildren: [
         "eventMonthlyChart",
@@ -213,17 +217,18 @@ export default {
         "holidaysDistributionChart",
       ],
     });
+
+    // State
+    const year = ref(DateTime.local().year);
+
+    // Computed
+    const { yearOptions } = toRefs(store);
+
     return {
       isLoading,
+      year,
+      yearOptions,
     };
-  },
-  data() {
-    return {
-      year: DateTime.local().year,
-    };
-  },
-  computed: {
-    ...mapState(useMainStore, ["yearOptions"]),
   },
 };
 </script>

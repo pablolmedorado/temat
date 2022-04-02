@@ -1,5 +1,5 @@
 <template>
-  <v-form v-if="item" ref="itemForm" :disabled="isTaskLoading('submit')">
+  <v-form v-if="item" ref="itemForm" :disabled="isFormLoading">
     <v-row>
       <v-col>
         <DatePickerInput
@@ -7,9 +7,7 @@
           label="Fecha*"
           prepend-icon="mdi-calendar"
           :max="today"
-          :error-messages="buildValidationErrorMessages($v.item.date)"
-          @input="$v.item.date.$touch()"
-          @blur="$v.item.date.$touch()"
+          :error-messages="getErrorMsgs(v$.item.date)"
         />
       </v-col>
     </v-row>
@@ -23,9 +21,7 @@
           label="Rol*"
           prepend-icon="mdi-badge-account"
           :loading="!effortRoleOptions.length"
-          :error-messages="buildValidationErrorMessages($v.item.role)"
-          @change="$v.item.role.$touch()"
-          @blur="$v.item.role.$touch()"
+          :error-messages="getErrorMsgs(v$.item.role)"
         />
       </v-col>
       <v-col>
@@ -38,9 +34,7 @@
           suffix="UT"
           hint="1UT = 1/2h"
           persistent-hint
-          :error-messages="buildValidationErrorMessages($v.item.effort)"
-          @input="$v.item.effort.$touch()"
-          @blur="$v.item.effort.$touch()"
+          :error-messages="getErrorMsgs(v$.item.effort)"
         />
       </v-col>
     </v-row>
@@ -51,9 +45,7 @@
           label="Comentarios"
           prepend-icon="mdi-comment-quote"
           counter="2000"
-          :error-messages="buildValidationErrorMessages($v.item.comments)"
-          @input="$v.item.comments.$touch()"
-          @blur="$v.item.comments.$touch()"
+          :error-messages="getErrorMsgs(v$.item.comments)"
         />
       </v-col>
     </v-row>
@@ -62,56 +54,77 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { toRefs } from "@vue/composition-api";
 import { DateTime } from "luxon";
-import { isObject } from "lodash";
-import { maxLength, minValue, numeric, required } from "vuelidate/lib/validators";
-
-import FormMixin from "@/mixins/form-mixin";
+import { isObject } from "lodash-es";
+import { maxLength, minValue, numeric, required } from "@vuelidate/validators";
 
 import EffortService from "@/modules/scrum/services/effort-service";
 
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
+import useForm, { formProps } from "@/composables/useForm";
 
 export default {
   name: "EffortForm",
-  mixins: [FormMixin({ service: EffortService })],
-  validations: {
-    item: {
-      date: {
-        required,
-        noFutureAllocations: (value) => {
-          return DateTime.fromISO(value) < DateTime.local();
-        },
-      },
-      role: { required },
-      effort: { required, numeric, minValue: minValue(1) },
-      comments: { maxLength: maxLength(2000) },
-    },
-  },
-  data() {
+  props: formProps,
+  validations() {
     return {
-      today: DateTime.local().toISODate(),
-      successMessage: "Esfuerzo guardado correctamente",
-      validationErrorMessages: {
-        noFutureAllocations: "No es posible imputar a futuro",
+      item: {
+        date: {
+          required,
+          noFutureAllocations: (value) => {
+            return DateTime.fromISO(value) < DateTime.local();
+          },
+        },
+        role: { required },
+        effort: { required, numeric, minValue: minValue(1) },
+        comments: { maxLength: maxLength(2000) },
       },
     };
   },
-  computed: {
-    ...mapState(useUserStoryStore, {
-      effortRoleOptions: "effortRoles",
-    }),
-  },
-  methods: {
-    buildSaveFunctionArgs() {
+  setup(props) {
+    // Store
+    const userStoryStore = useUserStoryStore();
+
+    // Composables
+    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(props, EffortService, {
+      buildSaveFunctionArgs,
+      successMessage: "Esfuerzo guardado correctamente",
+      customErrorMsgs: {
+        noFutureAllocations: "No es posible imputar a futuro",
+      },
+    });
+
+    // State
+    const today = DateTime.local().toISODate();
+
+    // Computed
+    const { effortRoles: effortRoleOptions } = toRefs(userStoryStore);
+
+    // Methods
+    function buildSaveFunctionArgs(cleanedItem) {
       return [
-        this.replaceUndefined({
-          ...this.item,
-          user_story: isObject(this.item.user_story) ? this.item.user_story.id : this.item.user_story,
-        }),
+        {
+          ...cleanedItem,
+          user_story: isObject(cleanedItem.user_story) ? cleanedItem.user_story.id : cleanedItem.user_story,
+        },
       ];
-    },
+    }
+
+    return {
+      // State
+      item,
+      today,
+      // Computed
+      v$,
+      itemHasChanged,
+      isFormLoading,
+      effortRoleOptions,
+      // Methods
+      getErrorMsgs,
+      submit,
+      reset,
+    };
   },
 };
 </script>

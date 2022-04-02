@@ -42,9 +42,9 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { computed, ref, toRefs, watch } from "@vue/composition-api";
 import { DateTime, Interval } from "luxon";
-import { countBy, get, pick, set } from "lodash";
+import { countBy, get, pick, set } from "lodash-es";
 
 import HolidayService from "@/modules/holidays/services/holiday-service";
 
@@ -66,84 +66,91 @@ export default {
       required: true,
     },
   },
-  setup() {
+  setup(props) {
+    // Store
+    const mainStore = useMainStore();
+    const userStore = useUserStore();
+
+    // Composables
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
 
-    return {
-      isLoading,
-      isTaskLoading,
-      addTask,
-      removeTask,
-    };
-  },
-  data() {
-    return {
-      holidays: [],
-    };
-  },
-  computed: {
-    ...mapState(useMainStore, ["locale"]),
-    ...mapState(useUserStore, ["workerUsers"]),
-    intervalDates() {
-      const yearDateTime = DateTime.fromObject({ year: this.year });
+    // State
+    const holidays = ref([]);
+
+    // Computed
+    const { workerUsers } = toRefs(userStore);
+    const intervalDates = computed(() => {
+      const yearDateTime = DateTime.fromObject({ year: props.year });
       return Interval.fromDateTimes(yearDateTime, yearDateTime.endOf("year"))
         .splitBy({ days: 1 })
         .map((d) => d.start);
-    },
-    datesByMonth() {
-      return countBy(this.intervalDates, (date) => date.setLocale(this.locale).toLocaleString({ month: "long" }));
-    },
-    bodyData() {
-      return this.holidays.reduce((previousValue, currentValue) => {
+    });
+    const datesByMonth = computed(() => {
+      return countBy(intervalDates.value, (date) => date.setLocale(mainStore.locale).toLocaleString({ month: "long" }));
+    });
+    const bodyData = computed(() => {
+      return holidays.value.reduce((previousValue, currentValue) => {
         const result = { ...previousValue };
         set(result, [currentValue.user, currentValue.planned_date], currentValue);
         return result;
       }, {});
-    },
-  },
-  watch: {
-    year() {
-      this.fetchHolidays();
-    },
-  },
-  created() {
-    this.fetchHolidays();
-  },
-  methods: {
-    async fetchHolidays() {
-      this.addTask("fetch-holidays");
+    });
+
+    // Watchers
+    watch(() => props.year, fetchHolidays);
+
+    // Methods
+    async function fetchHolidays() {
+      addTask("fetch-holidays");
       try {
         const response = await HolidayService.list({
-          planned_date__year: this.year,
+          planned_date__year: props.year,
           fields: "id,user,planned_date,approved",
         });
-        this.holidays = response.data;
+        holidays.value = response.data;
       } finally {
-        this.removeTask("fetch-holidays");
+        removeTask("fetch-holidays");
       }
-    },
-    getCellProps(user, dateTime) {
+    }
+    function getCellProps(user, dateTime) {
       const date = dateTime.toISODate();
       return {
         date: date,
-        holiday: get(this.bodyData, [user.id, date]),
+        holiday: get(bodyData.value, [user.id, date]),
         class: {
           weekend: dateTime.weekday > 5,
           "first-day": dateTime.day === 1,
         },
       };
-    },
-    onHolidayChange(holiday) {
-      const oldHoliday = this.holidays.findIndex((item) => item.id === holiday.id);
+    }
+    function onHolidayChange(holiday) {
+      const oldHoliday = holidays.value.findIndex((item) => item.id === holiday.id);
       if (oldHoliday !== -1) {
         if (!holiday.planned_date) {
-          this.holidays.splice(oldHoliday, 1);
+          holidays.value.splice(oldHoliday, 1);
         } else {
           const newHoliday = pick(holiday, ["id", "user", "planned_date", "approved"]);
-          this.holidays.splice(oldHoliday, 1, newHoliday);
+          holidays.value.splice(oldHoliday, 1, newHoliday);
         }
       }
-    },
+    }
+
+    // Initialization
+    fetchHolidays();
+
+    return {
+      // State
+      holidays,
+      // Computed
+      isLoading,
+      workerUsers,
+      intervalDates,
+      datesByMonth,
+      // Methods
+      isTaskLoading,
+      getCellProps,
+      onHolidayChange,
+    };
   },
 };
 </script>

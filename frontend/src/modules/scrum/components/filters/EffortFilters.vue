@@ -24,20 +24,47 @@
 </template>
 
 <script>
-import FilterMixin from "@/mixins/filter-mixin";
+import { computed } from "@vue/composition-api";
 
+import useFilters, { filterProps } from "@/composables/useFilters";
 import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "EffortFilters",
-  mixins: [FilterMixin],
-  computed: {
-    showUserFilter() {
-      return userHasPermission("scrum.view_effort");
-    },
-    userFilter() {
-      return this.splitFilterValue("user_id__in", true);
-    },
+  props: filterProps,
+  setup(props) {
+    // Composables
+    const {
+      showFiltersDialog,
+      hasAdvancedFilters,
+      updateFilters,
+      clearFilters,
+      openFiltersDialog,
+      closeFiltersDialog,
+      applyFiltersFromDialog,
+      splitFilterValue,
+    } = useFilters(props);
+
+    // State
+    const showUserFilter = userHasPermission("scrum.view_effort");
+
+    // Computed
+    const userFilter = computed(() => splitFilterValue("user_id__in", true));
+
+    return {
+      // State
+      showFiltersDialog,
+      hasAdvancedFilters,
+      showUserFilter,
+      // Computed
+      userFilter,
+      // Methods
+      updateFilters,
+      clearFilters,
+      openFiltersDialog,
+      closeFiltersDialog,
+      applyFiltersFromDialog,
+    };
   },
 };
 </script>

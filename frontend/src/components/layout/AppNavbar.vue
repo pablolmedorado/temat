@@ -4,12 +4,12 @@
     <span class="text-h6 ml-3 mr-5">
       {{ appLabel.name }}
       <sub class="text-caption">{{ appLabel.version }}</sub>
-      <img v-if="isXmas" id="santaHat" src="@/assets/santa_hat.svg" alt="Santa's hat" />
+      <img v-if="isXmas" id="santa-hat" src="@/assets/santa_hat.svg" alt="Santa's hat" />
     </span>
     <v-spacer />
     <v-progress-circular v-show="loadingRequests" class="mr-5" :size="32" color="white" indeterminate />
     <LinkManager />
-    <NotificationManager class="mr-5" />
+    <NotificationManager class="mr-3" />
     <UserAvatar size="36" :font-size="14" :user="currentUser" />
     <v-menu bottom left offset-y>
       <template #activator="{ on, attrs }">
@@ -38,25 +38,30 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "pinia";
+import { toRefs } from "@vue/composition-api";
 
 import LinkManager from "@/modules/links/components/LinkManager";
 import NotificationManager from "@/modules/notifications/components/NotificationManager";
 
 import { useMainStore } from "@/stores/main";
 
-import { isXmas } from "@/utils/dates";
+import { isXmas as isXmasFn } from "@/utils/dates";
 
 export default {
   name: "AppNavbar",
   components: { LinkManager, NotificationManager },
-  computed: {
-    ...mapState(useMainStore, ["appLabel", "loadingRequests", "currentUser"]),
-    isXmas,
-  },
-  methods: {
-    ...mapActions(useMainStore, ["showSnackbar"]),
-    clearAppData() {
+  setup() {
+    // Store
+    const store = useMainStore();
+
+    // State
+    const isXmas = isXmasFn();
+
+    // Computed
+    const { appLabel, currentUser, loadingRequests } = toRefs(store);
+
+    // Methods
+    function clearAppData() {
       localStorage.clear();
       if (window.caches) {
         caches.keys().then((cacheNames) => {
@@ -65,17 +70,28 @@ export default {
           });
         });
       }
-      this.showSnackbar({
+      store.showSnackbar({
         message: "Se ha restablecido el almacenamiento local y la caché",
         timeout: 3000,
       });
-    },
+    }
+
+    return {
+      // State
+      isXmas,
+      // Computed
+      appLabel,
+      currentUser,
+      loadingRequests,
+      // Methods
+      clearAppData,
+    };
   },
 };
 </script>
 
 <style scoped>
-#santaHat {
+#santa-hat {
   height: 20px;
   position: absolute;
   left: 2.73em;

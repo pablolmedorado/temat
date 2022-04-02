@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { keyBy } from "lodash";
+import { keyBy } from "lodash-es";
 
 import UserService from "@/services/user-service";
 import GroupService from "@/services/group-service";

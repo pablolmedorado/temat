@@ -213,7 +213,8 @@
 </template>
 
 <script>
-import { get, intersection, uniq } from "lodash";
+import { computed, nextTick, ref, watch } from "@vue/composition-api";
+import { get, intersection, uniq } from "lodash-es";
 
 import SprintService from "@/modules/scrum/services/sprint-service";
 import UserStoryService from "@/modules/scrum/services/user-story-service";
@@ -242,163 +243,171 @@ export default {
     },
   },
   setup(props) {
+    // Composables
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
     const { contextItem } = useScrumContext(props);
     const { userStoryTypes: userStoryTypesOptions, userStoryTypesMap } = useUserStoryTypes();
-    return {
-      isLoading,
-      isTaskLoading,
-      addTask,
-      removeTask,
-      contextItem,
-      userStoryTypesOptions,
-      userStoryTypesMap,
-    };
-  },
-  data() {
-    return {
-      panels: [],
-      progress: 0,
-      userStoryCount: 0,
-      userStoriesWithMigrations: [],
-      developmentUsers: [],
-      deploymentNotes: [],
-      userStoryHeaders: [
-        {
-          text: "Nombre",
-          align: "start",
-          sortable: true,
-          value: "name",
-        },
-        { text: "Prioridad", sortable: true, value: "priority" },
-        { text: "Responsable", sortable: false, value: "development_user" },
-        { text: "Estado", sortable: true, value: "status" },
-        {
-          text: "Clasificación",
-          sortable: false,
-          value: "classification",
-          fields: ["tags.name", "tags.colour", "tags.icon"],
-        },
-        { text: "Miscelánea", sortable: false, value: "misc" },
-      ],
-      userStoryTableOptions: {
-        ...defaultTableOptions,
-        sortBy: ["status", "priority"],
-        sortDesc: [false, false],
-        multiSort: true,
-        mustSort: true,
+
+    // State
+    const panels = ref([]);
+    const progress = ref(0);
+    const userStoryCount = ref(0);
+    const userStoriesWithMigrations = ref([]);
+    const developmentUsers = ref([]);
+    const deploymentNotes = ref([]);
+    const userStoryHeaders = [
+      {
+        text: "Nombre",
+        align: "start",
+        sortable: true,
+        value: "name",
       },
-      userStories: [],
-      userStoryNameFilter: "",
-      userStoryTypeFilter: null,
-      userStoryTagFilter: [],
-      visibleUserStories: [],
+      { text: "Prioridad", sortable: true, value: "priority" },
+      { text: "Responsable", sortable: false, value: "development_user" },
+      { text: "Estado", sortable: true, value: "status" },
+      {
+        text: "Clasificación",
+        sortable: false,
+        value: "classification",
+        fields: ["tags.name", "tags.colour", "tags.icon"],
+      },
+      { text: "Miscelánea", sortable: false, value: "misc" },
+    ];
+    const userStoryTableOptions = {
+      ...defaultTableOptions,
+      sortBy: ["status", "priority"],
+      sortDesc: [false, false],
+      multiSort: true,
+      mustSort: true,
     };
-  },
-  computed: {
-    breadcrumbs() {
-      if (this.contextItem) {
+    const userStories = ref([]);
+    const userStoryNameFilter = ref("");
+    const userStoryTypeFilter = ref(null);
+    const userStoryTagFilter = ref([]);
+    const visibleUserStories = ref([]);
+
+    // Computed
+    const breadcrumbs = computed(() => {
+      if (contextItem.value) {
         return [
           {
             text: "Sprints",
             to: { name: "sprints" },
             exact: true,
           },
-          { text: this.contextItem.name, disabled: false, link: false },
+          { text: contextItem.value.name, disabled: false, link: false },
           { text: "Informe de despliegue", disabled: true },
         ];
       } else {
         return [];
       }
-    },
-  },
-  watch: {
-    userStories(newValue) {
-      this.visibleUserStories = newValue;
-    },
-    userStoryNameFilter() {
-      this.filterUserStories();
-    },
-    userStoryTypeFilter() {
-      this.filterUserStories();
-    },
-    userStoryTagFilter() {
-      this.filterUserStories();
-    },
-  },
-  created() {
-    this.fetchData();
-    this.fetchUserStories(true);
-  },
-  methods: {
-    get,
-    uniq,
-    async fetchData() {
-      this.addTask("fetch-report-data");
+    });
+
+    // Watchers
+    watch(userStories, (newValue) => (visibleUserStories.value = newValue));
+    watch([userStoryNameFilter, userStoryTypeFilter, userStoryTagFilter], filterUserStories);
+
+    // Methods
+    async function fetchData() {
+      addTask("fetch-report-data");
       try {
-        this.panels = [];
-        this.userStories = [];
-        const response = await SprintService.deploymentReportData(this.sprintId);
-        this.developmentUsers = get(response, ["data", "development_users"], []);
-        if (this.developmentUsers.length) {
-          this.panels.push(0);
+        panels.value = [];
+        userStories.value = [];
+        const response = await SprintService.deploymentReportData(props.sprintId);
+        developmentUsers.value = get(response, ["data", "development_users"], []);
+        if (developmentUsers.value.length) {
+          panels.value.push(0);
         }
-        this.userStoriesWithMigrations = get(response, ["data", "user_stories_with_migrations"], []);
-        if (this.userStoriesWithMigrations.length) {
-          this.panels.push(1);
+        userStoriesWithMigrations.value = get(response, ["data", "user_stories_with_migrations"], []);
+        if (userStoriesWithMigrations.value.length) {
+          panels.value.push(1);
         }
-        this.deploymentNotes = get(response, ["data", "deployment_notes"], []);
-        if (this.deploymentNotes.length) {
-          this.panels.push(2);
+        deploymentNotes.value = get(response, ["data", "deployment_notes"], []);
+        if (deploymentNotes.value.length) {
+          panels.value.push(2);
         }
-        this.progress = get(response, ["data", "progress"], 0);
-        this.userStoryCount = get(response, ["data", "user_story_count"], 0);
+        progress.value = get(response, ["data", "progress"], 0);
+        userStoryCount.value = get(response, ["data", "user_story_count"], 0);
       } finally {
-        this.removeTask("fetch-report-data");
+        removeTask("fetch-report-data");
       }
-    },
-    fetchUserStories(forceFetch) {
-      this.$nextTick(async () => {
-        if (this.panels.includes(3) && (!this.userStories.length || forceFetch)) {
-          this.addTask("fetch-user-stories");
+    }
+    function fetchUserStories(forceFetch) {
+      nextTick(async () => {
+        if (panels.value.includes(3) && (!userStories.value.length || forceFetch)) {
+          addTask("fetch-user-stories");
           try {
             const response = await UserStoryService.list({
-              sprint_id: this.sprintId,
+              sprint_id: props.sprintId,
               fields:
                 "id,name,type,priority,status,current_progress,validated,development_user,risk_level,risk_comments," +
                 "use_migrations,deployment_notes,tags",
               expand: "tags",
               ordering: "status,priority",
             });
-            this.userStories = response.data;
-            this.userStoryCount = response.data.length;
+            userStories.value = response.data;
+            userStoryCount.value = response.data.length;
           } finally {
-            this.removeTask("fetch-user-stories");
+            removeTask("fetch-user-stories");
           }
         }
       });
-    },
-    filterUserStories() {
-      this.visibleUserStories = this.userStories
+    }
+    function filterUserStories() {
+      visibleUserStories.value = userStories.value
         .filter((us) =>
-          this.userStoryNameFilter ? us.name.toLowerCase().includes(this.userStoryNameFilter.toLowerCase()) : true
+          userStoryNameFilter.value ? us.name.toLowerCase().includes(userStoryNameFilter.value.toLowerCase()) : true
         )
-        .filter((us) => (this.userStoryTypeFilter ? us.type === this.userStoryTypeFilter : true))
+        .filter((us) => (userStoryTypeFilter.value ? us.type === userStoryTypeFilter.value : true))
         .filter((us) => {
-          return get(this.userStoryTagFilter, "length")
+          return get(userStoryTagFilter.value, "length")
             ? intersection(
                 us.tags.map((tag) => tag.name),
-                this.userStoryTagFilter
-              ).length === this.userStoryTagFilter.length
+                userStoryTagFilter.value
+              ).length === userStoryTagFilter.value.length
             : true;
         });
-    },
-    clearUserStoryFilters() {
-      this.userStoryNameFilter = "";
-      this.userStoryTypeFilter = null;
-      this.userStoryTagFilter = [];
-      this.visibleUserStories = this.userStories;
-    },
+    }
+    function clearUserStoryFilters() {
+      userStoryNameFilter.value = "";
+      userStoryTypeFilter.value = null;
+      userStoryTagFilter.value = [];
+      visibleUserStories.value = userStories.value;
+    }
+
+    // Initialization
+    fetchData();
+    fetchUserStories(true);
+
+    return {
+      // State
+      panels,
+      progress,
+      userStoryCount,
+      userStoriesWithMigrations,
+      developmentUsers,
+      deploymentNotes,
+      userStoryHeaders,
+      userStoryTableOptions,
+      userStoryNameFilter,
+      userStoryTypeFilter,
+      userStoryTagFilter,
+      visibleUserStories,
+      // Computed
+      isLoading,
+      contextItem,
+      userStoryTypesOptions,
+      userStoryTypesMap,
+      breadcrumbs,
+      // Methods
+      get,
+      uniq,
+      isTaskLoading,
+      fetchData,
+      fetchUserStories,
+      filterUserStories,
+      clearUserStoryFilters,
+    };
   },
 };
 </script>
