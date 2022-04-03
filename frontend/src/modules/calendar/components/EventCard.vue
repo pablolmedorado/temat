@@ -27,7 +27,7 @@
         </v-list>
       </v-menu>
       <template v-if="!eventTypesMap[item.type].system_slug">
-        <v-divider vertical inset />
+        <v-divider vertical inset class="mx-1" />
         <v-btn v-if="canChange" icon @click="onEdit(item)">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>

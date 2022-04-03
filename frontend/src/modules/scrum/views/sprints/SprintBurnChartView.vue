@@ -6,7 +6,7 @@
         <v-toolbar-title class="text-h6"> Diagrama {{ burnUp ? "Burn-Up" : "Burn-Down" }} </v-toolbar-title>
         <v-spacer />
         <SprintViewSelector :sprint-id="sprintId" />
-        <v-divider vertical inset />
+        <v-divider vertical inset class="mx-1" />
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">
             <v-btn v-if="!burnUp" icon :disabled="isLoading" v-bind="attrs" @click="burnUp = true" v-on="on">

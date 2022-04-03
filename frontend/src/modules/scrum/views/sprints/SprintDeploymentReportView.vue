@@ -6,7 +6,7 @@
         <v-toolbar-title class="text-h6"> Informe de despliegue </v-toolbar-title>
         <v-spacer />
         <SprintViewSelector :sprint-id="sprintId" />
-        <v-divider vertical inset />
+        <v-divider vertical inset class="mx-1" />
         <v-btn icon :disabled="isTaskLoading('fetch-report-data')" @click="fetchData">
           <v-icon>mdi-refresh</v-icon>
         </v-btn>

@@ -6,7 +6,7 @@
         <v-toolbar-title class="text-h6"> Diagrama de Gantt </v-toolbar-title>
         <v-spacer />
         <SprintViewSelector :sprint-id="sprintId" />
-        <v-divider vertical inset />
+        <v-divider vertical inset class="mx-1" />
         <v-btn icon :disabled="isLoading" @click="fetchChartData">
           <v-icon>mdi-refresh</v-icon>
         </v-btn>

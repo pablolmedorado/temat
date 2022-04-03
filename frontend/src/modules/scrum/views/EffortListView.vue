@@ -31,6 +31,7 @@
               </template>
               <span>Informe</span>
             </v-tooltip>
+            <v-divider vertical inset class="mx-1" />
           </template>
 
           <template #item.date="{ value }">

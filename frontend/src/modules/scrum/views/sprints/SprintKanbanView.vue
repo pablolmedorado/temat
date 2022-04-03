@@ -7,7 +7,7 @@
           <v-toolbar-title class="text-h6">Kanban</v-toolbar-title>
           <v-spacer />
           <SprintViewSelector :sprint-id="sprintId" />
-          <v-divider vertical inset />
+          <v-divider vertical inset class="mx-1" />
           <v-tooltip bottom>
             <template #activator="{ on, attrs }">
               <v-btn v-if="!hideEmptyColumns" icon v-bind="attrs" @click="hideEmptyColumns = true" v-on="on">
