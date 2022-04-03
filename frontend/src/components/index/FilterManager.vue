@@ -34,8 +34,8 @@
           </v-list-item-icon>
           <v-list-item-title>Guardar filtro rápido</v-list-item-title>
         </v-list-item>
-        <v-divider class="mt-3 mb-2" />
-        <v-subheader class="ml-2">Filtros rápidos</v-subheader>
+        <v-divider v-show="hasFilters" class="mt-3 mb-2" />
+        <v-subheader v-show="hasFilters" class="ml-2">Filtros rápidos</v-subheader>
         <v-list-item
           v-for="filter in quickFilters"
           :key="filter.label"
@@ -71,6 +71,7 @@
 </template>
 
 <script>
+import { computed } from "@vue/composition-api";
 import { isEqual, isObject } from "lodash-es";
 
 import { useMainStore } from "@/stores/main";
@@ -116,6 +117,9 @@ export default {
     // State
     const customQuickFilters = useLocalStorage(`${props.localStorageNamespace}QuickFilters`, []);
 
+    // Computed
+    const hasFilters = computed(() => Boolean(props.quickFilters.length + customQuickFilters.value.length));
+
     // Methods
     function addQuickFilter(filter) {
       if (isObject(filter)) {
@@ -146,6 +150,8 @@ export default {
     return {
       // State
       customQuickFilters,
+      // Computed
+      hasFilters,
       // Methods
       isEqual,
       addQuickFilter,
