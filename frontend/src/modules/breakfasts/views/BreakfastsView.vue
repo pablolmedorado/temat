@@ -11,7 +11,23 @@
           custom-headers
           selectable-rows
         >
-          <template #toolbar="{ isIndexLoading }">
+          <template #toolbar="{ isIndexLoading, selectedItems }">
+            <v-tooltip bottom>
+              <template #activator="{ attrs, on }">
+                <v-btn
+                  v-show="selectedItems.length"
+                  v-bind="attrs"
+                  icon
+                  @click.stop="$refs.breakfastSummaryDialog.open(selectedItems)"
+                  v-on="on"
+                >
+                  <v-badge :content="selectedItems.length" color="secondary" overlap>
+                    <v-icon>mdi-clipboard-list</v-icon>
+                  </v-badge>
+                </v-btn>
+              </template>
+              <span>Resumen</span>
+            </v-tooltip>
             <v-tooltip bottom>
               <template #activator="{ attrs, on }">
                 <v-btn
@@ -27,26 +43,11 @@
               </template>
               <span>Mi desayuno</span>
             </v-tooltip>
+            <v-divider vertical inset class="mx-1" />
           </template>
 
           <template #item.user="{ value }">
             <UserPill :user="value" />
-          </template>
-
-          <template #fab="{ selectedItems }">
-            <v-fab-transition>
-              <v-btn
-                v-show="selectedItems.length"
-                fab
-                fixed
-                bottom
-                right
-                color="secondary"
-                @click.stop="$refs.breakfastSummaryDialog.open(selectedItems)"
-              >
-                <v-icon>mdi-clipboard-list</v-icon>
-              </v-btn>
-            </v-fab-transition>
           </template>
         </ItemIndex>
       </v-col>

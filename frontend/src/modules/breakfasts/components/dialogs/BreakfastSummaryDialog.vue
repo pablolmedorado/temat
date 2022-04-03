@@ -11,7 +11,7 @@
       <v-toolbar flat>
         <v-toolbar-title class="text-h6"> Resumen de tostadas </v-toolbar-title>
         <v-spacer />
-        <v-tooltip v-if="isClipboardSupported" bottom>
+        <v-tooltip v-if="isClipboardSupported" left>
           <template #activator="{ on, attrs }">
             <v-btn icon v-bind="attrs" v-on="on" @click="copyBreakfastsToClipboard">
               <v-icon>mdi-clipboard-text-multiple-outline</v-icon>
