@@ -57,7 +57,7 @@ export default {
     const isBulk = computed(() => isArray(dataToDelete.value));
     const confirmationLabel = computed(() => {
       if (isBulk.value) {
-        return `Confirmo que deseo eliminar ${dataToDelete.value.length} elementos`;
+        return `Confirmo que deseo eliminar ${dataToDelete.value.length || "todos los"} elementos`;
       } else {
         const representation = isFunction(props.itemText)
           ? props.itemText(dataToDelete.value)

@@ -12,58 +12,57 @@
           selectable-rows
         >
           <template #toolbar="{ selectedItems }">
-            <v-tooltip bottom>
-              <template #activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  :disabled="isLoading || !Boolean(selectedItems.length)"
-                  :loading="isTaskLoading('bulk-action', 'markAllAsRead')"
-                  v-bind="attrs"
-                  @click="performBulkAction('markAllAsRead', selectedItems)"
-                  v-on="on"
-                >
-                  <v-badge :value="selectedItems.length" :content="`${selectedItems.length}`" color="secondary" overlap>
-                    <v-icon>mdi-email-open</v-icon>
+            <v-menu bottom left offset-y>
+              <template #activator="{ attrs, on }">
+                <v-btn v-bind="attrs" :disabled="isLoading" icon v-on="on">
+                  <v-badge
+                    :value="Boolean(selectedItems.length)"
+                    color="secondary"
+                    :content="selectedItems.length.toString()"
+                    overlap
+                  >
+                    <v-icon>mdi-dots-vertical</v-icon>
                   </v-badge>
                 </v-btn>
               </template>
-              <span> Marcar como leído </span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template #activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  :disabled="isLoading || !Boolean(selectedItems.length)"
-                  :loading="isTaskLoading('bulk-action', 'markAllAsUnread')"
-                  v-bind="attrs"
-                  @click="performBulkAction('markAllAsUnread', selectedItems)"
-                  v-on="on"
-                >
-                  <v-badge :value="selectedItems.length" :content="`${selectedItems.length}`" color="secondary" overlap>
-                    <v-icon>mdi-email-mark-as-unread</v-icon>
-                  </v-badge>
-                </v-btn>
-              </template>
-              <span> Marcar como no leído </span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template #activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  :disabled="isLoading || !Boolean(selectedItems.length)"
-                  :loading="isTaskLoading('bulk-action', 'bulkDelete')"
-                  v-bind="attrs"
-                  @click.stop="openDeleteDialog(selectedItems)"
-                  v-on="on"
-                >
-                  <v-badge :value="selectedItems.length" :content="`${selectedItems.length}`" color="error" overlap>
-                    <v-icon>mdi-delete</v-icon>
-                  </v-badge>
-                </v-btn>
-              </template>
-              <span> Eliminar </span>
-            </v-tooltip>
-            <v-divider vertical inset />
+              <v-list dense>
+                <template v-if="!Boolean(selectedItems.length)">
+                  <v-list-item @click="performBulkAction('markAllAsRead', [])">
+                    <v-list-item-icon>
+                      <v-icon>mdi-email-open</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Marcar todo como leído</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click.stop="openDeleteDialog([])">
+                    <v-list-item-icon>
+                      <v-icon>mdi-delete</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Eliminar todo</v-list-item-title>
+                  </v-list-item>
+                </template>
+                <template v-else>
+                  <v-list-item @click="performBulkAction('markAllAsRead', selectedItems)">
+                    <v-list-item-icon>
+                      <v-icon>mdi-email-open</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Marcar como leído</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="performBulkAction('markAllAsUnread', selectedItems)">
+                    <v-list-item-icon>
+                      <v-icon>mdi-email-mark-as-unread</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Marcar como no leído</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click.stop="openDeleteDialog(selectedItems)">
+                    <v-list-item-icon>
+                      <v-icon>mdi-delete</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Eliminar</v-list-item-title>
+                  </v-list-item>
+                </template>
+              </v-list>
+            </v-menu>
+            <v-divider vertical inset class="mx-1" />
           </template>
 
           <template #item.timestamp="{ value }">
