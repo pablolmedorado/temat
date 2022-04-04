@@ -90,7 +90,15 @@
           :error-messages="getErrorMsgs(v$.item.location)"
         >
           <template #append>
-            <v-icon v-show="item.location" @click="openLocation(item.location)">mdi-google-maps</v-icon>
+            <v-btn
+              v-show="item.location"
+              icon
+              small
+              :href="`https://www.google.com/maps/search/${item.location}/`"
+              target="_blank"
+            >
+              <v-icon>mdi-google-maps</v-icon>
+            </v-btn>
           </template>
         </v-text-field>
       </v-col>
@@ -245,9 +253,6 @@ export default {
       };
       return [payload, { expand: "tags" }];
     }
-    function openLocation(location) {
-      window.open(`https://www.google.com/maps/search/${location}/`, "_blank");
-    }
 
     return {
       // State
@@ -269,7 +274,6 @@ export default {
       getErrorMsgs,
       submit,
       reset,
-      openLocation,
     };
   },
 };

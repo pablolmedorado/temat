@@ -15,13 +15,13 @@
             <v-tooltip bottom>
               <template #activator="{ attrs, on }">
                 <v-btn
-                  v-show="selectedItems.length"
                   v-bind="attrs"
+                  :disabled="!selectedItems.length"
                   icon
                   @click.stop="$refs.breakfastSummaryDialog.open(selectedItems)"
                   v-on="on"
                 >
-                  <v-badge :content="selectedItems.length" color="secondary" overlap>
+                  <v-badge :value="selectedItems.length" :content="selectedItems.length" color="secondary" overlap>
                     <v-icon>mdi-clipboard-list</v-icon>
                   </v-badge>
                 </v-btn>

@@ -50,7 +50,10 @@ export default function (
   // Watchers
   watch(
     () => props.sourceItem,
-    (newValue) => (item.value = initializeItem(newValue))
+    (newValue) => {
+      item.value = initializeItem(newValue);
+      v$.value.$reset();
+    }
   );
   watch(itemHasChanged, (newValue) => emit("changed:item", newValue), { immediate: true });
 

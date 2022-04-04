@@ -18,6 +18,7 @@ export default class Sprint extends BaseModel {
   static getDefaults = function () {
     return {
       id: null,
+      name: "",
       start_date: DateTime.local().toISODate(),
       end_date: null,
       accountable_user: null,

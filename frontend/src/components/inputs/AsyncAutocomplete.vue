@@ -9,14 +9,8 @@
     v-on="$listeners"
   >
     <template #append>
-      <v-tooltip bottom>
-        <template #activator="{ on, attrs }">
-          <v-icon v-bind="attrs" class="db-icon" v-on="on">mdi-database-search-outline</v-icon>
-        </template>
-        <span> Realiza búsqueda en BD </span>
-      </v-tooltip>
+      <slot name="append"></slot>
     </template>
-
     <template #append-outer>
       <slot name="append-outer"></slot>
     </template>

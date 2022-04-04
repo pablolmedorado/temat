@@ -184,12 +184,14 @@ export default {
     return {
       // State
       fullscreenWrapper,
+      hideEmptyColumns,
       // Computed
       isLoading,
       contextItem,
       isFullscreen,
       kanbanStatus,
       breadcrumbs,
+      itemsByStatus,
       kanbanMinWidth,
       statusColumnClasses,
       // Methods
