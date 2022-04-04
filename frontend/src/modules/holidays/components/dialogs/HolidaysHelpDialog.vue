@@ -49,10 +49,20 @@
 </template>
 
 <script>
-import DialogMixin from "@/mixins/dialog-mixin";
+import useDialog, { dialogProps } from "@/composables/useDialog";
 
 export default {
   name: "HolidaysHelpDialog",
-  mixins: [DialogMixin],
+  inheritAttrs: false,
+  props: dialogProps,
+  setup(props) {
+    const { showDialog, open, close } = useDialog(props);
+
+    return {
+      showDialog,
+      open,
+      close,
+    };
+  },
 };
 </script>

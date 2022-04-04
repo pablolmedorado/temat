@@ -40,23 +40,49 @@
 </template>
 
 <script>
-import FilterMixin from "@/mixins/filter-mixin";
+import { computed } from "@vue/composition-api";
+
+import useFilters, { filterProps } from "@/composables/useFilters";
 
 export default {
   name: "EpicFilters",
-  mixins: [FilterMixin],
-  data() {
+  props: filterProps,
+  setup(props) {
+    // Composables
+    const {
+      showFiltersDialog,
+      hasAdvancedFilters,
+      updateFilters,
+      clearFilters,
+      openFiltersDialog,
+      closeFiltersDialog,
+      applyFiltersFromDialog,
+      splitFilterValue,
+    } = useFilters(props);
+
+    // State
+    const finishedOptions = [
+      { label: "Sí", value: true },
+      { label: "No", value: false },
+    ];
+
+    // Computed
+    const tagFilter = computed(() => splitFilterValue("tags__name__in"));
+
     return {
-      finishedOptions: [
-        { label: "Sí", value: true },
-        { label: "No", value: false },
-      ],
+      // State
+      showFiltersDialog,
+      hasAdvancedFilters,
+      finishedOptions,
+      // Computed
+      tagFilter,
+      // Methods
+      updateFilters,
+      clearFilters,
+      openFiltersDialog,
+      closeFiltersDialog,
+      applyFiltersFromDialog,
     };
-  },
-  computed: {
-    tagFilter() {
-      return this.splitFilterValue("tags__name__in");
-    },
   },
 };
 </script>

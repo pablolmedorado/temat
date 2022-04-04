@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import { ref, watch } from "@vue/composition-api";
+
 import UserStoryService from "@/modules/scrum/services/user-story-service";
 
 import UserStoryProgressChart from "@/modules/scrum/components/charts/UserStoryProgressChart";
@@ -56,41 +58,45 @@ export default {
       required: true,
     },
   },
-  setup() {
+  setup(props) {
+    // Composables
     const { isLoading, addTask, removeTask } = useLoading();
-    return {
-      isLoading,
-      addTask,
-      removeTask,
-    };
-  },
-  data() {
-    return {
-      items: [],
-    };
-  },
-  watch: {
-    "userStory.id": {
-      handler(newValue) {
+
+    // State
+    const items = ref([]);
+
+    // Watchers
+    watch(
+      () => props.userStory.id,
+      (newValue) => {
         if (newValue) {
-          this.fetchItems();
+          fetchItems();
         } else {
-          this.items = [];
+          items.value = [];
         }
       },
-      immediate: true,
-    },
-  },
-  methods: {
-    async fetchItems() {
-      this.addTask("fetch-items");
+      { immediate: true }
+    );
+
+    // Methods
+    async function fetchItems() {
+      addTask("fetch-items");
       try {
-        const response = await UserStoryService.progressByUserStory(this.userStory.id);
-        this.items = response.data.results ? response.data.results : response.data;
+        const response = await UserStoryService.progressByUserStory(props.userStory.id);
+        items.value = response.data.results ? response.data.results : response.data;
       } finally {
-        this.removeTask("fetch-items");
+        removeTask("fetch-items");
       }
-    },
+    }
+
+    return {
+      // State
+      items,
+      // Computed
+      isLoading,
+      // Methods
+      fetchItems,
+    };
   },
 };
 </script>

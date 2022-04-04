@@ -15,7 +15,7 @@ export default class Breakfast extends BaseModel {
 
   static localStorageNamespace = "breakfast";
 
-  static get defaults() {
+  static getDefaults = function () {
     const mainStore = useMainStore();
     return {
       id: null,
@@ -26,5 +26,5 @@ export default class Breakfast extends BaseModel {
       ingredient2: null,
       drink: null,
     };
-  }
+  };
 }

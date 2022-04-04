@@ -19,9 +19,10 @@
 </template>
 
 <script>
-import { get } from "lodash";
+import { computed, onMounted, ref } from "@vue/composition-api";
+import { get, invoke } from "lodash-es";
 
-import { truncate } from "@/filters";
+import { truncate } from "@/utils/text";
 
 export default {
   name: "TruncatedText",
@@ -35,19 +36,29 @@ export default {
       default: 30,
     },
   },
-  computed: {
-    text() {
-      return this.value || get(this.$slots, ["default", 0, "text"], "");
-    },
-    truncatedText() {
-      return truncate(this.text, this.textLength);
-    },
-    isTruncated() {
-      return this.text.length > this.textLength;
-    },
-    cursor() {
-      return this.isTruncated ? "help" : "default";
-    },
+  setup(props, { slots }) {
+    // State
+    const slotText = ref(null);
+
+    // Computed
+    const text = computed(() => props.value || slotText.value || "");
+    const truncatedText = computed(() => truncate(text.value, props.textLength));
+    const isTruncated = computed(() => text.value.length > props.textLength);
+    const cursor = computed(() => (isTruncated.value ? "help" : "default"));
+
+    // Lifecycle hooks
+    onMounted(() => {
+      const slotContent = invoke(slots, "default");
+      slotText.value = get(slotContent, [0, "text"], null);
+    });
+
+    return {
+      // Computed
+      text,
+      truncatedText,
+      isTruncated,
+      cursor,
+    };
   },
 };
 </script>

@@ -47,7 +47,8 @@
 </template>
 
 <script>
-import { groupBy } from "lodash";
+import { computed, ref } from "@vue/composition-api";
+import { groupBy } from "lodash-es";
 
 import LinkService from "@/modules/links/services/link-service";
 
@@ -56,37 +57,37 @@ import useLoading from "@/composables/useLoading";
 export default {
   name: "LinkManager",
   setup() {
+    // Composables
     const { isLoading, addTask, removeTask } = useLoading();
-    return {
-      isLoading,
-      addTask,
-      removeTask,
-    };
-  },
-  data() {
-    return {
-      showMenu: false,
-      items: [],
-    };
-  },
-  computed: {
-    itemsByType() {
-      return groupBy(this.items, "type.order");
-    },
-  },
-  created() {
-    this.fetchItems();
-  },
-  methods: {
-    async fetchItems() {
-      this.addTask("fetch-items");
+
+    // State
+    const showMenu = ref(false);
+    const items = ref([]);
+
+    // Computed
+    const itemsByType = computed(() => groupBy(items.value, "type.order"));
+
+    // Methods
+    async function fetchItems() {
+      addTask("fetch-items");
       try {
         const response = await LinkService.list({ expand: "type" });
-        this.items = response.data;
+        items.value = response.data;
       } finally {
-        this.removeTask("fetch-items");
+        removeTask("fetch-items");
       }
-    },
+    }
+
+    // Initialization
+    fetchItems();
+
+    return {
+      // State
+      showMenu,
+      // Computed
+      isLoading,
+      itemsByType,
+    };
   },
 };
 </script>

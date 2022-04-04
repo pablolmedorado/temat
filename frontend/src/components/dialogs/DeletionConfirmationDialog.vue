@@ -26,14 +26,16 @@
 </template>
 
 <script>
-import { isArray, isFunction } from "lodash";
+import { computed, ref, watch } from "@vue/composition-api";
+import { isArray, isFunction } from "lodash-es";
 
-import DialogMixin from "@/mixins/dialog-mixin";
+import useDialog, { dialogProps } from "@/composables/useDialog";
 
 export default {
   name: "DeletionConfirmationDialog",
-  mixins: [DialogMixin],
+  inheritAttrs: false,
   props: {
+    ...dialogProps,
     itemText: {
       type: [String, Function],
       default: "name",
@@ -43,45 +45,57 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-      dataToDelete: null,
-      deletionConfirmation: false,
-    };
-  },
-  computed: {
-    isBulk() {
-      return isArray(this.dataToDelete);
-    },
-    confirmationLabel() {
-      if (this.isBulk) {
-        return `Confirmo que deseo eliminar ${this.dataToDelete.length} elementos`;
+  setup(props, { emit }) {
+    // Composables
+    const { showDialog, open: _open, close: _close } = useDialog(props);
+
+    // State
+    const dataToDelete = ref(null);
+    const deletionConfirmation = ref(false);
+
+    // Computed
+    const isBulk = computed(() => isArray(dataToDelete.value));
+    const confirmationLabel = computed(() => {
+      if (isBulk.value) {
+        return `Confirmo que deseo eliminar ${dataToDelete.value.length || "todos los"} elementos`;
       } else {
-        const representation = isFunction(this.itemText)
-          ? this.itemText(this.dataToDelete)
-          : this.dataToDelete[this.itemText];
+        const representation = isFunction(props.itemText)
+          ? props.itemText(dataToDelete.value)
+          : dataToDelete.value[props.itemText];
         return `Confirmo que deseo eliminar el elemento '${representation}'`;
       }
-    },
-  },
-  watch: {
-    showDialog() {
-      this.deletionConfirmation = false;
-    },
-  },
-  methods: {
-    open(data) {
-      this.dataToDelete = data;
-      this.showDialog = true;
-    },
-    close() {
-      this.dataToDelete = null;
-      this.showDialog = false;
-    },
-    confirmDeletion() {
-      this.$emit("confirm", this.dataToDelete);
-      this.close();
-    },
+    });
+
+    // Watchers
+    watch(showDialog, () => (deletionConfirmation.value = false));
+
+    // Methods
+    function open(data) {
+      dataToDelete.value = data;
+      _open();
+    }
+    function close() {
+      dataToDelete.value = null;
+      _close();
+    }
+    function confirmDeletion() {
+      emit("confirm", dataToDelete.value);
+      close();
+    }
+
+    return {
+      // State
+      showDialog,
+      dataToDelete,
+      deletionConfirmation,
+      // Computed
+      isBulk,
+      confirmationLabel,
+      // Methods
+      open,
+      close,
+      confirmDeletion,
+    };
   },
 };
 </script>

@@ -1,4 +1,4 @@
-import { get, compact } from "lodash";
+import { get, compact } from "lodash-es";
 import { DateTime } from "luxon";
 
 import BaseModel from "@/models/base-model";
@@ -19,7 +19,7 @@ export default class Effort extends BaseModel {
 
   static localStorageNamespace = "effort";
 
-  static itemText(item) {
+  static itemText = function (item) {
     const userStore = useUserStore();
     const representationParts = [
       item.date,
@@ -29,9 +29,9 @@ export default class Effort extends BaseModel {
       `${item.effort}UT`,
     ];
     return compact(representationParts).join(" / ");
-  }
+  };
 
-  static get defaults() {
+  static getDefaults = function () {
     const mainStore = useMainStore();
     return {
       id: null,
@@ -42,5 +42,5 @@ export default class Effort extends BaseModel {
       effort: 1,
       comments: "",
     };
-  }
+  };
 }

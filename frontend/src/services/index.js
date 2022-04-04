@@ -1,4 +1,4 @@
-import { get, keyBy } from "lodash";
+import { get, keyBy } from "lodash-es";
 
 import BreakfastServices from "@/modules/breakfasts/services";
 import CalendarServices from "@/modules/calendar/services";

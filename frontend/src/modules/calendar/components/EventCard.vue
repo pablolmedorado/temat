@@ -27,11 +27,11 @@
         </v-list>
       </v-menu>
       <template v-if="!eventTypesMap[item.type].system_slug">
-        <v-divider vertical inset />
+        <v-divider vertical inset class="mx-1" />
         <v-btn v-if="canChange" icon @click="onEdit(item)">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
-        <v-btn icon @click="onEdit(itemForCopy)">
+        <v-btn icon @click="onCopy(item)">
           <v-icon>mdi-content-copy</v-icon>
         </v-btn>
         <v-btn v-if="canDelete" icon @click.stop="onDelete(item)">
@@ -58,13 +58,26 @@
 </template>
 
 <script>
-import EventEditionMixin from "@/modules/calendar/mixins/event-edition-mixin";
+import { computed } from "@vue/composition-api";
+import { cloneDeep } from "lodash-es";
 
+import CalendarEvent from "@/modules/calendar/models/event";
+
+import EventService from "@/modules/calendar/services/event-service";
+
+import EventForm from "@/modules/calendar/components/forms/EventForm";
+import EventRepresentation from "@/modules/calendar/components/EventRepresentation";
+
+import { useMainStore } from "@/stores/main";
+
+import useEventTypes from "@/modules/calendar/composables/useEventTypes";
+import { userHasPermission } from "@/utils/permissions";
+import { buildGoogleCalendarUrl } from "@/modules/calendar/utils";
 import { applyDarkVariant } from "@/utils/colours";
 
 export default {
   name: "EventCard",
-  mixins: [EventEditionMixin],
+  components: { EventRepresentation },
   inheritAttrs: false,
   props: {
     item: {
@@ -72,17 +85,71 @@ export default {
       required: true,
     },
   },
-  methods: {
-    applyDarkVariant,
-    onFormSubmit(newItem) {
-      this.$emit("update:event", newItem);
-      this.$emit("close:dialog");
-    },
-    async onDeleteConfirm() {
-      await this.service.delete(this.item.id);
-      this.$emit("delete:event", this.item);
-      this.$emit("close:dialog");
-    },
+  setup(props, { emit, refs }) {
+    // Store
+    const mainStore = useMainStore();
+
+    // Composables
+    const { eventTypesMap } = useEventTypes();
+
+    // State
+    const formComponent = EventForm;
+
+    // Computed
+    const canChange = computed(
+      () => mainStore.currentUser.id === props.item.creation_user || userHasPermission(CalendarEvent.CHANGE_PERMISSION)
+    );
+    const canCopy = computed(
+      () => mainStore.currentUser.id === props.item.creation_user || userHasPermission(CalendarEvent.ADD_PERMISSION)
+    );
+    const canDelete = computed(
+      () => mainStore.currentUser.id === props.item.creation_user || userHasPermission(CalendarEvent.DELETE_PERMISSION)
+    );
+    const googleCalendarUrl = computed(() => buildGoogleCalendarUrl(props.item));
+
+    // Methods
+    function onEdit(itemToEdit) {
+      refs.formDialog.open(itemToEdit);
+    }
+    function onCopy(itemToCopy) {
+      const copy = cloneDeep(itemToCopy);
+      delete copy.id;
+      refs.formDialog.open(copy);
+    }
+    function onFormSubmit(newItem) {
+      emit("update:event", newItem);
+      emit("close:dialog");
+    }
+    function onDelete(itemToDelete) {
+      refs.deleteDialog.open(itemToDelete);
+    }
+    async function onDeleteConfirm() {
+      await EventService.delete(props.item.id);
+      emit("delete:event", props.item);
+      emit("close:dialog");
+    }
+    function buildIcalUrl({ id }) {
+      return `${Urls["calendar:event-ical"]()}?id=${id}&page_size=1`;
+    }
+
+    return {
+      // State
+      formComponent,
+      // Computed
+      eventTypesMap,
+      canChange,
+      canCopy,
+      canDelete,
+      googleCalendarUrl,
+      // Methods
+      applyDarkVariant,
+      onEdit,
+      onCopy,
+      onFormSubmit,
+      onDelete,
+      onDeleteConfirm,
+      buildIcalUrl,
+    };
   },
 };
 </script>

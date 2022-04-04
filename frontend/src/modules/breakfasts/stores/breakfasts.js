@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { keyBy } from "lodash";
+import { keyBy } from "lodash-es";
 
 import BBaseService from "@/modules/breakfasts/services/base-service";
 import BreadService from "@/modules/breakfasts/services/bread-service";

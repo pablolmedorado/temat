@@ -8,12 +8,12 @@
       </template>
       <v-list dense>
         <v-list-item v-for="item in menuItems" :key="item.label" @click="item.action">
-          <v-list-item-icon
-            ><v-icon>{{ item.icon }}</v-icon></v-list-item-icon
-          >
-          <v-list-item-content
-            ><v-list-item-title>{{ item.label }}</v-list-item-title></v-list-item-content
-          >
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.label }}</v-list-item-title>
+          </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -44,9 +44,14 @@ export default {
     },
   },
   setup(props, { emit }) {
+    // Composables
     const { isLoading, addTask, removeTask } = useLoading();
     const { edit, cancel, getStatusInfo } = useHolidays();
 
+    // State
+    const canManage = userHasPermission(Holiday.CHANGE_PERMISSION);
+
+    // Computed
     const cellStyle = computed(() => {
       if (props.holiday) {
         const colorName = getStatusInfo(props.holiday.approved).colour;
@@ -60,7 +65,6 @@ export default {
       }
       return undefined;
     });
-
     const menuItems = computed(() => {
       if (props.holiday) {
         const items = [
@@ -87,6 +91,7 @@ export default {
       return [];
     });
 
+    // Methods
     async function editHoliday(item, approved) {
       addTask(`edit-holiday-${approved}`, item.id);
       try {
@@ -109,15 +114,13 @@ export default {
     }
 
     return {
+      // State
+      canManage,
+      // Computed
       isLoading,
-      addTask,
-      removeTask,
-      edit,
-      cancel,
       cellStyle,
       cellIcon,
       menuItems,
-      canManage: userHasPermission(Holiday.CHANGE_PERMISSION),
     };
   },
 };

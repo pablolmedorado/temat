@@ -1,23 +1,34 @@
+<template>
+  <AsyncChart ref="chart" :options-function="buildOptions" v-bind="{ ...$attrs, ...fetchProps }" />
+</template>
+
 <script>
+import { computed } from "@vue/composition-api";
 import Highcharts from "highcharts";
-import { get } from "lodash";
+import { get } from "lodash-es";
 import colors from "vuetify/lib/util/colors";
 
 import EventService from "@/modules/calendar/services/event-service";
 
-import BaseChart from "@/components/charts/BaseChart";
-
 export default {
   name: "EventAttendeesChart",
-  extends: BaseChart,
-  data() {
-    return {
+  inheritAttrs: false,
+  props: {
+    filter: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  setup(props, { refs }) {
+    // Computed
+    const fetchProps = computed(() => ({
       service: EventService,
       fetchFunctionName: "attendeesChartData",
-    };
-  },
-  computed: {
-    localChartOptions() {
+      fetchFunctionArgs: [props.filter],
+    }));
+
+    // Methods
+    function buildOptions(chartData) {
       const series = Highcharts.merge(
         [
           {
@@ -31,7 +42,7 @@ export default {
             data: [],
           },
         ],
-        get(this.chartData, "series", [])
+        get(chartData, "series", [])
       );
       return {
         chart: {
@@ -65,7 +76,18 @@ export default {
         },
         series,
       };
-    },
+    }
+    function fetchData() {
+      refs.chart.fetchData();
+    }
+
+    return {
+      // Computed
+      fetchProps,
+      // Methods
+      buildOptions,
+      fetchData,
+    };
   },
 };
 </script>

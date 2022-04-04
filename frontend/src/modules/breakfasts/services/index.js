@@ -1,4 +1,4 @@
-import { keyBy } from "lodash";
+import { keyBy } from "lodash-es";
 
 import BaseService from "./base-service";
 import BreadService from "./bread-service";

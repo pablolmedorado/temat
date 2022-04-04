@@ -1,26 +1,42 @@
+<template>
+  <AsyncChart
+    ref="chart"
+    constructor-type="stockChart"
+    :options-function="buildOptions"
+    v-bind="{ ...$attrs, ...fetchProps }"
+  />
+</template>
+
 <script>
-import { mapState } from "pinia";
-import { has } from "lodash";
+import { computed } from "@vue/composition-api";
+import { has } from "lodash-es";
 
 import EffortService from "@/modules/scrum/services/effort-service";
-
-import BaseChart from "@/components/charts/BaseChart";
 
 import { useUserStore } from "@/stores/users";
 
 export default {
   name: "EffortUserTimelineChart",
-  extends: BaseChart,
-  data() {
-    return {
-      constructorType: "stockChart",
+  inheritAttrs: false,
+  props: {
+    filter: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  setup(props, { refs, root }) {
+    // Store
+    const userStore = useUserStore();
+
+    // Computed
+    const fetchProps = computed(() => ({
       service: EffortService,
       fetchFunctionName: "userTimelineChartData",
-    };
-  },
-  computed: {
-    ...mapState(useUserStore, ["workerUsers"]),
-    localChartOptions() {
+      fetchFunctionArgs: [props.filter],
+    }));
+
+    // Methods
+    function buildOptions(chartData) {
       return {
         chart: {
           type: "column",
@@ -67,12 +83,12 @@ export default {
           plotBands: [
             {
               from: 0,
-              to: this.workerUsers.length * 14,
+              to: userStore.workerUsers.length * 14,
               color: "rgba(68, 170, 213, 0.1)",
               label: {
                 text: "Jornada laboral",
                 style: {
-                  color: this.$vuetify.theme.isDark ? "#ffffff" : "#606060",
+                  color: root.$vuetify.theme.isDark ? "#ffffff" : "#606060",
                 },
               },
             },
@@ -86,16 +102,27 @@ export default {
             },
           },
         },
-        series: this.workerUsers.map((user) => {
+        series: userStore.workerUsers.map((user) => {
           return {
             name: user.acronym,
-            data: has(this.chartData, user.acronym)
-              ? this.chartData[user.acronym].map((item) => [new Date(item.date).getTime(), item.total_effort])
+            data: has(chartData, user.acronym)
+              ? chartData[user.acronym].map((item) => [new Date(item.date).getTime(), item.total_effort])
               : [],
           };
         }),
       };
-    },
+    }
+    function fetchData() {
+      refs.chart.fetchData();
+    }
+
+    return {
+      // Computed
+      fetchProps,
+      // Methods
+      buildOptions,
+      fetchData,
+    };
   },
 };
 </script>

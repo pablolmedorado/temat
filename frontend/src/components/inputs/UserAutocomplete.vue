@@ -4,10 +4,8 @@
     :items="userOptions"
     :item-text="(user) => `${user.first_name} ${user.last_name}`"
     item-value="id"
-    :filter="filterFunction"
     :item-disabled="(user) => !user.is_active"
-    :disabled="disabled"
-    :readonly="readonly"
+    :filter="filterFunction"
     :loading="!userOptions.length"
     v-on="$listeners"
   >
@@ -39,8 +37,8 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
-import { intersectionBy } from "lodash";
+import { computed } from "@vue/composition-api";
+import { intersectionBy } from "lodash-es";
 
 import { useUserStore } from "@/stores/users";
 
@@ -85,38 +83,45 @@ export default {
       default: false,
     },
   },
-  computed: {
-    ...mapState(useUserStore, {
-      defaultUserList: "users",
-    }),
-    userOptions() {
-      return this.items.length ? this.items : this.defaultUserList;
-    },
-  },
-  methods: {
-    filterFunction(item, queryText) {
+  setup(props, { emit }) {
+    // Store
+    const userStore = useUserStore();
+
+    // Computed
+    const userOptions = computed(() => (props.items.length ? props.items : userStore.users));
+
+    // Methods
+    function filterFunction(item, queryText) {
       const fullText = `${item.acronym} ${item.first_name} ${item.last_name}`;
       return fullText.toLocaleLowerCase().indexOf(queryText.toLocaleLowerCase()) > -1;
-    },
-    getRandomInt(max) {
+    }
+    function getRandomInt(max) {
       return Math.floor(Math.random() * Math.floor(max));
-    },
-    getRandomUser() {
+    }
+    function getRandomUser() {
       let result;
-      let choices = this.userOptions.filter((user) => user.is_active);
-      if (this.limitRandomChoicesTo.length) {
-        choices = this.returnObject
-          ? intersectionBy(choices, this.limitRandomChoicesTo, "id")
-          : choices.filter((user) => this.limitRandomChoicesTo.includes(user.id));
+      let choices = userOptions.value.filter((user) => user.is_active);
+      if (props.limitRandomChoicesTo.length) {
+        choices = props.returnObject
+          ? intersectionBy(choices, props.limitRandomChoicesTo, "id")
+          : choices.filter((user) => props.limitRandomChoicesTo.includes(user.id));
       }
       if (!choices.length) {
         result = null;
       } else {
-        const randomIndex = this.getRandomInt(choices.length);
-        result = this.returnObject ? choices[randomIndex] : choices[randomIndex].id;
+        const randomIndex = getRandomInt(choices.length);
+        result = props.returnObject ? choices[randomIndex] : choices[randomIndex].id;
       }
-      this.$emit("input", this.multiple ? [result] : result);
-    },
+      emit("input", props.multiple ? [result] : result);
+    }
+
+    return {
+      // Computed
+      userOptions,
+      // Methods
+      filterFunction,
+      getRandomUser,
+    };
   },
 };
 </script>

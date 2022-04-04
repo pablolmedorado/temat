@@ -45,7 +45,8 @@
             <DateRouterLink :date="value" />
           </template>
           <template #item.users="{ value }">
-            <UserPill v-for="user in value" :key="user" :user="user" class="my-1 mr-2" />
+            <template v-if="!value.length"> No asignada </template>
+            <UserPill v-for="user in value" v-else :key="user" :user="user" class="my-1 mr-2" />
           </template>
           <template #item.table_actions="{ item }">
             <v-badge bottom left overlap>
@@ -98,7 +99,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "pinia";
+import { nextTick, toRefs } from "@vue/composition-api";
 import { DateTime } from "luxon";
 
 import GreenWorkingDay from "@/modules/green-working-days/models/green-working-day";
@@ -120,75 +121,96 @@ export default {
     title: "Jornadas especiales",
   },
   components: { StepperBulkFormDialog, VoluteersDialog },
-  setup() {
+  setup(props, { refs }) {
+    // Store
+    const store = useMainStore();
+
+    // Composables
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading({
       includedChildren: ["itemIndex"],
     });
-    return { isLoading, isTaskLoading, addTask, removeTask };
-  },
-  data() {
-    return {
-      modelClass: GreenWorkingDay,
-      service: getServiceByBasename(GreenWorkingDay.serviceBasename),
-      tableHeaders: [
-        { text: "Fecha", align: "start", sortable: true, value: "date", fixed: true },
-        { text: "Etiqueta", align: "start", sortable: true, value: "label", default: true },
-        {
-          text: "Usuarios",
-          align: "start",
-          sortable: false,
-          value: "users",
-          fixed: true,
-        },
-        {
-          text: "Acciones",
-          align: "start",
-          sortable: false,
-          value: "table_actions",
-          fields: ["volunteers"],
-          fixed: true,
-        },
-      ],
-      tableOptions: {
-        sortBy: ["date"],
-        sortDesc: [false],
-        mustSort: true,
+
+    // State
+    const modelClass = GreenWorkingDay;
+    const service = getServiceByBasename(GreenWorkingDay.serviceBasename);
+    const tableHeaders = [
+      { text: "Fecha", align: "start", sortable: true, value: "date", fixed: true },
+      { text: "Etiqueta", align: "start", sortable: true, value: "label", default: true },
+      {
+        text: "Usuarios",
+        align: "start",
+        sortable: false,
+        value: "users",
+        fixed: true,
       },
-      quickFilters: [{ key: "current-year", label: "Año en curso", filters: { date__year: DateTime.local().year } }],
-      formComponent: GreenWorkingDayForm,
-      bulkFormComponent: GreenWorkingDayBulkForm,
+      {
+        text: "Acciones",
+        align: "start",
+        sortable: false,
+        value: "table_actions",
+        fields: ["volunteers"],
+        fixed: true,
+      },
+    ];
+    const tableOptions = {
+      sortBy: ["date"],
+      sortDesc: [false],
+      mustSort: true,
     };
-  },
-  computed: {
-    ...mapState(useMainStore, ["currentUser", "yearOptions"]),
-    canAdd() {
-      return userHasPermission(this.modelClass.ADD_PERMISSION);
-    },
-  },
-  methods: {
-    ...mapActions(useMainStore, ["showSnackbar"]),
-    fetchTableItems() {
-      this.$refs.itemIndex.fetchTableItems();
-    },
-    async toggleVolunteer(item) {
-      this.addTask("toggle-volunteer", item.id);
+    const quickFilters = [
+      { key: "current-year", label: "Año en curso", filters: { date__year: DateTime.local().year } },
+    ];
+    const formComponent = GreenWorkingDayForm;
+    const bulkFormComponent = GreenWorkingDayBulkForm;
+    const canAdd = userHasPermission(modelClass.ADD_PERMISSION);
+
+    // Computed
+    const { currentUser, yearOptions } = toRefs(store);
+
+    // Methods
+    function fetchTableItems() {
+      refs.itemIndex.fetchTableItems();
+    }
+    async function toggleVolunteer(item) {
+      addTask("toggle-volunteer", item.id);
       try {
-        await this.service.toggleVolunteer(item.id);
-        this.fetchTableItems();
-        this.showSnackbar({
+        await service.toggleVolunteer(item.id);
+        fetchTableItems();
+        store.showSnackbar({
           color: "success",
           message: "Estado de voluntario actualizado correctamente",
         });
       } finally {
-        this.removeTask("toggle-volunteer", item.id);
+        removeTask("toggle-volunteer", item.id);
       }
-    },
-    setYearFilter(year) {
-      this.$refs.itemIndex.addFilter({ date__year: year });
-      this.$nextTick(() => {
-        this.$refs.itemIndex.fetchTableItems();
+    }
+    function setYearFilter(year) {
+      refs.itemIndex.addFilter({ date__year: year });
+      nextTick(() => {
+        fetchTableItems();
       });
-    },
+    }
+
+    return {
+      // State
+      modelClass,
+      service,
+      tableHeaders,
+      tableOptions,
+      quickFilters,
+      formComponent,
+      bulkFormComponent,
+      canAdd,
+      // Computed
+      isLoading,
+      currentUser,
+      yearOptions,
+      // Methods
+      isTaskLoading,
+      fetchTableItems,
+      toggleVolunteer,
+      setYearFilter,
+    };
   },
 };
 </script>

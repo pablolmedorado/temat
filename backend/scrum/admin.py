@@ -130,8 +130,9 @@ class UserStoryAdmin(ImportExportActionModelAdmin):
                 )
             },
         ),
+        (_("SCV"), {"fields": ("cvs_branch_name", "cvs_issue_id", "cvs_pull_request_id")}),
         (_("Despliegue"), {"fields": ("use_migrations", "deployment_notes")}),
-        (_("Miscelánea"), {"fields": ("cvs_reference", "external_resource")}),
+        (_("Miscelánea"), {"fields": ("external_resource",)}),
         (
             _("Autoría"),
             {"fields": ("creation_user", "creation_datetime", "modification_user", "modification_datetime")},

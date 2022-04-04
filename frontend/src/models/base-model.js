@@ -20,11 +20,11 @@ export default class BaseModel {
     return item.name;
   }
 
-  static get defaults() {
+  static getDefaults() {
     return {};
   }
 
   constructor(data) {
-    Object.assign(this, this.constructor.defaults, data);
+    Object.assign(this, this.constructor.getDefaults(), data);
   }
 }

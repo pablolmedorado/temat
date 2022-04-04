@@ -17,6 +17,11 @@ env = environ.Env(
     DEBUG=(bool, os.environ.get("TEMAT_DEBUG", default=False)),
     SECRET_KEY=(str, os.environ.get("TEMAT_SECRET_KEY")),
     DATABASE_URL=(str, os.environ.get("TEMAT_DATABASE_URL", default=DEFAULT_DATABASE_URL)),
+    CVS_VENDOR=(str, None),
+    CVS_BASE_URL=(str, None),
+    CVS_BRANCH_URL_PATH=(str, None),
+    CVS_ISSUE_URL_PATH=(str, None),
+    CVS_PULL_REQUEST_URL_PATH=(str, None),
 )
 
 environ.Env.read_env()
@@ -117,6 +122,26 @@ DATABASES = {"default": env.db("DATABASE_URL")}
 if env("ENV") == "production":
     DATABASES["default"]["CONN_MAX_AGE"] = 300
 
+
+# CVS
+
+# Repository
+CVS_VENDOR = env("CVS_VENDOR")  # github, gitlab or bitbucket
+CVS_BASE_URL = env("CVS_BASE_URL")  # repo url
+
+# Branches
+CVS_BRANCH_URL_PATH = env("CVS_BRANCH_URL_PATH")
+CVS_BRANCH_BASE_URL = f"{CVS_BASE_URL}/{env('CVS_BRANCH_URL_PATH')}" if CVS_BASE_URL and CVS_BRANCH_URL_PATH else None
+
+# Issues
+CVS_ISSUE_URL_PATH = env("CVS_ISSUE_URL_PATH")
+CVS_ISSUE_BASE_URL = f"{CVS_BASE_URL}/{env('CVS_ISSUE_URL_PATH')}" if CVS_BASE_URL and CVS_ISSUE_URL_PATH else None
+
+# Pull Requests
+CVS_PULL_REQUEST_URL_PATH = env("CVS_PULL_REQUEST_URL_PATH")
+CVS_PULL_REQUEST_BASE_URL = (
+    f"{CVS_BASE_URL}/{env('CVS_PULL_REQUEST_URL_PATH')}" if CVS_BASE_URL and CVS_PULL_REQUEST_URL_PATH else None
+)
 
 # Auth
 

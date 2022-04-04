@@ -1,25 +1,36 @@
+<template>
+  <AsyncChart ref="chart" :options-function="buildOptions" v-bind="{ ...$attrs, ...fetchProps }" />
+</template>
+
 <script>
+import { computed } from "@vue/composition-api";
 import Highcharts from "highcharts";
-import { get } from "lodash";
+import { get } from "lodash-es";
 import colors from "vuetify/lib/util/colors";
 
 import HolidayService from "@/modules/holidays/services/holiday-service";
-
-import BaseChart from "@/components/charts/BaseChart";
 
 import { hex2rgba } from "@/utils/colours";
 
 export default {
   name: "HolidaysChart",
-  extends: BaseChart,
-  data() {
-    return {
+  inheritAttrs: false,
+  props: {
+    filter: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  setup(props, { refs }) {
+    // Computed
+    const fetchProps = computed(() => ({
       service: HolidayService,
       fetchFunctionName: "userAvailabilityChartData",
-    };
-  },
-  computed: {
-    localChartOptions() {
+      fetchFunctionArgs: [props.filter],
+    }));
+
+    // Methods
+    function buildOptions(chartData) {
       const series = Highcharts.merge(
         [
           {
@@ -35,7 +46,7 @@ export default {
             pointPadding: 0.4,
           },
         ],
-        get(this.chartData, "series", [])
+        get(chartData, "series", [])
       );
       return {
         chart: {
@@ -45,7 +56,7 @@ export default {
           text: "Vacaciones por usuario",
         },
         xAxis: {
-          categories: get(this.chartData, "categories", []),
+          categories: get(chartData, "categories", []),
         },
         yAxis: [
           {
@@ -64,7 +75,18 @@ export default {
         },
         series,
       };
-    },
+    }
+    function fetchData() {
+      refs.chart.fetchData();
+    }
+
+    return {
+      // Computed
+      fetchProps,
+      // Methods
+      buildOptions,
+      fetchData,
+    };
   },
 };
 </script>

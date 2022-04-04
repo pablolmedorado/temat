@@ -7,7 +7,7 @@
           <v-toolbar-title class="text-h6">Kanban</v-toolbar-title>
           <v-spacer />
           <SprintViewSelector :sprint-id="sprintId" />
-          <v-divider vertical inset />
+          <v-divider vertical inset class="mx-1" />
           <v-tooltip bottom>
             <template #activator="{ on, attrs }">
               <v-btn v-if="!hideEmptyColumns" icon v-bind="attrs" @click="hideEmptyColumns = true" v-on="on">
@@ -46,7 +46,7 @@
                     <template v-else>
                       <v-row v-for="item in itemsByStatus[status.value]" :key="item.id">
                         <v-col class="px-1">
-                          <KanbanCard class="mb-4" :user-story="item" />
+                          <KanbanCard class="elevation-5 mb-4" :user-story="item" />
                         </v-col>
                       </v-row>
                     </template>
@@ -62,10 +62,9 @@
 </template>
 
 <script>
-import { ref } from "@vue/composition-api";
-import { mapState } from "pinia";
+import { computed, ref } from "@vue/composition-api";
 import { useFullscreen } from "@vueuse/core";
-import { get, groupBy } from "lodash";
+import { get, groupBy } from "lodash-es";
 
 import UserStoryService from "@/modules/scrum/services/user-story-service";
 
@@ -93,88 +92,64 @@ export default {
       required: true,
     },
   },
-  setup(props) {
-    const { isLoading, addTask, removeTask } = useLoading();
+  setup(props, { root }) {
+    // Store
+    const userStore = useUserStore();
+    const userStoryStore = useUserStoryStore();
 
+    // Composables
+    const { isLoading, addTask, removeTask } = useLoading();
     const { contextItem } = useScrumContext(props);
 
-    const fullscreenWrapper = ref(null); // will be bind to the fullscreenWrapper <div> element
+    const fullscreenWrapper = ref(null); // will be bound to the fullscreenWrapper <div> element
     const { isFullscreen, toggle: toggleFullscreen } = useFullscreen(fullscreenWrapper);
 
-    return {
-      isLoading,
-      addTask,
-      removeTask,
-      contextItem,
-      fullscreenWrapper,
-      isFullscreen,
-      toggleFullscreen,
-    };
-  },
-  data() {
-    return {
-      items: [],
-      hideEmptyColumns: false,
-    };
-  },
-  computed: {
-    ...mapState(useUserStore, ["workerUsers"]),
-    ...mapState(useUserStoryStore, ["userStoryStatus"]),
-    kanbanStatus() {
-      return this.userStoryStatus.filter((status) => status.value);
-    },
-    itemsByStatus() {
-      return groupBy(this.items, "status");
-    },
-    breadcrumbs() {
-      if (this.contextItem) {
+    // State
+    const items = ref([]);
+    const hideEmptyColumns = ref(false);
+
+    // Computed
+    const kanbanStatus = computed(() => userStoryStore.userStoryStatus.filter((status) => status.value));
+    const itemsByStatus = computed(() => {
+      return groupBy(items.value, "status");
+    });
+    const breadcrumbs = computed(() => {
+      if (contextItem.value) {
         return [
           {
             text: "Sprints",
             to: { name: "sprints" },
             exact: true,
           },
-          { text: this.contextItem.name, disabled: false, link: false },
+          { text: contextItem.value.name, disabled: false, link: false },
           { text: "Kanban", disabled: true },
         ];
       } else {
         return [];
       }
-    },
-    kanbanMinWidth() {
-      if (this.hideEmptyColumns) {
-        const availableStatus = Object.keys(this.itemsByStatus).length;
-        switch (availableStatus) {
-          case 1:
-            return "360px";
-          case 2:
-            return "711px";
-          case 3:
-            return "1062px";
-          case 4:
-            return "1413px";
-          default:
-            return undefined;
-        }
-      } else {
-        return "1413px";
-      }
-    },
-    statusColumnClasses() {
+    });
+    const kanbanMinWidth = computed(() => {
+      const availableColumns = hideEmptyColumns.value ? Object.keys(itemsByStatus.value).length : 4;
+      const kanbanWidthByColumns = {
+        1: "360px",
+        2: "711px",
+        3: "1062px",
+        4: "1413px",
+      };
+      return get(kanbanWidthByColumns, [availableColumns]);
+    });
+    const statusColumnClasses = computed(() => {
       const classes = ["kanban-column", "grey"];
-      classes.push(this.$vuetify.theme.isDark ? "darken-3" : "lighten-3");
+      classes.push(root.$vuetify.theme.isDark ? "darken-3" : "lighten-3");
       return classes;
-    },
-  },
-  created() {
-    this.fetchItems();
-  },
-  methods: {
-    async fetchItems() {
-      this.addTask("fetch-items");
+    });
+
+    // Methods
+    async function fetchItems() {
+      addTask("fetch-items");
       try {
         const response = await UserStoryService.list({
-          sprint_id: this.sprintId,
+          sprint_id: props.sprintId,
           status__gte: 1,
           ordering: "status,priority,-risk_level,start_date",
           fields:
@@ -182,26 +157,48 @@ export default {
             "current_effort,planned_effort,start_date,end_date,development_user,validation_user,support_user," +
             "risk_level",
         });
-        this.items = response.data;
+        items.value = response.data;
       } finally {
-        this.removeTask("fetch-items");
+        removeTask("fetch-items");
       }
-    },
-    buildColumnBadgeProps(status) {
-      const itemNumber = get(this.itemsByStatus, [status.value, "length"], 0);
+    }
+    function buildColumnBadgeProps(status) {
+      const itemNumber = get(itemsByStatus.value, [status.value, "length"], 0);
       const props = {
         color: "secondary",
         content: `${itemNumber}`,
       };
       if ([2, 3].includes(status.value)) {
-        const maxItems = Math.ceil(this.workerUsers.length * 1.5);
+        const maxItems = Math.ceil(userStore.workerUsers.length * 1.5);
         props.content = `${itemNumber}/${maxItems}`;
         if (itemNumber > maxItems) {
           props.color = "orange";
         }
       }
       return props;
-    },
+    }
+
+    // Initialization
+    fetchItems();
+
+    return {
+      // State
+      fullscreenWrapper,
+      hideEmptyColumns,
+      // Computed
+      isLoading,
+      contextItem,
+      isFullscreen,
+      kanbanStatus,
+      breadcrumbs,
+      itemsByStatus,
+      kanbanMinWidth,
+      statusColumnClasses,
+      // Methods
+      toggleFullscreen,
+      fetchItems,
+      buildColumnBadgeProps,
+    };
   },
 };
 </script>

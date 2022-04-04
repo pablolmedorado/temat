@@ -1,4 +1,4 @@
-import { keyBy } from "lodash";
+import { keyBy } from "lodash-es";
 
 import GreenDayService from "./green-working-day-service";
 

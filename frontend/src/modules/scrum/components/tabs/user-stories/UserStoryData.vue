@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "pinia";
+import { computed, ref, toRefs } from "@vue/composition-api";
 
 import UserStory from "@/modules/scrum/models/user-story";
 
@@ -104,67 +104,84 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      showSpeedDial: false,
-      showdeleteUserStoryDialog: false,
-    };
-  },
-  computed: {
-    ...mapState(useMainStore, ["currentUser"]),
-    ...mapState(useUserStoryStore, ["riskLevelsMap"]),
-    canEdit() {
-      const action = this.item.id ? "change" : "add";
+  setup(props, { emit, refs, root }) {
+    // Store
+    const mainStore = useMainStore();
+    const userStoryStore = useUserStoryStore();
+
+    // State
+    const showSpeedDial = ref(false);
+    const showdeleteUserStoryDialog = ref(false);
+    const canCopy = userHasPermission(UserStory.ADD_PERMISSION);
+    const canDelete = userHasPermission(UserStory.DELETE_PERMISSION);
+
+    // Computed
+    const { riskLevelsMap } = toRefs(userStoryStore);
+    const canEdit = computed(() => {
+      const action = props.item.id ? "change" : "add";
       return (
-        [this.item.development_user, this.item.validation_user, this.item.support_user].includes(this.currentUser.id) ||
-        userHasPermission(`scrum.${action}_userstory`)
+        [props.item.development_user, props.item.validation_user, props.item.support_user].includes(
+          mainStore.currentUser.id
+        ) || userHasPermission(`scrum.${action}_userstory`)
       );
-    },
-    canValidate() {
-      return this.currentUser.id === this.item.validation_user || userHasPermission(UserStory.CHANGE_PERMISSION);
-    },
-    canCopy() {
-      return userHasPermission(UserStory.ADD_PERMISSION);
-    },
-    canDelete() {
-      return userHasPermission(UserStory.DELETE_PERMISSION);
-    },
-  },
-  methods: {
-    ...mapActions(useMainStore, ["showSnackbar"]),
-    async saveUserStory() {
+    });
+    const canValidate = computed(() => {
+      return mainStore.currentUser.id === props.item.validation_user || userHasPermission(UserStory.CHANGE_PERMISSION);
+    });
+
+    // Methods
+    async function saveUserStory() {
       const newUserStory = await this.$refs.userStoryForm.submit();
       if (newUserStory) {
-        if (this.item.id) {
-          this.$emit("update:item", newUserStory);
+        if (props.item.id) {
+          emit("update:item", newUserStory);
         } else {
-          this.$emit("changed:item", false);
-          this.$router.push({ name: "user-story", params: { id: newUserStory.id } });
+          emit("changed:item", false);
+          root.$router.push({ name: "user-story", params: { id: newUserStory.id } });
         }
       }
-    },
-    async validateUserStory(item) {
+    }
+    async function validateUserStory(item) {
       const response = await UserStoryService.validate(item.id, { expand: "sprint" });
-      this.$emit("update:item", response.data);
-    },
-    async copyUserStory() {
-      const response = await UserStoryService.copy(this.item.id);
-      this.showSnackbar({
+      emit("update:item", response.data);
+    }
+    async function copyUserStory() {
+      const response = await UserStoryService.copy(props.item.id);
+      mainStore.showSnackbar({
         color: "success",
         message: "Copia creada correctamente",
       });
-      this.$router.push({ name: "user-story", params: { id: response.data.id } });
-    },
-    async deleteUserStory(item) {
+      root.$router.push({ name: "user-story", params: { id: response.data.id } });
+    }
+    async function deleteUserStory(item) {
       await UserStoryService.delete(item.id);
-      this.$router.push({ name: "user-stories" });
-    },
-    resetForm() {
-      this.$refs.userStoryForm.reset();
-    },
-    openDeleteDialog(item) {
-      this.$refs.deleteDialog.open(item);
-    },
+      root.$router.push({ name: "user-stories" });
+    }
+    function resetForm() {
+      refs.userStoryForm.reset();
+    }
+    function openDeleteDialog(item) {
+      refs.deleteDialog.open(item);
+    }
+
+    return {
+      // State
+      showSpeedDial,
+      showdeleteUserStoryDialog,
+      canCopy,
+      canDelete,
+      // Computed
+      riskLevelsMap,
+      canEdit,
+      canValidate,
+      // Methods
+      saveUserStory,
+      validateUserStory,
+      copyUserStory,
+      deleteUserStory,
+      resetForm,
+      openDeleteDialog,
+    };
   },
 };
 </script>

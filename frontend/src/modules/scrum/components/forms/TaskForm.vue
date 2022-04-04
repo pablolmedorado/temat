@@ -1,5 +1,5 @@
 <template>
-  <v-form v-if="item" ref="itemForm" :disabled="isTaskLoading('submit')">
+  <v-form v-if="item" ref="itemForm" :disabled="isFormLoading">
     <v-row>
       <v-col>
         <v-textarea
@@ -8,9 +8,7 @@
           rows="3"
           prepend-icon="mdi-format-title"
           counter="2000"
-          :error-messages="buildValidationErrorMessages($v.item.name)"
-          @input="$v.item.name.$touch()"
-          @blur="$v.item.name.$touch()"
+          :error-messages="getErrorMsgs(v$.item.name)"
         />
       </v-col>
     </v-row>
@@ -24,9 +22,7 @@
           prepend-icon="mdi-weight"
           hint="Complejidad"
           persistent-hint
-          :error-messages="buildValidationErrorMessages($v.item.weight)"
-          @input="$v.item.weight.$touch()"
-          @blur="$v.item.weight.$touch()"
+          :error-messages="getErrorMsgs(v$.item.weight)"
         />
       </v-col>
       <v-col v-if="item.id" cols="6">
@@ -38,24 +34,40 @@
 </template>
 
 <script>
-import { maxLength, minValue, numeric, required } from "vuelidate/lib/validators";
-
-import FormMixin from "@/mixins/form-mixin";
+import { maxLength, minValue, numeric, required } from "@vuelidate/validators";
 
 import TaskService from "@/modules/scrum/services/task-service";
 
+import useForm, { formProps } from "@/composables/useForm";
+
 export default {
   name: "TaskForm",
-  mixins: [FormMixin({ service: TaskService })],
-  validations: {
-    item: {
-      name: { required, maxLength: maxLength(2000) },
-      weight: { required, numeric, minValue: minValue(1) },
-    },
-  },
-  data() {
+  props: formProps,
+  validations() {
     return {
+      item: {
+        name: { required, maxLength: maxLength(2000) },
+        weight: { required, numeric, minValue: minValue(1) },
+      },
+    };
+  },
+  setup(props) {
+    // Composables
+    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(props, TaskService, {
       successMessage: "Tarea guardada correctamente",
+    });
+
+    return {
+      // State
+      item,
+      // Computed
+      v$,
+      itemHasChanged,
+      isFormLoading,
+      // Methods
+      getErrorMsgs,
+      submit,
+      reset,
     };
   },
 };

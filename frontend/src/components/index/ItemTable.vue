@@ -27,7 +27,8 @@
 </template>
 
 <script>
-import { defaultTo, isEqual, uniq } from "lodash";
+import { computed, onActivated, ref, watch } from "@vue/composition-api";
+import { defaultTo, isEqual, uniq } from "lodash-es";
 
 import useLoading from "@/composables/useLoading";
 import { defaultTableOptions } from "@/utils/constants";
@@ -83,24 +84,18 @@ export default {
       default: 2,
     },
   },
-  setup() {
+  setup(props, { emit }) {
+    // Composables
     const { isLoading, addTask, removeTask } = useLoading();
-    return {
-      isLoading,
-      addTask,
-      removeTask,
-    };
-  },
-  data() {
-    return {
-      items: [],
-      itemCount: 0,
-    };
-  },
-  computed: {
-    fields() {
-      let fields = [this.itemKey];
-      this.headers.forEach((header) => {
+
+    // State
+    const items = ref([]);
+    const itemCount = ref(0);
+
+    // Computed
+    const fields = computed(() => {
+      let fields = [props.itemKey];
+      props.headers.forEach((header) => {
         if (header.fields) {
           fields = [...fields, ...header.fields];
         } else if (header.value !== "table_actions") {
@@ -108,86 +103,97 @@ export default {
         }
       });
       return uniq(fields);
-    },
-    expand() {
+    });
+    const expand = computed(() => {
       const expand = [];
-      this.fields.forEach((field) => {
+      fields.value.forEach((field) => {
         const splittedField = field.split(".");
         if (splittedField.length > 1) {
           expand.push(splittedField.slice(0, splittedField.length - 1).join("."));
         }
       });
       return uniq(expand);
-    },
-    ordering() {
+    });
+    const ordering = computed(() => {
       const ordering = [];
-      this.options.sortBy.forEach((field, index) => {
-        const header = this.headers.find((header) => header.value === field);
+      props.options.sortBy.forEach((field, index) => {
+        const header = props.headers.find((header) => header.value === field);
         if (header) {
-          ordering.push(`${this.options.sortDesc[index] ? "-" : ""}${defaultTo(header.sortingField, field)}`);
+          ordering.push(`${props.options.sortDesc[index] ? "-" : ""}${defaultTo(header.sortingField, field)}`);
         }
       });
       return ordering;
-    },
-  },
-  watch: {
-    filters: {
-      handler(newValue, oldValue) {
-        if (!isEqual(newValue, oldValue) && this.reactiveFilters) {
-          this.fetchItems(true);
-        }
-      },
-      deep: true,
-    },
-    options: {
-      handler(newValue, oldValue) {
-        if (!isEqual(newValue, oldValue)) {
-          this.fetchItems();
-        }
-      },
-      deep: true,
-    },
-    headers: {
-      handler(newValue, oldValue) {
-        if (!isEqual(newValue, oldValue)) {
-          this.fetchItems();
-        }
-      },
-      deep: true,
-    },
-  },
-  activated() {
-    if (this.headers.length) {
-      this.fetchItems();
-    }
-  },
-  methods: {
-    buildFetchRequestParams() {
-      return {
-        ...this.filters,
-        ...this.systemFilters,
-        fields: this.fields.join(","),
-        expand: this.expand.join(","),
-        ordering: this.ordering.join(","),
-        page: this.options.page,
-        page_size: this.options.itemsPerPage,
-      };
-    },
-    async fetchItems(resetPagination = false) {
-      if (resetPagination && this.options.page !== 1) {
-        this.$emit("update:options", { ...this.options, page: 1 });
+    });
+
+    // Methods
+    async function fetchItems(resetPagination = false) {
+      if (resetPagination && props.options.page !== 1) {
+        emit("update:options", { ...props.options, page: 1 });
       } else {
-        this.addTask("fetch-items");
+        addTask("fetch-items");
         try {
-          const response = await this.service.list(this.buildFetchRequestParams());
-          this.$emit("input", []);
-          this.items = this.options.itemsPerPage <= 0 ? response.data : response.data.results;
-          this.itemCount = this.options.itemsPerPage <= 0 ? response.data.length : response.data.count;
+          const response = await props.service.list({
+            ...props.filters,
+            ...props.systemFilters,
+            fields: fields.value.join(","),
+            expand: expand.value.join(","),
+            ordering: ordering.value.join(","),
+            page: props.options.page,
+            page_size: props.options.itemsPerPage,
+          });
+          emit("input", []);
+          items.value = props.options.itemsPerPage <= 0 ? response.data : response.data.results;
+          itemCount.value = props.options.itemsPerPage <= 0 ? response.data.length : response.data.count;
         } finally {
-          this.removeTask("fetch-items");
+          removeTask("fetch-items");
         }
       }
-    },
+    }
+
+    // Watchers
+    watch(
+      () => props.filters,
+      (newValue, oldValue) => {
+        if (!isEqual(newValue, oldValue) && props.reactiveFilters) {
+          fetchItems(true);
+        }
+      },
+      { deep: true }
+    );
+    watch(
+      () => props.options,
+      (newValue, oldValue) => {
+        if (!isEqual(newValue, oldValue)) {
+          fetchItems(true);
+        }
+      },
+      { deep: true }
+    );
+    watch(
+      () => props.headers,
+      (newValue, oldValue) => {
+        if (!isEqual(newValue, oldValue)) {
+          fetchItems(true);
+        }
+      },
+      { deep: true }
+    );
+
+    // Lifecycle hooks
+    onActivated(() => {
+      if (props.headers.length) {
+        fetchItems();
+      }
+    });
+
+    return {
+      // State
+      isLoading,
+      items,
+      itemCount,
+      // Methods
+      fetchItems,
+    };
   },
 };
 </script>

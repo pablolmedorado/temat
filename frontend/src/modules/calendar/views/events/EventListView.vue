@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { computed, nextTick, toRefs } from "@vue/composition-api";
 import { DateTime } from "luxon";
 
 import CalendarEvent from "@/modules/calendar/models/event";
@@ -100,83 +100,101 @@ export default {
     date: isoDateToLocaleString,
     datetime: isoDateTimeToLocaleString,
   },
-  setup() {
+  setup(props, { refs }) {
+    // Store
+    const eventStore = useEventStore();
+
+    // Composables
     const { eventTypesMap } = useEventTypes();
-    return { eventTypesMap };
-  },
-  data() {
-    return {
-      modelClass: CalendarEvent,
-      tableHeaders: [
-        { text: "Nombre", align: "start", sortable: true, value: "name", fixed: true },
-        { text: "Tipo", align: "start", sortable: true, sortingField: "type__name", value: "type", default: true },
-        {
-          text: "Fecha de inicio",
-          align: "start",
-          sortable: true,
-          value: "start_datetime",
-          fields: ["start_datetime", "all_day"],
-          default: true,
-        },
-        {
-          text: "Duración",
-          align: "start",
-          sortable: false,
-          value: "duration",
-          fields: ["start_datetime", "end_datetime"],
-          default: true,
-        },
-        { text: "Visibilidad", align: "start", sortable: true, value: "visibility", default: true },
-        {
-          text: "Tags",
-          align: "start",
-          sortable: false,
-          value: "tags",
-          fields: ["tags.name", "tags.colour", "tags.icon"],
-        },
-        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
-      ],
-      tableOptions: {
-        sortBy: ["start_datetime"],
-        sortDesc: [true],
-        mustSort: true,
+
+    // State
+    const modelClass = CalendarEvent;
+    const tableHeaders = [
+      { text: "Nombre", align: "start", sortable: true, value: "name", fixed: true },
+      { text: "Tipo", align: "start", sortable: true, sortingField: "type__name", value: "type", default: true },
+      {
+        text: "Fecha de inicio",
+        align: "start",
+        sortable: true,
+        value: "start_datetime",
+        fields: ["start_datetime", "all_day"],
+        default: true,
       },
-      filterComponent: EventFilters,
-      systemFilters: { type__system_slug__isnull: true },
-      datetimeFormat: DateTime.DATETIME_MED_WITH_WEEKDAY,
-      breadcrumbs: [
-        { text: "Calendario", to: { name: "calendar" }, exact: true },
-        { text: "Eventos", disabled: true },
-      ],
+      {
+        text: "Duración",
+        align: "start",
+        sortable: false,
+        value: "duration",
+        fields: ["start_datetime", "end_datetime"],
+        default: true,
+      },
+      { text: "Visibilidad", align: "start", sortable: true, value: "visibility", default: true },
+      {
+        text: "Tags",
+        align: "start",
+        sortable: false,
+        value: "tags",
+        fields: ["tags.name", "tags.colour", "tags.icon"],
+      },
+      { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
+    ];
+    const tableOptions = {
+      sortBy: ["start_datetime"],
+      sortDesc: [true],
+      mustSort: true,
     };
-  },
-  computed: {
-    ...mapState(useEventStore, ["eventVisibilityTypesMap"]),
-    quickFilters() {
-      return [
-        {
-          key: "next-events",
-          label: "Próximos eventos",
-          filters: { start_datetime__date__gte: DateTime.local().toISODate() },
-        },
-      ];
-    },
-  },
-  methods: {
-    calculateDuration(item) {
+    const filterComponent = EventFilters;
+    const systemFilters = { type__system_slug__isnull: true };
+    const datetimeFormat = DateTime.DATETIME_MED_WITH_WEEKDAY;
+    const breadcrumbs = [
+      { text: "Calendario", to: { name: "calendar" }, exact: true },
+      { text: "Eventos", disabled: true },
+    ];
+
+    // Computed
+    const { eventVisibilityTypesMap } = toRefs(eventStore);
+    const quickFilters = computed(() => [
+      {
+        key: "next-events",
+        label: "Próximos eventos",
+        filters: { start_datetime__date__gte: DateTime.local().toISODate() },
+      },
+    ]);
+
+    // Methods
+    function calculateDuration(item) {
       const start = DateTime.fromISO(item.start_datetime);
       const end = DateTime.fromISO(item.end_datetime);
       return getReadableDuration(end.diff(start).toObject());
-    },
-    extractIsoDate(datetime) {
+    }
+    function extractIsoDate(datetime) {
       return DateTime.fromISO(datetime).toISODate();
-    },
-    setTagFilter(tag) {
-      this.$refs.itemIndex.addFilter({ tags__name__in: tag });
-      this.$nextTick(() => {
-        this.$refs.itemIndex.fetchTableItems();
+    }
+    function setTagFilter(tag) {
+      refs.itemIndex.addFilter({ tags__name__in: tag });
+      nextTick(() => {
+        refs.itemIndex.fetchTableItems();
       });
-    },
+    }
+
+    return {
+      // State
+      modelClass,
+      tableHeaders,
+      tableOptions,
+      filterComponent,
+      systemFilters,
+      datetimeFormat,
+      breadcrumbs,
+      // Computed
+      eventTypesMap,
+      eventVisibilityTypesMap,
+      quickFilters,
+      // Methods
+      calculateDuration,
+      extractIsoDate,
+      setTagFilter,
+    };
   },
 };
 </script>

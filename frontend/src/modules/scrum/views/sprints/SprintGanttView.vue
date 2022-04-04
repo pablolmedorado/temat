@@ -6,7 +6,7 @@
         <v-toolbar-title class="text-h6"> Diagrama de Gantt </v-toolbar-title>
         <v-spacer />
         <SprintViewSelector :sprint-id="sprintId" />
-        <v-divider vertical inset />
+        <v-divider vertical inset class="mx-1" />
         <v-btn icon :disabled="isLoading" @click="fetchChartData">
           <v-icon>mdi-refresh</v-icon>
         </v-btn>
@@ -19,7 +19,8 @@
 </template>
 
 <script>
-import { get } from "lodash";
+import { computed, onMounted } from "@vue/composition-api";
+import { get } from "lodash-es";
 
 import ContextBreadcrumbs from "@/modules/scrum/components/ContextBreadcrumbs";
 import SprintGanttChart from "@/modules/scrum/components/charts/SprintGanttChart";
@@ -42,40 +43,46 @@ export default {
       required: true,
     },
   },
-  setup(props) {
+  setup(props, { refs }) {
+    // Composables
     const { isLoading } = useLoading({
       includedChildren: ["chart"],
     });
     const { contextItem } = useScrumContext(props);
-    return {
-      isLoading,
-      contextItem,
-    };
-  },
-  computed: {
-    breadcrumbs() {
-      if (this.contextItem) {
+
+    // Computed
+    const breadcrumbs = computed(() => {
+      if (contextItem.value) {
         return [
           {
             text: "Sprints",
             to: { name: "sprints" },
             exact: true,
           },
-          { text: this.contextItem.name, disabled: false, link: false },
+          { text: contextItem.value.name, disabled: false, link: false },
           { text: "Diagrama de Gantt", disabled: true },
         ];
       } else {
         return [];
       }
-    },
-  },
-  mounted() {
-    this.fetchChartData();
-  },
-  methods: {
-    fetchChartData() {
-      this.$refs.chart.fetchChartData();
-    },
+    });
+
+    // Methods
+    function fetchChartData() {
+      refs.chart.fetchData();
+    }
+
+    // Lifecycle hooks
+    onMounted(fetchChartData);
+
+    return {
+      // Computed
+      isLoading,
+      contextItem,
+      breadcrumbs,
+      // Methods
+      fetchChartData,
+    };
   },
 };
 </script>

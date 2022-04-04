@@ -1,6 +1,6 @@
 <template>
   <v-menu
-    v-model="showDatepicker"
+    v-model="showDatePicker"
     :disabled="readonly"
     :close-on-content-click="false"
     :nudge-right="40"
@@ -10,23 +10,23 @@
   >
     <template #activator="{ on, attrs }">
       <v-text-field
+        v-bind="{ ...attrs, ...$attrs }"
         :value="value | date"
-        :label="label"
-        :prepend-icon="prependIcon"
-        :append-icon="appendIcon"
-        :error-messages="errorMessages"
         :clearable="clearable && !readonly"
         readonly
-        v-bind="attrs"
-        @blur="$emit('blur', $event)"
-        @click:append="$emit('click:append', $event)"
         @click:clear="$emit('input', null)"
-        v-on="on"
-      />
+        v-on="{ ...on, ...$listeners }"
+      >
+        <template #append>
+          <slot name="append"></slot>
+        </template>
+        <template #append-outer>
+          <slot name="append-outer"></slot>
+        </template>
+      </v-text-field>
     </template>
     <v-date-picker
       :value="value"
-      :readonly="readonly"
       :min="min"
       :max="max"
       :locale="locale"
@@ -35,14 +35,15 @@
       color="primary"
       show-week
       no-title
-      @input="showDatepicker = false"
+      scrollable
+      @input="showDatePicker = false"
       @change="$emit('input', $event)"
     />
   </v-menu>
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { ref, toRefs } from "@vue/composition-api";
 
 import { useMainStore } from "@/stores/main";
 
@@ -56,19 +57,7 @@ export default {
   inheritAttrs: false,
   props: {
     value: {
-      type: String,
-      default: null,
-    },
-    label: {
-      type: String,
-      default: "",
-    },
-    prependIcon: {
-      type: String,
-      default: undefined,
-    },
-    appendIcon: {
-      type: String,
+      type: [Array, String],
       default: undefined,
     },
     min: {
@@ -79,10 +68,6 @@ export default {
       type: String,
       default: undefined,
     },
-    errorMessages: {
-      type: Array,
-      default: () => [],
-    },
     readonly: {
       type: Boolean,
       default: false,
@@ -92,13 +77,20 @@ export default {
       default: false,
     },
   },
-  data() {
+  setup() {
+    // Store
+    const store = useMainStore();
+
+    // State
+    const showDatePicker = ref(false);
+
+    // Computed
+    const { locale } = toRefs(store);
+
     return {
-      showDatepicker: false,
+      showDatePicker,
+      locale,
     };
-  },
-  computed: {
-    ...mapState(useMainStore, ["locale"]),
   },
 };
 </script>

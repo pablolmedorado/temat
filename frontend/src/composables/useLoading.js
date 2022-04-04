@@ -1,5 +1,5 @@
 import { computed, getCurrentInstance, onUnmounted, ref, watch } from "@vue/composition-api";
-import { get } from "lodash";
+import { get } from "lodash-es";
 
 const currentTasks = ref({});
 
@@ -20,9 +20,7 @@ export default function ({ includedChildren } = {}) {
   });
 
   // Watchers
-  watch(isLoading, (newValue) => {
-    emit("change:loading", newValue);
-  });
+  watch(isLoading, (newValue) => emit("change:loading", newValue));
 
   // Methods
   function isChildLoading(childRef) {

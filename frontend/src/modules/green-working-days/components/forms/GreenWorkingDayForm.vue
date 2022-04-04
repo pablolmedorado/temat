@@ -1,5 +1,5 @@
 <template>
-  <v-form v-if="item" ref="itemForm" :disabled="isTaskLoading('submit')">
+  <v-form v-if="item" ref="itemForm" :disabled="isFormLoading">
     <v-row>
       <v-col>
         <v-text-field
@@ -7,9 +7,7 @@
           label="Etiqueta"
           prepend-icon="mdi-tag"
           counter="100"
-          :error-messages="buildValidationErrorMessages($v.item.label)"
-          @input="$v.item.label.$touch()"
-          @blur="$v.item.label.$touch()"
+          :error-messages="getErrorMsgs(v$.item.label)"
         />
       </v-col>
     </v-row>
@@ -46,24 +44,40 @@
 </template>
 
 <script>
-import { maxLength, required } from "vuelidate/lib/validators";
-
-import FormMixin from "@/mixins/form-mixin";
+import { maxLength, required } from "@vuelidate/validators";
 
 import GreenWorkingDayService from "@/modules/green-working-days/services/green-working-day-service";
 
+import useForm, { formProps } from "@/composables/useForm";
+
 export default {
   name: "GreenWorkingDayForm",
-  mixins: [FormMixin({ service: GreenWorkingDayService })],
-  validations: {
-    item: {
-      label: { required, maxLength: maxLength(100) },
-    },
-  },
-  data() {
+  props: formProps,
+  validations() {
     return {
-      saveFunctionName: "update",
-      successMessage: "Jornada especial guardada correctamente",
+      item: {
+        label: { required, maxLength: maxLength(100) },
+      },
+    };
+  },
+  setup(props) {
+    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(
+      props,
+      GreenWorkingDayService,
+      {
+        saveFunctionName: "update",
+        successMessage: "Jornada especial guardada correctamente",
+      }
+    );
+
+    return {
+      v$,
+      getErrorMsgs,
+      item,
+      itemHasChanged,
+      submit,
+      reset,
+      isFormLoading,
     };
   },
 };

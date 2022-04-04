@@ -1,22 +1,33 @@
+<template>
+  <AsyncChart ref="chart" :options-function="buildOptions" v-bind="{ ...$attrs, ...fetchProps }" />
+</template>
+
 <script>
-import { get } from "lodash";
+import { computed } from "@vue/composition-api";
+import { get } from "lodash-es";
 import colors from "vuetify/lib/util/colors";
 
 import EventService from "@/modules/calendar/services/event-service";
 
-import BaseChart from "@/components/charts/BaseChart";
-
 export default {
   name: "EventMonthlyChart",
-  extends: BaseChart,
-  data() {
-    return {
+  inheritAttrs: false,
+  props: {
+    filter: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  setup(props, { refs, root }) {
+    // Computed
+    const fetchProps = computed(() => ({
       service: EventService,
       fetchFunctionName: "monthlyChartData",
-    };
-  },
-  computed: {
-    localChartOptions() {
+      fetchFunctionArgs: [props.filter],
+    }));
+
+    // Methods
+    function buildOptions(chartData) {
       return {
         chart: {
           type: "column",
@@ -25,7 +36,7 @@ export default {
           text: "Eventos por mes",
         },
         xAxis: {
-          categories: get(this.chartData, "categories", []),
+          categories: get(chartData, "categories", []),
         },
         yAxis: {
           allowDecimals: false,
@@ -41,13 +52,13 @@ export default {
           },
           plotLines: [
             {
-              value: get(this.chartData, "average", null),
+              value: get(chartData, "average", null),
               color: colors.grey.base,
               dashStyle: "longdash",
               width: 2,
               label: {
                 text: "Media",
-                style: { color: this.$vuetify.theme.isDark ? "#ffffff" : "#000000" },
+                style: { color: root.$vuetify.theme.isDark ? "#ffffff" : "#000000" },
               },
             },
           ],
@@ -70,12 +81,23 @@ export default {
           },
           series: {
             borderWidth: 1,
-            borderColor: this.$vuetify.theme.isDark ? "#ffffff" : "rgba(0, 0, 0, 0.54)",
+            borderColor: root.$vuetify.theme.isDark ? "#ffffff" : "rgba(0, 0, 0, 0.54)",
           },
         },
-        series: get(this.chartData, "series", []),
+        series: get(chartData, "series", []),
       };
-    },
+    }
+    function fetchData() {
+      refs.chart.fetchData();
+    }
+
+    return {
+      // Computed
+      fetchProps,
+      // Methods
+      buildOptions,
+      fetchData,
+    };
   },
 };
 </script>

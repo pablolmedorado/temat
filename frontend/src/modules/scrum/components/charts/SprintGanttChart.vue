@@ -1,19 +1,27 @@
+<template>
+  <AsyncChart
+    ref="chart"
+    constructor-type="ganttChart"
+    :options-function="buildOptions"
+    :height="height"
+    v-bind="{ ...$attrs, ...fetchProps }"
+  />
+</template>
+
 <script>
-import { mapState } from "pinia";
-import { get } from "lodash";
+import { computed } from "@vue/composition-api";
+import { get } from "lodash-es";
 import colors from "vuetify/lib/util/colors";
 
 import SprintService from "@/modules/scrum/services/sprint-service";
 
-import BaseChart from "@/components/charts/BaseChart";
-
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
-import { truncate } from "@/filters";
+import { truncate } from "@/utils/text";
 
 export default {
   name: "SprintGanttChart",
-  extends: BaseChart,
+  inheritAttrs: false,
   props: {
     sprintId: {
       type: String,
@@ -24,26 +32,41 @@ export default {
       default: null,
     },
   },
-  data() {
-    return {
-      constructorType: "ganttChart",
+  setup(props, { refs, root }) {
+    // Store
+    const userStoryStore = useUserStoryStore();
+
+    // Computed
+    const fetchProps = computed(() => ({
       service: SprintService,
       fetchFunctionName: "ganttChartData",
-    };
-  },
-  computed: {
-    ...mapState(useUserStoryStore, ["riskLevelsMap"]),
-    localChartOptions() {
-      const router = this.$router;
+      fetchFunctionArgs: [props.sprintId],
+    }));
+
+    // Methods
+    function getUserStoryColour(userStory) {
+      if (userStory.risk_level !== 0) {
+        return userStoryStore.riskLevelsMap[userStory.risk_level].colour;
+      }
+      if (userStory.validated) {
+        return colors.green.base;
+      }
+      if (!userStory.current_progress) {
+        return colors.grey.base;
+      }
+      return colors.blue.base;
+    }
+    function buildOptions(chartData) {
+      const router = root.$router;
       function navigateToUSDetail(event) {
         const userStoryId = event.point.id;
         router.push({ name: "user-story", params: { id: userStoryId } });
       }
-      const userStories = get(this.chartData, "user_stories", []);
+      const userStories = get(chartData, "user_stories", []);
 
       return {
         title: {
-          text: this.chartData.name,
+          text: chartData.name,
         },
         legend: { enabled: false },
         tooltip: { shared: false },
@@ -59,41 +82,35 @@ export default {
         },
         xAxis: {
           currentDateIndicator: true,
-          min: new Date(this.chartData.start_date).getTime(),
-          max: new Date(this.chartData.end_date).getTime(),
+          min: new Date(chartData.start_date).getTime(),
+          max: new Date(chartData.end_date).getTime(),
         },
         series: [
           {
-            name: this.chartData.name,
+            name: chartData.name,
             data: userStories.map((userStory) => ({
               id: userStory.id,
               name: truncate(userStory.name, 35),
               start: new Date(userStory.start_date).getTime(),
               end: new Date(userStory.end_date).getTime(),
               completed: userStory.current_progress / 100,
-              color: this.getUserStoryColour(userStory),
+              color: getUserStoryColour(userStory),
             })),
           },
         ],
       };
-    },
-  },
-  methods: {
-    buildFetchFunctionArgs() {
-      return [this.sprintId];
-    },
-    getUserStoryColour(userStory) {
-      if (userStory.risk_level !== 0) {
-        return this.riskLevelsMap[userStory.risk_level].colour;
-      }
-      if (userStory.validated) {
-        return colors.green.base;
-      }
-      if (!userStory.current_progress) {
-        return colors.grey.base;
-      }
-      return colors.blue.base;
-    },
+    }
+    function fetchData() {
+      refs.chart.fetchData();
+    }
+
+    return {
+      // Computed
+      fetchProps,
+      // Methods
+      buildOptions,
+      fetchData,
+    };
   },
 };
 </script>

@@ -79,28 +79,26 @@
 </template>
 
 <script>
+import { nextTick } from "@vue/composition-api";
+
 import Holiday from "@/modules/holidays/models/holiday";
-
-import DialogMixin from "@/mixins/dialog-mixin";
-
-import HolidayService from "@/modules/holidays/services/holiday-service";
 
 import HolidayFilters from "@/modules/holidays/components/filters/HolidayFilters";
 
-import useHolidays from "@/modules/holidays/composables/useHolidays";
 import useLoading from "@/composables/useLoading";
+import useDialog, { dialogProps } from "@/composables/useDialog";
+import useHolidays from "@/modules/holidays/composables/useHolidays";
 import { defaultTableOptions } from "@/utils/constants";
 
 export default {
   name: "HolidayManagementDialog",
-  mixins: [DialogMixin],
+  props: dialogProps,
   setup(props, { emit, refs }) {
-    // General
-    const { isLoading, isChildLoading, isTaskLoading, addTask, removeTask } = useLoading({
+    const { isLoading, isTaskLoading, addTask, removeTask } = useLoading({
       includedChildren: ["itemIndex"],
     });
 
-    // Table management
+    // Table
     const tableOptions = {
       ...defaultTableOptions,
       sortBy: ["planned_date"],
@@ -142,12 +140,11 @@ export default {
         filters: { approved__isnull: true },
       },
     ];
-
     function fetchItems() {
       refs.itemIndex.fetchTableItems();
     }
 
-    // Holidays management
+    // Holidays
     const { edit, cancel, getStatusInfo } = useHolidays();
     async function editHoliday(item, approved) {
       addTask(`edit-holiday-${approved}`, item.id);
@@ -172,33 +169,35 @@ export default {
       }
     }
 
+    // Dialog
+    const { showDialog, open: _open, close } = useDialog(props);
+    function open() {
+      _open();
+      nextTick(() => {
+        fetchItems();
+      });
+    }
+
     return {
-      // General
       isLoading,
-      isChildLoading,
       isTaskLoading,
-      // Table management
+      // Table
       modelClass: Holiday,
       tableOptions,
       tableHeaders,
       filterComponent: HolidayFilters,
       systemFilters,
       quickFilters,
-      service: HolidayService,
       fetchItems,
-      // Holidays management
+      // Holidays
       editHoliday,
       cancelHoliday,
       getHolidayStatusInfo: getStatusInfo,
+      // Dialog
+      showDialog,
+      open,
+      close,
     };
-  },
-  methods: {
-    open() {
-      this.showDialog = true;
-      this.$nextTick(() => {
-        this.fetchItems();
-      });
-    },
   },
 };
 </script>

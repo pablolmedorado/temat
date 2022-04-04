@@ -13,7 +13,7 @@ export default class SupportWorkingDay extends BaseModel {
 
   static localStorageNamespace = "support";
 
-  static itemText(item) {
+  static itemText = function (item) {
     return item.date;
-  }
+  };
 }

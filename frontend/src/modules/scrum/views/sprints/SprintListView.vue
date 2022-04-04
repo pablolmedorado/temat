@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { nextTick } from "@vue/composition-api";
 
 import Sprint from "@/modules/scrum/models/sprint";
 
@@ -72,88 +72,94 @@ import SprintFilters from "@/modules/scrum/components/filters/SprintFilters";
 import SprintForm from "@/modules/scrum/components/forms/SprintForm";
 import SprintViewSelector from "@/modules/scrum/components/SprintViewSelector";
 
-import { useMainStore } from "@/stores/main";
-
 export default {
   name: "SprintListView",
   metaInfo: {
     title: "Sprints",
   },
   components: { SprintViewSelector },
-  data() {
-    return {
-      modelClass: Sprint,
-      tableHeaders: [
-        { text: "Nombre", align: "start", sortable: true, value: "name", fixed: true },
-        { text: "Fecha inicio", align: "start", sortable: true, value: "start_date", default: true },
-        { text: "Fecha fin", align: "start", sortable: true, value: "end_date", default: true },
-        {
-          text: "En curso",
-          align: "start",
-          sortable: true,
-          value: "ongoing",
-          sortingField: "annotated_ongoing",
-          default: true,
-        },
-        {
-          text: "Usuario responsable",
-          align: "start",
-          sortable: true,
-          value: "accountable_user",
-          sortingField: "accountable_user__acronym",
-          default: true,
-        },
-        {
-          text: "Historias de usuario",
-          align: "start",
-          sortable: true,
-          sortingField: "user_stories__count",
-          value: "num_of_user_stories",
-        },
-        {
-          text: "Esfuerzo",
-          align: "start",
-          sortable: true,
-          sortingField: "annotated_current_effort",
-          value: "effort",
-          fields: ["planned_effort", "current_effort"],
-        },
-        {
-          text: "Progreso",
-          align: "start",
-          sortable: true,
-          sortingField: "annotated_current_progress",
-          value: "current_progress",
-        },
-        {
-          text: "Tags",
-          align: "start",
-          sortable: false,
-          value: "tags",
-          fields: ["tags.name", "tags.colour", "tags.icon"],
-        },
-        { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
-      ],
-      tableOptions: {
-        sortBy: ["ongoing", "start_date"],
-        sortDesc: [true, true],
-        multiSort: true,
+  setup(props, { refs }) {
+    // State
+    const modelClass = Sprint;
+    const tableHeaders = [
+      { text: "Nombre", align: "start", sortable: true, value: "name", fixed: true },
+      { text: "Fecha inicio", align: "start", sortable: true, value: "start_date", default: true },
+      { text: "Fecha fin", align: "start", sortable: true, value: "end_date", default: true },
+      {
+        text: "En curso",
+        align: "start",
+        sortable: true,
+        value: "ongoing",
+        sortingField: "annotated_ongoing",
+        default: true,
       },
-      filterComponent: SprintFilters,
-      quickFilters: [{ key: "ongoing", label: "En curso", filters: { ongoing: true } }],
-      formComponent: SprintForm,
+      {
+        text: "Usuario responsable",
+        align: "start",
+        sortable: true,
+        value: "accountable_user",
+        sortingField: "accountable_user__acronym",
+        default: true,
+      },
+      {
+        text: "Historias de usuario",
+        align: "start",
+        sortable: true,
+        sortingField: "user_stories__count",
+        value: "num_of_user_stories",
+      },
+      {
+        text: "Esfuerzo",
+        align: "start",
+        sortable: true,
+        sortingField: "annotated_current_effort",
+        value: "effort",
+        fields: ["planned_effort", "current_effort"],
+      },
+      {
+        text: "Progreso",
+        align: "start",
+        sortable: true,
+        sortingField: "annotated_current_progress",
+        value: "current_progress",
+      },
+      {
+        text: "Tags",
+        align: "start",
+        sortable: false,
+        value: "tags",
+        fields: ["tags.name", "tags.colour", "tags.icon"],
+      },
+      { text: "Acciones", align: "start", sortable: false, value: "table_actions", fixed: true },
+    ];
+    const tableOptions = {
+      sortBy: ["ongoing", "start_date"],
+      sortDesc: [true, true],
+      multiSort: true,
     };
-  },
-  computed: {
-    ...mapState(useMainStore, ["currentUser"]),
-  },
-  methods: {
-    setTagFilter(tag) {
-      this.$refs.itemIndex.addFilter({ tags__name__in: tag });
-      this.$nextTick(() => {
-        this.$refs.itemIndex.fetchTableItems();
+    const filterComponent = SprintFilters;
+    const quickFilters = [{ key: "ongoing", label: "En curso", filters: { ongoing: true } }];
+    const formComponent = SprintForm;
+
+    // Methods
+    function setTagFilter(tag) {
+      refs.itemIndex.addFilter({ tags__name__in: tag });
+      nextTick(() => {
+        refs.itemIndex.fetchTableItems();
       });
-    },
+    }
+
+    return {
+      // State
+      modelClass,
+      tableHeaders,
+      tableOptions,
+      filterComponent,
+      quickFilters,
+      formComponent,
+      // Methods
+      setTagFilter,
+    };
   },
 };
 </script>

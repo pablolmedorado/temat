@@ -1,13 +1,15 @@
 import { ref } from "@vue/composition-api";
-import { defaultTo, get, isArray, isFunction, isString } from "lodash";
+import { defaultTo, get, isArray, isFunction, isString } from "lodash-es";
 
 import { useMainStore } from "@/stores/main";
 
 import getService from "@/services";
 
 export default function (service, fn, options = {}) {
-  const mainStore = useMainStore();
   service = isString(service) ? getService(service) : service;
+
+  // Store
+  const store = useMainStore();
 
   // State
   const requestLoading = ref(false);
@@ -25,7 +27,7 @@ export default function (service, fn, options = {}) {
       requestDataCount.value = defaultTo(response.data.count, isArray(response.data) ? response.data.length : 0);
 
       if (options.successMsg) {
-        mainStore.showSnackbar({
+        store.showSnackbar({
           color: "success",
           message: options.successMsg,
         });
@@ -35,11 +37,11 @@ export default function (service, fn, options = {}) {
       requestData.value = null;
       requestDataCount.value = 0;
 
-      if (options.raiseOnError) {
+      if (options.throwErrors) {
         throw error;
       } else {
         console.error(error);
-        mainStore.showSnackbar({
+        store.showSnackbar({
           color: "error",
           message: get(options, "errorMsg", "Ocurrió un error realizando la petición"),
         });
@@ -50,7 +52,7 @@ export default function (service, fn, options = {}) {
     }
   }
 
-  // Lifecycle hooks
+  // Initialization
   if (options.immediate) {
     performRequest();
   }

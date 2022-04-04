@@ -27,8 +27,8 @@ const Template = (args, { argTypes }) => ({
   },
   template: `
     <div>
-      <v-btn color="primary" @click="showDialog = true">Open dialog</v-btn>
-      <BaseDialog v-bind="$props" :value="showDialog">
+      <v-btn color="primary" @click="$refs.dialog.open()">Open dialog</v-btn>
+      <BaseDialog v-bind="$props" ref="dialog" v-model="showDialog">
         <template #header>Title</template>
         <template #body>
           <p>
@@ -58,9 +58,9 @@ const Template = (args, { argTypes }) => ({
             pradera.
           </p>
         </template>
-        <template #actions>
+        <template #actions="{ close }">
           <v-spacer />
-          <v-btn text @click="showDialog = false">Close</v-btn>
+          <v-btn text @click="close()">Close</v-btn>
         </template>
       </BaseDialog>
     </div>

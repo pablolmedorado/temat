@@ -34,10 +34,34 @@
 </template>
 
 <script>
-import FilterMixin from "@/mixins/filter-mixin";
+import useFilters, { filterProps } from "@/composables/useFilters";
 
 export default {
   name: "SupportFilters",
-  mixins: [FilterMixin],
+  props: filterProps,
+  setup(props) {
+    // Composables
+    const {
+      showFiltersDialog,
+      hasAdvancedFilters,
+      updateFilters,
+      clearFilters,
+      openFiltersDialog,
+      closeFiltersDialog,
+      applyFiltersFromDialog,
+    } = useFilters(props);
+
+    return {
+      // State
+      showFiltersDialog,
+      hasAdvancedFilters,
+      // Methods
+      updateFilters,
+      clearFilters,
+      openFiltersDialog,
+      closeFiltersDialog,
+      applyFiltersFromDialog,
+    };
+  },
 };
 </script>

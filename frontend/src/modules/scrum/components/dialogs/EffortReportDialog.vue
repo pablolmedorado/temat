@@ -68,71 +68,75 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { computed, ref } from "@vue/composition-api";
 
 import Effort from "@/modules/scrum/models/effort";
-
-import DialogMixin from "@/mixins/dialog-mixin";
 
 import EffortRoleTimelineChart from "@/modules/scrum/components/charts/EffortRoleTimelineChart";
 import EffortUserTimelineChart from "@/modules/scrum/components/charts/EffortUserTimelineChart";
 
-import { useMainStore } from "@/stores/main";
 import { useUserStore } from "@/stores/users";
 
 import useLoading from "@/composables/useLoading";
+import useDialog, { dialogProps } from "@/composables/useDialog";
 import { userHasPermission } from "@/utils/permissions";
 
 export default {
   name: "EffortReportDialog",
   components: { EffortRoleTimelineChart, EffortUserTimelineChart },
-  mixins: [DialogMixin],
-  setup() {
+  inheritAttrs: false,
+  props: dialogProps,
+  setup(props, { refs }) {
+    // Store
+    const userStore = useUserStore();
+
+    // Composables
     const { isLoading } = useLoading({
       includedChildren: ["userChart", "roleChart"],
     });
-    return {
-      isLoading,
-    };
-  },
-  data() {
-    return {
-      filters: null,
-    };
-  },
-  computed: {
-    ...mapState(useMainStore, ["currentUser"]),
-    ...mapState(useUserStore, ["userMap"]),
-    showUserChart() {
-      return userHasPermission(Effort.VIEW_PERMISSION);
-    },
-    filteredUsers() {
-      if (!this.filters.user_id__in) {
+    const { showDialog, open: _open, close } = useDialog(props);
+
+    // State
+    const filters = ref(null);
+    const showUserChart = userHasPermission(Effort.VIEW_PERMISSION);
+
+    // Computed
+    const filteredUsers = computed(() => {
+      if (!filters.value.user_id__in) {
         return undefined;
       }
-      return this.filters.user_id__in
+      return filters.value.user_id__in
         .split(",")
-        .map((user) => this.userMap[user].acronym)
+        .map((user) => userStore.userMap[user].acronym)
         .join(", ");
-    },
-  },
-  methods: {
-    open(filters) {
-      this.filters = filters;
-      this.showDialog = true;
-      this.$nextTick(() => {
-        this.refresh();
-      });
-    },
-    close() {
-      this.showDialog = false;
-    },
-    refresh() {
-      if (this.showUserChart) {
-        this.$refs.userChart.fetchChartData();
+    });
+
+    // Methods
+    async function open(newFilters) {
+      filters.value = newFilters;
+      await _open();
+      refresh();
+    }
+    function refresh() {
+      if (showUserChart) {
+        refs.userChart.fetchData();
       }
-      this.$refs.roleChart.fetchChartData();
-    },
+      refs.roleChart.fetchData();
+    }
+
+    return {
+      // State
+      isLoading,
+      showDialog,
+      filters,
+      showUserChart,
+      // Computed
+      filteredUsers,
+      // Methods
+      open,
+      close,
+      refresh,
+    };
   },
 };
 </script>

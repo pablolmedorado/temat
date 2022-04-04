@@ -22,9 +22,9 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { computed, onActivated, ref, toRefs, watch } from "@vue/composition-api";
 import { DateTime, Interval } from "luxon";
-import { defaultTo, property } from "lodash";
+import { defaultTo, property } from "lodash-es";
 
 import HolidayService from "@/modules/holidays/services/holiday-service";
 import EventService from "@/modules/calendar/services/event-service";
@@ -33,8 +33,6 @@ import { useMainStore } from "@/stores/main";
 import { useUserStore } from "@/stores/users";
 
 import useLoading from "@/composables/useLoading";
-
-const currentDate = DateTime.local();
 
 export default {
   name: "HolidaysDatePicker",
@@ -61,100 +59,95 @@ export default {
       default: false,
     },
   },
-  setup() {
+  setup(props, { emit }) {
+    // Store
+    const mainStore = useMainStore();
+    const userStore = useUserStore();
+
+    // Composables
     const { isLoading, addTask, removeTask } = useLoading();
-    return {
-      isLoading,
-      addTask,
-      removeTask,
-    };
-  },
-  data() {
-    return {
-      pickerDate: currentDate.toFormat("yyyy-MM"),
-      usedDates: [],
-      importantDates: [],
-      summary: {},
-    };
-  },
-  computed: {
-    ...mapState(useMainStore, ["locale", "currentUser"]),
-    ...mapState(useUserStore, ["workerUsers"]),
-    pickerInterval() {
-      const date = DateTime.fromObject({ year: this.year });
+
+    // State
+    const currentDate = DateTime.local();
+    const pickerDate = ref(currentDate.toFormat("yyyy-MM"));
+    const usedDates = ref([]);
+    const importantDates = ref([]);
+    const summary = ref({});
+
+    // Computed
+    const { locale } = toRefs(mainStore);
+    const pickerInterval = computed(() => {
+      const date = DateTime.fromObject({ year: props.year });
       const startDate = date.startOf("year");
       const endDate = date.endOf("year").plus({ year: 1 });
       return Interval.fromDateTimes(startDate, endDate);
-    },
-  },
-  watch: {
-    year(newValue) {
-      this.$emit("input", this.multiple || this.range ? [] : null);
-      this.pickerDate =
-        newValue === currentDate.year
-          ? currentDate.toFormat("yyyy-MM")
-          : DateTime.fromObject({ year: newValue }).toFormat("yyyy-MM");
-      this.getSummary();
-      this.getImportantDatesByYear(newValue);
-      if (this.disableUserHolidays) {
-        this.getUsedDates();
+    });
+
+    // Watchers
+    watch(
+      () => props.year,
+      (newValue) => {
+        emit("input", props.multiple || props.range ? [] : null);
+        pickerDate.value =
+          newValue === currentDate.year
+            ? currentDate.toFormat("yyyy-MM")
+            : DateTime.fromObject({ year: newValue }).toFormat("yyyy-MM");
+        getSummary();
+        getImportantDatesByYear(newValue);
+        if (props.disableUserHolidays) {
+          getUsedDates();
+        }
       }
-    },
-    range(newValue) {
-      if (newValue) {
-        this.$emit("input", this.value ? [this.value] : []);
-      } else {
-        this.$emit("input", this.value ? this.value[0] : null);
+    );
+    watch(
+      () => props.range,
+      (newValue) => {
+        if (newValue) {
+          emit("input", props.value ? [props.value] : []);
+        } else {
+          emit("input", props.value ? props.value[0] : null);
+        }
       }
-    },
-  },
-  created() {
-    this.getImportantDatesByYear(this.year);
-  },
-  activated() {
-    this.getSummary();
-    if (this.disableUserHolidays) {
-      this.getUsedDates();
-    }
-  },
-  methods: {
-    async getImportantDatesByYear(year) {
-      this.addTask("fetch-important-dates");
+    );
+
+    // Methods
+    async function getImportantDatesByYear(year) {
+      addTask("fetch-important-dates");
       try {
         const response = await EventService.myImportantDatesByYear(year);
-        this.importantDates = response.data;
+        importantDates.value = response.data;
       } finally {
-        this.removeTask("fetch-important-dates");
+        removeTask("fetch-important-dates");
       }
-    },
-    async getSummary() {
-      this.addTask("fetch-summary");
+    }
+    async function getSummary() {
+      addTask("fetch-summary");
       try {
-        const response = await HolidayService.summary({ allowance_date__year: this.year });
-        this.summary = Object.fromEntries(response.data.map((item) => [item.date, item.users]));
+        const response = await HolidayService.summary({ allowance_date__year: props.year });
+        summary.value = Object.fromEntries(response.data.map((item) => [item.date, item.users]));
       } finally {
-        this.removeTask("fetch-summary");
+        removeTask("fetch-summary");
       }
-    },
-    async getUsedDates() {
-      this.addTask("fetch-used-dates");
+    }
+    async function getUsedDates() {
+      addTask("fetch-used-dates");
       try {
         const response = await HolidayService.list({
-          user_id: this.currentUser.id,
-          planned_date__gte: this.pickerInterval.start.toISODate(),
-          planned_date__lte: this.pickerInterval.end.toISODate(),
+          user_id: mainStore.currentUser.id,
+          planned_date__gte: pickerInterval.value.start.toISODate(),
+          planned_date__lte: pickerInterval.value.end.toISODate(),
           fields: "planned_date",
         });
-        this.usedDates = response.data.map(property("planned_date"));
+        usedDates.value = response.data.map(property("planned_date"));
       } finally {
-        this.removeTask("fetch-used-dates");
+        removeTask("fetch-used-dates");
       }
-    },
-    allowedDates(date) {
-      return this.disableUserHolidays ? !this.usedDates.includes(date) : true;
-    },
-    summaryDateColour(date) {
-      const userRatio = (defaultTo(this.summary[date], 0) * 100) / this.workerUsers.length;
+    }
+    function allowedDates(date) {
+      return props.disableUserHolidays ? !usedDates.value.includes(date) : true;
+    }
+    function summaryDateColour(date) {
+      const userRatio = (defaultTo(summary.value[date], 0) * 100) / userStore.workerUsers.length;
       if (userRatio < 20) {
         return "green";
       }
@@ -162,24 +155,50 @@ export default {
         return "orange";
       }
       return "red";
-    },
-    pickerEvents(date) {
+    }
+    function pickerEvents(date) {
       const events = [];
-      if (this.importantDates.includes(date)) {
+      if (importantDates.value.includes(date)) {
         events.push("black");
       }
-      if (this.summary[date]) {
-        events.push(this.summaryDateColour(date));
+      if (summary.value[date]) {
+        events.push(summaryDateColour(date));
       }
       return events;
-    },
-    clear() {
-      if (this.multiple || this.range) {
-        this.$emit("input", []);
+    }
+    function clear() {
+      if (props.multiple || props.range) {
+        emit("input", []);
       } else {
-        this.$emit("input", null);
+        emit("input", null);
       }
-    },
+    }
+
+    // Lifecycle hooks
+    onActivated(() => {
+      getSummary();
+      if (props.disableUserHolidays) {
+        getUsedDates();
+      }
+    });
+
+    // Initialization
+    getImportantDatesByYear(props.year);
+
+    return {
+      // State
+      pickerDate,
+      // Computed
+      isLoading,
+      locale,
+      pickerInterval,
+      // Methods
+      getSummary,
+      getUsedDates,
+      allowedDates,
+      pickerEvents,
+      clear,
+    };
   },
 };
 </script>

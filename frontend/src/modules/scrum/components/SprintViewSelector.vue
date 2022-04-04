@@ -38,6 +38,8 @@
 </template>
 
 <script>
+import { computed } from "@vue/composition-api";
+
 export default {
   name: "SprintViewSelector",
   props: {
@@ -54,20 +56,21 @@ export default {
       default: false,
     },
   },
-  data() {
+  setup(props, { root }) {
+    // State
+    const views = [
+      { label: "Kanban", routeName: "sprint-kanban", icon: "mdi-human-male-board" },
+      { label: "Diagrama de quemado (Burn-down/up)", routeName: "sprint-chart", icon: "mdi-fire" },
+      { label: "Diagrama de Gantt", routeName: "sprint-gantt", icon: "mdi-chart-timeline" },
+      { label: "Informe de despliegue", routeName: "sprint-deployment-report", icon: "mdi-rocket-launch" },
+    ];
+
+    // Computed
+    const availableViews = computed(() => views.filter((view) => view.routeName !== root.$route.name));
+
     return {
-      views: [
-        { label: "Kanban", routeName: "sprint-kanban", icon: "mdi-human-male-board" },
-        { label: "Diagrama de quemado (Burn-down/up)", routeName: "sprint-chart", icon: "mdi-fire" },
-        { label: "Diagrama de Gantt", routeName: "sprint-gantt", icon: "mdi-chart-timeline" },
-        { label: "Informe de despliegue", routeName: "sprint-deployment-report", icon: "mdi-rocket-launch" },
-      ],
+      availableViews,
     };
-  },
-  computed: {
-    availableViews() {
-      return this.views.filter((view) => view.routeName !== this.$route.name);
-    },
   },
 };
 </script>

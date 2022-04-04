@@ -11,7 +11,7 @@
       <v-toolbar flat>
         <v-toolbar-title class="text-h6"> Resumen de tostadas </v-toolbar-title>
         <v-spacer />
-        <v-tooltip v-if="isClipboardSupported" bottom>
+        <v-tooltip v-if="isClipboardSupported" left>
           <template #activator="{ on, attrs }">
             <v-btn icon v-bind="attrs" v-on="on" @click="copyBreakfastsToClipboard">
               <v-icon>mdi-clipboard-text-multiple-outline</v-icon>
@@ -41,53 +41,52 @@
 </template>
 
 <script>
-import { mapActions } from "pinia";
+import { computed, ref } from "@vue/composition-api";
 import { useClipboard } from "@vueuse/core";
-import { chain, property, uniqueId } from "lodash";
-
-import DialogMixin from "@/mixins/dialog-mixin";
+import { chain, property, uniqueId } from "lodash-es";
 
 import { useMainStore } from "@/stores/main";
+import useDialog, { dialogProps } from "@/composables/useDialog";
 
 export default {
   name: "BreakfastSummaryDialog",
-  mixins: [DialogMixin],
-  setup() {
+  inheritAttrs: false,
+  props: dialogProps,
+  setup(props) {
+    // Store
+    const store = useMainStore();
+
+    // Composables
+    const { showDialog, open: _open, close: _close } = useDialog(props);
     const { copy: copyToClipboard, isSupported: isClipboardSupported } = useClipboard({ read: false });
-    return {
-      isClipboardSupported,
-      copyToClipboard,
-    };
-  },
-  data() {
-    return {
-      headers: [
-        { text: "Pan", align: "start", sortable: true, value: "bread" },
-        { text: "Base", align: "start", sortable: true, value: "base" },
-        {
-          text: "Primer ingrediente",
-          align: "start",
-          sortable: true,
-          value: "ingredient1",
-        },
-        {
-          text: "Segundo ingrediente",
-          align: "start",
-          sortable: true,
-          value: "ingredient2",
-        },
-        { text: "Total", align: "start", sortable: true, value: "count" },
-      ],
-      options: {
-        sortBy: ["bread", "base", "ingredient1", "ingredient2"],
-        sortDesc: [false, false, false, false],
+
+    // State
+    const headers = [
+      { text: "Pan", align: "start", sortable: true, value: "bread" },
+      { text: "Base", align: "start", sortable: true, value: "base" },
+      {
+        text: "Primer ingrediente",
+        align: "start",
+        sortable: true,
+        value: "ingredient1",
       },
-      items: [],
-    };
-  },
-  computed: {
-    itemSummary() {
-      return chain(this.items)
+      {
+        text: "Segundo ingrediente",
+        align: "start",
+        sortable: true,
+        value: "ingredient2",
+      },
+      { text: "Total", align: "start", sortable: true, value: "count" },
+    ];
+    const options = ref({
+      sortBy: ["bread", "base", "ingredient1", "ingredient2"],
+      sortDesc: [false, false, false, false],
+    });
+    const items = ref([]);
+
+    // Computed
+    const itemSummary = computed(() => {
+      return chain(items.value)
         .map((item) => chain(item).pick(["bread", "base", "ingredient1", "ingredient2"]).map(property("name")).value())
         .countBy()
         .map((count, item) => {
@@ -102,40 +101,54 @@ export default {
           };
         })
         .value();
-    },
-    clipboardSummary() {
-      return this.itemSummary
+    });
+    const clipboardSummary = computed(() => {
+      return itemSummary.value
         .map((item) => {
           const ingredients = [item.base, item.ingredient1, item.ingredient2].filter((item) => !!item).join(", ");
           return `${item.count} ${item.bread} con ${ingredients}`;
         })
         .join("\n");
-    },
-  },
-  methods: {
-    ...mapActions(useMainStore, ["showSnackbar"]),
-    open(items) {
-      this.items = items;
-      this.showDialog = true;
-    },
-    close() {
-      this.items = [];
-      this.showDialog = false;
-    },
-    async copyBreakfastsToClipboard() {
+    });
+
+    // Methods
+    function open(newItems) {
+      items.value = newItems;
+      _open();
+    }
+    function close() {
+      _close();
+      items.value = [];
+    }
+    function copyBreakfastsToClipboard() {
       try {
-        this.copyToClipboard(this.clipboardSummary);
-        this.showSnackbar({
+        copyToClipboard(clipboardSummary.value);
+        store.showSnackbar({
           color: "info",
           message: "Desayunos copiados al portapapeles",
         });
       } catch {
-        this.showSnackbar({
+        store.showSnackbar({
           color: "error",
           message: "Error copiando desayunos al portapapeles",
         });
       }
-    },
+    }
+
+    return {
+      // State
+      showDialog,
+      headers,
+      options,
+      items,
+      // Computed
+      itemSummary,
+      isClipboardSupported,
+      // Methods
+      open,
+      close,
+      copyBreakfastsToClipboard,
+    };
   },
 };
 </script>

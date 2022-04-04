@@ -13,7 +13,7 @@ export default class UserStory extends BaseModel {
 
   static localStorageNamespace = "userStory";
 
-  static get defaults() {
+  static getDefaults = function () {
     return {
       id: null,
       name: "",
@@ -38,12 +38,14 @@ export default class UserStory extends BaseModel {
       validation_comments: "",
       support_user: null,
       support_comments: "",
-      cvs_reference: "",
+      cvs_branch_name: "",
+      cvs_issue_id: null,
+      cvs_pull_request_id: null,
       risk_level: 0,
       risk_comments: "",
       use_migrations: false,
       deployment_notes: "",
       tags: [],
     };
-  }
+  };
 }

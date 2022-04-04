@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { computed, toRefs } from "@vue/composition-api";
 
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
@@ -38,18 +38,26 @@ export default {
       required: true,
     },
   },
-  computed: {
-    ...mapState(useUserStoryStore, ["userStoryStatusMap", "riskLevelsMap"]),
-    statusLabelStyle() {
-      if (this.userStory.risk_level) {
-        return {
-          color: this.riskLevelsMap[this.userStory.risk_level].colour,
-          fontWeight: "bold",
-        };
-      } else {
-        return {};
-      }
-    },
+  setup(props) {
+    // Store
+    const userStoryStore = useUserStoryStore();
+
+    // Computed
+    const { userStoryStatusMap, riskLevelsMap } = toRefs(userStoryStore);
+    const statusLabelStyle = computed(() => {
+      return props.userStory.risk_level
+        ? {
+            color: riskLevelsMap.value[props.userStory.risk_level].colour,
+            fontWeight: "bold",
+          }
+        : {};
+    });
+
+    return {
+      userStoryStatusMap,
+      riskLevelsMap,
+      statusLabelStyle,
+    };
   },
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="elevation-5" :style="borderStyle">
+  <v-card :style="borderStyle">
     <v-card-text class="py-0">
       <v-row>
         <v-col class="d-inline-flex">
@@ -88,7 +88,9 @@
 </template>
 
 <script>
+import { computed } from "@vue/composition-api";
 import { DateTime } from "luxon";
+import { get } from "lodash-es";
 import colors from "vuetify/lib/util/colors";
 
 import UserStoryActors from "@/modules/scrum/components/UserStoryActors";
@@ -107,50 +109,38 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      greenColour: colors.green.base,
-      orangeColour: colors.orange.base,
-      redColour: colors.red.base,
-      blueColour: colors.blue.base,
-    };
-  },
-  computed: {
-    borderStyle() {
-      const style = { borderLeftColor: undefined };
-      switch (this.userStory.risk_level) {
-        case 0:
-          style.borderLeftColor = colors.green.base;
-          break;
-        case 1:
-          style.borderLeftColor = colors.orange.base;
-          break;
-        case 2:
-          style.borderLeftColor = colors.red.base;
-          break;
-        default:
-          style.borderLeftColor = colors.blue.base;
-      }
-      return style;
-    },
-    effortPillColour() {
-      return this.userStory.current_effort <= this.userStory.planned_effort ? "green" : "orange";
-    },
-    endDatePillNumber() {
-      const startDate = DateTime.fromISO(this.userStory.start_date);
-      const end = this.userStory.status < 4 ? DateTime.local() : DateTime.fromISO(this.userStory.validated_changed);
+  setup(props) {
+    const borderStyle = computed(() => {
+      const riskColours = [colors.green.base, colors.orange.base, colors.red.base];
+      return {
+        borderLeftColor: get(riskColours, [props.userStory.risk_level], colors.blue.base),
+      };
+    });
+    const effortPillColour = computed(() => {
+      return props.userStory.current_effort <= props.userStory.planned_effort ? "green" : "orange";
+    });
+    const endDatePillNumber = computed(() => {
+      const startDate = DateTime.fromISO(props.userStory.start_date);
+      const end = props.userStory.status < 4 ? DateTime.local() : DateTime.fromISO(props.userStory.validated_changed);
       return Math.max(0, Math.floor(end.diff(startDate).as("days")));
-    },
-    endDatePillColour() {
-      const endDate = DateTime.fromISO(this.userStory.end_date).plus({ days: 1 });
-      if (this.userStory.status < 4) {
+    });
+    const endDatePillColour = computed(() => {
+      const endDate = DateTime.fromISO(props.userStory.end_date).plus({ days: 1 });
+      if (props.userStory.status < 4) {
         const now = DateTime.local();
         return endDate < now ? "orange" : "green";
       } else {
-        const validationDate = DateTime.fromISO(this.userStory.validated_changed);
+        const validationDate = DateTime.fromISO(props.userStory.validated_changed);
         return endDate <= validationDate ? "orange" : "green";
       }
-    },
+    });
+
+    return {
+      borderStyle,
+      effortPillColour,
+      endDatePillNumber,
+      endDatePillColour,
+    };
   },
 };
 </script>

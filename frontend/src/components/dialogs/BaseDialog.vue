@@ -17,17 +17,28 @@
       </v-card-text>
       <v-divider />
       <v-card-actions>
-        <slot name="actions"></slot>
+        <slot name="actions" v-bind="{ close }"></slot>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import DialogMixin from "@/mixins/dialog-mixin";
+import useDialog, { dialogProps } from "@/composables/useDialog";
 
 export default {
   name: "BaseDialog",
-  mixins: [DialogMixin],
+  inheritAttrs: false,
+  props: dialogProps,
+  setup(props) {
+    const { showDialog, open, close } = useDialog(props);
+    return {
+      // State
+      showDialog,
+      // Methods
+      open,
+      close,
+    };
+  },
 };
 </script>

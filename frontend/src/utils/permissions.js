@@ -1,4 +1,4 @@
-import { difference, intersection, memoize } from "lodash";
+import { difference, intersection, memoize } from "lodash-es";
 
 import { useMainStore } from "@/stores/main";
 

@@ -1,52 +1,49 @@
 <template>
-  <v-form ref="itemsForm" :disabled="isTaskLoading('submit')">
-    <v-row v-for="(item, index) in items" :key="item.date">
-      <v-col>
-        <v-text-field
-          :value="item.date"
-          label="Fecha*"
-          prepend-icon="mdi-calendar"
-          readonly
-          :error-messages="buildValidationErrorMessages($v.items.$each.$iter[index].date)"
-          @change="$v.items.$each.$iter[index].date.$touch()"
-          @blur="$v.items.$each.$iter[index].date.$touch()"
-        />
-      </v-col>
-      <v-col>
-        <UserAutocomplete
-          v-model.number="item.user"
-          label="Usuario*"
-          prepend-icon="mdi-account"
-          show-random-btn
-          :error-messages="buildValidationErrorMessages($v.items.$each.$iter[index].user)"
-          @change="$v.items.$each.$iter[index].user.$touch()"
-          @blur="$v.items.$each.$iter[index].user.$touch()"
-        />
-      </v-col>
-    </v-row>
+  <v-form ref="itemsForm" :disabled="isFormLoading">
+    <SupportDayBulkFormRow v-for="index in items.length" :key="items[index - 1].date" v-model="items[index - 1]" />
     <small>* indica campo obligatorio</small>
   </v-form>
 </template>
 
 <script>
-import { minLength, required } from "vuelidate/lib/validators";
-
-import BulkFormMixin from "@/mixins/bulk-form-mixin";
+import { minLength, required } from "@vuelidate/validators";
 
 import SupportService from "@/modules/support-working-days/services/support-service";
 
+import SupportDayBulkFormRow from "@/modules/support-working-days/components/forms/SupportDayBulkFormRow";
+
+import useBulkForm, { bulkFormProps } from "@/composables/useBulkForm";
+
 export default {
   name: "SupportDayBulkForm",
-  mixins: [BulkFormMixin({ service: SupportService })],
-  validations: {
-    items: {
-      required,
-      minLength: minLength(1),
-      $each: {
-        date: { required },
-        user: { required },
+  components: { SupportDayBulkFormRow },
+  props: bulkFormProps,
+  validations() {
+    return {
+      items: {
+        required,
+        minLength: minLength(1),
       },
-    },
+    };
+  },
+  setup(props) {
+    const { v$, getErrorMsgs, items, itemHaveChanged, submit, reset, isFormLoading } = useBulkForm(
+      props,
+      SupportService
+    );
+
+    return {
+      // State
+      items,
+      // Computed
+      v$,
+      itemHaveChanged,
+      isFormLoading,
+      // Methods
+      getErrorMsgs,
+      submit,
+      reset,
+    };
   },
 };
 </script>

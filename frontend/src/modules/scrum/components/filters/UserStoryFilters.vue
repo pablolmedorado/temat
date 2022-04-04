@@ -408,6 +408,30 @@
               </v-row>
               <v-row>
                 <v-col>
+                  <v-text-field
+                    :value="filters.cvs_issue_id"
+                    label="Issue SCV"
+                    type="number"
+                    min="0"
+                    prepend-icon="mdi-record-circle-outline"
+                    clearable
+                    @input="updateFilters({ cvs_issue_id: $event })"
+                  />
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    :value="filters.cvs_pull_request_id"
+                    label="Pull Request SCV"
+                    type="number"
+                    min="0"
+                    prepend-icon="mdi-source-pull"
+                    clearable
+                    @input="updateFilters({ cvs_pull_request_id: $event })"
+                  />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
                   <v-switch
                     class="pl-1"
                     :value="filters.use_migrations"
@@ -433,65 +457,84 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
-import { range } from "lodash";
-
-import FilterMixin from "@/mixins/filter-mixin";
+import { computed, inject, ref, toRefs } from "@vue/composition-api";
+import { range } from "lodash-es";
 
 import EpicService from "@/modules/scrum/services/epic-service";
 import SprintService from "@/modules/scrum/services/sprint-service";
 
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
+import useFilters, { filterProps } from "@/composables/useFilters";
 import useUserStoryTypes from "@/modules/scrum/composables/useUserStoryTypes";
 
 export default {
   name: "UserStoryFilters",
-  mixins: [FilterMixin],
-  inject: {
-    context: { default: {} },
-  },
-  setup() {
+  props: filterProps,
+  setup(props) {
+    // Store
+    const userStoryStore = useUserStoryStore();
+
+    // Composables
+    const {
+      showFiltersDialog,
+      hasAdvancedFilters,
+      updateFilters,
+      clearFilters,
+      openFiltersDialog,
+      closeFiltersDialog,
+      applyFiltersFromDialog,
+      splitFilterValue,
+    } = useFilters(props, { basicFilters: ["search", "status__in", "any_role_user__in"] });
     const { userStoryTypes: userStoryTypesOptions } = useUserStoryTypes();
+
+    // State
+    const epicService = EpicService;
+    const sprintService = SprintService;
+    const tab = ref("general");
+    const priorityOptions = range(1, 11);
+
+    // Computed
+    const { riskLevels: riskLevelOptions, userStoryStatus: userStoryStatusOptions } = toRefs(userStoryStore);
+    const statusFilter = computed(() => splitFilterValue("status__in", true));
+    const tagFilter = computed(() => splitFilterValue("tags__name__in"));
+    const anyRoleUserFilter = computed(() => splitFilterValue("any_role_user__in", true));
+    const priorityFilter = computed(() => splitFilterValue("priority__in", true));
+    const developmentUserFilter = computed(() => splitFilterValue("development_user_id__in", true));
+    const validationUserFilter = computed(() => splitFilterValue("validation_user_id__in", true));
+    const supportUserFilter = computed(() => splitFilterValue("support_user_id__in", true));
+
+    // Dependency injection
+    const context = inject("context", {});
+
     return {
+      // Injections
+      context,
+      // State
+      showFiltersDialog,
+      hasAdvancedFilters,
       userStoryTypesOptions,
+      epicService,
+      sprintService,
+      tab,
+      priorityOptions,
+      // Computed
+      riskLevelOptions,
+      userStoryStatusOptions,
+      statusFilter,
+      tagFilter,
+      anyRoleUserFilter,
+      priorityFilter,
+      developmentUserFilter,
+      validationUserFilter,
+      supportUserFilter,
+      // Methods
+      updateFilters,
+      clearFilters,
+      openFiltersDialog,
+      closeFiltersDialog,
+      applyFiltersFromDialog,
     };
-  },
-  data() {
-    return {
-      epicService: EpicService,
-      sprintService: SprintService,
-      tab: "general",
-      priorityOptions: range(1, 11),
-      basicFilters: ["search", "status__in", "any_role_user__in"],
-    };
-  },
-  computed: {
-    ...mapState(useUserStoryStore, {
-      riskLevelOptions: "riskLevels",
-      userStoryStatusOptions: "userStoryStatus",
-    }),
-    statusFilter() {
-      return this.splitFilterValue("status__in", true);
-    },
-    tagFilter() {
-      return this.splitFilterValue("tags__name__in");
-    },
-    anyRoleUserFilter() {
-      return this.splitFilterValue("any_role_user__in", true);
-    },
-    priorityFilter() {
-      return this.splitFilterValue("priority__in", true);
-    },
-    developmentUserFilter() {
-      return this.splitFilterValue("development_user_id__in", true);
-    },
-    validationUserFilter() {
-      return this.splitFilterValue("validation_user_id__in", true);
-    },
-    supportUserFilter() {
-      return this.splitFilterValue("support_user_id__in", true);
-    },
   },
 };
 </script>

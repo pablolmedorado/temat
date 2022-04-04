@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.21.0](https://github.com/pablolmedorado/temat/compare/v1.20.0...v1.21.0) (2022-04-04)
+
+
+### Features
+
+* **notifications:** add bulk actions for all notifications (mark as read/delete) ([cc54a14](https://github.com/pablolmedorado/temat/commit/cc54a146d29954caf17f2524128c262a58a1f5d6))
+* **user-stories:** add cvs fields (branch, issue & pull request) ([cdb28e3](https://github.com/pablolmedorado/temat/commit/cdb28e3094a2ccfafb69c3d4dafcda393c26886f))
+
+
+### Bug Fixes
+
+* **breakfasts:** move summary button to the toolbar ([03356f1](https://github.com/pablolmedorado/temat/commit/03356f1a322500a9beaba17df2726a51ace852c5))
+* **frontend:** add extra margin to toolbar dividers ([8d1e52a](https://github.com/pablolmedorado/temat/commit/8d1e52acede77217e33209020c55b0f9a1870fc4))
+* **frontend:** reorder imports to avoid error with pinia in routes with guards ([aca314c](https://github.com/pablolmedorado/temat/commit/aca314cab549bd4542dcf5823020a0d3346796d2))
+* **index:** hide "Quick Filters" label & divider if there are no filters ([9aace0e](https://github.com/pablolmedorado/temat/commit/9aace0ea2cbc3d75fc87de54f8899d7fbfb7da60))
+* **tasks:** add 'all' option to itemsPerPageOptions ([cf9c7a2](https://github.com/pablolmedorado/temat/commit/cf9c7a2daf2cee4dd181ed665bea94ec3d8dfc8a))
+
 ## [1.20.0](https://github.com/pablolmedorado/temat/compare/v1.19.0...v1.20.0) (2022-02-14)
 
 

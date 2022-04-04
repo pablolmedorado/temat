@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { computed, toRefs } from "@vue/composition-api";
 
 import { useMainStore } from "@/stores/main";
 import { useUserStore } from "@/stores/users";
@@ -44,12 +44,20 @@ export default {
       default: false,
     },
   },
-  computed: {
-    ...mapState(useMainStore, ["isKonamiCodeActive"]),
-    ...mapState(useUserStore, ["userMap"]),
-    localUser() {
-      return typeof this.user == "number" ? this.userMap[this.user] : this.user;
-    },
+  setup(props) {
+    // Store
+    const mainStore = useMainStore();
+    const userStore = useUserStore();
+
+    // Computed
+    const { isKonamiCodeActive } = toRefs(mainStore);
+    const localUser = computed(() => (typeof props.user == "number" ? userStore.userMap[props.user] : props.user));
+
+    return {
+      // Computed
+      isKonamiCodeActive,
+      localUser,
+    };
   },
 };
 </script>

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { ref, watch } from "@vue/composition-api";
 
 import { useUserStore } from "@/stores/users";
 
@@ -21,22 +21,26 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      localGroup: null,
-    };
-  },
-  computed: {
-    ...mapState(useUserStore, ["groupMap"]),
-  },
-  watch: {
-    group: {
-      deep: true,
-      immediate: true,
-      handler(newVal) {
-        this.localGroup = typeof newVal == "number" ? this.groupMap[newVal] : newVal;
+  setup(props) {
+    // Store
+    const userStore = useUserStore();
+
+    // State
+    const localGroup = ref(null);
+
+    // Watchers
+    watch(
+      () => props.group,
+      (newValue) => {
+        localGroup.value = typeof newValue == "number" ? userStore.groupMap[newValue] : newValue;
       },
-    },
+      { deep: true, immediate: true }
+    );
+
+    return {
+      // State
+      localGroup,
+    };
   },
 };
 </script>

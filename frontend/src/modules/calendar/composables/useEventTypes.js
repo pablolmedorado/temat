@@ -6,16 +6,16 @@ export default function () {
   // Store
   const eventStore = useEventStore();
 
-  // State
+  // Computed
   const { eventTypes, eventTypesMap } = toRefs(eventStore);
 
-  // Lifecycle hooks
-  if (!eventTypes.value.length) {
+  // Initialization
+  if (!eventStore.eventTypes.length) {
     eventStore.getEventTypes();
   }
 
   return {
-    // State
+    // Computed
     eventTypes,
     eventTypesMap,
     // Methods

@@ -147,7 +147,7 @@ class UserStoryViewSet(AtomicBulkUpdateModelMixin, FlexFieldsModelViewSet):
         "development_comments",
         "validation_comments",
         "support_comments",
-        "cvs_reference",
+        "cvs_branch_name",
         "risk_comments",
         "deployment_notes",
     )
@@ -165,7 +165,7 @@ class UserStoryViewSet(AtomicBulkUpdateModelMixin, FlexFieldsModelViewSet):
         "annotated_current_effort",
         "priority",
         "risk_level",
-        "cvs_reference",
+        "cvs_branch_name",
         "use_migrations",
     )
     ordering = ("-start_date",)

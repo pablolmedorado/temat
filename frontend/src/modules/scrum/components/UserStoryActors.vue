@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { toRefs } from "@vue/composition-api";
 
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
@@ -50,8 +50,16 @@ export default {
       default: 12,
     },
   },
-  computed: {
-    ...mapState(useUserStoryStore, ["effortRolesMap"]),
+  setup() {
+    // Store
+    const userStoryStore = useUserStoryStore();
+
+    // Computed
+    const { effortRolesMap } = toRefs(userStoryStore);
+
+    return {
+      effortRolesMap,
+    };
   },
 };
 </script>
