@@ -53,6 +53,48 @@
           <template #item.priority="{ value }">
             <v-icon>{{ `mdi-numeric-${value}-box` }}</v-icon>
           </template>
+          <template #item.cvs_info="{ item }">
+            <span class="d-inline-flex">
+              <v-chip
+                v-if="item.cvs_branch_name"
+                color="#8256d0"
+                pill
+                small
+                dark
+                :href="buildBranchUrl(item)"
+                target="_blank"
+              >
+                {{ item.cvs_branch_name | truncate(30) }}
+                <v-icon right small>mdi-source-branch</v-icon>
+              </v-chip>
+              <v-chip
+                v-if="item.cvs_issue_id"
+                color="#8256d0"
+                pill
+                small
+                dark
+                :href="buildIssueUrl(item)"
+                target="_blank"
+                class="ml-1"
+              >
+                {{ `#${item.cvs_issue_id}` }}
+                <v-icon right small>mdi-record-circle-outline</v-icon>
+              </v-chip>
+              <v-chip
+                v-if="item.cvs_pull_request_id"
+                color="#8256d0"
+                pill
+                small
+                dark
+                :href="buildPullRequestUrl(item)"
+                target="_blank"
+                class="ml-1"
+              >
+                {{ `#${item.cvs_pull_request_id}` }}
+                <v-icon right small>mdi-source-pull</v-icon>
+              </v-chip>
+            </span>
+          </template>
           <template #item.status="{ item }">
             <UserStoryIndexStatus :user-story="item" />
           </template>
@@ -137,14 +179,19 @@ import UserStoryFilters from "@/modules/scrum/components/filters/UserStoryFilter
 import UserStoryIndexStatus from "@/modules/scrum/components/UserStoryIndexStatus";
 
 import { useMainStore } from "@/stores/main";
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 import useLoading from "@/composables/useLoading";
 import useScrumContext, { scrumContextProps } from "@/modules/scrum/composables/useScrumContext";
 import { getServiceByBasename } from "@/services";
 import { userHasPermission } from "@/utils/permissions";
+import { truncate } from "@/utils/text";
 
 export default {
   name: "UserStoryListView",
+  filters: {
+    truncate,
+  },
   metaInfo() {
     let title = "Historias de usuario";
     if (this.hasContext) {
@@ -166,6 +213,7 @@ export default {
   setup(props, { refs }) {
     // Store
     const store = useMainStore();
+    const userStoryStore = useUserStoryStore();
 
     // Composables
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading({
@@ -200,7 +248,13 @@ export default {
       { text: "Fecha inicio p.", align: "start", sortable: true, value: "start_date" },
       { text: "Fecha límite", align: "start", sortable: true, value: "end_date", default: true },
       { text: "Prioridad", align: "start", sortable: true, value: "priority", default: true },
-      { text: "Referencia SCV", align: "start", sortable: true, value: "cvs_reference" },
+      {
+        text: "Info SCV",
+        align: "start",
+        sortable: false,
+        value: "cvs_info",
+        fields: ["cvs_branch_name", "cvs_issue_id", "cvs_pull_request_id"],
+      },
       {
         text: "Estado",
         align: "start",
@@ -355,6 +409,24 @@ export default {
       }
       return linkConfig;
     }
+    function buildBranchUrl({ cvs_branch_name }) {
+      if (userStoryStore.cvsBranchBaseUrl && cvs_branch_name) {
+        return `${userStoryStore.cvsBranchBaseUrl}/${cvs_branch_name}`;
+      }
+      return null;
+    }
+    function buildIssueUrl({ cvs_issue_id }) {
+      if (userStoryStore.cvsIssueBaseUrl && cvs_issue_id) {
+        return `${userStoryStore.cvsIssueBaseUrl}/${cvs_issue_id}`;
+      }
+      return null;
+    }
+    function buildPullRequestUrl({ cvs_pull_request_id }) {
+      if (userStoryStore.cvsPullRequestBaseUrl && cvs_pull_request_id) {
+        return `${userStoryStore.cvsPullRequestBaseUrl}/${cvs_pull_request_id}`;
+      }
+      return null;
+    }
     function canDevelop(item) {
       return store.currentUser.id === item.development_user || userHasPermission(modelClass.CHANGE_PERMISSION);
     }
@@ -420,6 +492,9 @@ export default {
       userHasPermission,
       fetchTableItems,
       buildDetailLink,
+      buildBranchUrl,
+      buildIssueUrl,
+      buildPullRequestUrl,
       canDevelop,
       canValidate,
       validateItem,

@@ -2,7 +2,7 @@
 {% load render_bundle from webpack_loader %}
 {% load webpack_static from webpack_loader %}
 {% load pwa %}
-{% load user_data %}
+{% load backend_data %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -13,7 +13,7 @@
     <!-- pwa -->
     {% progressive_web_app_meta %}
     <!-- user data -->
-    {% user_data user %}
+    {% backend_data user %}
     <!-- built files will be auto injected -->
     {% render_bundle "app" "css" %}
   </head>

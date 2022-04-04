@@ -408,6 +408,30 @@
               </v-row>
               <v-row>
                 <v-col>
+                  <v-text-field
+                    :value="filters.cvs_issue_id"
+                    label="Issue SCV"
+                    type="number"
+                    min="0"
+                    prepend-icon="mdi-record-circle-outline"
+                    clearable
+                    @input="updateFilters({ cvs_issue_id: $event })"
+                  />
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    :value="filters.cvs_pull_request_id"
+                    label="Pull Request SCV"
+                    type="number"
+                    min="0"
+                    prepend-icon="mdi-source-pull"
+                    clearable
+                    @input="updateFilters({ cvs_pull_request_id: $event })"
+                  />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
                   <v-switch
                     class="pl-1"
                     :value="filters.use_migrations"

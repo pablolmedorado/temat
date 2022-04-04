@@ -25,6 +25,10 @@ export const useUserStoryStore = defineStore("userStory", {
         { value: 1, label: "Naranja", icon: "mdi-emoticon-confused", colour: colors.orange.base },
         { value: 2, label: "Rojo", icon: "mdi-emoticon-poop", colour: colors.red.base },
       ],
+      cvsVendor: window.djangoData.cvs.vendor,
+      cvsBranchBaseUrl: window.djangoData.cvs.branch_base_url,
+      cvsIssueBaseUrl: window.djangoData.cvs.issue_base_url,
+      cvsPullRequestBaseUrl: window.djangoData.cvs.pull_request_base_url,
     };
   },
   getters: {

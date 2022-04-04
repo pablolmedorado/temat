@@ -177,7 +177,9 @@ class UserStory(Transactionable, Taggable, Authorable, Notifiable, models.Model)
         on_delete=models.PROTECT,
     )
     support_comments = models.CharField(_("comentarios de soporte"), max_length=2000, blank=True)
-    cvs_reference = models.CharField(_("referencia scv"), help_text="Rama de git.", max_length=255, blank=True)
+    cvs_branch_name = models.CharField(_("rama scv"), max_length=255, blank=True)
+    cvs_issue_id = models.PositiveIntegerField(_("número de issue"), blank=True, null=True, db_index=True)
+    cvs_pull_request_id = models.PositiveIntegerField(_("número de pull request"), blank=True, null=True, db_index=True)
     risk_level = models.PositiveSmallIntegerField(
         _("nivel de riesgo"), choices=RiskLevel.choices, default=RiskLevel.GREEN, blank=False
     )

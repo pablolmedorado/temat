@@ -40,13 +40,14 @@
                   label="Épica"
                   prepend-icon="mdi-sword-cross"
                 >
-                  <template v-if="item.epic" #append-outer>
+                  <template v-if="item.epic" #append>
                     <v-tooltip bottom>
                       <template #activator="{ on: onTooltip, attrs: attrTooltip }">
                         <v-btn
                           v-bind="attrTooltip"
                           :to="{ name: 'epic-user-stories', params: { epicId: item.epic } }"
                           icon
+                          small
                           v-on="onTooltip"
                         >
                           <v-icon> mdi-open-in-app </v-icon>
@@ -184,7 +185,7 @@
                   return-object
                   @click:clear="onSprintClear"
                 >
-                  <template v-if="item.sprint" #append-outer>
+                  <template v-if="item.sprint" #append>
                     <v-tooltip bottom>
                       <template #activator="{ on: onTooltip, attrs: attrTooltip }">
                         <v-btn
@@ -194,6 +195,7 @@
                             params: { sprintId: item.sprint.id },
                           }"
                           icon
+                          small
                           v-on="onTooltip"
                         >
                           <v-icon> mdi-open-in-app </v-icon>
@@ -333,13 +335,55 @@
                     <v-row>
                       <v-col>
                         <v-text-field
-                          v-model.trim="item.cvs_reference"
-                          label="Referencia SCV"
+                          v-model.trim="item.cvs_branch_name"
+                          label="Rama SCV"
                           counter="255"
-                          prepend-icon="mdi-git"
+                          prepend-icon="mdi-source-branch"
                           :readonly="!canEdit && currentUser.id !== item.development_user"
-                          :error-messages="getErrorMsgs(v$.item.cvs_reference)"
-                        />
+                          :error-messages="getErrorMsgs(v$.item.cvs_branch_name)"
+                        >
+                          <template #append>
+                            <v-btn v-show="branchUrl" icon small :href="branchUrl" target="_blank">
+                              <v-icon>{{ `mdi-${cvsVendor}` }}</v-icon>
+                            </v-btn>
+                          </template>
+                        </v-text-field>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols="12" lg="6">
+                        <v-text-field
+                          v-model="item.cvs_issue_id"
+                          label="Issue SCV"
+                          prepend-icon="mdi-record-circle-outline"
+                          prefix="#"
+                          min="1"
+                          :readonly="!canEdit && currentUser.id !== item.development_user"
+                          :error-messages="getErrorMsgs(v$.item.cvs_issue_id)"
+                        >
+                          <template #append>
+                            <v-btn v-show="issueUrl" icon small :href="issueUrl" target="_blank">
+                              <v-icon>{{ `mdi-${cvsVendor}` }}</v-icon>
+                            </v-btn>
+                          </template>
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="12" lg="6">
+                        <v-text-field
+                          v-model="item.cvs_pull_request_id"
+                          label="Pull Request SCV"
+                          prepend-icon="mdi-source-pull"
+                          prefix="#"
+                          min="1"
+                          :readonly="!canEdit && currentUser.id !== item.development_user"
+                          :error-messages="getErrorMsgs(v$.item.cvs_pull_request_id)"
+                        >
+                          <template #append>
+                            <v-btn v-show="pullRequestUrl" icon small :href="pullRequestUrl" target="_blank">
+                              <v-icon>{{ `mdi-${cvsVendor}` }}</v-icon>
+                            </v-btn>
+                          </template>
+                        </v-text-field>
                       </v-col>
                     </v-row>
                   </v-card-text>
@@ -502,6 +546,7 @@
 import { computed, toRefs } from "@vue/composition-api";
 import { DateTime } from "luxon";
 import { between, helpers, maxLength, minValue, numeric, required, requiredIf } from "@vuelidate/validators";
+import { defaultTo } from "lodash-es";
 import { isWebUri } from "valid-url";
 import { useClipboard } from "@vueuse/core";
 
@@ -555,7 +600,9 @@ export default {
         priority: { required, numeric, between: between(1, 10) },
         development_user: {},
         development_comments: { maxLength: maxLength(2000) },
-        cvs_reference: { maxLength: maxLength(255) },
+        cvs_branch_name: { maxLength: maxLength(255) },
+        cvs_issue_id: { numeric, minValue: minValue(1) },
+        cvs_pull_request_id: { numeric, minValue: minValue(1) },
         validation_comments: { maxLength: maxLength(2000) },
         support_comments: { maxLength: maxLength(2000) },
         risk_level: { required },
@@ -590,6 +637,7 @@ export default {
       { value: false, text: "No" },
       { value: true, text: "Sí" },
     ];
+    const cvsVendor = defaultTo(userStoryStore.cvsVendor, "git");
 
     // Computed
     const { currentUser } = toRefs(mainStore);
@@ -624,6 +672,24 @@ export default {
         return `Última modificación: ${isoDateTimeToLocaleString(item.value.validated_changed)}`;
       }
       return undefined;
+    });
+    const branchUrl = computed(() => {
+      if (userStoryStore.cvsBranchBaseUrl && item.value.cvs_branch_name) {
+        return `${userStoryStore.cvsBranchBaseUrl}/${item.value.cvs_branch_name}`;
+      }
+      return null;
+    });
+    const issueUrl = computed(() => {
+      if (userStoryStore.cvsIssueBaseUrl && item.value.cvs_issue_id) {
+        return `${userStoryStore.cvsIssueBaseUrl}/${item.value.cvs_issue_id}`;
+      }
+      return null;
+    });
+    const pullRequestUrl = computed(() => {
+      if (userStoryStore.cvsPullRequestBaseUrl && item.value.cvs_pull_request_id) {
+        return `${userStoryStore.cvsPullRequestBaseUrl}/${item.value.cvs_pull_request_id}`;
+      }
+      return null;
     });
 
     // Methods
@@ -667,6 +733,7 @@ export default {
       epicService,
       sprintService,
       useMigrationsOptions,
+      cvsVendor,
       // Computed
       v$,
       itemHasChanged,
@@ -679,6 +746,9 @@ export default {
       hasARole,
       validatedOptions,
       validatedHintText,
+      branchUrl,
+      issueUrl,
+      pullRequestUrl,
       // Methods
       getErrorMsgs,
       submit,
