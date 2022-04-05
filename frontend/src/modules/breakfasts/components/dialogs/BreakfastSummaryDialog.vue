@@ -43,7 +43,7 @@
 <script>
 import { computed, ref } from "@vue/composition-api";
 import { useClipboard } from "@vueuse/core";
-import { chain, property, uniqueId } from "lodash-es";
+import { countBy, map, pick, uniqueId } from "lodash-es";
 
 import { useMainStore } from "@/stores/main";
 import useDialog, { dialogProps } from "@/composables/useDialog";
@@ -86,21 +86,21 @@ export default {
 
     // Computed
     const itemSummary = computed(() => {
-      return chain(items.value)
-        .map((item) => chain(item).pick(["bread", "base", "ingredient1", "ingredient2"]).map(property("name")).value())
-        .countBy()
-        .map((count, item) => {
-          const elements = item.split(",");
-          return {
-            id: uniqueId("breakfast_"),
-            bread: elements[0] || "",
-            base: elements[1] || "",
-            ingredient1: elements[2] || "",
-            ingredient2: elements[3] || "",
-            count,
-          };
-        })
-        .value();
+      const rawBreakfasts = items.value.map((breakfast) =>
+        map(pick(breakfast, ["bread", "base", "ingredient1", "ingredient2"]), "name")
+      );
+      const breakfastsByCount = countBy(rawBreakfasts);
+      return map(breakfastsByCount, (count, item) => {
+        const elements = item.split(",");
+        return {
+          id: uniqueId("breakfast_"),
+          bread: elements[0] || "",
+          base: elements[1] || "",
+          ingredient1: elements[2] || "",
+          ingredient2: elements[3] || "",
+          count,
+        };
+      });
     });
     const clipboardSummary = computed(() => {
       return itemSummary.value
