@@ -131,7 +131,7 @@ export default {
     });
     const defaultItem = computed(() => ({
       ...modelClass.getDefaults(),
-      role: mainStore.loggedUserRole,
+      role: loggedUserRole.value,
       user_story: props.userStory.id,
     }));
 
@@ -165,7 +165,6 @@ export default {
       // Computed
       effortRolesMap,
       systemFilters,
-      loggedUserRole,
       defaultItem,
       // Methods
       canPerformAction,

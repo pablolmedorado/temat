@@ -3,7 +3,7 @@ import { isFunction } from "lodash-es";
 
 export default function (key, initialValue, options = {}) {
   // State
-  const lsInitialValue = localStorage[key] ? JSON.parse(localStorage[key]) : undefined;
+  const lsInitialValue = localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : undefined;
   let value;
   if (lsInitialValue) {
     value = ref(isFunction(options.getter) ? options.getter(lsInitialValue, initialValue) : lsInitialValue);
@@ -16,7 +16,7 @@ export default function (key, initialValue, options = {}) {
     value,
     (newValue) => {
       const lsNewValue = isFunction(options.setter) ? options.setter(newValue, initialValue) : newValue;
-      localStorage[key] = JSON.stringify(lsNewValue);
+      localStorage.setItem(key, JSON.stringify(lsNewValue));
     },
     { deep: true }
   );

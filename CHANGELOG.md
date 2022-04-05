@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.21.1](https://github.com/pablolmedorado/temat/compare/v1.21.0...v1.21.1) (2022-04-05)
+
+
+### Bug Fixes
+
+* **effort:** fix role auto-fill in effort form ([f850815](https://github.com/pablolmedorado/temat/commit/f85081581b0d376aafb3874130e96a1e4b87d3c3))
+* **frontend:** stop using chain function from lodash-es as it does not support tree shaking ([dcae903](https://github.com/pablolmedorado/temat/commit/dcae903d6e41b8ff26f8bb1facccba2e58c9b1b9))
+
 ## [1.21.0](https://github.com/pablolmedorado/temat/compare/v1.20.0...v1.21.0) (2022-04-04)
 
 

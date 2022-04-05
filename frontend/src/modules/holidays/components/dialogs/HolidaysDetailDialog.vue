@@ -28,7 +28,7 @@
 
 <script>
 import { computed, ref } from "@vue/composition-api";
-import { chain } from "lodash-es";
+import { countBy, map } from "lodash-es";
 
 import useDialog, { dialogProps } from "@/composables/useDialog";
 
@@ -61,13 +61,11 @@ export default {
 
     // Computed
     const holidaysSummary = computed(() => {
-      return chain(holidays.value)
-        .countBy((item) => [item.allowance_date, item.expiration_date])
-        .map((count, item) => {
-          const dates = item.split(",");
-          return { allowance_date: dates[0], expiration_date: dates[1], count };
-        })
-        .value();
+      const holidaysByCount = countBy(holidays.value, (item) => [item.allowance_date, item.expiration_date]);
+      return map(holidaysByCount, (count, item) => {
+        const dates = item.split(",");
+        return { allowance_date: dates[0], expiration_date: dates[1], count };
+      });
     });
 
     // Methods

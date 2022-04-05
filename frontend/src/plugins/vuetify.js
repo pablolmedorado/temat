@@ -14,7 +14,7 @@ export default new Vuetify({
     current: "es",
   },
   theme: {
-    dark: localStorage.darkMode ? JSON.parse(localStorage.darkMode) : false,
+    dark: localStorage.getItem("darkMode") ? JSON.parse(localStorage.getItem("darkMode")) : false,
     themes: {
       light: {
         primary: "#00205b",
