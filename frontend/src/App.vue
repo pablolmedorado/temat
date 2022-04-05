@@ -62,7 +62,7 @@ export default {
     };
     watch(
       () => root.$vuetify.theme.isDark,
-      (newValue) => (localStorage.darkMode = JSON.stringify(newValue))
+      (newValue) => localStorage.setItem("darkMode", JSON.stringify(newValue))
     );
 
     // Snackbar
