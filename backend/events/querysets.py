@@ -7,8 +7,6 @@ class EventQuerySet(models.QuerySet):
         return self.filter(type__system_slug__isnull=False)
 
     def by_user(self, user):
-        if user.is_superuser or "events.view_event" in user.get_all_permissions():
-            return self
         return self.filter(Q(visibility="PU") | Q(attendees=user) | Q(groups__user=user) | Q(creation_user=user))
 
     def by_attendee(self, user):
