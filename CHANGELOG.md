@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.21.2](https://github.com/pablolmedorado/temat/compare/v1.21.1...v1.21.2) (2022-04-11)
+
+
+### Bug Fixes
+
+* **calendar:** hide private events to superusers to preserve regular users' privacy ([6898fc3](https://github.com/pablolmedorado/temat/commit/6898fc33b3c846eab0a272fa3cfcafd2a1b337ea))
+* **user-stories:** fix url validator. It wasn't working after upgrading Vuelidate ([5b952a2](https://github.com/pablolmedorado/temat/commit/5b952a2c155503eceec17860d71a1316895627b8))
+
 ### [1.21.1](https://github.com/pablolmedorado/temat/compare/v1.21.0...v1.21.1) (2022-04-05)
 
 
