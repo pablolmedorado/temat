@@ -1,5 +1,6 @@
 <template>
   <v-menu
+    v-if="items.length"
     v-model="showMenu"
     content-class="v-dialog--scrollable"
     :min-width="400"
@@ -84,6 +85,7 @@ export default {
     return {
       // State
       showMenu,
+      items,
       // Computed
       isLoading,
       itemsByType,
