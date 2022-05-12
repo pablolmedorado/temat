@@ -23,9 +23,9 @@
 
 <script>
 import { required } from "@vuelidate/validators";
+import { useVModel } from "@vueuse/core";
 
-import useValidations from "@/composables/useValidations";
-import useInnerValue from "@/composables/useInnerValue";
+import { useValidations } from "@/composables/validations";
 
 export default {
   name: "SupportDayBulkFormRow",
@@ -45,7 +45,7 @@ export default {
   },
   setup(props) {
     const { v$, getErrorMsgs } = useValidations();
-    const { innerValue } = useInnerValue(props);
+    const innerValue = useVModel(props);
 
     return {
       v$,

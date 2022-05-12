@@ -77,8 +77,8 @@ import EventRepresentation from "@/modules/calendar/components/EventRepresentati
 
 import { useMainStore } from "@/stores/main";
 
-import useEventTypes from "@/modules/calendar/composables/useEventTypes";
-import useLoading from "@/composables/useLoading";
+import { useEventTypes } from "@/modules/calendar/composables/event-types";
+import { useLoading } from "@/composables/loading";
 import { applyDarkVariant, getFontColourFromBackground } from "@/utils/colours";
 
 export default {

@@ -62,7 +62,7 @@ import { maxLength, minValue, numeric, required } from "@vuelidate/validators";
 import EffortService from "@/modules/scrum/services/effort-service";
 
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
-import useForm, { formProps } from "@/composables/useForm";
+import { useForm, formProps } from "@/composables/form";
 
 export default {
   name: "EffortForm",
@@ -82,12 +82,12 @@ export default {
       },
     };
   },
-  setup(props) {
+  setup() {
     // Store
     const userStoryStore = useUserStoryStore();
 
     // Composables
-    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(props, EffortService, {
+    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(EffortService, {
       buildSaveFunctionArgs,
       successMessage: "Esfuerzo guardado correctamente",
       customErrorMsgs: {

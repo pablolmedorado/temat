@@ -29,7 +29,7 @@
 import { computed, ref, watch } from "@vue/composition-api";
 import { isArray, isFunction } from "lodash-es";
 
-import useDialog, { dialogProps } from "@/composables/useDialog";
+import { useDialog, dialogProps } from "@/composables/dialog";
 
 export default {
   name: "DeletionConfirmationDialog",
@@ -47,7 +47,7 @@ export default {
   },
   setup(props, { emit }) {
     // Composables
-    const { showDialog, open: _open, close: _close } = useDialog(props);
+    const { showDialog, open: _open, close: _close } = useDialog();
 
     // State
     const dataToDelete = ref(null);

@@ -53,7 +53,7 @@ import HolidayTableCell from "@/modules/holidays/components/HolidayTableCell";
 import { useMainStore } from "@/stores/main";
 import { useUserStore } from "@/stores/users";
 
-import useLoading from "@/composables/useLoading";
+import { useLoading } from "@/composables/loading";
 
 export default {
   name: "HolidayTable",

@@ -12,7 +12,10 @@ export const defaultErrorMsgs = {
   url: "Formato de URL incorrecto",
 };
 
-export default function ({ customErrorMsgs } = {}) {
+export function useValidations(options = {}) {
+  // Default options
+  const { customErrorMsgs } = options;
+
   // Composables
   const v$ = useVuelidate({ $lazy: true, $autoDirty: true });
 

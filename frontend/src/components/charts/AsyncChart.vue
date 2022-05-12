@@ -21,7 +21,7 @@ import { computed, onActivated, ref, watch } from "@vue/composition-api";
 import Highcharts from "highcharts";
 import { Chart } from "highcharts-vue";
 
-import useLoading from "@/composables/useLoading";
+import { useLoading } from "@/composables/loading";
 
 import darkUnica from "@/utils/highcharts/themes/dark-unica-custom";
 

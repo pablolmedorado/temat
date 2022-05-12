@@ -223,9 +223,9 @@ import ContextBreadcrumbs from "@/modules/scrum/components/ContextBreadcrumbs";
 import SprintViewSelector from "@/modules/scrum/components/SprintViewSelector";
 import UserStoryIndexStatus from "@/modules/scrum/components/UserStoryIndexStatus";
 
-import useLoading from "@/composables/useLoading";
-import useScrumContext from "@/modules/scrum/composables/useScrumContext";
-import useUserStoryTypes from "@/modules/scrum/composables/useUserStoryTypes";
+import { useLoading } from "@/composables/loading";
+import { useScrumContext } from "@/modules/scrum/composables/scrum-context";
+import { useUserStoryTypes } from "@/modules/scrum/composables/user-story-types";
 import { defaultTableOptions } from "@/utils/constants";
 
 export default {
@@ -245,7 +245,7 @@ export default {
   setup(props) {
     // Composables
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
-    const { contextItem } = useScrumContext(props);
+    const { contextItem } = useScrumContext();
     const { userStoryTypes: userStoryTypesOptions, userStoryTypesMap } = useUserStoryTypes();
 
     // State

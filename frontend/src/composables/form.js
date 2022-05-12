@@ -3,29 +3,28 @@ import { cloneDeep, difference, forOwn, isArray, isEqualWith, isFunction } from 
 
 import { useMainStore } from "@/stores/main";
 
-import useLoading from "@/composables/useLoading";
-import useValidations from "@/composables/useValidations";
+import { useLoading } from "@/composables/loading";
+import { useValidations } from "@/composables/validations";
 
-export const bulkFormProps = {
-  sourceItems: {
-    type: Array,
+export const formProps = {
+  sourceItem: {
+    type: Object,
     required: true,
   },
 };
 
-export default function (
-  props,
-  service,
-  {
+export function useForm(service, options = {}) {
+  // Default options
+  const {
     initializeItem = cloneDeep,
     saveFunctionName = "save",
     buildSaveFunctionArgs,
-    successMessage = "Elementos guardados correctamente",
+    successMessage = "Elemento guardado correctamente",
     customErrorMsgs,
-  } = {}
-) {
+  } = options;
+
   // Vue instance
-  const { emit } = getCurrentInstance();
+  const { emit, props } = getCurrentInstance();
 
   // Store
   const store = useMainStore();
@@ -35,40 +34,40 @@ export default function (
   const { v$, errorMsgs, getErrorMsgs } = useValidations({ customErrorMsgs });
 
   // State
-  const items = ref(props.sourceItems.map((item) => initializeItem(item)));
+  const item = ref(initializeItem(props.sourceItem));
 
   // Computed
-  const itemsHaveChanged = computed(() => {
-    return !props.sourceItems.every((sourceItem, index) => {
-      return isEqualWith(sourceItem, items.value[index], (sourceValue, currentValue) => {
-        if (isArray(sourceValue) && isArray(currentValue)) {
-          return difference(sourceValue, currentValue).length == 0;
-        }
-      });
+  const itemHasChanged = computed(() => {
+    return !isEqualWith(props.sourceItem, item.value, (sourceValue, currentValue) => {
+      if (isArray(sourceValue) && isArray(currentValue)) {
+        return difference(sourceValue, currentValue).length == 0;
+      }
     });
   });
   const isFormLoading = computed(() => isTaskLoading("submit"));
 
   // Watchers
   watch(
-    () => props.sourceItems,
-    (newValue) => (items.value = newValue.map((item) => initializeItem(item))),
-    { deep: true }
+    () => props.sourceItem,
+    (newValue) => {
+      item.value = initializeItem(newValue);
+      v$.value.$reset();
+    }
   );
-  watch(itemsHaveChanged, (newValue) => emit("changed:items", newValue), { immediate: true });
+  watch(itemHasChanged, (newValue) => emit("changed:item", newValue), { immediate: true });
 
   // Methods
   function reset() {
+    item.value = initializeItem(props.sourceItem);
     v$.value.$reset();
-    items.value = props.sourceItems.map((item) => initializeItem(item));
   }
   async function submit() {
     const valid = await v$.value.$validate();
     if (valid) {
       addTask("submit");
       try {
-        const cleanedItems = items.value.map((item) => replaceUndefined(item));
-        const args = isFunction(buildSaveFunctionArgs) ? buildSaveFunctionArgs(cleanedItems) : [cleanedItems];
+        const cleanedItem = replaceUndefined(item.value);
+        const args = isFunction(buildSaveFunctionArgs) ? buildSaveFunctionArgs(cleanedItem) : [cleanedItem];
         const response = await service[saveFunctionName](...args);
         store.showSnackbar({
           color: "success",
@@ -102,9 +101,9 @@ export default function (
     errorMsgs,
     getErrorMsgs,
     // State
-    items,
+    item,
     // Computed
-    itemsHaveChanged,
+    itemHasChanged,
     isFormLoading,
     // Methods
     initializeItem,

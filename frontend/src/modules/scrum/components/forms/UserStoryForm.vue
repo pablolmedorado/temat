@@ -557,8 +557,8 @@ import UserStoryService from "@/modules/scrum/services/user-story-service";
 import { useMainStore } from "@/stores/main";
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
-import useForm, { formProps } from "@/composables/useForm";
-import useUserStoryTypes from "@/modules/scrum/composables/useUserStoryTypes";
+import { useForm, formProps } from "@/composables/form";
+import { useUserStoryTypes } from "@/modules/scrum/composables/user-story-types";
 import { isoDateTimeToLocaleString, isoDateToLocaleString } from "@/utils/dates";
 import { userHasPermission } from "@/utils/permissions";
 import { urlValidator } from "@/utils/validation";
@@ -619,7 +619,7 @@ export default {
 
     // Composables
     const { copy: copyToClipboard, isSupported: isClipboardSupported } = useClipboard({ read: false });
-    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(props, UserStoryService, {
+    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(UserStoryService, {
       buildSaveFunctionArgs,
       successMessage: "Historia de usuario guardada correctamente",
       customErrorMsgs: {

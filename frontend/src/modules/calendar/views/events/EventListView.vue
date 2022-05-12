@@ -88,7 +88,7 @@ import EventFilters from "@/modules/calendar/components/filters/EventFilters";
 
 import { useEventStore } from "@/modules/calendar/stores/events";
 
-import useEventTypes from "@/modules/calendar/composables/useEventTypes";
+import { useEventTypes } from "@/modules/calendar/composables/event-types";
 import { getReadableDuration, isoDateToLocaleString, isoDateTimeToLocaleString } from "@/utils/dates";
 
 export default {

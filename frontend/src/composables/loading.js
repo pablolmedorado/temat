@@ -3,7 +3,10 @@ import { get } from "lodash-es";
 
 const currentTasks = ref({});
 
-export default function ({ includedChildren } = {}) {
+export function useLoading(options = {}) {
+  // Default options
+  const { includedChildren } = options;
+
   // Vue instance
   const { emit, refs, uid } = getCurrentInstance();
 

@@ -26,8 +26,8 @@ import ContextBreadcrumbs from "@/modules/scrum/components/ContextBreadcrumbs";
 import SprintGanttChart from "@/modules/scrum/components/charts/SprintGanttChart";
 import SprintViewSelector from "@/modules/scrum/components/SprintViewSelector";
 
-import useLoading from "@/composables/useLoading";
-import useScrumContext from "@/modules/scrum/composables/useScrumContext";
+import { useLoading } from "@/composables/loading";
+import { useScrumContext } from "@/modules/scrum/composables/scrum-context";
 
 export default {
   name: "SprintGanttView",
@@ -48,7 +48,7 @@ export default {
     const { isLoading } = useLoading({
       includedChildren: ["chart"],
     });
-    const { contextItem } = useScrumContext(props);
+    const { contextItem } = useScrumContext();
 
     // Computed
     const breadcrumbs = computed(() => {

@@ -85,9 +85,9 @@ import Holiday from "@/modules/holidays/models/holiday";
 
 import HolidayFilters from "@/modules/holidays/components/filters/HolidayFilters";
 
-import useLoading from "@/composables/useLoading";
-import useDialog, { dialogProps } from "@/composables/useDialog";
-import useHolidays from "@/modules/holidays/composables/useHolidays";
+import { useLoading } from "@/composables/loading";
+import { useDialog, dialogProps } from "@/composables/dialog";
+import { useHolidays } from "@/modules/holidays/composables/holidays";
 import { defaultTableOptions } from "@/utils/constants";
 
 export default {
@@ -170,7 +170,7 @@ export default {
     }
 
     // Dialog
-    const { showDialog, open: _open, close } = useDialog(props);
+    const { showDialog, open: _open, close } = useDialog();
     function open() {
       _open();
       nextTick(() => {

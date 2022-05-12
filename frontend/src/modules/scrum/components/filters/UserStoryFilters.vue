@@ -465,13 +465,13 @@ import SprintService from "@/modules/scrum/services/sprint-service";
 
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
-import useFilters, { filterProps } from "@/composables/useFilters";
-import useUserStoryTypes from "@/modules/scrum/composables/useUserStoryTypes";
+import { useFilters, filterProps } from "@/composables/filters";
+import { useUserStoryTypes } from "@/modules/scrum/composables/user-story-types";
 
 export default {
   name: "UserStoryFilters",
   props: filterProps,
-  setup(props) {
+  setup() {
     // Store
     const userStoryStore = useUserStoryStore();
 
@@ -485,7 +485,7 @@ export default {
       closeFiltersDialog,
       applyFiltersFromDialog,
       splitFilterValue,
-    } = useFilters(props, { basicFilters: ["search", "status__in", "any_role_user__in"] });
+    } = useFilters({ basicFilters: ["search", "status__in", "any_role_user__in"] });
     const { userStoryTypes: userStoryTypesOptions } = useUserStoryTypes();
 
     // State

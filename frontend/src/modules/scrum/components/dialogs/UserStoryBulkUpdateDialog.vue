@@ -66,8 +66,8 @@ import { get } from "lodash-es";
 import SprintService from "@/modules/scrum/services/sprint-service";
 import UserStoryService from "@/modules/scrum/services/user-story-service";
 
-import useLoading from "@/composables/useLoading";
-import useDialog, { dialogProps } from "@/composables/useDialog";
+import { useLoading } from "@/composables/loading";
+import { useDialog, dialogProps } from "@/composables/dialog";
 import { isoDateToLocaleString } from "@/utils/dates";
 
 export default {
@@ -80,7 +80,7 @@ export default {
   setup(props, { emit }) {
     // Composables
     const { isLoading, addTask, removeTask } = useLoading();
-    const { showDialog, open: _open, close: _close } = useDialog(props);
+    const { showDialog, open: _open, close: _close } = useDialog();
 
     // State
     const sprint = ref(null);

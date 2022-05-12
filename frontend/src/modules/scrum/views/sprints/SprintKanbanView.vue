@@ -75,8 +75,8 @@ import SprintViewSelector from "@/modules/scrum/components/SprintViewSelector";
 import { useUserStore } from "@/stores/users";
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
-import useLoading from "@/composables/useLoading";
-import useScrumContext from "@/modules/scrum/composables/useScrumContext";
+import { useLoading } from "@/composables/loading";
+import { useScrumContext } from "@/modules/scrum/composables/scrum-context";
 
 export default {
   name: "SprintKanbanView",
@@ -99,7 +99,7 @@ export default {
 
     // Composables
     const { isLoading, addTask, removeTask } = useLoading();
-    const { contextItem } = useScrumContext(props);
+    const { contextItem } = useScrumContext();
 
     const fullscreenWrapper = ref(null); // will be bound to the fullscreenWrapper <div> element
     const { isFullscreen, toggle: toggleFullscreen } = useFullscreen(fullscreenWrapper);

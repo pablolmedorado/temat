@@ -45,8 +45,8 @@ import { nextTick, ref, watch } from "@vue/composition-api";
 import { isObject } from "lodash-es";
 import { required } from "@vuelidate/validators";
 
-import useValidations from "@/composables/useValidations";
-import useDialog, { dialogProps } from "@/composables/useDialog";
+import { useValidations } from "@/composables/validations";
+import { useDialog, dialogProps } from "@/composables/dialog";
 
 export default {
   name: "QuickFilterDialog",
@@ -65,7 +65,7 @@ export default {
   setup(props, { emit }) {
     // Composables
     const { v$, getErrorMsgs } = useValidations();
-    const { showDialog, open, close } = useDialog(props);
+    const { showDialog, open, close } = useDialog();
 
     // State
     const newQuickFilter = ref(undefined);

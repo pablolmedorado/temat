@@ -21,7 +21,7 @@
 import { ref, watch } from "@vue/composition-api";
 import { debounce, isObject } from "lodash-es";
 
-import useLoading from "@/composables/useLoading";
+import { useLoading } from "@/composables/loading";
 import { normalize } from "@/utils/text";
 
 export default {

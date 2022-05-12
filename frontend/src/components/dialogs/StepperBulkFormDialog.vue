@@ -55,7 +55,7 @@
 import { computed, ref, toRefs } from "@vue/composition-api";
 
 import { useMainStore } from "@/stores/main";
-import useDialog, { dialogProps } from "@/composables/useDialog";
+import { useDialog, dialogProps } from "@/composables/dialog";
 
 export default {
   name: "StepperBulkFormDialog",
@@ -72,7 +72,7 @@ export default {
     const store = useMainStore();
 
     // Composables
-    const { showDialog, open, close: _close } = useDialog(props);
+    const { showDialog, open, close: _close } = useDialog();
 
     // State
     const step = ref(1);

@@ -32,7 +32,7 @@ import EventService from "@/modules/calendar/services/event-service";
 import { useMainStore } from "@/stores/main";
 import { useUserStore } from "@/stores/users";
 
-import useLoading from "@/composables/useLoading";
+import { useLoading } from "@/composables/loading";
 
 export default {
   name: "HolidaysDatePicker",

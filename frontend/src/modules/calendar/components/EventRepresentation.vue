@@ -153,7 +153,7 @@ import EventAuthorshipTag from "@/modules/calendar/components/EventAuthorshipTag
 import { useMainStore } from "@/stores/main";
 import { useEventStore } from "@/modules/calendar/stores/events";
 
-import useEventTypes from "@/modules/calendar/composables/useEventTypes";
+import { useEventTypes } from "@/modules/calendar/composables/event-types";
 import { applyDarkVariant } from "@/utils/colours";
 import { getReadableDuration } from "@/utils/dates";
 

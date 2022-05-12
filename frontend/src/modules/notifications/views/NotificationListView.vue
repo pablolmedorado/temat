@@ -126,7 +126,7 @@ import NotificationFilters from "@/modules/notifications/components/filters/Noti
 
 import { useNotificationStore } from "@/modules/notifications/stores/notifications";
 
-import useLoading from "@/composables/useLoading";
+import { useLoading } from "@/composables/loading";
 import { getServiceByBasename } from "@/services";
 import { isoDateTimeToLocaleString } from "@/utils/dates";
 

@@ -40,14 +40,16 @@
 
 <script>
 import { ref } from "@vue/composition-api";
-
-import useInnerValue, { innerValueProps } from "@/composables/useInnerValue";
+import { useVModel } from "@vueuse/core";
 
 export default {
   name: "TimePickerInput",
   inheritAttrs: false,
   props: {
-    ...innerValueProps,
+    value: {
+      type: String,
+      default: undefined,
+    },
     readonly: {
       type: Boolean,
       default: false,
@@ -59,7 +61,7 @@ export default {
   },
   setup(props) {
     // Composables
-    const { innerValue } = useInnerValue(props);
+    const innerValue = useVModel(props);
 
     // State
     const showTimePicker = ref(false);

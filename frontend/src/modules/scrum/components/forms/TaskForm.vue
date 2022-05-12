@@ -38,7 +38,7 @@ import { maxLength, minValue, numeric, required } from "@vuelidate/validators";
 
 import TaskService from "@/modules/scrum/services/task-service";
 
-import useForm, { formProps } from "@/composables/useForm";
+import { useForm, formProps } from "@/composables/form";
 
 export default {
   name: "TaskForm",
@@ -51,9 +51,9 @@ export default {
       },
     };
   },
-  setup(props) {
+  setup() {
     // Composables
-    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(props, TaskService, {
+    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(TaskService, {
       successMessage: "Tarea guardada correctamente",
     });
 

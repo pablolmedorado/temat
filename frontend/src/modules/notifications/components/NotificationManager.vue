@@ -111,7 +111,7 @@
 
 <script>
 import { computed, ref, toRefs, watch } from "@vue/composition-api";
-import { useIntervalFn } from "@vueuse/core";
+import { useIntervalFn, useWebNotification } from "@vueuse/core";
 import { isNil, partition } from "lodash-es";
 
 import NotificationService from "@/modules/notifications/services/notification-service";
@@ -119,8 +119,7 @@ import NotificationService from "@/modules/notifications/services/notification-s
 import { useMainStore } from "@/stores/main";
 import { useNotificationStore } from "@/modules/notifications/stores/notifications";
 
-import useLoading from "@/composables/useLoading";
-import useNotifications from "@/composables/useNotifications";
+import { useLoading } from "@/composables/loading";
 
 import NotificationImg from "@/modules/notifications/assets/notification.png";
 
@@ -138,8 +137,15 @@ export default {
 
     // Composables
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading();
-    const { areEnabled: areNotificationsEnabled } = useNotifications();
-    const { getUnreadCount } = useNotificationStore();
+    const {
+      isSupported: areNotificationsEnabled,
+      show: showNotification,
+      onClick: onNotificationClick,
+    } = useWebNotification({
+      title: mainStore.appName,
+      lang: "es",
+      icon: NotificationImg,
+    });
 
     // State
     const showNotificationSummary = ref(false);
@@ -153,11 +159,8 @@ export default {
     watch(
       () => notificationStore.unreadCount,
       (newValue, oldValue) => {
-        if (areNotificationsEnabled.value && newValue > oldValue) {
-          new Notification(mainStore.appName, {
-            body: `Tienes ${newValue} notificación/es sin leer`,
-            icon: NotificationImg,
-          });
+        if (areNotificationsEnabled && newValue > oldValue) {
+          showNotification({ body: `Tienes ${newValue} notificación/es sin leer` });
         }
       }
     );
@@ -170,6 +173,7 @@ export default {
     });
 
     // Methods
+    const getUnreadCount = notificationStore.getUnreadCount;
     async function getUnreadSummary() {
       addTask("fetch-unread-summary");
       try {
@@ -222,6 +226,7 @@ export default {
 
     // Initialization
     useIntervalFn(getUnreadCount, 300000, { immediate: true, immediateCallback: true }); // 5 minutes
+    onNotificationClick.on(() => (showNotificationSummary.value = true));
 
     return {
       // State

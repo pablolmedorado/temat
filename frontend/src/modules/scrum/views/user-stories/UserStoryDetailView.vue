@@ -53,7 +53,7 @@ import UserStoryEffort from "@/modules/scrum/components/tabs/user-stories/UserSt
 import UserStoryProgress from "@/modules/scrum/components/tabs/user-stories/UserStoryProgress";
 import UserStoryTasks from "@/modules/scrum/components/tabs/user-stories/UserStoryTasks";
 
-import useScrumContext, { scrumContextProps } from "@/modules/scrum/composables/useScrumContext";
+import { useScrumContext, scrumContextProps } from "@/modules/scrum/composables/scrum-context";
 import { handleError } from "@/utils/error-handlers";
 
 export default {
@@ -127,7 +127,7 @@ export default {
   },
   setup(props, { refs }) {
     // Composables
-    const { contextItem } = useScrumContext(props);
+    const { contextItem } = useScrumContext();
 
     // State
     const item = ref(null);

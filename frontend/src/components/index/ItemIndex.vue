@@ -161,12 +161,12 @@
 
 <script>
 import { nextTick, provide, ref, watch } from "@vue/composition-api";
+import { useLocalStorage } from "@vueuse/core";
 import { defaultTo, get, invoke, isBoolean, isFunction, omit } from "lodash-es";
 
 import { useMainStore } from "@/stores/main";
 
-import useLoading from "@/composables/useLoading";
-import useLocalStorage from "@/composables/useLocalStorage";
+import { useLoading } from "@/composables/loading";
 import { defaultTableOptions } from "@/utils/constants";
 import { getServiceByBasename } from "@/services";
 import { userHasPermission } from "@/utils/permissions";
@@ -282,13 +282,23 @@ export default {
     const selectedItems = ref([]);
     const localTableOptions = { ...defaultTableOptions, ...props.tableInitialOptions };
     const tableOptions = useLocalStorage(`${lsNamespace}TableOptions`, localTableOptions, {
-      getter: (lsOptions) => ({ ...localTableOptions, ...lsOptions }),
-      setter: (options) => omit(options, ["page"]),
+      serializer: {
+        read: (lsOptions) => {
+          const options = lsOptions ? JSON.parse(lsOptions) : {};
+          return { ...localTableOptions, ...options };
+        },
+        write: (options) => JSON.stringify(omit(options, ["page"])),
+      },
     });
     const defaultTableHeaders = props.tableAvailableHeaders.filter((header) => header.default || header.fixed);
     const tableHeaders = useLocalStorage(`${lsNamespace}TableHeaders`, defaultTableHeaders, {
-      getter: (lsHeaders) => props.tableAvailableHeaders.filter((header) => lsHeaders.includes(header.value)),
-      setter: (headers) => headers.map((header) => header.value),
+      serializer: {
+        read: (lsHeaders) => {
+          const headers = lsHeaders ? JSON.parse(lsHeaders) : [];
+          return props.tableAvailableHeaders.filter((header) => headers.includes(header.value));
+        },
+        write: (headers) => JSON.stringify(headers.map((header) => header.value)),
+      },
     });
     watch(
       tableHeaders,

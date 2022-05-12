@@ -46,18 +46,18 @@ import { useClipboard } from "@vueuse/core";
 import { countBy, map, pick, uniqueId } from "lodash-es";
 
 import { useMainStore } from "@/stores/main";
-import useDialog, { dialogProps } from "@/composables/useDialog";
+import { useDialog, dialogProps } from "@/composables/dialog";
 
 export default {
   name: "BreakfastSummaryDialog",
   inheritAttrs: false,
   props: dialogProps,
-  setup(props) {
+  setup() {
     // Store
     const store = useMainStore();
 
     // Composables
-    const { showDialog, open: _open, close: _close } = useDialog(props);
+    const { showDialog, open: _open, close: _close } = useDialog();
     const { copy: copyToClipboard, isSupported: isClipboardSupported } = useClipboard({ read: false });
 
     // State

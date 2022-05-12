@@ -49,12 +49,12 @@ import { toRefs } from "@vue/composition-api";
 
 import { useNotificationStore } from "@/modules/notifications/stores/notifications";
 
-import useFilters, { filterProps } from "@/composables/useFilters";
+import { useFilters, filterProps } from "@/composables/filters";
 
 export default {
   name: "NotificationFilters",
   props: filterProps,
-  setup(props) {
+  setup() {
     // Store
     const notificationStore = useNotificationStore();
 
@@ -67,7 +67,7 @@ export default {
       openFiltersDialog,
       closeFiltersDialog,
       applyFiltersFromDialog,
-    } = useFilters(props);
+    } = useFilters();
 
     // State
     const unreadOptions = [

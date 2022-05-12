@@ -1,4 +1,4 @@
-import { computed, provide, ref, watch } from "@vue/composition-api";
+import { computed, getCurrentInstance, provide, ref, watch } from "@vue/composition-api";
 
 import EpicService from "@/modules/scrum/services/epic-service";
 import SprintService from "@/modules/scrum/services/sprint-service";
@@ -14,7 +14,10 @@ export const scrumContextProps = {
   },
 };
 
-export default function (props) {
+export function useScrumContext() {
+  // Vue instance
+  const { props } = getCurrentInstance();
+
   //State
   const contextItem = ref(null);
 

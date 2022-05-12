@@ -56,7 +56,7 @@ import { maxLength, required } from "@vuelidate/validators";
 
 import SprintService from "@/modules/scrum/services/sprint-service";
 
-import useForm, { formProps } from "@/composables/useForm";
+import { useForm, formProps } from "@/composables/form";
 
 export default {
   name: "SprintForm",
@@ -78,9 +78,9 @@ export default {
       },
     };
   },
-  setup(props) {
+  setup() {
     // Composables
-    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(props, SprintService, {
+    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(SprintService, {
       successMessage: "Sprint guardado correctamente",
       customErrorMsgs: {
         endDateBeforeStartDate: "Fecha de fin anterior a la de inicio",

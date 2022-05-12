@@ -3,7 +3,7 @@ import { useMainStore } from "@/stores/main";
 
 import HolidayService from "@/modules/holidays/services/holiday-service";
 
-export default function () {
+export function useHolidays() {
   // Store
   const mainStore = useMainStore();
 

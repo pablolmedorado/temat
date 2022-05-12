@@ -159,7 +159,7 @@ import EventService from "@/modules/calendar/services/event-service";
 
 import { useMainStore } from "@/stores/main";
 import { useEventStore } from "@/modules/calendar/stores/events";
-import useForm, { formProps } from "@/composables/useForm";
+import { useForm, formProps } from "@/composables/form";
 
 export default {
   name: "EventForm",
@@ -206,7 +206,7 @@ export default {
     const endTime = ref(DateTime.fromISO(props.sourceItem.end_datetime).toFormat("HH:mm"));
 
     // Composables
-    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(props, EventService, {
+    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(EventService, {
       initializeItem,
       buildSaveFunctionArgs,
       successMessage: "Evento guardado correctamente",

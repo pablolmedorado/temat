@@ -164,12 +164,12 @@ import { computed, toRefs } from "@vue/composition-api";
 
 import { useEventStore } from "@/modules/calendar/stores/events";
 
-import useFilters, { filterProps } from "@/composables/useFilters";
+import { useFilters, filterProps } from "@/composables/filters";
 
 export default {
   name: "EventFilters",
   props: filterProps,
-  setup(props) {
+  setup() {
     // Store
     const eventStore = useEventStore();
 
@@ -183,7 +183,7 @@ export default {
       closeFiltersDialog,
       applyFiltersFromDialog,
       splitFilterValue,
-    } = useFilters(props, { basicFilters: ["search", "type_id__in"] });
+    } = useFilters({ basicFilters: ["search", "type_id__in"] });
 
     // Computed
     const { eventTypes: eventTypesOptions, eventVisibilityTypes: visibilityOptions } = toRefs(eventStore);
