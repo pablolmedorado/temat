@@ -181,8 +181,8 @@ import UserStoryIndexStatus from "@/modules/scrum/components/UserStoryIndexStatu
 import { useMainStore } from "@/stores/main";
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
-import useLoading from "@/composables/useLoading";
-import useScrumContext, { scrumContextProps } from "@/modules/scrum/composables/useScrumContext";
+import { useLoading } from "@/composables/loading";
+import { useScrumContext, scrumContextProps } from "@/modules/scrum/composables/scrum-context";
 import { getServiceByBasename } from "@/services";
 import { userHasPermission } from "@/utils/permissions";
 import { truncate } from "@/utils/text";
@@ -219,7 +219,7 @@ export default {
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading({
       includedChildren: ["itemIndex"],
     });
-    const { hasContext, contextItem } = useScrumContext(props);
+    const { hasContext, contextItem } = useScrumContext();
 
     // State
     const modelClass = UserStory;

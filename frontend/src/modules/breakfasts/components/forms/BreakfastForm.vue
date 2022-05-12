@@ -80,7 +80,7 @@ import BreakfastService from "@/modules/breakfasts/services/breakfast-service";
 
 import { useBreakfastStore } from "@/modules/breakfasts/stores/breakfasts";
 
-import useForm, { formProps } from "@/composables/useForm";
+import { useForm, formProps } from "@/composables/form";
 
 export default {
   name: "BreakfastForm",
@@ -95,12 +95,12 @@ export default {
       },
     };
   },
-  setup(props) {
+  setup() {
     // Store
     const breakfastStore = useBreakfastStore();
 
     // Composables
-    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(props, BreakfastService, {
+    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(BreakfastService, {
       successMessage: "Desayuno guardado correctamente",
       customErrorMsgs: {
         requiredIfIngredient2: "Requerido si hay ingrediente 2",

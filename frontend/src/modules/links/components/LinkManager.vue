@@ -52,7 +52,7 @@ import { groupBy } from "lodash-es";
 
 import LinkService from "@/modules/links/services/link-service";
 
-import useLoading from "@/composables/useLoading";
+import { useLoading } from "@/composables/loading";
 
 export default {
   name: "LinkManager",

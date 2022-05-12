@@ -32,10 +32,10 @@
 </template>
 
 <script>
+import { useVModel } from "@vueuse/core";
 import { maxLength, required } from "@vuelidate/validators";
 
-import useValidations from "@/composables/useValidations";
-import useInnerValue from "@/composables/useInnerValue";
+import { useValidations } from "@/composables/validations";
 
 export default {
   name: "GreenWorkingDayBulkFormRow",
@@ -55,7 +55,7 @@ export default {
   },
   setup(props) {
     const { v$, getErrorMsgs } = useValidations();
-    const { innerValue } = useInnerValue(props);
+    const innerValue = useVModel(props);
 
     return {
       v$,

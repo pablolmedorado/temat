@@ -12,7 +12,7 @@ import SupportService from "@/modules/support-working-days/services/support-serv
 
 import SupportDayBulkFormRow from "@/modules/support-working-days/components/forms/SupportDayBulkFormRow";
 
-import useBulkForm, { bulkFormProps } from "@/composables/useBulkForm";
+import { useBulkForm, bulkFormProps } from "@/composables/bulk-form";
 
 export default {
   name: "SupportDayBulkForm",
@@ -26,11 +26,8 @@ export default {
       },
     };
   },
-  setup(props) {
-    const { v$, getErrorMsgs, items, itemHaveChanged, submit, reset, isFormLoading } = useBulkForm(
-      props,
-      SupportService
-    );
+  setup() {
+    const { v$, getErrorMsgs, items, itemHaveChanged, submit, reset, isFormLoading } = useBulkForm(SupportService);
 
     return {
       // State

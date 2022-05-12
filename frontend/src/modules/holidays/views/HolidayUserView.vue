@@ -137,8 +137,8 @@ import HolidayService from "@/modules/holidays/services/holiday-service";
 
 import { useMainStore } from "@/stores/main";
 
-import useHolidays from "@/modules/holidays/composables/useHolidays";
-import useLoading from "@/composables/useLoading";
+import { useHolidays } from "@/modules/holidays/composables/holidays";
+import { useLoading } from "@/composables/loading";
 
 export default {
   name: "HolidayUserView",

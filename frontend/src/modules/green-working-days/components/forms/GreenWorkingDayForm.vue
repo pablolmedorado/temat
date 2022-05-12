@@ -48,7 +48,7 @@ import { maxLength, required } from "@vuelidate/validators";
 
 import GreenWorkingDayService from "@/modules/green-working-days/services/green-working-day-service";
 
-import useForm, { formProps } from "@/composables/useForm";
+import { useForm, formProps } from "@/composables/form";
 
 export default {
   name: "GreenWorkingDayForm",
@@ -60,15 +60,11 @@ export default {
       },
     };
   },
-  setup(props) {
-    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(
-      props,
-      GreenWorkingDayService,
-      {
-        saveFunctionName: "update",
-        successMessage: "Jornada especial guardada correctamente",
-      }
-    );
+  setup() {
+    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(GreenWorkingDayService, {
+      saveFunctionName: "update",
+      successMessage: "Jornada especial guardada correctamente",
+    });
 
     return {
       v$,

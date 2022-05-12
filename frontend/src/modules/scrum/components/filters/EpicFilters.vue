@@ -42,12 +42,12 @@
 <script>
 import { computed } from "@vue/composition-api";
 
-import useFilters, { filterProps } from "@/composables/useFilters";
+import { useFilters, filterProps } from "@/composables/filters";
 
 export default {
   name: "EpicFilters",
   props: filterProps,
-  setup(props) {
+  setup() {
     // Composables
     const {
       showFiltersDialog,
@@ -58,7 +58,7 @@ export default {
       closeFiltersDialog,
       applyFiltersFromDialog,
       splitFilterValue,
-    } = useFilters(props);
+    } = useFilters();
 
     // State
     const finishedOptions = [

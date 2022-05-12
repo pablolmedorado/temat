@@ -77,8 +77,8 @@ import EffortUserTimelineChart from "@/modules/scrum/components/charts/EffortUse
 
 import { useUserStore } from "@/stores/users";
 
-import useLoading from "@/composables/useLoading";
-import useDialog, { dialogProps } from "@/composables/useDialog";
+import { useLoading } from "@/composables/loading";
+import { useDialog, dialogProps } from "@/composables/dialog";
 import { userHasPermission } from "@/utils/permissions";
 
 export default {
@@ -94,7 +94,7 @@ export default {
     const { isLoading } = useLoading({
       includedChildren: ["userChart", "roleChart"],
     });
-    const { showDialog, open: _open, close } = useDialog(props);
+    const { showDialog, open: _open, close } = useDialog();
 
     // State
     const filters = ref(null);

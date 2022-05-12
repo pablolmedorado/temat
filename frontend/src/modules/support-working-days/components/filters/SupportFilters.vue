@@ -34,12 +34,12 @@
 </template>
 
 <script>
-import useFilters, { filterProps } from "@/composables/useFilters";
+import { useFilters, filterProps } from "@/composables/filters";
 
 export default {
   name: "SupportFilters",
   props: filterProps,
-  setup(props) {
+  setup() {
     // Composables
     const {
       showFiltersDialog,
@@ -49,7 +49,7 @@ export default {
       openFiltersDialog,
       closeFiltersDialog,
       applyFiltersFromDialog,
-    } = useFilters(props);
+    } = useFilters();
 
     return {
       // State

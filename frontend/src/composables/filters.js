@@ -12,9 +12,12 @@ export const filterProps = {
   },
 };
 
-export default function (props, { basicFilters = [] } = {}) {
+export function useFilters(options = {}) {
+  // Default options
+  const { basicFilters = [] } = options;
+
   // Vue instance
-  const { emit, refs } = getCurrentInstance();
+  const { emit, props, refs } = getCurrentInstance();
 
   // State
   const showFiltersDialog = ref(false);

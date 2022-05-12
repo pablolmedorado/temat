@@ -23,9 +23,9 @@ export const dialogProps = {
   },
 };
 
-export default function (props) {
+export function useDialog() {
   // Vue instance
-  const { emit } = getCurrentInstance();
+  const { emit, props } = getCurrentInstance();
 
   // State
   const showDialog = ref(props.value);

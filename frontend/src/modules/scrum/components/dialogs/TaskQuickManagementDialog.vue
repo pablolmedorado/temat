@@ -54,8 +54,8 @@ import TaskService from "@/modules/scrum/services/task-service";
 
 import { useMainStore } from "@/stores/main";
 
-import useLoading from "@/composables/useLoading";
-import useDialog, { dialogProps } from "@/composables/useDialog";
+import { useLoading } from "@/composables/loading";
+import { useDialog, dialogProps } from "@/composables/dialog";
 import { userHasPermission } from "@/utils/permissions";
 
 export default {
@@ -70,7 +70,7 @@ export default {
     const { isLoading, isTaskLoading, addTask, removeTask } = useLoading({
       includedChildren: ["itemTable"],
     });
-    const { showDialog, open: _open, close: _close } = useDialog(props);
+    const { showDialog, open: _open, close: _close } = useDialog();
 
     // State
     const tableHeaders = [

@@ -72,11 +72,10 @@
 
 <script>
 import { computed } from "@vue/composition-api";
+import { useLocalStorage } from "@vueuse/core";
 import { isEqual, isObject } from "lodash-es";
 
 import { useMainStore } from "@/stores/main";
-
-import useLocalStorage from "@/composables/useLocalStorage";
 
 export default {
   name: "FilterManager",

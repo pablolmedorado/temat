@@ -44,12 +44,12 @@ import { computed, toRefs } from "@vue/composition-api";
 
 import { useMainStore } from "@/stores/main";
 
-import useFilters, { filterProps } from "@/composables/useFilters";
+import { useFilters, filterProps } from "@/composables/filters";
 
 export default {
   name: "HolidayFilters",
   props: filterProps,
-  setup(props) {
+  setup() {
     // Store
     const store = useMainStore();
 
@@ -63,7 +63,7 @@ export default {
       closeFiltersDialog,
       applyFiltersFromDialog,
       splitFilterValue,
-    } = useFilters(props);
+    } = useFilters();
 
     // State
     const approvedOptions = [

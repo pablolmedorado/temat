@@ -12,7 +12,7 @@ import GreenWorkingDayService from "@/modules/green-working-days/services/green-
 
 import GreenWorkingDayBulkFormRow from "@/modules/green-working-days/components/forms/GreenWorkingDayBulkFormRow";
 
-import useBulkForm, { bulkFormProps } from "@/composables/useBulkForm";
+import { useBulkForm, bulkFormProps } from "@/composables/bulk-form";
 
 export default {
   name: "GreenWorkingDayBulkForm",
@@ -26,11 +26,9 @@ export default {
       },
     };
   },
-  setup(props) {
-    const { v$, getErrorMsgs, items, itemHaveChanged, submit, reset, isFormLoading } = useBulkForm(
-      props,
-      GreenWorkingDayService
-    );
+  setup() {
+    const { v$, getErrorMsgs, items, itemHaveChanged, submit, reset, isFormLoading } =
+      useBulkForm(GreenWorkingDayService);
 
     return {
       v$,

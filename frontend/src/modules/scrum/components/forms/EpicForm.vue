@@ -47,7 +47,7 @@ import { maxLength, required } from "@vuelidate/validators";
 
 import EpicService from "@/modules/scrum/services/epic-service";
 
-import useForm, { formProps } from "@/composables/useForm";
+import { useForm, formProps } from "@/composables/form";
 
 export default {
   name: "EpicForm",
@@ -61,9 +61,9 @@ export default {
       },
     };
   },
-  setup(props) {
+  setup() {
     // Composables
-    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(props, EpicService, {
+    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(EpicService, {
       successMessage: "Épica guardada correctamente",
     });
 

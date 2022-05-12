@@ -43,7 +43,7 @@
 <script>
 import { computed, ref } from "@vue/composition-api";
 
-import useDialog, { dialogProps } from "@/composables/useDialog";
+import { useDialog, dialogProps } from "@/composables/dialog";
 
 export default {
   name: "TableHeadersConfigDialog",
@@ -61,7 +61,7 @@ export default {
   },
   setup(props, { emit }) {
     // Composables
-    const { showDialog, open: _open, close: _close } = useDialog(props);
+    const { showDialog, open: _open, close: _close } = useDialog();
 
     // State
     const selectedHeaders = ref([]);

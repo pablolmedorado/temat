@@ -67,7 +67,7 @@ import BreakfastSummaryDialog from "@/modules/breakfasts/components/dialogs/Brea
 
 import { useMainStore } from "@/stores/main";
 
-import useLoading from "@/composables/useLoading";
+import { useLoading } from "@/composables/loading";
 import { getServiceByBasename } from "@/services";
 
 export default {

@@ -47,7 +47,7 @@ import UserStoryService from "@/modules/scrum/services/user-story-service";
 
 import UserStoryProgressChart from "@/modules/scrum/components/charts/UserStoryProgressChart";
 
-import useLoading from "@/composables/useLoading";
+import { useLoading } from "@/composables/loading";
 
 export default {
   name: "UserStoryProgress",

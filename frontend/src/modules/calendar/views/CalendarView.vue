@@ -138,6 +138,7 @@
 
 <script>
 import { computed, onActivated, ref, toRefs, watch } from "@vue/composition-api";
+import { useLocalStorage } from "@vueuse/core";
 import { DateTime, Interval } from "luxon";
 import { debounce, defaultTo, sortBy } from "lodash-es";
 import { escapeHTML } from "vuetify/es5/util/helpers";
@@ -151,9 +152,8 @@ import EventForm from "@/modules/calendar/components/forms/EventForm";
 
 import { useMainStore } from "@/stores/main";
 
-import useEventTypes from "@/modules/calendar/composables/useEventTypes";
-import useLoading from "@/composables/useLoading";
-import useLocalStorage from "@/composables/useLocalStorage";
+import { useEventTypes } from "@/modules/calendar/composables/event-types";
+import { useLoading } from "@/composables/loading";
 import { getFontColourFromBackground, hex2rgba } from "@/utils/colours";
 
 export default {

@@ -70,7 +70,7 @@ import EventRepresentation from "@/modules/calendar/components/EventRepresentati
 
 import { useMainStore } from "@/stores/main";
 
-import useEventTypes from "@/modules/calendar/composables/useEventTypes";
+import { useEventTypes } from "@/modules/calendar/composables/event-types";
 import { userHasPermission } from "@/utils/permissions";
 import { buildGoogleCalendarUrl } from "@/modules/calendar/utils";
 import { applyDarkVariant } from "@/utils/colours";

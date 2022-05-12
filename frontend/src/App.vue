@@ -29,7 +29,7 @@ import { useMainStore } from "@/stores/main";
 import { useTagStore } from "@/stores/tags";
 import { useUserStore } from "@/stores/users";
 
-import useKonamiCode from "@/composables/useKonamiCode";
+import { useKonamiCode } from "@/composables/konami-code";
 import loperaSentences from "@/utils/lopera-sentences";
 import { handleError } from "@/utils/error-handlers";
 

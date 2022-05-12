@@ -49,14 +49,14 @@
 </template>
 
 <script>
-import useDialog, { dialogProps } from "@/composables/useDialog";
+import { useDialog, dialogProps } from "@/composables/dialog";
 
 export default {
   name: "HolidaysHelpDialog",
   inheritAttrs: false,
   props: dialogProps,
-  setup(props) {
-    const { showDialog, open, close } = useDialog(props);
+  setup() {
+    const { showDialog, open, close } = useDialog();
 
     return {
       showDialog,

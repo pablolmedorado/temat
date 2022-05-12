@@ -1,6 +1,6 @@
 import { onBeforeUnmount, onMounted } from "@vue/composition-api";
 
-export default function (callback) {
+export function useKonamiCode(callback) {
   // State
   const code = [
     "ArrowUp",

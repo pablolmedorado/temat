@@ -20,7 +20,7 @@ import { required } from "@vuelidate/validators";
 
 import SupportService from "@/modules/support-working-days/services/support-service";
 
-import useForm, { formProps } from "@/composables/useForm";
+import { useForm, formProps } from "@/composables/form";
 
 export default {
   name: "SupportDayForm",
@@ -32,9 +32,9 @@ export default {
       },
     };
   },
-  setup(props) {
+  setup() {
     // Composables
-    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(props, SupportService, {
+    const { v$, getErrorMsgs, item, itemHasChanged, submit, reset, isFormLoading } = useForm(SupportService, {
       saveFunctionName: "update",
       successMessage: "Día de soporte guardado correctamente",
     });

@@ -30,15 +30,15 @@
 import { computed, ref } from "@vue/composition-api";
 import { countBy, map } from "lodash-es";
 
-import useDialog, { dialogProps } from "@/composables/useDialog";
+import { useDialog, dialogProps } from "@/composables/dialog";
 
 export default {
   name: "HolidaysDetailDialog",
   inheritAttrs: false,
   props: dialogProps,
-  setup(props) {
+  setup() {
     // Composables
-    const { showDialog, open: _open, close: _close } = useDialog(props);
+    const { showDialog, open: _open, close: _close } = useDialog();
 
     // State
     const headers = [

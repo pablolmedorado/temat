@@ -175,7 +175,7 @@ import UserStoryUserChart from "@/modules/scrum/components/charts/UserStoryUserC
 
 import { useMainStore } from "@/stores/main";
 
-import useLoading from "@/composables/useLoading";
+import { useLoading } from "@/composables/loading";
 
 export default {
   name: "AnalyticsView",
