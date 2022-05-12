@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.21.3](https://github.com/pablolmedorado/temat/compare/v1.21.2...v1.21.3) (2022-05-12)
+
+
+### Bug Fixes
+
+* **links:** hide links menu when there are no links ([cb72d0e](https://github.com/pablolmedorado/temat/commit/cb72d0e7a93707787c45d0c9375e19fc17412e53))
+
 ### [1.21.2](https://github.com/pablolmedorado/temat/compare/v1.21.1...v1.21.2) (2022-04-11)
 
 
