@@ -2,7 +2,8 @@ from datetime import date
 
 from django.utils.translation import ugettext_lazy as _
 
-from rest_flex_fields import FlexFieldsModelSerializer
+from ordered_model.serializers import OrderedModelSerializer
+from rest_flex_fields.serializers import FlexFieldsModelSerializer, FlexFieldsSerializerMixin
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 from rest_framework_bulk import BulkListSerializer
@@ -132,13 +133,14 @@ class EffortSerializer(FlexFieldsModelSerializer):
         ]
 
 
-class TaskSerializer(FlexFieldsModelSerializer):
+class TaskSerializer(FlexFieldsSerializerMixin, OrderedModelSerializer):
+    order = serializers.IntegerField(required=False, read_only=False)
+
     class Meta:
         model = Task
         fields = ("id", "name", "user_story", "order", "weight", "done", "done_changed")
         read_only_fields = (
             "id",
-            "order",
             "done_changed",
             "creation_datetime",
             "creation_user",

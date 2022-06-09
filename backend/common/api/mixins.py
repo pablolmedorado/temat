@@ -47,16 +47,6 @@ class AtomicBulkDestroyModelMixin(BulkDestroyModelMixin):
 
 
 class OrderedMixin(object):
-    def perform_create(self, serializer):
-        super().perform_create(serializer)
-        if "order" in self.request.data:
-            serializer.instance.to(int(self.request.data.get("order")))
-
-    def perform_update(self, serializer):
-        super().perform_update(serializer)
-        if "order" in self.request.data:
-            serializer.instance.to(int(self.request.data.get("order")))
-
     @atomic_transaction_singleton
     @action(detail=True, methods=["PATCH"])
     def to(self, request, *args, **kwargs):  # noqa
