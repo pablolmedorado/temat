@@ -1,6 +1,6 @@
 from rest_framework_bulk.routes import BulkRouter
 
-from .api.viewsets import GreenWorkingDayViewSet, HolidayViewSet, HolidayTypeViewSet, SupportWorkingDayViewSet
+from .api.viewsets import GreenWorkingDayViewSet, HolidayTypeViewSet, HolidayViewSet, SupportWorkingDayViewSet
 
 app_name = "work_organization"
 

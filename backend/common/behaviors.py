@@ -1,18 +1,21 @@
 import uuid
 
+from django_currentuser.db.models import CurrentUserField
+from django_currentuser.middleware import get_current_authenticated_user
+from taggit.managers import TaggableManager
+
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from django_currentuser.db.models import CurrentUserField
-from django_currentuser.middleware import get_current_authenticated_user
-from taggit.managers import TaggableManager
-
 from .decorators import atomic_transaction_singleton
 
 
 class Transactionable(models.Model):
+    class Meta:
+        abstract = True
+
     @atomic_transaction_singleton
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -21,19 +24,16 @@ class Transactionable(models.Model):
     def delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
 
-    class Meta:
-        abstract = True
-
 
 class Uuidable(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
+    class Meta:
+        abstract = True
+
     @property
     def persisted(self):
         return self.__class__.objects.filter(id=self.id).exists()
-
-    class Meta:
-        abstract = True
 
 
 class Authorable(models.Model):
@@ -84,6 +84,9 @@ class Notifiable(models.Model):
         related_query_name="%(app_label)s_%(class)s",
     )
 
+    class Meta:
+        abstract = True
+
     @property
     def notification_str(self):
         return f"{self}"
@@ -91,9 +94,6 @@ class Notifiable(models.Model):
     @property
     def notification_sender(self):
         return get_current_authenticated_user() or get_user_model().objects.get_random_admin()
-
-    class Meta:
-        abstract = True
 
 
 class Taggable(Uuidable):

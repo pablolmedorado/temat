@@ -1,10 +1,10 @@
-from django.db import models
-from django.utils.html import format_html
-from django.utils.translation import ugettext_lazy as _
-
 from colorfield.fields import ColorField
 from ordered_model.models import OrderedModel as Orderable
 from taggit.models import GenericUUIDTaggedItemBase, TagBase
+
+from django.db import models
+from django.utils.html import format_html
+from django.utils.translation import ugettext_lazy as _
 
 from .behaviors import Transactionable
 
@@ -19,15 +19,15 @@ class Tag(Transactionable, TagBase):
         default="mdi-label",
     )
 
+    class Meta:
+        verbose_name = _("etiqueta")
+        verbose_name_plural = _("etiquetas")
+
     def colored_colour(self):
         return format_html('<span style="color: {colour};">{colour}</span>', colour=self.colour)
 
     colored_colour.short_description = _("Color")  # type: ignore
     colored_colour.admin_order_field = "colour"  # type: ignore
-
-    class Meta:
-        verbose_name = _("etiqueta")
-        verbose_name_plural = _("etiquetas")
 
 
 class TaggedItem(Transactionable, GenericUUIDTaggedItemBase):
@@ -43,12 +43,12 @@ class TaggedItem(Transactionable, GenericUUIDTaggedItemBase):
 class LinkType(Transactionable, Orderable, models.Model):
     name = models.CharField(_("nombre"), max_length=200, blank=False, unique=True)
 
-    def __str__(self):
-        return self.name
-
     class Meta(Orderable.Meta):
         verbose_name = _("tipo de enlace")
         verbose_name_plural = _("tipos de enlace")
+
+    def __str__(self):
+        return self.name
 
 
 class Link(Transactionable, Orderable, models.Model):
@@ -71,9 +71,9 @@ class Link(Transactionable, Orderable, models.Model):
 
     order_with_respect_to = ("type",)
 
-    def __str__(self):
-        return self.name
-
     class Meta(Orderable.Meta):
         verbose_name = _("enlace")
         verbose_name_plural = _("enlaces")
+
+    def __str__(self):
+        return self.name

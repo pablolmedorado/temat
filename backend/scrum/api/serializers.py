@@ -1,18 +1,18 @@
 from datetime import date
 
-from django.utils.translation import ugettext_lazy as _
-
 from ordered_model.serializers import OrderedModelSerializer
 from rest_flex_fields.serializers import FlexFieldsModelSerializer, FlexFieldsSerializerMixin
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 from rest_framework_bulk import BulkListSerializer
-from taggit.serializers import TagListSerializerField, TaggitSerializer
+from taggit.serializers import TaggitSerializer, TagListSerializerField
 
-from ..models import Effort, Epic, Progress, Sprint, Task, UserStory, UserStoryType
+from django.utils.translation import ugettext_lazy as _
+
 from common.api.mixins import BulkSerializerMixin
 from common.api.serializers import TagSerializer
 from users.api.serializers import UserSerializer
+from ..models import Effort, Epic, Progress, Sprint, Task, UserStory, UserStoryType
 
 
 class SprintSerializer(TaggitSerializer, FlexFieldsModelSerializer):

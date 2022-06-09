@@ -1,8 +1,10 @@
-import operator
 from functools import reduce
+import operator
 from typing import List
 
-import django.utils.timezone
+from colorfield.fields import ColorField
+from icalendar import Calendar, Event as ICalendarEvent, vCalAddress, vText
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
@@ -11,13 +13,11 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import Q
 from django.utils.html import format_html
+import django.utils.timezone
 from django.utils.translation import ugettext_lazy as _
 
-from colorfield.fields import ColorField
-from icalendar import Calendar, Event as ICalendarEvent, vCalAddress, vText
-
-from .querysets import EventQuerySet
 from common.behaviors import Authorable, Notifiable, Taggable, Transactionable
+from .querysets import EventQuerySet
 
 
 class EventType(Transactionable, models.Model):
@@ -49,15 +49,6 @@ class EventType(Transactionable, models.Model):
         _("importante"), help_text=_("Mostrar fechas de eventos de este tipo en selectores de fecha"), default=False
     )
 
-    def __str__(self):
-        return self.name
-
-    def colored_colour(self):
-        return format_html('<span style="color: {colour};">{colour}</span>', colour=self.colour)
-
-    colored_colour.short_description = _("Color")  # type: ignore
-    colored_colour.admin_order_field = "colour"  # type: ignore
-
     class Meta:
         verbose_name = _("tipo de evento")
         verbose_name_plural = _("tipos de evento")
@@ -67,6 +58,15 @@ class EventType(Transactionable, models.Model):
                 fields=["system_slug"], condition=Q(system_slug__isnull=False), name="unique_event_type_slug"
             )
         ]
+
+    def __str__(self):
+        return self.name
+
+    def colored_colour(self):
+        return format_html('<span style="color: {colour};">{colour}</span>', colour=self.colour)
+
+    colored_colour.short_description = _("Color")  # type: ignore
+    colored_colour.admin_order_field = "colour"  # type: ignore
 
 
 class Event(Transactionable, Taggable, Authorable, Notifiable, models.Model):
@@ -126,8 +126,13 @@ class Event(Transactionable, Taggable, Authorable, Notifiable, models.Model):
 
     objects = EventQuerySet.as_manager()
 
+    class Meta:
+        verbose_name = _("evento")
+        verbose_name_plural = _("eventos")
+        ordering = ("-start_datetime",)
+
     def __str__(self):
-        return f"{self.name}"
+        return self.name
 
     def to_icalendar_event(self) -> ICalendarEvent:
         ical_event = ICalendarEvent()
@@ -163,8 +168,3 @@ class Event(Transactionable, Taggable, Authorable, Notifiable, models.Model):
         for event in event_list:
             ical.add_component(event.to_icalendar_event())
         return ical
-
-    class Meta:
-        verbose_name = _("evento")
-        verbose_name_plural = _("eventos")
-        ordering = ("-start_datetime",)

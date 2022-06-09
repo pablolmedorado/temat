@@ -1,5 +1,9 @@
 from datetime import date
 
+from colorfield.fields import ColorField
+from model_utils.fields import MonitorField
+from ordered_model.models import OrderedModel as Orderable
+
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator, URLValidator
 from django.db import models
@@ -8,14 +12,10 @@ from django.db.models.functions import Coalesce
 from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 
-from colorfield.fields import ColorField
-from model_utils.fields import MonitorField
-from ordered_model.models import OrderedModel as Orderable
-
-from .behaviors import UserStoryContainer
-from .querysets import EpicQuerySet, SprintQuerySet, UserStoryQuerySet
 from common.behaviors import Authorable, Eventable, Notifiable, Taggable, Transactionable, Uuidable
 from common.decorators import atomic_transaction_singleton
+from .behaviors import UserStoryContainer
+from .querysets import EpicQuerySet, SprintQuerySet, UserStoryQuerySet
 
 
 class Sprint(Transactionable, Taggable, Authorable, Notifiable, Eventable, UserStoryContainer, models.Model):
@@ -31,21 +31,21 @@ class Sprint(Transactionable, Taggable, Authorable, Notifiable, Eventable, UserS
         on_delete=models.PROTECT,
     )
 
-    @property
-    def ongoing(self):
-        if hasattr(self, "annotated_ongoing"):
-            return self.annotated_ongoing
-        return self.start_date <= date.today() and self.end_date >= date.today()
-
     objects = SprintQuerySet.as_manager()
-
-    def __str__(self):
-        return self.name
 
     class Meta:
         verbose_name = _("sprint")
         verbose_name_plural = _("sprints")
         ordering = ("-start_date",)
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def ongoing(self):
+        if hasattr(self, "annotated_ongoing"):
+            return self.annotated_ongoing
+        return self.start_date <= date.today() and self.end_date >= date.today()
 
 
 class Epic(Transactionable, Taggable, Authorable, UserStoryContainer, models.Model):
@@ -55,18 +55,23 @@ class Epic(Transactionable, Taggable, Authorable, UserStoryContainer, models.Mod
 
     objects = EpicQuerySet.as_manager()
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = _("epic")
         verbose_name_plural = _("epics")
         ordering = ("-creation_datetime",)
 
+    def __str__(self):
+        return self.name
+
 
 class UserStoryType(Transactionable, models.Model):
     name = models.CharField(_("nombre"), max_length=50, blank=False, unique=True)
     colour = ColorField(_("color en las gráficas"), blank=False)
+
+    class Meta:
+        verbose_name = _("tipo de historia de usuario")
+        verbose_name_plural = _("tipos de historia de usuario")
+        ordering = ("name",)
 
     def __str__(self):
         return self.name
@@ -76,11 +81,6 @@ class UserStoryType(Transactionable, models.Model):
 
     colored_colour.short_description = _("Color")  # type: ignore
     colored_colour.admin_order_field = "colour"  # type: ignore
-
-    class Meta:
-        verbose_name = _("tipo de historia de usuario")
-        verbose_name_plural = _("tipos de historia de usuario")
-        ordering = ("name",)
 
 
 class UserStory(Transactionable, Taggable, Authorable, Notifiable, models.Model):
@@ -196,8 +196,17 @@ class UserStory(Transactionable, Taggable, Authorable, Notifiable, models.Model)
 
     objects = UserStoryQuerySet.as_manager()
 
+    class Meta:
+        verbose_name = _("historia de usuario")
+        verbose_name_plural = _("historias de usuario")
+        ordering = ("-start_date",)
+        constraints = [
+            models.UniqueConstraint(fields=["name", "sprint"], name="unique_user_story_sprint"),
+            models.UniqueConstraint(fields=["name", "epic"], name="unique_user_story_epic"),
+        ]
+
     def __str__(self):
-        return f"{self.name}"
+        return self.name
 
     @classmethod
     @atomic_transaction_singleton
@@ -211,22 +220,13 @@ class UserStory(Transactionable, Taggable, Authorable, Notifiable, models.Model)
                 "planned_effort": instance.planned_effort,
                 "priority": instance.priority,
                 "use_migrations": instance.use_migrations,
-                "creation_user": owner if owner else instance.creation_user,
+                "creation_user": owner or instance.creation_user,
             }
         )
         new_instance.tags.add(*instance.tags.all())
         for task in instance.tasks.all().iterator():
             new_instance.tasks.create(**{"name": task.name, "weight": task.weight})
         return new_instance
-
-    class Meta:
-        verbose_name = _("historia de usuario")
-        verbose_name_plural = _("historias de usuario")
-        ordering = ("-start_date",)
-        constraints = [
-            models.UniqueConstraint(fields=["name", "sprint"], name="unique_user_story_sprint"),
-            models.UniqueConstraint(fields=["name", "epic"], name="unique_user_story_epic"),
-        ]
 
 
 class Progress(Transactionable, Uuidable, Authorable, models.Model):
@@ -243,14 +243,14 @@ class Progress(Transactionable, Uuidable, Authorable, models.Model):
         _("avance"), blank=False, default=0, validators=[MaxValueValidator(100)]
     )
 
-    def __str__(self):
-        return f"{self.date} / {self.user_story} / {self.progress}"
-
     class Meta:
         verbose_name = _("registro de avance")
         verbose_name_plural = _("histórico de avance")
         ordering = ("-date",)
         constraints = [models.UniqueConstraint(fields=["date", "user_story"], name="unique_progress")]
+
+    def __str__(self):
+        return f"{self.user_story} / {self.date} / {self.progress}%"
 
 
 class Effort(Transactionable, Uuidable, Authorable, models.Model):
@@ -286,14 +286,14 @@ class Effort(Transactionable, Uuidable, Authorable, models.Model):
     )
     comments = models.CharField(_("comentarios"), max_length=2000, blank=True)
 
-    def __str__(self):
-        return f"{self.date} / {self.user} / {self.role} / {self.user_story} / {self.effort}"
-
     class Meta:
         verbose_name = _("asignación de esfuerzo")
         verbose_name_plural = _("asignaciones de esfuerzo")
         ordering = ("-creation_datetime",)
         constraints = [models.UniqueConstraint(fields=["date", "user", "role", "user_story"], name="unique_effort")]
+
+    def __str__(self):
+        return f"{self.user_story} / {self.date} / {self.user} / {self.role} / {self.effort}UT"
 
 
 class Task(Transactionable, Uuidable, Orderable, Authorable, models.Model):
@@ -314,10 +314,10 @@ class Task(Transactionable, Uuidable, Orderable, Authorable, models.Model):
 
     order_with_respect_to = ("user_story",)
 
-    def __str__(self):
-        return f"{self.user_story} / {self.order}.{self.name} / {self.done}"
-
     class Meta(Orderable.Meta):
         verbose_name = _("tarea")
         verbose_name_plural = _("tareas")
         constraints = [models.UniqueConstraint(fields=["name", "user_story"], name="unique_task")]
+
+    def __str__(self):
+        return f"{self.user_story} / {self.order}.{self.name}"

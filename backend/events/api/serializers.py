@@ -1,13 +1,12 @@
-from django.utils.translation import ugettext_lazy as _
-
 from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
-from taggit.serializers import TagListSerializerField, TaggitSerializer
+from taggit.serializers import TaggitSerializer, TagListSerializerField
 
+from django.utils.translation import ugettext_lazy as _
 
-from ..models import Event, EventType
 from common.api.serializers import TagSerializer
 from users.api.serializers import GroupSerializer, UserSerializer
+from ..models import Event, EventType
 
 
 class EventTypeSerializer(FlexFieldsModelSerializer):

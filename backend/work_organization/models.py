@@ -5,8 +5,8 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
-from .querysets import HolidayQuerySet
 from common.behaviors import Authorable, Eventable, Notifiable, Transactionable, Uuidable
+from .querysets import HolidayQuerySet
 
 
 class GreenWorkingDay(Transactionable, Uuidable, Authorable, Notifiable, Eventable, models.Model):
@@ -25,13 +25,13 @@ class GreenWorkingDay(Transactionable, Uuidable, Authorable, Notifiable, Eventab
         blank=True,
     )
 
-    def __str__(self):
-        return f"{self.label} ({self.date})"
-
     class Meta:
         verbose_name = _("jornada especial")
         verbose_name_plural = _("jornadas especiales")
         ordering = ["-date"]
+
+    def __str__(self):
+        return f"{self.label} ({self.date})"
 
 
 class SupportWorkingDay(Transactionable, Uuidable, Authorable, Notifiable, Eventable, models.Model):
@@ -45,13 +45,13 @@ class SupportWorkingDay(Transactionable, Uuidable, Authorable, Notifiable, Event
         on_delete=models.CASCADE,
     )
 
-    def __str__(self):
-        return f"{self.date}"
-
     class Meta:
         verbose_name = _("jornada de soporte")
         verbose_name_plural = _("jornadas de soporte")
         ordering = ["-date"]
+
+    def __str__(self):
+        return f"{self.date}"
 
 
 class HolidayType(Transactionable, models.Model):
@@ -77,9 +77,6 @@ class HolidayType(Transactionable, models.Model):
         db_index=True,
     )
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = _("tipo de vacaciones")
         verbose_name_plural = _("tipos de vacaciones")
@@ -89,6 +86,9 @@ class HolidayType(Transactionable, models.Model):
                 fields=["system_slug"], condition=Q(system_slug__isnull=False), name="unique_holiday_type_slug"
             )
         ]
+
+    def __str__(self):
+        return self.name
 
 
 def holiday_type_default():
@@ -129,20 +129,20 @@ class Holiday(Transactionable, Uuidable, Authorable, Notifiable, Eventable, mode
         on_delete=models.CASCADE,
     )
 
+    objects = HolidayQuerySet.as_manager()
+
+    class Meta:
+        verbose_name = _("día de vacaciones")
+        verbose_name_plural = _("días de vacaciones")
+        ordering = ["-planned_date", "user"]
+
+    def __str__(self):
+        return f"{self.user} / {self.planned_date or 'No solicitado'} ({self.allowance_date.year})"
+
     @property
     def expiration_date(self):
         return self.allowance_date + self.type.validity
 
     @property
     def notification_str(self):
-        return f"{self.planned_date}"
-
-    objects = HolidayQuerySet.as_manager()
-
-    def __str__(self):
-        return f"{self.id} - {self.user} ({self.allowance_date.year})"
-
-    class Meta:
-        verbose_name = _("día de vacaciones")
-        verbose_name_plural = _("días de vacaciones")
-        ordering = ["-planned_date", "user"]
+        return f"{self.planned_date} ({self.allowance_date.year})"

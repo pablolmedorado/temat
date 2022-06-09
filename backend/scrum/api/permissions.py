@@ -1,8 +1,8 @@
 from datetime import timedelta
 
-from django.utils import timezone
-
 from rest_framework import permissions
+
+from django.utils import timezone
 
 from common.api.utils import check_api_user_permissions
 

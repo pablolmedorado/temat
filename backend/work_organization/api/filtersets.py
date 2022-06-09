@@ -1,7 +1,7 @@
-from django.utils.translation import gettext as _
-
 import django_filters
 from django_filters import DateFilter
+
+from django.utils.translation import gettext as _
 
 from ..models import GreenWorkingDay, Holiday, SupportWorkingDay
 

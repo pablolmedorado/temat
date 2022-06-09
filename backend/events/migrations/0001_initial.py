@@ -1,9 +1,11 @@
+import uuid
+
 import colorfield.fields
+
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
-import uuid
 
 
 class Migration(migrations.Migration):

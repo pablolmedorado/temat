@@ -1,5 +1,7 @@
 from datetime import date, datetime
 
+from notifications.signals import notify
+
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q, Sum, Value
@@ -8,11 +10,9 @@ from django.db.models.signals import post_delete, post_save, pre_delete, pre_sav
 from django.dispatch import receiver
 from django.utils.timezone import make_aware
 
-from notifications.signals import notify
-
-from .models import Progress, Sprint, Task, UserStory
 from common.utils import get_notification_sender, notify_item_assignation_to_user
 from events.models import Event, EventType
+from .models import Progress, Sprint, Task, UserStory
 
 
 @receiver(post_save, sender=Sprint)

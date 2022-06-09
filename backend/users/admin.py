@@ -1,13 +1,13 @@
 from datetime import date
 
+from import_export.admin import ImportExportActionModelAdmin
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import ugettext as _
 
-from import_export.admin import ImportExportActionModelAdmin
-
-from .models import User, Company
-from .resources import UserResource, CompanyResource
+from .models import Company, User
+from .resources import CompanyResource, UserResource
 
 
 @admin.register(User)

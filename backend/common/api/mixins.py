@@ -1,9 +1,9 @@
-from django.utils.translation import ugettext_lazy as _
-
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework_bulk import BulkCreateModelMixin, BulkDestroyModelMixin, BulkListSerializer, BulkUpdateModelMixin
+
+from django.utils.translation import ugettext_lazy as _
 
 from ..decorators import atomic_transaction_singleton
 

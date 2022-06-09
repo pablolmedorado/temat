@@ -1,12 +1,12 @@
-import operator
 from datetime import date
 from functools import reduce
-
-from django.db.models import F, Q
-from django.utils.translation import ugettext_lazy as _
+import operator
 
 from django_filters import BaseInFilter, BooleanFilter, NumberFilter
 from django_filters.rest_framework import FilterSet
+
+from django.db.models import F, Q
+from django.utils.translation import ugettext_lazy as _
 
 from ..models import Effort, Epic, Progress, Sprint, Task, UserStory
 

@@ -1,7 +1,7 @@
-from django.utils.encoding import smart_str
-
 from import_export.widgets import CharWidget, ManyToManyWidget
 from taggit.managers import _TaggableManager
+
+from django.utils.encoding import smart_str
 
 
 class UUIDWidget(CharWidget):

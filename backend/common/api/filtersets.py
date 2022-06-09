@@ -1,5 +1,4 @@
 from django_filters.rest_framework import FilterSet
-
 from notifications.models import Notification
 
 from ..models import Tag

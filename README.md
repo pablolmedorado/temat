@@ -3,7 +3,6 @@
 ![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/pablolmedorado/temat?include_prereleases&sort=semver)
 ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/pablolmedorado/temat)
 ![GitHub](https://img.shields.io/github/license/pablolmedorado/temat)
-[![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/pablolmedorado/temat)
 
 ![Docker version](https://img.shields.io/badge/Docker-20-2496ed)
 ![PostgreSQL version](https://img.shields.io/badge/PostgreSQL-13-336791)
@@ -13,6 +12,8 @@
 ![Node version](https://img.shields.io/badge/Node.js-14-026e00)
 ![Vue.js version](https://img.shields.io/badge/Vue.js-2.6-4fc08d)
 ![Vuetify version](https://img.shields.io/badge/Vuetify-2.6-1867c0)
+
+[![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
 
 ## 👀 Overview
 

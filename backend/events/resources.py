@@ -1,13 +1,13 @@
-from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
-
 from django_currentuser.middleware import get_current_authenticated_user
 from import_export import resources
 from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 
-from .models import Event, EventType
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
+
 from common.widgets import TagsWidget, UUIDWidget
+from .models import Event, EventType
 
 
 class EventResource(resources.ModelResource):

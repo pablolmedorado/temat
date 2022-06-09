@@ -1,6 +1,6 @@
 from rest_framework import routers
 
-from .api.viewsets import EventViewSet, EventTypeViewSet
+from .api.viewsets import EventTypeViewSet, EventViewSet
 
 app_name = "events"
 

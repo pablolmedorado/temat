@@ -1,14 +1,10 @@
-from django.contrib.auth import (
-    authenticate,
-    login as django_login,
-    logout as django_logout,
-)
-from django.utils.datastructures import MultiValueDictKeyError
-
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+
+from django.contrib.auth import authenticate, login as django_login, logout as django_logout
+from django.utils.datastructures import MultiValueDictKeyError
 
 
 @api_view(["POST"])

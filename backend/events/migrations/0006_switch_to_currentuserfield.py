@@ -1,8 +1,9 @@
+import django_currentuser.db.models.fields
+import django_currentuser.middleware
+
 from django.conf import settings
 from django.db import migrations
 import django.db.models.deletion
-import django_currentuser.db.models.fields
-import django_currentuser.middleware
 
 
 class Migration(migrations.Migration):

@@ -1,9 +1,9 @@
-from django.urls import path
-
 from rest_framework import routers
 
-from .api.viewsets import GroupViewSet, UserViewSet
+from django.urls import path
+
 from .api.views import login, logout
+from .api.viewsets import GroupViewSet, UserViewSet
 
 app_name = "users"
 
