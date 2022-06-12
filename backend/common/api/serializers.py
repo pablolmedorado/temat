@@ -1,3 +1,4 @@
+from colorfield.serializers import ColorField
 from notifications.models import Notification
 from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
@@ -35,6 +36,8 @@ class NotificationSerializer(FlexFieldsModelSerializer):
 
 
 class TagSerializer(FlexFieldsModelSerializer):
+    colour = ColorField(required=False, read_only=True)
+
     class Meta:
         model = Tag
         fields = (

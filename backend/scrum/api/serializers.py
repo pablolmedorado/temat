@@ -1,5 +1,6 @@
 from datetime import date
 
+from colorfield.serializers import ColorField
 from ordered_model.serializers import OrderedModelSerializer
 from rest_flex_fields.serializers import FlexFieldsModelSerializer, FlexFieldsSerializerMixin
 from rest_framework import serializers
@@ -103,6 +104,8 @@ class EpicSerializer(TaggitSerializer, FlexFieldsModelSerializer):
 
 
 class UserStoryTypeSerializer(FlexFieldsModelSerializer):
+    colour = ColorField()
+
     class Meta:
         model = UserStoryType
         fields = ("id", "name", "colour")
