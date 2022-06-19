@@ -94,35 +94,35 @@ export default {
 
     // Computed
     const fields = computed(() => {
-      let fields = [props.itemKey];
+      let result = [props.itemKey];
       props.headers.forEach((header) => {
         if (header.fields) {
-          fields = [...fields, ...header.fields];
+          result = [...result, ...header.fields];
         } else if (header.value !== "table_actions") {
-          fields.push(header.value);
+          result.push(header.value);
         }
       });
-      return uniq(fields);
+      return uniq(result);
     });
     const expand = computed(() => {
-      const expand = [];
+      const result = [];
       fields.value.forEach((field) => {
         const splittedField = field.split(".");
         if (splittedField.length > 1) {
-          expand.push(splittedField.slice(0, splittedField.length - 1).join("."));
+          result.push(splittedField.slice(0, splittedField.length - 1).join("."));
         }
       });
-      return uniq(expand);
+      return uniq(result);
     });
     const ordering = computed(() => {
-      const ordering = [];
+      const result = [];
       props.options.sortBy.forEach((field, index) => {
-        const header = props.headers.find((header) => header.value === field);
+        const header = props.headers.find((headerItem) => headerItem.value === field);
         if (header) {
-          ordering.push(`${props.options.sortDesc[index] ? "-" : ""}${defaultTo(header.sortingField, field)}`);
+          result.push(`${props.options.sortDesc[index] ? "-" : ""}${defaultTo(header.sortingField, field)}`);
         }
       });
-      return ordering;
+      return result;
     });
 
     // Methods
@@ -152,27 +152,18 @@ export default {
 
     // Watchers
     watch(
+      () => [props.options, props.headers],
+      (newValue, oldValue) => {
+        if (!isEqual(newValue, oldValue)) {
+          fetchItems();
+        }
+      },
+      { deep: true }
+    );
+    watch(
       () => props.filters,
       (newValue, oldValue) => {
         if (!isEqual(newValue, oldValue) && props.reactiveFilters) {
-          fetchItems(true);
-        }
-      },
-      { deep: true }
-    );
-    watch(
-      () => props.options,
-      (newValue, oldValue) => {
-        if (!isEqual(newValue, oldValue)) {
-          fetchItems(true);
-        }
-      },
-      { deep: true }
-    );
-    watch(
-      () => props.headers,
-      (newValue, oldValue) => {
-        if (!isEqual(newValue, oldValue)) {
           fetchItems(true);
         }
       },
