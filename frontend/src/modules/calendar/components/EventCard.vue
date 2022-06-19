@@ -63,18 +63,20 @@ import { cloneDeep } from "lodash-es";
 
 import CalendarEvent from "@/modules/calendar/models/event";
 
-import EventService from "@/modules/calendar/services/event-service";
-
-import EventForm from "@/modules/calendar/components/forms/EventForm";
-import EventRepresentation from "@/modules/calendar/components/EventRepresentation";
-
 import { useMainStore } from "@/stores/main";
 
-import { useEventTypes } from "@/modules/calendar/composables/event-types";
-import { userHasPermission } from "@/utils/permissions";
-import { buildGoogleCalendarUrl } from "@/modules/calendar/utils";
-import { applyDarkVariant } from "@/utils/colours";
+import EventService from "@/modules/calendar/services/event-service";
 
+import EventRepresentation from "@/modules/calendar/components/EventRepresentation";
+import EventForm from "@/modules/calendar/components/forms/EventForm";
+
+import { useEventTypes } from "@/modules/calendar/composables/event-types";
+
+import { applyDarkVariant } from "@/utils/colours";
+import { userHasPermission } from "@/utils/permissions";
+import Urls from "@/utils/reverse";
+
+import { buildGoogleCalendarUrl } from "@/modules/calendar/utils";
 export default {
   name: "EventCard",
   components: { EventRepresentation },

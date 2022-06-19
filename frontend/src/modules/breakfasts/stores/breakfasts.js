@@ -1,10 +1,10 @@
-import { defineStore } from "pinia";
 import { keyBy } from "lodash-es";
+import { defineStore } from "pinia";
 
 import BBaseService from "@/modules/breakfasts/services/base-service";
 import BreadService from "@/modules/breakfasts/services/bread-service";
-import IngredientService from "@/modules/breakfasts/services/ingredient-service";
 import DrinkService from "@/modules/breakfasts/services/drink-service";
+import IngredientService from "@/modules/breakfasts/services/ingredient-service";
 
 export const useBreakfastStore = defineStore("breakfasts", {
   state: () => {

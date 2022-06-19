@@ -72,13 +72,14 @@ import { computed, ref } from "@vue/composition-api";
 
 import Effort from "@/modules/scrum/models/effort";
 
+import { useUserStore } from "@/stores/users";
+
 import EffortRoleTimelineChart from "@/modules/scrum/components/charts/EffortRoleTimelineChart";
 import EffortUserTimelineChart from "@/modules/scrum/components/charts/EffortUserTimelineChart";
 
-import { useUserStore } from "@/stores/users";
-
-import { useLoading } from "@/composables/loading";
 import { useDialog, dialogProps } from "@/composables/dialog";
+import { useLoading } from "@/composables/loading";
+
 import { userHasPermission } from "@/utils/permissions";
 
 export default {

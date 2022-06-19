@@ -23,14 +23,14 @@
 
 <script>
 import { computed, onActivated, ref, toRefs, watch } from "@vue/composition-api";
-import { DateTime, Interval } from "luxon";
 import { defaultTo, property } from "lodash-es";
-
-import HolidayService from "@/modules/holidays/services/holiday-service";
-import EventService from "@/modules/calendar/services/event-service";
+import { DateTime, Interval } from "luxon";
 
 import { useMainStore } from "@/stores/main";
 import { useUserStore } from "@/stores/users";
+
+import EventService from "@/modules/calendar/services/event-service";
+import HolidayService from "@/modules/holidays/services/holiday-service";
 
 import { useLoading } from "@/composables/loading";
 

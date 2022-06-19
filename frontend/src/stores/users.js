@@ -1,8 +1,8 @@
-import { defineStore } from "pinia";
 import { keyBy } from "lodash-es";
+import { defineStore } from "pinia";
 
-import UserService from "@/services/user-service";
 import GroupService from "@/services/group-service";
+import UserService from "@/services/user-service";
 
 export const useUserStore = defineStore("users", {
   state: () => {

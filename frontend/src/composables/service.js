@@ -3,10 +3,10 @@ import { defaultTo, isArray, isFunction, isString } from "lodash-es";
 
 import { useMainStore } from "@/stores/main";
 
-import getService from "@/services";
+import { getServiceByBasename } from "@/services";
 
 export function useService(service, fn, options = {}) {
-  service = isString(service) ? getService(service) : service;
+  service = isString(service) ? getServiceByBasename(service) : service;
 
   // Default options
   const {

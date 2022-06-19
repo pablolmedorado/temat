@@ -79,15 +79,15 @@ import { computed, ref, toRefs } from "@vue/composition-api";
 
 import UserStory from "@/modules/scrum/models/user-story";
 
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
+import { useMainStore } from "@/stores/main";
+
 import UserStoryService from "@/modules/scrum/services/user-story-service";
 
-import UserStoryAuthorshipIcon from "@/modules/scrum/components/UserStoryAuthorshipIcon";
 import UserStoryForm from "@/modules/scrum/components/forms/UserStoryForm";
+import UserStoryAuthorshipIcon from "@/modules/scrum/components/UserStoryAuthorshipIcon";
 import UserStoryProgressBar from "@/modules/scrum/components/UserStoryProgressBar";
 import UserStoryStatus from "@/modules/scrum/components/UserStoryStatus";
-
-import { useMainStore } from "@/stores/main";
-import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 import { isoDateTimeToLocaleString } from "@/utils/dates";
 import { userHasPermission } from "@/utils/permissions";

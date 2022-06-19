@@ -145,15 +145,16 @@
 
 <script>
 import { computed, toRefs } from "@vue/composition-api";
-import { DateTime } from "luxon";
 import { camelCase } from "lodash-es";
+import { DateTime } from "luxon";
+
+import { useEventStore } from "@/modules/calendar/stores/events";
+import { useMainStore } from "@/stores/main";
 
 import EventAuthorshipTag from "@/modules/calendar/components/EventAuthorshipTag";
 
-import { useMainStore } from "@/stores/main";
-import { useEventStore } from "@/modules/calendar/stores/events";
-
 import { useEventTypes } from "@/modules/calendar/composables/event-types";
+
 import { applyDarkVariant } from "@/utils/colours";
 import { getReadableDuration } from "@/utils/dates";
 

@@ -12,9 +12,9 @@ import { computed } from "@vue/composition-api";
 import { has, get } from "lodash-es";
 import colors from "vuetify/lib/util/colors";
 
-import SprintService from "@/modules/scrum/services/sprint-service";
-
 import { useUserStore } from "@/stores/users";
+
+import SprintService from "@/modules/scrum/services/sprint-service";
 
 export default {
   name: "SprintBurnChart",

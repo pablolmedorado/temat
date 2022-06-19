@@ -1,6 +1,6 @@
-import BaseModel from "@/models/base-model";
-
 import { DateTime } from "luxon";
+
+import BaseModel from "@/models/base-model";
 
 export default class Sprint extends BaseModel {
   static contentType = {

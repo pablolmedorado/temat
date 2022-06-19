@@ -1,17 +1,18 @@
 import Vue from "vue";
 import Router from "vue-router";
+
 import VueMeta from "vue-meta";
 
-import calendarRoutes from "@/modules/calendar/routes";
-import scrumRoutes from "@/modules/scrum/routes";
-import greenWorkingDaysRoutes from "@/modules/green-working-days/routes";
-import supportWorkingDaysRoutes from "@/modules/support-working-days/routes";
-import holidaysRoutes from "@/modules/holidays/routes";
-import breakfastsRoutes from "@/modules/breakfasts/routes";
-import notificationsRoutes from "@/modules/notifications/routes";
-import analyticsRoutes from "@/modules/analytics/routes";
-
 import NotFoundView from "@/views/NotFoundView";
+
+import analyticsRoutes from "@/modules/analytics/routes";
+import breakfastsRoutes from "@/modules/breakfasts/routes";
+import calendarRoutes from "@/modules/calendar/routes";
+import greenWorkingDaysRoutes from "@/modules/green-working-days/routes";
+import holidaysRoutes from "@/modules/holidays/routes";
+import notificationsRoutes from "@/modules/notifications/routes";
+import scrumRoutes from "@/modules/scrum/routes";
+import supportWorkingDaysRoutes from "@/modules/support-working-days/routes";
 
 Vue.use(Router);
 Vue.use(VueMeta);

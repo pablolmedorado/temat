@@ -26,8 +26,9 @@ import colors from "vuetify/lib/util/colors";
 
 import Holiday from "@/modules/holidays/models/holiday";
 
-import { useHolidays } from "@/modules/holidays/composables/holidays";
 import { useLoading } from "@/composables/loading";
+import { useHolidays } from "@/modules/holidays/composables/holidays";
+
 import { hex2rgba } from "@/utils/colours";
 import { userHasPermission } from "@/utils/permissions";
 

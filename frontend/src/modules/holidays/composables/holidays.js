@@ -1,4 +1,5 @@
 import { ref } from "@vue/composition-api";
+
 import { useMainStore } from "@/stores/main";
 
 import HolidayService from "@/modules/holidays/services/holiday-service";

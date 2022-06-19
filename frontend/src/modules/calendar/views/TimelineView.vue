@@ -66,19 +66,20 @@
 
 <script>
 import { ref, computed, onActivated } from "@vue/composition-api";
-import { DateTime } from "luxon";
 import { groupBy } from "lodash-es";
+import { DateTime } from "luxon";
 
 import CalendarEvent from "@/modules/calendar/models/event";
+
+import { useMainStore } from "@/stores/main";
 
 import EventService from "@/modules/calendar/services/event-service";
 
 import EventRepresentation from "@/modules/calendar/components/EventRepresentation";
 
-import { useMainStore } from "@/stores/main";
-
-import { useEventTypes } from "@/modules/calendar/composables/event-types";
 import { useLoading } from "@/composables/loading";
+import { useEventTypes } from "@/modules/calendar/composables/event-types";
+
 import { applyDarkVariant, getFontColourFromBackground } from "@/utils/colours";
 
 export default {

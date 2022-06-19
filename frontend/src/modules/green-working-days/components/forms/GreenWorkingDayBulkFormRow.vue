@@ -32,8 +32,8 @@
 </template>
 
 <script>
-import { useVModel } from "@vueuse/core";
 import { maxLength, required } from "@vuelidate/validators";
+import { useVModel } from "@vueuse/core";
 
 import { useValidations } from "@/composables/validations";
 

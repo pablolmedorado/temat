@@ -1,3 +1,5 @@
+const path = require("path");
+
 const BundleTracker = require("webpack-bundle-tracker");
 
 module.exports = {
@@ -26,5 +28,28 @@ module.exports = {
       },
     ]);
     config.resolve.alias.set("__STATIC__", "static");
+  },
+  configureWebpack: {
+    module: {
+      rules: [
+        {
+          test: path.join(__dirname, "src", "utils", "reverse.js"),
+          use: [
+            {
+              loader: "exports-loader",
+              options: {
+                exports: "default window.Urls",
+              },
+            },
+            {
+              loader: "imports-loader",
+              options: {
+                wrapper: "window",
+              },
+            },
+          ],
+        },
+      ],
+    },
   },
 };

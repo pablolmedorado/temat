@@ -207,7 +207,7 @@ REST_FRAMEWORK = {
 
 JS_REVERSE_EXCLUDE_NAMESPACES = ["admin", "djdt", "rest_framework", "hijack"]
 
-JS_REVERSE_OUTPUT_PATH = FRONTEND_DIR("src", "plugins")
+JS_REVERSE_OUTPUT_PATH = FRONTEND_DIR("src", "utils")
 
 JS_REVERSE_JS_GLOBAL_OBJECT_NAME = "window"
 

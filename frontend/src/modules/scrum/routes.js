@@ -7,8 +7,8 @@ import SprintDeploymentReportView from "@/modules/scrum/views/sprints/SprintDepl
 import SprintGanttView from "@/modules/scrum/views/sprints/SprintGanttView";
 import SprintKanbanView from "@/modules/scrum/views/sprints/SprintKanbanView";
 import SprintListView from "@/modules/scrum/views/sprints/SprintListView";
-import UserStoryListView from "@/modules/scrum/views/user-stories/UserStoryListView";
 import UserStoryDetailView from "@/modules/scrum/views/user-stories/UserStoryDetailView";
+import UserStoryListView from "@/modules/scrum/views/user-stories/UserStoryListView";
 
 import { usersWithPermissionOnly } from "@/utils/router-guards";
 

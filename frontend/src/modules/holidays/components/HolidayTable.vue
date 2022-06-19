@@ -43,15 +43,15 @@
 
 <script>
 import { computed, ref, toRefs, watch } from "@vue/composition-api";
-import { DateTime, Interval } from "luxon";
 import { countBy, get, pick, set } from "lodash-es";
+import { DateTime, Interval } from "luxon";
+
+import { useMainStore } from "@/stores/main";
+import { useUserStore } from "@/stores/users";
 
 import HolidayService from "@/modules/holidays/services/holiday-service";
 
 import HolidayTableCell from "@/modules/holidays/components/HolidayTableCell";
-
-import { useMainStore } from "@/stores/main";
-import { useUserStore } from "@/stores/users";
 
 import { useLoading } from "@/composables/loading";
 

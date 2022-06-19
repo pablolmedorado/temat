@@ -42,11 +42,11 @@
 
 <script>
 import { nextTick, ref, watch } from "@vue/composition-api";
-import { isObject } from "lodash-es";
 import { required } from "@vuelidate/validators";
+import { isObject } from "lodash-es";
 
-import { useValidations } from "@/composables/validations";
 import { useDialog, dialogProps } from "@/composables/dialog";
+import { useValidations } from "@/composables/validations";
 
 export default {
   name: "QuickFilterDialog",

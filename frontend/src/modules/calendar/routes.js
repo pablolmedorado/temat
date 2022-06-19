@@ -1,7 +1,7 @@
-import TimelineView from "@/modules/calendar/views/TimelineView";
 import CalendarView from "@/modules/calendar/views/CalendarView";
-import EventListView from "@/modules/calendar/views/events/EventListView";
 import EventDetailView from "@/modules/calendar/views/events/EventDetailView";
+import EventListView from "@/modules/calendar/views/events/EventListView";
+import TimelineView from "@/modules/calendar/views/TimelineView";
 
 export default [
   {

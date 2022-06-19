@@ -54,6 +54,7 @@ import UserStoryProgress from "@/modules/scrum/components/tabs/user-stories/User
 import UserStoryTasks from "@/modules/scrum/components/tabs/user-stories/UserStoryTasks";
 
 import { useScrumContext, scrumContextProps } from "@/modules/scrum/composables/scrum-context";
+
 import { handleError } from "@/utils/error-handlers";
 
 export default {

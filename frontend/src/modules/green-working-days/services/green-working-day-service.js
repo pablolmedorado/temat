@@ -1,5 +1,7 @@
-import Api from "@/utils/api";
 import BaseService from "@/services/base-service";
+
+import Api from "@/utils/api";
+import Urls from "@/utils/reverse";
 
 class GreenWorkingDayService extends BaseService {
   basename = "work-organization:green-day";

@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-named-as-default
 import useVuelidate from "@vuelidate/core";
 import { isFunction } from "lodash-es";
 

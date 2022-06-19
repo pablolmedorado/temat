@@ -114,10 +114,10 @@ import { computed, ref, toRefs, watch } from "@vue/composition-api";
 import { useIntervalFn, useWebNotification } from "@vueuse/core";
 import { isNil, partition } from "lodash-es";
 
-import NotificationService from "@/modules/notifications/services/notification-service";
-
-import { useMainStore } from "@/stores/main";
 import { useNotificationStore } from "@/modules/notifications/stores/notifications";
+import { useMainStore } from "@/stores/main";
+
+import NotificationService from "@/modules/notifications/services/notification-service";
 
 import { useLoading } from "@/composables/loading";
 

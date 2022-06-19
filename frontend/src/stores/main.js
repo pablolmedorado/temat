@@ -1,6 +1,5 @@
-import { defineStore } from "pinia";
-
 import { DateTime } from "luxon";
+import { defineStore } from "pinia";
 
 import { version } from "@/../package.json";
 

@@ -1,5 +1,5 @@
-import HolidayUserView from "@/modules/holidays/views/HolidayUserView";
 import HolidayTeamView from "@/modules/holidays/views/HolidayTeamView";
+import HolidayUserView from "@/modules/holidays/views/HolidayUserView";
 
 export default [
   {

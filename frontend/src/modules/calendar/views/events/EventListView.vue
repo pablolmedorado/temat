@@ -84,11 +84,12 @@ import { DateTime } from "luxon";
 
 import CalendarEvent from "@/modules/calendar/models/event";
 
-import EventFilters from "@/modules/calendar/components/filters/EventFilters";
-
 import { useEventStore } from "@/modules/calendar/stores/events";
 
+import EventFilters from "@/modules/calendar/components/filters/EventFilters";
+
 import { useEventTypes } from "@/modules/calendar/composables/event-types";
+
 import { getReadableDuration, isoDateToLocaleString, isoDateTimeToLocaleString } from "@/utils/dates";
 
 export default {

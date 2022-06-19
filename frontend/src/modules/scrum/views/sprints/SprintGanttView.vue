@@ -22,8 +22,8 @@
 import { computed, onMounted } from "@vue/composition-api";
 import { get } from "lodash-es";
 
-import ContextBreadcrumbs from "@/modules/scrum/components/ContextBreadcrumbs";
 import SprintGanttChart from "@/modules/scrum/components/charts/SprintGanttChart";
+import ContextBreadcrumbs from "@/modules/scrum/components/ContextBreadcrumbs";
 import SprintViewSelector from "@/modules/scrum/components/SprintViewSelector";
 
 import { useLoading } from "@/composables/loading";

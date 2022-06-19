@@ -544,21 +544,22 @@
 
 <script>
 import { computed, toRefs } from "@vue/composition-api";
-import { DateTime } from "luxon";
 import { between, helpers, maxLength, minValue, numeric, required, requiredIf } from "@vuelidate/validators";
-import { defaultTo } from "lodash-es";
-import { isWebUri } from "valid-url";
 import { useClipboard } from "@vueuse/core";
+import { defaultTo } from "lodash-es";
+import { DateTime } from "luxon";
+import { isWebUri } from "valid-url";
+
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
+import { useMainStore } from "@/stores/main";
 
 import EpicService from "@/modules/scrum/services/epic-service";
 import SprintService from "@/modules/scrum/services/sprint-service";
 import UserStoryService from "@/modules/scrum/services/user-story-service";
 
-import { useMainStore } from "@/stores/main";
-import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
-
 import { useForm, formProps } from "@/composables/form";
 import { useUserStoryTypes } from "@/modules/scrum/composables/user-story-types";
+
 import { isoDateTimeToLocaleString, isoDateToLocaleString } from "@/utils/dates";
 import { userHasPermission } from "@/utils/permissions";
 import { urlValidator } from "@/utils/validation";

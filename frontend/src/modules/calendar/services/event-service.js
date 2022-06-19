@@ -1,9 +1,11 @@
 import { DateTime } from "luxon";
 
-import Api from "@/utils/api";
+import CalendarEvent from "@/modules/calendar/models/event";
+
 import BaseService from "@/services/base-service";
 
-import CalendarEvent from "@/modules/calendar/models/event";
+import Api from "@/utils/api";
+import Urls from "@/utils/reverse";
 
 class EventService extends BaseService {
   basename = "calendar:event";

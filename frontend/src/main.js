@@ -1,16 +1,13 @@
+/* eslint-disable import/order */
 import Vue from "vue";
 
 import "./plugins/composition";
 
 import pinia from "./plugins/pinia";
-
+import vuetify from "./plugins/vuetify";
 import router from "./router";
 
-import vuetify from "./plugins/vuetify";
-
 import "./plugins/highcharts";
-
-import "./plugins/reverse";
 
 import "./plugins/global-components";
 

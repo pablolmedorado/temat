@@ -167,9 +167,11 @@ import { defaultTo, get, invoke, isBoolean, isFunction, omit } from "lodash-es";
 import { useMainStore } from "@/stores/main";
 
 import { useLoading } from "@/composables/loading";
+
 import { defaultTableOptions } from "@/utils/constants";
-import { getServiceByBasename } from "@/services";
 import { userHasPermission } from "@/utils/permissions";
+
+import { getServiceByBasename } from "@/services";
 
 export default {
   name: "ItemIndex",

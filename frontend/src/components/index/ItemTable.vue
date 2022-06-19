@@ -31,6 +31,7 @@ import { computed, onActivated, ref, watch } from "@vue/composition-api";
 import { defaultTo, isEqual, uniq } from "lodash-es";
 
 import { useLoading } from "@/composables/loading";
+
 import { defaultTableOptions } from "@/utils/constants";
 
 export default {

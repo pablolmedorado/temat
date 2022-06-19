@@ -62,12 +62,13 @@
 <script>
 import Breakfast from "@/modules/breakfasts/models/breakfast";
 
-import BreakfastForm from "@/modules/breakfasts/components/forms/BreakfastForm";
-import BreakfastSummaryDialog from "@/modules/breakfasts/components/dialogs/BreakfastSummaryDialog";
-
 import { useMainStore } from "@/stores/main";
 
+import BreakfastSummaryDialog from "@/modules/breakfasts/components/dialogs/BreakfastSummaryDialog";
+import BreakfastForm from "@/modules/breakfasts/components/forms/BreakfastForm";
+
 import { useLoading } from "@/composables/loading";
+
 import { getServiceByBasename } from "@/services";
 
 export default {

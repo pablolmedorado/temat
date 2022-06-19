@@ -104,16 +104,18 @@ import { DateTime } from "luxon";
 
 import GreenWorkingDay from "@/modules/green-working-days/models/green-working-day";
 
-import StepperBulkFormDialog from "@/components/dialogs/StepperBulkFormDialog";
-import GreenWorkingDayBulkForm from "@/modules/green-working-days/components/forms/GreenWorkingDayBulkForm";
-import GreenWorkingDayForm from "@/modules/green-working-days/components/forms/GreenWorkingDayForm";
-import VoluteersDialog from "@/modules/green-working-days/components/dialogs/VoluteersDialog";
-
 import { useMainStore } from "@/stores/main";
 
+import StepperBulkFormDialog from "@/components/dialogs/StepperBulkFormDialog";
+import VoluteersDialog from "@/modules/green-working-days/components/dialogs/VoluteersDialog";
+import GreenWorkingDayBulkForm from "@/modules/green-working-days/components/forms/GreenWorkingDayBulkForm";
+import GreenWorkingDayForm from "@/modules/green-working-days/components/forms/GreenWorkingDayForm";
+
 import { useLoading } from "@/composables/loading";
-import { getServiceByBasename } from "@/services";
+
 import { userHasPermission } from "@/utils/permissions";
+
+import { getServiceByBasename } from "@/services";
 
 export default {
   name: "GreenWorkingDayListView",

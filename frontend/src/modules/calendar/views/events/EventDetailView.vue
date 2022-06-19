@@ -72,17 +72,20 @@ import { cloneDeep, get } from "lodash-es";
 
 import CalendarEvent from "@/modules/calendar/models/event";
 
-import EventService from "@/modules/calendar/services/event-service";
-
-import EventForm from "@/modules/calendar/components/forms/EventForm";
-import EventRepresentation from "@/modules/calendar/components/EventRepresentation";
-
 import { useMainStore } from "@/stores/main";
 
+import EventService from "@/modules/calendar/services/event-service";
+
+import EventRepresentation from "@/modules/calendar/components/EventRepresentation";
+import EventForm from "@/modules/calendar/components/forms/EventForm";
+
 import { useEventTypes } from "@/modules/calendar/composables/event-types";
+
 import { handleError } from "@/utils/error-handlers";
 import { userHasPermission } from "@/utils/permissions";
+import Urls from "@/utils/reverse";
 import { truncate } from "@/utils/text";
+
 import { buildGoogleCalendarUrl } from "@/modules/calendar/utils";
 
 export default {

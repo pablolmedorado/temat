@@ -5,9 +5,9 @@
 <script>
 import { computed } from "@vue/composition-api";
 
-import UserStoryService from "@/modules/scrum/services/user-story-service";
-
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
+
+import UserStoryService from "@/modules/scrum/services/user-story-service";
 
 export default {
   name: "EffortRoleChart",

@@ -7,9 +7,9 @@ import { computed } from "@vue/composition-api";
 import Highcharts from "highcharts";
 import { get } from "lodash-es";
 
-import UserStoryService from "@/modules/scrum/services/user-story-service";
-
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
+
+import UserStoryService from "@/modules/scrum/services/user-story-service";
 
 export default {
   name: "UserStoryUserChart",

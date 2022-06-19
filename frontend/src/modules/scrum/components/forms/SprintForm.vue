@@ -51,8 +51,8 @@
 
 <script>
 import { watch } from "@vue/composition-api";
-import { DateTime } from "luxon";
 import { maxLength, required } from "@vuelidate/validators";
+import { DateTime } from "luxon";
 
 import SprintService from "@/modules/scrum/services/sprint-service";
 
