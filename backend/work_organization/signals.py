@@ -1,16 +1,16 @@
 from datetime import datetime
 
+from notifications.signals import notify
+
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.db.models.signals import m2m_changed, post_save, pre_save
 from django.dispatch import receiver
 from django.utils.timezone import make_aware
 
-from notifications.signals import notify
-
-from .models import GreenWorkingDay, Holiday, HolidayType, SupportWorkingDay
 from common.utils import get_notification_sender, notify_item_assignation_to_user
 from events.models import Event, EventType
+from .models import GreenWorkingDay, Holiday, HolidayType, SupportWorkingDay
 
 
 @receiver(post_save, sender=Holiday)

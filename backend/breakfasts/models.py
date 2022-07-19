@@ -8,61 +8,61 @@ from common.behaviors import Transactionable
 class Bread(Transactionable, models.Model):
     name = models.CharField(_("nombre"), max_length=50, blank=False, unique=True)
 
-    def __str__(self):
-        return self.name
-
-    def natural_key(self):
-        return (self.name,)
-
     class Meta:
         verbose_name = _("pan")
         verbose_name_plural = _("panes")
         ordering = ("name",)
 
-
-class Base(Transactionable, models.Model):
-    name = models.CharField(_("nombre"), max_length=50, blank=False, unique=True)
-
     def __str__(self):
         return self.name
 
     def natural_key(self):
         return (self.name,)
+
+
+class Base(Transactionable, models.Model):
+    name = models.CharField(_("nombre"), max_length=50, blank=False, unique=True)
 
     class Meta:
         verbose_name = _("base")
         verbose_name_plural = _("bases")
         ordering = ("name",)
 
-
-class Ingredient(Transactionable, models.Model):
-    name = models.CharField(_("nombre"), max_length=50, blank=False, unique=True)
-
     def __str__(self):
         return self.name
 
     def natural_key(self):
         return (self.name,)
+
+
+class Ingredient(Transactionable, models.Model):
+    name = models.CharField(_("nombre"), max_length=50, blank=False, unique=True)
 
     class Meta:
         verbose_name = _("ingrediente")
         verbose_name_plural = _("ingredientes")
         ordering = ("name",)
 
-
-class Drink(Transactionable, models.Model):
-    name = models.CharField(_("nombre"), max_length=50, blank=False, unique=True)
-
     def __str__(self):
         return self.name
 
     def natural_key(self):
         return (self.name,)
 
+
+class Drink(Transactionable, models.Model):
+    name = models.CharField(_("nombre"), max_length=50, blank=False, unique=True)
+
     class Meta:
         verbose_name = _("bebida")
         verbose_name_plural = _("bebidas")
         ordering = ("name",)
+
+    def __str__(self):
+        return self.name
+
+    def natural_key(self):
+        return (self.name,)
 
 
 class Breakfast(Transactionable, models.Model):
@@ -102,10 +102,10 @@ class Breakfast(Transactionable, models.Model):
         Drink, verbose_name=_("bebida"), related_name="breakfasts", blank=True, null=True, on_delete=models.PROTECT
     )
 
-    def __str__(self):
-        return f"{self.user}"
-
     class Meta:
         verbose_name = _("desayuno")
         verbose_name_plural = _("desayunos")
         ordering = ("user",)
+
+    def __str__(self):
+        return f"{self.user}"

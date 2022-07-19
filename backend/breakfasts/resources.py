@@ -1,8 +1,8 @@
-from django.contrib.auth import get_user_model
-
 from import_export import resources
 from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget
+
+from django.contrib.auth import get_user_model
 
 from .models import Base, Bread, Breakfast, Drink, Ingredient
 

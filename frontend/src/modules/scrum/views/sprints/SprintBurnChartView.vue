@@ -33,8 +33,8 @@
 import { computed, onMounted, ref } from "@vue/composition-api";
 import { get } from "lodash-es";
 
-import ContextBreadcrumbs from "@/modules/scrum/components/ContextBreadcrumbs";
 import SprintBurnChart from "@/modules/scrum/components/charts/SprintBurnChart";
+import ContextBreadcrumbs from "@/modules/scrum/components/ContextBreadcrumbs";
 import SprintViewSelector from "@/modules/scrum/components/SprintViewSelector";
 
 import { useLoading } from "@/composables/loading";

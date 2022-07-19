@@ -1,10 +1,10 @@
-from django.contrib.auth.models import Group
-
 from rest_flex_fields.views import FlexFieldsMixin
 from rest_framework import viewsets
 
-from .serializers import GroupSerializer, UserSerializer
+from django.contrib.auth.models import Group
+
 from ..models import User
+from .serializers import GroupSerializer, UserSerializer
 
 
 class UserViewSet(FlexFieldsMixin, viewsets.ReadOnlyModelViewSet):

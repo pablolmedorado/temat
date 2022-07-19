@@ -1,6 +1,6 @@
+import { keyBy } from "lodash-es";
 import { defineStore } from "pinia";
 import colors from "vuetify/lib/util/colors";
-import { keyBy } from "lodash-es";
 
 import UserStoryTypeService from "@/modules/scrum/services/user-story-type-service";
 

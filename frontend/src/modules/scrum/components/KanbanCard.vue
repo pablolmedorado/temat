@@ -89,8 +89,8 @@
 
 <script>
 import { computed } from "@vue/composition-api";
-import { DateTime } from "luxon";
 import { get } from "lodash-es";
+import { DateTime } from "luxon";
 import colors from "vuetify/lib/util/colors";
 
 import UserStoryActors from "@/modules/scrum/components/UserStoryActors";

@@ -1,10 +1,9 @@
-from django.utils.translation import ugettext_lazy as _
-
 from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
 
-from users.api.serializers import UserSerializer
+from django.utils.translation import ugettext_lazy as _
 
+from users.api.serializers import UserSerializer
 from ..models import Base, Bread, Breakfast, Drink, Ingredient
 
 

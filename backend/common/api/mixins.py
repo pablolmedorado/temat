@@ -1,9 +1,9 @@
-from django.utils.translation import ugettext_lazy as _
-
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework_bulk import BulkCreateModelMixin, BulkDestroyModelMixin, BulkListSerializer, BulkUpdateModelMixin
+
+from django.utils.translation import ugettext_lazy as _
 
 from ..decorators import atomic_transaction_singleton
 
@@ -47,16 +47,6 @@ class AtomicBulkDestroyModelMixin(BulkDestroyModelMixin):
 
 
 class OrderedMixin(object):
-    def perform_create(self, serializer):
-        super().perform_create(serializer)
-        if "order" in self.request.data:
-            serializer.instance.to(int(self.request.data.get("order")))
-
-    def perform_update(self, serializer):
-        super().perform_update(serializer)
-        if "order" in self.request.data:
-            serializer.instance.to(int(self.request.data.get("order")))
-
     @atomic_transaction_singleton
     @action(detail=True, methods=["PATCH"])
     def to(self, request, *args, **kwargs):  # noqa

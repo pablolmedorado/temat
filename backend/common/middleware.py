@@ -1,11 +1,11 @@
 import sys
 
+import colorama
+
 from django.conf import settings
 from django.db import connection
 from django.utils import termcolors
 from django.utils.deprecation import MiddlewareMixin
-
-import colorama
 
 
 class QueryPrintingMiddleware(MiddlewareMixin):

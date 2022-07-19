@@ -1,10 +1,10 @@
+from import_export.admin import ImportExportActionModelAdmin
+
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 
-from import_export.admin import ImportExportActionModelAdmin
-
 from .models import Event, EventType
-from .resources import EventTypeResource, EventResource
+from .resources import EventResource, EventTypeResource
 
 
 @admin.register(EventType)

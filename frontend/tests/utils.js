@@ -1,7 +1,8 @@
 import Vue from "vue";
+
+import { render } from "@testing-library/vue";
 import VueCompositionApi from "@vue/composition-api";
 import Vuetify from "vuetify";
-import { render } from "@testing-library/vue";
 
 Vue.use(VueCompositionApi);
 

@@ -1,5 +1,5 @@
-import { useMainStore } from "@/stores/main";
 import { useEventStore } from "@/modules/calendar/stores/events";
+import { useMainStore } from "@/stores/main";
 
 export function buildGoogleCalendarUrl(event) {
   const store = useMainStore();

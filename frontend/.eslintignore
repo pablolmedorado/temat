@@ -1,5 +1,5 @@
 // Django JS Reverse
-src/plugins/reverse.js
+src/utils/reverse.js
 
 // Storybook
 !.storybook

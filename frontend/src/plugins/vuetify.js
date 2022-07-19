@@ -3,8 +3,8 @@ import Vue from "vue";
 import "roboto-fontface/css/roboto/roboto-fontface.css";
 import "@mdi/font/css/materialdesignicons.css";
 
-import Vuetify from "vuetify/lib";
 import es from "vuetify/es5/locale/es";
+import Vuetify from "vuetify/lib";
 
 Vue.use(Vuetify);
 

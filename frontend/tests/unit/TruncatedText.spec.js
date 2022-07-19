@@ -1,6 +1,6 @@
-import { renderWithVuetify } from "@/../tests/utils";
-
 import Component from "@/components/TruncatedText";
+
+import { renderWithVuetify } from "@/../tests/utils";
 
 test("truncates the text given in the prop", async () => {
   const { getByText } = renderWithVuetify(Component, {

@@ -66,14 +66,14 @@ import { computed, ref } from "@vue/composition-api";
 import { useFullscreen } from "@vueuse/core";
 import { get, groupBy } from "lodash-es";
 
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
+import { useUserStore } from "@/stores/users";
+
 import UserStoryService from "@/modules/scrum/services/user-story-service";
 
 import ContextBreadcrumbs from "@/modules/scrum/components/ContextBreadcrumbs";
 import KanbanCard from "@/modules/scrum/components/KanbanCard";
 import SprintViewSelector from "@/modules/scrum/components/SprintViewSelector";
-
-import { useUserStore } from "@/stores/users";
-import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 import { useLoading } from "@/composables/loading";
 import { useScrumContext } from "@/modules/scrum/composables/scrum-context";

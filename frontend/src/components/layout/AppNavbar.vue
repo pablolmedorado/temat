@@ -40,10 +40,10 @@
 <script>
 import { toRefs } from "@vue/composition-api";
 
+import { useMainStore } from "@/stores/main";
+
 import LinkManager from "@/modules/links/components/LinkManager";
 import NotificationManager from "@/modules/notifications/components/NotificationManager";
-
-import { useMainStore } from "@/stores/main";
 
 import { isXmas as isXmasFn } from "@/utils/dates";
 

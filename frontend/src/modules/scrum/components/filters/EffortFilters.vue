@@ -27,6 +27,7 @@
 import { computed } from "@vue/composition-api";
 
 import { useFilters, filterProps } from "@/composables/filters";
+
 import { userHasPermission } from "@/utils/permissions";
 
 export default {

@@ -4,9 +4,9 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from .managers import UserManager
 from common.behaviors import Transactionable
 from common.decorators import atomic_transaction_singleton
+from .managers import UserManager
 
 
 class Company(Transactionable, models.Model):
@@ -19,16 +19,18 @@ class Company(Transactionable, models.Model):
     )
     extra_holiday_with_green_working_days = models.BooleanField(_("vacaciones extra con dias verdes"), default=True)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = _("empresa")
         verbose_name_plural = _("empresas")
         ordering = ["name"]
 
+    def __str__(self):
+        return self.name
+
 
 class User(Transactionable, AbstractUser):
+    REQUIRED_FIELDS = ["first_name", "last_name", "acronym"]
+
     acronym = models.CharField(
         _("siglas"),
         help_text=_("Siglas identificativas del usuario para vistas resumen. Máximo 3 caracteres."),
@@ -47,7 +49,13 @@ class User(Transactionable, AbstractUser):
 
     objects = UserManager()
 
-    REQUIRED_FIELDS = ["first_name", "last_name", "acronym"]
+    class Meta(AbstractUser.Meta):
+        ordering = ["first_name", "last_name", "acronym"]
+
+    def __str__(self):
+        if self.get_full_name():
+            return self.get_full_name()
+        return super().__str__()
 
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}".strip()
@@ -63,11 +71,3 @@ class User(Transactionable, AbstractUser):
 
             for number in range(self.company.yearly_holiday_allocation):
                 self.holidays.create(allowance_date=holidays_allowance_date)
-
-    def __str__(self):
-        if self.get_full_name():
-            return self.get_full_name()
-        return super().__str__()
-
-    class Meta(AbstractUser.Meta):
-        ordering = ["first_name", "last_name", "acronym"]

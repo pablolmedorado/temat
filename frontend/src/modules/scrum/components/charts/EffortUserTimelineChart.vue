@@ -11,9 +11,9 @@
 import { computed } from "@vue/composition-api";
 import { has } from "lodash-es";
 
-import EffortService from "@/modules/scrum/services/effort-service";
-
 import { useUserStore } from "@/stores/users";
+
+import EffortService from "@/modules/scrum/services/effort-service";
 
 export default {
   name: "EffortUserTimelineChart",

@@ -1,13 +1,27 @@
 from datetime import date
 
-from django.db.models import Count, F, Sum
-
 from rest_flex_fields import is_expanded
 from rest_flex_fields.views import FlexFieldsMixin, FlexFieldsModelViewSet
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from django.db.models import Count, F, Sum
+
+from common.api.mixins import AtomicBulkUpdateModelMixin, OrderedMixin
+from common.api.permissions import HasDjangoPermissionOrReadOnly
+from common.api.utils import check_api_user_permissions
+from common.decorators import atomic_transaction_singleton
+from ..models import Effort, Epic, Progress, Sprint, Task, UserStory, UserStoryType
+from ..utils import (
+    burn_chart_data,
+    effort_role_timeline_chart_data,
+    effort_user_timeline_chart_data,
+    gantt_chart_data,
+    user_story_delayed_pie_chart_data,
+    user_story_overworked_pie_chart_data,
+    user_story_user_chart_data,
+)
 from .filtersets import (
     EffortFilterSet,
     EpicFilterSet,
@@ -30,20 +44,6 @@ from .serializers import (
     UserStoryTypeSerializer,
     UserStoryValidatorSerializer,
 )
-from ..models import Effort, Epic, Progress, Sprint, Task, UserStory, UserStoryType
-from ..utils import (
-    burn_chart_data,
-    effort_role_timeline_chart_data,
-    effort_user_timeline_chart_data,
-    gantt_chart_data,
-    user_story_delayed_pie_chart_data,
-    user_story_overworked_pie_chart_data,
-    user_story_user_chart_data,
-)
-from common.decorators import atomic_transaction_singleton
-from common.api.mixins import AtomicBulkUpdateModelMixin, OrderedMixin
-from common.api.permissions import HasDjangoPermissionOrReadOnly
-from common.api.utils import check_api_user_permissions
 
 
 class SprintViewSet(FlexFieldsModelViewSet):

@@ -170,22 +170,24 @@ import { get } from "lodash-es";
 import Effort from "@/modules/scrum/models/effort";
 import UserStory from "@/modules/scrum/models/user-story";
 
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
+import { useMainStore } from "@/stores/main";
+
 import ContextBreadcrumbs from "@/modules/scrum/components/ContextBreadcrumbs";
-import EffortForm from "@/modules/scrum/components/forms/EffortForm";
 import TaskQuickManagementDialog from "@/modules/scrum/components/dialogs/TaskQuickManagementDialog";
-import UserStoryActors from "@/modules/scrum/components/UserStoryActors";
 import UserStoryBulkUpdateDialog from "@/modules/scrum/components/dialogs/UserStoryBulkUpdateDialog";
 import UserStoryFilters from "@/modules/scrum/components/filters/UserStoryFilters";
+import EffortForm from "@/modules/scrum/components/forms/EffortForm";
+import UserStoryActors from "@/modules/scrum/components/UserStoryActors";
 import UserStoryIndexStatus from "@/modules/scrum/components/UserStoryIndexStatus";
-
-import { useMainStore } from "@/stores/main";
-import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 import { useLoading } from "@/composables/loading";
 import { useScrumContext, scrumContextProps } from "@/modules/scrum/composables/scrum-context";
-import { getServiceByBasename } from "@/services";
+
 import { userHasPermission } from "@/utils/permissions";
 import { truncate } from "@/utils/text";
+
+import { getServiceByBasename } from "@/services";
 
 export default {
   name: "UserStoryListView",

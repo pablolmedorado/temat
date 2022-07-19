@@ -82,14 +82,16 @@ import { invoke } from "lodash-es";
 
 import Task from "@/modules/scrum/models/task";
 
+import { useMainStore } from "@/stores/main";
+
 import TaskForm from "@/modules/scrum/components/forms/TaskForm";
 import UserStoryProgressBar from "@/modules/scrum/components/UserStoryProgressBar";
 
-import { useMainStore } from "@/stores/main";
-
 import { useLoading } from "@/composables/loading";
-import { getServiceByBasename } from "@/services";
+
 import { userHasPermission, userHasAnyPermission } from "@/utils/permissions";
+
+import { getServiceByBasename } from "@/services";
 
 export default {
   name: "UserStoryTasks",

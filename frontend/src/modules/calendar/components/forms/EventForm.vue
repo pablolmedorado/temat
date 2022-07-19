@@ -151,14 +151,15 @@
 
 <script>
 import { computed, ref, toRefs, watch } from "@vue/composition-api";
-import { DateTime } from "luxon";
-import { cloneDeep, defaultTo } from "lodash-es";
 import { maxLength, required, requiredUnless } from "@vuelidate/validators";
+import { cloneDeep, defaultTo } from "lodash-es";
+import { DateTime } from "luxon";
+
+import { useEventStore } from "@/modules/calendar/stores/events";
+import { useMainStore } from "@/stores/main";
 
 import EventService from "@/modules/calendar/services/event-service";
 
-import { useMainStore } from "@/stores/main";
-import { useEventStore } from "@/modules/calendar/stores/events";
 import { useForm, formProps } from "@/composables/form";
 
 export default {

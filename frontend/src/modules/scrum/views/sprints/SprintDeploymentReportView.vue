@@ -226,6 +226,7 @@ import UserStoryIndexStatus from "@/modules/scrum/components/UserStoryIndexStatu
 import { useLoading } from "@/composables/loading";
 import { useScrumContext } from "@/modules/scrum/composables/scrum-context";
 import { useUserStoryTypes } from "@/modules/scrum/composables/user-story-types";
+
 import { defaultTableOptions } from "@/utils/constants";
 
 export default {

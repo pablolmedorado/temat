@@ -160,20 +160,20 @@
 import { ref, toRefs } from "@vue/composition-api";
 import { DateTime } from "luxon";
 
-import EffortRoleChart from "@/modules/scrum/components/charts/EffortRoleChart";
+import { useMainStore } from "@/stores/main";
+
 import EventAttendeesChart from "@/modules/calendar/components/charts/EventAttendeesChart";
 import EventMonthlyChart from "@/modules/calendar/components/charts/EventMonthlyChart";
 import EventTypeChart from "@/modules/calendar/components/charts/EventTypeChart";
 import GreenWorkingDaysChart from "@/modules/green-working-days/components/charts/GreenWorkingDaysChart";
 import HolidaysChart from "@/modules/holidays/components/charts/HolidaysChart";
 import HolidaysDistributionChart from "@/modules/holidays/components/charts/HolidaysDistributionChart";
-import SupportUsersChart from "@/modules/support-working-days/components/charts/SupportUsersChart";
+import EffortRoleChart from "@/modules/scrum/components/charts/EffortRoleChart";
 import UserStoryDelayedChart from "@/modules/scrum/components/charts/UserStoryDelayedChart";
 import UserStoryOverworkedChart from "@/modules/scrum/components/charts/UserStoryOverworkedChart";
 import UserStoryTypeChart from "@/modules/scrum/components/charts/UserStoryTypeChart";
 import UserStoryUserChart from "@/modules/scrum/components/charts/UserStoryUserChart";
-
-import { useMainStore } from "@/stores/main";
+import SupportUsersChart from "@/modules/support-working-days/components/charts/SupportUsersChart";
 
 import { useLoading } from "@/composables/loading";
 

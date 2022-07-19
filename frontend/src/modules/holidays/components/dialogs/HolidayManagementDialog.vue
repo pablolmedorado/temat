@@ -85,9 +85,10 @@ import Holiday from "@/modules/holidays/models/holiday";
 
 import HolidayFilters from "@/modules/holidays/components/filters/HolidayFilters";
 
-import { useLoading } from "@/composables/loading";
 import { useDialog, dialogProps } from "@/composables/dialog";
+import { useLoading } from "@/composables/loading";
 import { useHolidays } from "@/modules/holidays/composables/holidays";
+
 import { defaultTableOptions } from "@/utils/constants";
 
 export default {

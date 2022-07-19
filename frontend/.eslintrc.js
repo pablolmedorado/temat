@@ -1,17 +1,17 @@
+const path = require("path");
+
 module.exports = {
   root: true,
   env: {
     node: true,
     browser: true,
   },
-  globals: {
-    Urls: "readonly",
-  },
   extends: [
     "plugin:vue/recommended",
     "plugin:testing-library/vue",
     "plugin:storybook/recommended",
     "eslint:recommended",
+    "plugin:import/recommended",
     "@vue/prettier",
   ],
   parserOptions: {
@@ -19,6 +19,70 @@ module.exports = {
   },
   plugins: ["vuetify"],
   rules: {
+    "import/order": [
+      "error",
+      {
+        groups: ["builtin", "external", "internal", ["parent", "sibling"]],
+        pathGroups: [
+          {
+            pattern: "vue+(|-router|x)",
+            group: "external",
+            position: "before",
+          },
+          {
+            pattern: "**/models/**",
+            group: "internal",
+            position: "before",
+          },
+          {
+            pattern: "**/stores/**",
+            group: "internal",
+            position: "before",
+          },
+          {
+            pattern: "**/services/**",
+            group: "internal",
+            position: "before",
+          },
+          {
+            pattern: "**/mixins/**",
+            group: "internal",
+            position: "before",
+          },
+          {
+            pattern: "**/views/**",
+            group: "internal",
+            position: "before",
+          },
+          {
+            pattern: "**/components/**",
+            group: "internal",
+            position: "before",
+          },
+          {
+            pattern: "**/composables/**",
+            group: "internal",
+            position: "before",
+          },
+          {
+            pattern: "**/utils/**",
+            group: "internal",
+            position: "before",
+          },
+          {
+            pattern: "**/assets/**",
+            group: "internal",
+            position: "after",
+          },
+        ],
+        pathGroupsExcludedImportTypes: ["vue+(|x|tify)"],
+        "newlines-between": "always",
+        alphabetize: {
+          order: "asc",
+          caseInsensitive: true,
+        },
+      },
+    ],
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
     "prettier/prettier": "error",
@@ -62,4 +126,18 @@ module.exports = {
       },
     },
   ],
+  settings: {
+    "import/resolver": {
+      webpack: {
+        config: {
+          resolve: {
+            alias: {
+              "@": path.resolve("src"),
+            },
+            extensions: [".js", ".vue"],
+          },
+        },
+      },
+    },
+  },
 };

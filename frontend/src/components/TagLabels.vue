@@ -20,8 +20,8 @@
 <script>
 import { camelCase } from "lodash-es";
 
-import { truncate } from "@/utils/text";
 import { applyDarkVariant } from "@/utils/colours";
+import { truncate } from "@/utils/text";
 
 export default {
   name: "TagLabels",

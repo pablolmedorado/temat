@@ -53,17 +53,18 @@
 
 <script>
 import { ref, toRefs } from "@vue/composition-api";
-import { DateTime } from "luxon";
 import { invoke } from "lodash-es";
+import { DateTime } from "luxon";
 
 import Holiday from "@/modules/holidays/models/holiday";
+
+import { useMainStore } from "@/stores/main";
 
 import HolidayManagementDialog from "@/modules/holidays/components/dialogs/HolidayManagementDialog";
 import HolidayTable from "@/modules/holidays/components/HolidayTable";
 
-import { useMainStore } from "@/stores/main";
-
 import { useLoading } from "@/composables/loading";
+
 import { userHasPermission } from "@/utils/permissions";
 
 export default {

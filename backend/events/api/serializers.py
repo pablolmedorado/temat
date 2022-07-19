@@ -1,16 +1,18 @@
-from django.utils.translation import ugettext_lazy as _
-
+from colorfield.serializers import ColorField
 from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
-from taggit.serializers import TagListSerializerField, TaggitSerializer
+from taggit.serializers import TaggitSerializer, TagListSerializerField
 
+from django.utils.translation import ugettext_lazy as _
 
-from ..models import Event, EventType
 from common.api.serializers import TagSerializer
 from users.api.serializers import GroupSerializer, UserSerializer
+from ..models import Event, EventType
 
 
 class EventTypeSerializer(FlexFieldsModelSerializer):
+    colour = ColorField(required=False)
+
     class Meta:
         model = EventType
         fields = ("id", "name", "colour", "icon", "important", "system_slug")

@@ -50,12 +50,13 @@ import { get } from "lodash-es";
 
 import Task from "@/modules/scrum/models/task";
 
-import TaskService from "@/modules/scrum/services/task-service";
-
 import { useMainStore } from "@/stores/main";
 
-import { useLoading } from "@/composables/loading";
+import TaskService from "@/modules/scrum/services/task-service";
+
 import { useDialog, dialogProps } from "@/composables/dialog";
+import { useLoading } from "@/composables/loading";
+
 import { userHasPermission } from "@/utils/permissions";
 
 export default {

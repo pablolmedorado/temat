@@ -4,6 +4,7 @@
 
 <script>
 import { computed } from "@vue/composition-api";
+
 import EventService from "@/modules/calendar/services/event-service";
 
 export default {

@@ -30,8 +30,9 @@ import { useTagStore } from "@/stores/tags";
 import { useUserStore } from "@/stores/users";
 
 import { useKonamiCode } from "@/composables/konami-code";
-import loperaSentences from "@/utils/lopera-sentences";
+
 import { handleError } from "@/utils/error-handlers";
+import loperaSentences from "@/utils/lopera-sentences";
 
 export default {
   name: "App",

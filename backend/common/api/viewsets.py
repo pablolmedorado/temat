@@ -3,12 +3,12 @@ from rest_framework import mixins, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from ..decorators import atomic_transaction_singleton
+from ..models import Link, Tag
 from .filtersets import NotificationFilterSet, TagFilterSet
 from .mixins import AtomicBulkDestroyModelMixin
 from .permissions import NotificationPermission
 from .serializers import LinkSerializer, NotificationSerializer, TagSerializer
-from ..decorators import atomic_transaction_singleton
-from ..models import Link, Tag
 
 
 class NotificationViewSet(

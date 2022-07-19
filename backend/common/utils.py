@@ -1,9 +1,9 @@
-from typing import Any, Optional, TYPE_CHECKING
-
-from django.contrib.auth import get_user_model
+from typing import TYPE_CHECKING, Any, Optional
 
 from django_currentuser.middleware import get_current_authenticated_user
 from notifications.signals import notify
+
+from django.contrib.auth import get_user_model
 
 if TYPE_CHECKING:
     from users.models import User

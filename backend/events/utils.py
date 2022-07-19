@@ -1,7 +1,8 @@
-from typing import Any, Dict
 from statistics import mean
+from typing import Any, Dict
 
 import pydash
+
 from django.db.models import Count, QuerySet
 from django.db.models.functions import TruncMonth
 

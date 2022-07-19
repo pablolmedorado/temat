@@ -6,8 +6,8 @@ from .api.viewsets import (
     ProgressViewSet,
     SprintViewSet,
     TaskViewSet,
-    UserStoryViewSet,
     UserStoryTypeViewSet,
+    UserStoryViewSet,
 )
 
 app_name = "scrum"

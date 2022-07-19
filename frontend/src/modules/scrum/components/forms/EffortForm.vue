@@ -55,13 +55,14 @@
 
 <script>
 import { toRefs } from "@vue/composition-api";
-import { DateTime } from "luxon";
-import { isObject } from "lodash-es";
 import { maxLength, minValue, numeric, required } from "@vuelidate/validators";
+import { isObject } from "lodash-es";
+import { DateTime } from "luxon";
+
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 import EffortService from "@/modules/scrum/services/effort-service";
 
-import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 import { useForm, formProps } from "@/composables/form";
 
 export default {

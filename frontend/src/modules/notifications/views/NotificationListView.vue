@@ -122,13 +122,15 @@ import { toRefs } from "@vue/composition-api";
 
 import Notification from "@/modules/notifications/models/notification";
 
-import NotificationFilters from "@/modules/notifications/components/filters/NotificationFilters";
-
 import { useNotificationStore } from "@/modules/notifications/stores/notifications";
 
+import NotificationFilters from "@/modules/notifications/components/filters/NotificationFilters";
+
 import { useLoading } from "@/composables/loading";
-import { getServiceByBasename } from "@/services";
+
 import { isoDateTimeToLocaleString } from "@/utils/dates";
+
+import { getServiceByBasename } from "@/services";
 
 export default {
   name: "NotificationListView",

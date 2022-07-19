@@ -1,10 +1,10 @@
 from rest_flex_fields.views import FlexFieldsModelViewSet
 from rest_framework import permissions
 
-from .serializers import BaseSerializer, BreadSerializer, BreakfastSerializer, DrinkSerializer, IngredientSerializer
-from ..models import Base, Bread, Breakfast, Drink, Ingredient
 from common.api.permissions import HasDjangoPermissionOrReadOnly, IsOwnerOrReadOnly
 from common.api.utils import check_api_user_permissions
+from ..models import Base, Bread, Breakfast, Drink, Ingredient
+from .serializers import BaseSerializer, BreadSerializer, BreakfastSerializer, DrinkSerializer, IngredientSerializer
 
 
 class BreadViewSet(FlexFieldsModelViewSet):

@@ -4,6 +4,9 @@ from django.db.models.functions import Coalesce
 
 
 class UserStoryContainer(models.Model):
+    class Meta:
+        abstract = True
+
     @property
     def num_of_user_stories(self):
         if hasattr(self, "user_stories__count"):
@@ -42,6 +45,3 @@ class UserStoryContainer(models.Model):
             )
             return current_effort["current_effort__sum"]
         return 0
-
-    class Meta:
-        abstract = True

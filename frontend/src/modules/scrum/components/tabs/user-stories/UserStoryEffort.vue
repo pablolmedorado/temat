@@ -58,15 +58,15 @@
 
 <script>
 import { computed, onMounted, toRefs, watch } from "@vue/composition-api";
-import { DateTime } from "luxon";
 import { invoke } from "lodash-es";
+import { DateTime } from "luxon";
 
 import Effort from "@/modules/scrum/models/effort";
 
-import EffortForm from "@/modules/scrum/components/forms/EffortForm";
-
-import { useMainStore } from "@/stores/main";
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
+import { useMainStore } from "@/stores/main";
+
+import EffortForm from "@/modules/scrum/components/forms/EffortForm";
 
 import { userHasPermission } from "@/utils/permissions";
 

@@ -129,16 +129,16 @@
 import { computed, onActivated, ref, toRefs, watch } from "@vue/composition-api";
 import { DateTime } from "luxon";
 
-import HolidaysDatePicker from "@/modules/holidays/components/inputs/HolidaysDatePicker";
-import HolidaysDetailDialog from "@/modules/holidays/components/dialogs/HolidaysDetailDialog";
-import HolidaysHelpDialog from "@/modules/holidays/components/dialogs/HolidaysHelpDialog";
+import { useMainStore } from "@/stores/main";
 
 import HolidayService from "@/modules/holidays/services/holiday-service";
 
-import { useMainStore } from "@/stores/main";
+import HolidaysDetailDialog from "@/modules/holidays/components/dialogs/HolidaysDetailDialog";
+import HolidaysHelpDialog from "@/modules/holidays/components/dialogs/HolidaysHelpDialog";
+import HolidaysDatePicker from "@/modules/holidays/components/inputs/HolidaysDatePicker";
 
-import { useHolidays } from "@/modules/holidays/composables/holidays";
 import { useLoading } from "@/composables/loading";
+import { useHolidays } from "@/modules/holidays/composables/holidays";
 
 export default {
   name: "HolidayUserView",

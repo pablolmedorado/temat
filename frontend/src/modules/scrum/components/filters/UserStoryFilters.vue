@@ -460,10 +460,10 @@
 import { computed, inject, ref, toRefs } from "@vue/composition-api";
 import { range } from "lodash-es";
 
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
+
 import EpicService from "@/modules/scrum/services/epic-service";
 import SprintService from "@/modules/scrum/services/sprint-service";
-
-import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 import { useFilters, filterProps } from "@/composables/filters";
 import { useUserStoryTypes } from "@/modules/scrum/composables/user-story-types";

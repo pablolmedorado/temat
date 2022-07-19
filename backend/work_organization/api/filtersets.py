@@ -1,7 +1,7 @@
-from django.utils.translation import gettext as _
-
 import django_filters
 from django_filters import DateFilter
+
+from django.utils.translation import gettext as _
 
 from ..models import GreenWorkingDay, Holiday, SupportWorkingDay
 
@@ -20,7 +20,11 @@ class GreenWorkingDayFilterSet(django_filters.rest_framework.FilterSet):
 class SupportWorkingDayFilterSet(django_filters.rest_framework.FilterSet):
     class Meta:
         model = SupportWorkingDay
-        fields = {"id": ["exact", "in"], "user_id": ["exact", "in"], "date": ["exact", "gte", "lte", "year"]}
+        fields = {
+            "id": ["exact", "in"],
+            "user_id": ["exact", "in"],
+            "date": ["exact", "gte", "lte", "year"],
+        }
 
 
 class HolidayFilterSet(django_filters.rest_framework.FilterSet):

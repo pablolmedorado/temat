@@ -1,9 +1,9 @@
-from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
-
 from import_export.admin import ImportExportActionModelAdmin
 from ordered_model.admin import OrderedModelAdmin
 from taggit.models import Tag as TaggitTag
+
+from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
 
 from .models import Link, LinkType, Tag
 from .resources import LinkResource, LinkTypeResource, TagResource

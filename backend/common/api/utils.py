@@ -1,6 +1,6 @@
-from django.db.models import QuerySet
-
 from rest_framework.generics import GenericAPIView
+
+from django.db.models import QuerySet
 
 PERMISSION_ACTIONS_BY_METHOD = {"GET": "view", "POST": "add", "PUT": "change", "PATCH": "change", "DELETE": "delete"}
 

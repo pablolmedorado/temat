@@ -78,12 +78,12 @@ import { DateTime } from "luxon";
 
 import Effort from "@/modules/scrum/models/effort";
 
+import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
+import { useMainStore } from "@/stores/main";
+
+import EffortReportDialog from "@/modules/scrum/components/dialogs/EffortReportDialog";
 import EffortFilters from "@/modules/scrum/components/filters/EffortFilters";
 import EffortForm from "@/modules/scrum/components/forms/EffortForm";
-import EffortReportDialog from "@/modules/scrum/components/dialogs/EffortReportDialog";
-
-import { useMainStore } from "@/stores/main";
-import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
 
 import { userHasPermission } from "@/utils/permissions";
 

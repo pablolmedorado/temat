@@ -1,12 +1,14 @@
-import colorfield.fields
 import datetime
+import uuid
+
+import colorfield.fields
+import model_utils.fields
+
 from django.conf import settings
 import django.core.validators
 from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
-import model_utils.fields
-import uuid
 
 
 class Migration(migrations.Migration):

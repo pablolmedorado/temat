@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from notifications.signals import notify
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.db.models import Q
@@ -7,10 +9,8 @@ from django.db.models.signals import m2m_changed, post_save, pre_save
 from django.dispatch import receiver
 from django.utils.timezone import make_aware
 
-from notifications.signals import notify
-
-from .models import Event
 from common.utils import get_notification_sender
+from .models import Event
 
 
 @receiver(pre_save, sender=Event)

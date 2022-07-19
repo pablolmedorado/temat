@@ -13,9 +13,9 @@ import { computed } from "@vue/composition-api";
 import { get } from "lodash-es";
 import colors from "vuetify/lib/util/colors";
 
-import SprintService from "@/modules/scrum/services/sprint-service";
-
 import { useUserStoryStore } from "@/modules/scrum/stores/user-stories";
+
+import SprintService from "@/modules/scrum/services/sprint-service";
 
 import { truncate } from "@/utils/text";
 

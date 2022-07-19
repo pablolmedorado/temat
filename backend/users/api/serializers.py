@@ -1,6 +1,6 @@
-from django.contrib.auth.models import Group
-
 from rest_flex_fields import FlexFieldsModelSerializer
+
+from django.contrib.auth.models import Group
 
 from ..models import Company, User
 

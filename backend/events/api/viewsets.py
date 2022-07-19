@@ -1,3 +1,8 @@
+from rest_flex_fields.views import FlexFieldsModelViewSet
+from rest_framework import permissions
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.db.models import Count, F
@@ -6,16 +11,11 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from rest_flex_fields.views import FlexFieldsModelViewSet
-from rest_framework import permissions
-from rest_framework.decorators import action
-from rest_framework.response import Response
-
-from .filtersets import EventFilterSet
-from .serializers import EventSerializer, EventTypeSerializer
+from common.api.permissions import HasDjangoPermissionOrReadOnly, IsOwnerOrReadOnly
 from ..models import Event, EventType
 from ..utils import monthly_chart_data
-from common.api.permissions import HasDjangoPermissionOrReadOnly, IsOwnerOrReadOnly
+from .filtersets import EventFilterSet
+from .serializers import EventSerializer, EventTypeSerializer
 
 
 class EventTypeViewSet(FlexFieldsModelViewSet):

@@ -1,7 +1,7 @@
+from import_export.admin import ImportExportActionModelAdmin
+
 from django.contrib import admin
 from django.utils.translation import ugettext as _
-
-from import_export.admin import ImportExportActionModelAdmin
 
 from .models import Base, Bread, Breakfast, Drink, Ingredient
 from .resources import BaseResource, BreadResource, BreakfastResource, DrinkResource, IngredientResource

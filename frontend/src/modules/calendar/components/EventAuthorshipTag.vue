@@ -14,8 +14,8 @@
 
 <script>
 import { computed, toRefs } from "@vue/composition-api";
-import { DateTime } from "luxon";
 import { defaultTo } from "lodash-es";
+import { DateTime } from "luxon";
 
 import { useUserStore } from "@/stores/users";
 

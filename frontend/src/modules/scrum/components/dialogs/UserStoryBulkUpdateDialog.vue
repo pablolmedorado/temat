@@ -66,8 +66,9 @@ import { get } from "lodash-es";
 import SprintService from "@/modules/scrum/services/sprint-service";
 import UserStoryService from "@/modules/scrum/services/user-story-service";
 
-import { useLoading } from "@/composables/loading";
 import { useDialog, dialogProps } from "@/composables/dialog";
+import { useLoading } from "@/composables/loading";
+
 import { isoDateToLocaleString } from "@/utils/dates";
 
 export default {

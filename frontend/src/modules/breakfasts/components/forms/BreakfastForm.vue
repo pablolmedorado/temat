@@ -76,9 +76,9 @@
 import { toRefs } from "@vue/composition-api";
 import { not, required, requiredIf, sameAs } from "@vuelidate/validators";
 
-import BreakfastService from "@/modules/breakfasts/services/breakfast-service";
-
 import { useBreakfastStore } from "@/modules/breakfasts/stores/breakfasts";
+
+import BreakfastService from "@/modules/breakfasts/services/breakfast-service";
 
 import { useForm, formProps } from "@/composables/form";
 

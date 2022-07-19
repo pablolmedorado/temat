@@ -1,17 +1,19 @@
 from datetime import date
 
-from django.utils.translation import ugettext_lazy as _
-
-from rest_flex_fields import FlexFieldsModelSerializer
+from colorfield.serializers import ColorField
+from ordered_model.serializers import OrderedModelSerializer
+from rest_flex_fields.serializers import FlexFieldsModelSerializer, FlexFieldsSerializerMixin
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 from rest_framework_bulk import BulkListSerializer
-from taggit.serializers import TagListSerializerField, TaggitSerializer
+from taggit.serializers import TaggitSerializer, TagListSerializerField
 
-from ..models import Effort, Epic, Progress, Sprint, Task, UserStory, UserStoryType
+from django.utils.translation import ugettext_lazy as _
+
 from common.api.mixins import BulkSerializerMixin
 from common.api.serializers import TagSerializer
 from users.api.serializers import UserSerializer
+from ..models import Effort, Epic, Progress, Sprint, Task, UserStory, UserStoryType
 
 
 class SprintSerializer(TaggitSerializer, FlexFieldsModelSerializer):
@@ -102,6 +104,8 @@ class EpicSerializer(TaggitSerializer, FlexFieldsModelSerializer):
 
 
 class UserStoryTypeSerializer(FlexFieldsModelSerializer):
+    colour = ColorField()
+
     class Meta:
         model = UserStoryType
         fields = ("id", "name", "colour")
@@ -132,13 +136,14 @@ class EffortSerializer(FlexFieldsModelSerializer):
         ]
 
 
-class TaskSerializer(FlexFieldsModelSerializer):
+class TaskSerializer(FlexFieldsSerializerMixin, OrderedModelSerializer):
+    order = serializers.IntegerField(required=False, read_only=False)
+
     class Meta:
         model = Task
         fields = ("id", "name", "user_story", "order", "weight", "done", "done_changed")
         read_only_fields = (
             "id",
-            "order",
             "done_changed",
             "creation_datetime",
             "creation_user",
