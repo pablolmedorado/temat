@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.22.0](https://github.com/pablolmedorado/temat/compare/v1.21.3...v1.22.0) (2022-07-19)
+
+
+### Features
+
+* **backend:** add not equal (__ne) and not in (__notin) custom lookups ([2bf9cb7](https://github.com/pablolmedorado/temat/commit/2bf9cb7c463edf0c3d3d73296368e61f9ddc9e20))
+
+
+### Bug Fixes
+
+* **index:** fix pagination reset issue ([c7726d4](https://github.com/pablolmedorado/temat/commit/c7726d4a5263b7898d17815b72ac997403c7e6c5))
+
 ### [1.21.3](https://github.com/pablolmedorado/temat/compare/v1.21.2...v1.21.3) (2022-05-12)
 
 
